@@ -31,9 +31,24 @@ export function getDevices() {
 
 
 export function getDeviceInfo(name) {
-  console.log("hello");
   return dispatch => {
     return fetch(url() + "tango/rest/rc3/hosts/w-v-kitslab-csdb-0/10000/devices/" + name, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(json => dispatch(setHighlightedDevice(name, json)));
+  };
+}
+
+
+export function getDeviceProperties(name) {
+  return dispatch => {
+    return fetch(url() + "tango/rest/rc3/hosts/w-v-kitslab-csdb-0/10000/devices/" + name + "/properties", {
       method: 'GET',
       mode: 'cors',
       credentials: 'include',

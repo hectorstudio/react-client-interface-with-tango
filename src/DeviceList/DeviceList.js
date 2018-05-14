@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as tangoActions from './actions/tango';
+import * as tangoActions from '../actions/tango';
 import React from 'react';
 import './DeviceList.css';
 
@@ -14,7 +14,7 @@ class deviceList extends React.Component {
 
 
   renderData(name, index) {
-    return <div key={index} onClick={() => this.props.tangoActions.getDeviceInfo(name)}>{name}</div>;
+    return <div key={index} onClick={() => this.props.tangoActions.getDeviceProperties(name)}>{name}</div>;
   }
   
   
