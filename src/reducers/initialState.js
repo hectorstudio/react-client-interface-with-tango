@@ -1,4 +1,6 @@
 export default {
-  deviceList: {},
+  deviceList: {
+  	filter: ""
+  },
   deviceViewer: {}
 };

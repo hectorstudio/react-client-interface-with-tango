@@ -1,5 +1,5 @@
 import initialState from './initialState';
-import {SET_DEVICES, SET_HIGHLIGHTED_DEVICE} from '../actions/actionTypes';
+import {SET_DEVICES, SET_HIGHLIGHTED_DEVICE, SET_SEARCH_FILTER} from '../actions/actionTypes';
 
 export default function deviceList(state = initialState.deviceList, action) {
   switch (action.type) {
@@ -7,7 +7,10 @@ export default function deviceList(state = initialState.deviceList, action) {
       return {...state, devices: action.list.output};
     case SET_HIGHLIGHTED_DEVICE:
       return {...state, highlightedDevice: action.name};
+    case SET_SEARCH_FILTER:
+      return {...state, filter: action.filter};
     default:
       return state;
   }
 }
+
