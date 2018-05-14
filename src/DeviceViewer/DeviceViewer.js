@@ -9,12 +9,10 @@ class deviceViewer extends React.Component {
 
 
   renderProperty(data, index) {
-    console.log(data)
     return <div key={index}>{data.name} : {data.values}</div>;
   }
 
   render() {
-    console.log(this.props)
     return (
       <div className="device-viewer">
         <div className="list">
