@@ -1,20 +1,26 @@
+import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import classNames from 'classnames';
+
 import * as tangoActions from '../actions/tango';
 import * as deviceListActions from '../actions/deviceList';
-import React from 'react';
 import './DeviceList.css';
 
-import { getFilteredDeviceNames, getHasDevices } from '../selectors/deviceList';
+import {
+  getFilteredDeviceNames,
+  getHasDevices,
+  getFilter,
+  getSelectedDeviceName
+} from '../selectors/deviceList';
 
-const DeviceEntry = ({name, onClick}) => (
-  <div onClick={() => onClick(name)}>
+const DeviceEntry = ({name, onClick, isSelected}) => (
+  <div className={classNames('entry', {selected: isSelected})} onClick={() => onClick(name)}>
     {name}
   </div>
 );
 
-class deviceList extends React.Component {
-
+class DeviceList extends React.Component {
   componentWillMount() {
     this.props.tangoActions.getDevices();
   }
@@ -24,15 +30,24 @@ class deviceList extends React.Component {
   }
   
   render() {
+    const entries = this.props.deviceNames.map((name, i) =>
+      <DeviceEntry
+        isSelected={name === this.props.selectedDeviceName}
+        key={i} name={name}
+        onClick={() => this.props.tangoActions.getDeviceProperties(name)}
+      />
+    );
+
     return (
       <div className="device-list">
+        {this.props.selectedDevice}
         <div className="search">
-          <input type="text" onChange={event => this.handleTextChange(event)} />
+          <input type="text" placeholder="Search" value={this.props.filter} onChange={event => this.handleTextChange(event)} />
         </div>
         <div className="list">
         {
           this.props.hasDevices
-          ? this.props.deviceNames.map((name, i) => <DeviceEntry key={i} name={name} onClick={() => this.props.tangoActions.getDeviceProperties(name)}/>)
+          ? entries
           : <p>No Data</p>
         }
         </div>
@@ -44,7 +59,9 @@ class deviceList extends React.Component {
 function mapStateToProps(state) {
   return {
     deviceNames: getFilteredDeviceNames(state),
-    hasDevices: getHasDevices(state)
+    selectedDeviceName: getSelectedDeviceName(state),
+    hasDevices: getHasDevices(state),
+    filter: getFilter(state)
   };
 }
 
@@ -58,4 +75,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(deviceList);
+)(DeviceList);
