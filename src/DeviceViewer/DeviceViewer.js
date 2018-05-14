@@ -7,10 +7,21 @@ import './DeviceViewer.css';
 
 class deviceViewer extends React.Component {
 
+
+  renderProperty(data, index) {
+    console.log(data)
+    return <div key={index}>{data.name} : {data.values}</div>;
+  }
+
   render() {
+    console.log(this.props)
     return (
       <div className="device-viewer">
-          Hello World
+        <div className="list">
+        {this.props.info ? Object.keys(this.props.info).map((name, i) => this.renderProperty(this.props.info[i], i)) : 
+          <p>No Data</p>
+        }
+        </div>
       </div>
     );
   }
