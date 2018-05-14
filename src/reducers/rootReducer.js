@@ -1,8 +1,8 @@
 import {combineReducers} from 'redux';
-import tango from './tangoReducer';
+import deviceList from './deviceList';
 
 const rootReducer = combineReducers({
-  tango
+  deviceList
 });
 
 export default rootReducer;
