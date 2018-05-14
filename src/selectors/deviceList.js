@@ -30,5 +30,5 @@ export const getHasDevices = createSelector(
 export const getFilteredDeviceNames = createSelector(
     getDeviceNames,
     getFilter,
-    (names, filter) => names.filter(name => name.indexOf(filter) !== -1)
+    (names, filter) => names.filter(name => name.toUpperCase().indexOf(filter.toUpperCase()) !== -1)
 );
