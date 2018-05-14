@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import DeviceList from './DeviceList';
+import DeviceList from './DeviceList/DeviceList';
+import DeviceViewer from './DeviceViewer/DeviceViewer';
 
 class App extends Component {
   render() {
@@ -17,6 +18,7 @@ class App extends Component {
               <DeviceList />
             </div>
             <div className="md-col-9">
+              <DeviceViewer />
             </div>
           </div>
         </div>

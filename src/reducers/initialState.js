@@ -1,4 +1,4 @@
 export default {
-  devices: {},
-  highlightedDevice : {}
+  deviceList: {},
+  deviceViewer: {}
 };
