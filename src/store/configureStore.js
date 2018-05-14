@@ -6,8 +6,6 @@ import rootReducer from '../reducers/rootReducer';
 
 const logger = createLogger({});
 
-debugger;
-
 export default function configureStore() {
   return createStore(
     rootReducer,
