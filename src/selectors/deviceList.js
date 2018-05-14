@@ -1,15 +1,22 @@
 import { createSelector } from 'reselect';
 
-const getDeviceList = state => state.deviceList;
+const getDeviceListState = state => state.deviceList;
 
 const getDevices = createSelector(
-    getDeviceList,
-    deviceList => deviceList.devices
+    getDeviceListState,
+    state => state.devices
 );
+
+export const getSelectedDeviceName = createSelector(
+    getDeviceListState,
+    state => state.highlightedDevice
+);
+
 export const getFilter = createSelector(
-	getDeviceList,
-	deviceList => deviceList.filter
+	getDeviceListState,
+	state => state.filter
 );
+
 export const getDeviceNames = createSelector(
     getDevices,
     devices => devices ? Object.keys(devices) : []
@@ -23,5 +30,5 @@ export const getHasDevices = createSelector(
 export const getFilteredDeviceNames = createSelector(
     getDeviceNames,
     getFilter,
-    (names, filter) => names.filter((name) => name.indexOf(filter) != -1)
+    (names, filter) => names.filter(name => name.indexOf(filter) !== -1)
 );
