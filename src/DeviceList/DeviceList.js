@@ -4,26 +4,28 @@ import * as tangoActions from '../actions/tango';
 import React from 'react';
 import './DeviceList.css';
 
+import { getDeviceNames, getHasDevices } from '../selectors/deviceList';
+
+const DeviceEntry = ({name, onClick}) => (
+  <div onClick={() => onClick(name)}>
+    {name}
+  </div>
+);
 
 class deviceList extends React.Component {
 
-
-    componentWillMount() {
-     this.props.tangoActions.getDevices();
-   }
-
-
-  renderData(name, index) {
-    return <div key={index} onClick={() => this.props.tangoActions.getDeviceProperties(name)}>{name}</div>;
+  componentWillMount() {
+    this.props.tangoActions.getDevices();
   }
-  
   
   render() {
     return (
       <div className="device-list">
         <div className="list">
-        {this.props.devices ? Object.keys(this.props.devices).map((name, i) => this.renderData(name, i)) : 
-          <p>No Data</p>
+        {
+          this.props.hasDevices
+          ? this.props.deviceNames.map((name, i) => <DeviceEntry name={name} onClick={() => this.props.tangoActions.getDeviceProperties(name)}/>)
+          : <p>No Data</p>
         }
         </div>
       </div>
@@ -33,7 +35,8 @@ class deviceList extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    devices: state.deviceList.devices
+    deviceNames: getDeviceNames(state),
+    hasDevices: getHasDevices(state)
   };
 }
 
