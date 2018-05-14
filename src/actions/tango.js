@@ -1,8 +1,24 @@
 import * as types from './actionTypes';
 
-function url() {
-  return 'http://w-v-kitslab-cc-0:8900/';
+const serviceConfig = {
+  baseUrl: 'http://w-v-kitslab-cc-0:8900/',
+  dbHost: 'w-v-kitslab-csdb-0',
+  dbPort: 10000
+};
+
+function callService(path) {
+  const {baseUrl, dbHost, dbPort} = serviceConfig;
+  const url = `${baseUrl}tango/rest/rc3/hosts/${dbHost}/${dbPort}/${path}`;
+  return fetch(url, {
+    method: 'GET',
+    mode: 'cors',
+    credentials: 'include',
+    headers: {
+      'Accept': 'application/json'
+    }
+  });
 }
+
 
 export function setDevices(data) {
   return {type: types.SET_DEVICES, list: data};
@@ -15,18 +31,9 @@ export function setHighlightedDevice(name, data) {
 
 
 export function getDevices() {
-  return dispatch => {
-    return fetch(url() + "tango/rest/rc3/hosts/w-v-kitslab-csdb-0/10000/devicenames", {
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
+  return dispatch => callService('devicenames')
     .then(response => response.json())
     .then(json => dispatch(setDevices(json)));
-  };
 }
 
 
@@ -47,16 +54,7 @@ export function getDevices() {
 
 
 export function getDeviceProperties(name) {
-  return dispatch => {
-    return fetch(url() + "tango/rest/rc3/hosts/w-v-kitslab-csdb-0/10000/devices/" + name + "/properties", {
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
+  return dispatch => callService(`devices/${name}/properties`)
     .then(response => response.json())
     .then(json => dispatch(setHighlightedDevice(name, json)));
-  };
 }
