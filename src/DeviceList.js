@@ -20,10 +20,12 @@ class deviceList extends React.Component {
   
   render() {
     return (
-      <div className="DeviceList-list">
+      <div className="device-list">
+        <div className="list">
         {this.props.devices ? Object.keys(this.props.devices).map((name, i) => this.renderData(name, i)) : 
           <p>No Data</p>
         }
+        </div>
       </div>
     );
   }
@@ -31,7 +33,7 @@ class deviceList extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    devices: state.tango.devices
+    devices: state.deviceList.devices
   };
 }
 

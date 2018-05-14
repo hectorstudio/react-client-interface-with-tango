@@ -1,7 +1,7 @@
 import initialState from './initialState';
 import {SET_DEVICES, SET_HIGHLIGHTED_DEVICE} from '../actions/actionTypes';
 
-export default function tango(state = initialState.devices, action) {
+export default function deviceList(state = initialState.devices, action) {
   switch (action.type) {
     case SET_DEVICES:
       return {...state, devices: action.list.output};
