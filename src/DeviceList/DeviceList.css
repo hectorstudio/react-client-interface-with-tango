@@ -15,5 +15,10 @@
 }
 
 .device-list .search {
+	position: sticky;
+	top: 0;
 	padding: 1em;
+	background-color: rgba(255, 255, 255, 0.75);
+	border-bottom: 1px solid lightgray;
+	margin-bottom: 0.5em;
 }
