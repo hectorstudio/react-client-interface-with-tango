@@ -7,18 +7,14 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="header">
-          <h1 className="title">WebJive</h1>
+        <header>
+          WebJive
         </header>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="md-col-3">
-              <DeviceList />
-            </div>
-            <div className="md-col-9">
-              <DeviceViewer />
-            </div>
-          </div>
+        <div className="left-column">
+          <DeviceList />
+        </div>
+        <div className="right-column">
+          <DeviceViewer />
         </div>
       </div>
     );

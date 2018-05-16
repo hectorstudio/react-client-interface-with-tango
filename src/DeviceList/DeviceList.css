@@ -1,6 +1,9 @@
 .device-list {
 	border-right: 1px solid lightgray;
 	padding: 0;
+	
+	max-height: 100%;	
+	overflow-y: scroll;
 }
 
 .device-list .entry {
@@ -12,5 +15,5 @@
 }
 
 .device-list .search {
-	margin: 1em;
+	padding: 1em;
 }
