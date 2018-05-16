@@ -10,6 +10,11 @@
 	padding: 0.1em 1em;
 }
 
+.device-list .entry:hover {
+	background-color: lightgray;
+	cursor: pointer;
+}
+
 .device-list .entry.selected {
 	background-color: peachpuff;
 }
