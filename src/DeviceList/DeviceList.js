@@ -34,7 +34,7 @@ class DeviceList extends React.Component {
       <DeviceEntry
         isSelected={name === this.props.selectedDeviceName}
         key={i} name={name}
-        onClick={() => this.props.tangoActions.getDeviceProperties(name)}
+        onClick={() => this.props.tangoActions.getDeviceInfo(name)}
       />
     );
 

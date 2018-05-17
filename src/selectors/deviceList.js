@@ -19,7 +19,7 @@ export const getFilter = createSelector(
 
 export const getDeviceNames = createSelector(
     getDevices,
-    devices => devices ? Object.keys(devices) : []
+    devices => devices ? devices.map(device => device.name) : []
 );
 
 export const getHasDevices = createSelector(
