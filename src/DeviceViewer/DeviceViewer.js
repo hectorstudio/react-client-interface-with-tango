@@ -9,14 +9,23 @@ class deviceViewer extends React.Component {
 
 
   renderProperty(data, index) {
-    return <div key={index}>{data.name} : {data.values}</div>;
+    return <div key={index}>{data.name} : 1</div>;
+  }
+
+  renderAttributes(data, index) {
+    return <div key={index}>{data.name} : 1</div>;
   }
 
   render() {
     return (
       <div className="device-viewer">
         <div className="list">
-        {this.props.info ? Object.keys(this.props.info).map((name, i) => this.renderProperty(this.props.info[i], i)) : 
+        <h1>Properties</h1>
+        {this.props.info.properties ? this.props.info.properties.map((prop, i) => this.renderProperty(prop, i)) : 
+          <p>No Data</p>
+        }
+        <h1>Attributes</h1>
+        {this.props.info.attributes ? this.props.info.attributes.map((prop, i) => this.renderAttributes(prop, i)) : 
           <p>No Data</p>
         }
         </div>
