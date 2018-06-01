@@ -1,34 +1,72 @@
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import * as tangoActions from '../actions/tango';
-import React from 'react';
+import {withRouter} from 'react-router';
+
+import { fetchDevice } from '../actions/tango';
+
+import React, { Component } from 'react';
 import './DeviceViewer.css';
 
+import {
+  getCurrentDeviceAttributes,
+  getCurrentDeviceProperties,
+  getCurrentDeviceName,
+  getDeviceIsLoading
+} from '../selectors/devices';
 
-class deviceViewer extends React.Component {
+const DeviceTables = ({properties, attributes}) =>
+  <div className="list">
+    <h2>Properties</h2>
+    <table>
+      <tbody>
+      {properties && properties.map((prop, i) =>
+        <tr key={i}>
+          <td>{prop.name}</td>
+          <td>{prop.value}</td>
+        </tr>
+      )}
+      </tbody>
+    </table>
+    
+    <h2>Attributes</h2>
+    <table>
+      <tbody>
+      {attributes && attributes.map((attr, i) =>
+        <tr key={i}>
+          <td>{attr.name}</td>
+          <td>{attr.value}</td>
+        </tr>
+      )}
+      </tbody>
+    </table>
+  </div>;
 
-
-  renderProperty(data, index) {
-    return <div key={index}>{data.name} : 1</div>;
+class DeviceViewer extends Component {
+  parseDevice(props) {
+    return (props || this.props).match.params.device;
   }
 
-  renderAttributes(data, index) {
-    return <div key={index}>{data.name} : 1</div>;
+  componentDidMount() {
+    const device = this.parseDevice();
+    this.props.fetchDevice(device);
+  }
+
+  componentDidUpdate(prevProps) {
+    const device = this.parseDevice();
+    if (device !== this.parseDevice(prevProps)) {
+      this.props.fetchDevice(device);
+    }
   }
 
   render() {
+    const {properties, attributes, loading} = this.props;
+    const content = loading
+      ? <div className="spinner"/>
+      : <DeviceTables attributes={attributes} properties={properties}/>;
+
     return (
       <div className="device-viewer">
-        <div className="list">
-        <h1>Properties</h1>
-        {this.props.info.properties ? this.props.info.properties.map((prop, i) => this.renderProperty(prop, i)) : 
-          <p>No Data</p>
-        }
-        <h1>Attributes</h1>
-        {this.props.info.attributes ? this.props.info.attributes.map((prop, i) => this.renderAttributes(prop, i)) : 
-          <p>No Data</p>
-        }
-        </div>
+        <h1>{this.parseDevice(this.props)}</h1>
+        {content}
       </div>
     );
   }
@@ -36,17 +74,20 @@ class deviceViewer extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    info: state.deviceViewer
+    name: getCurrentDeviceName(state),
+    attributes: getCurrentDeviceAttributes(state),
+    properties: getCurrentDeviceProperties(state),
+    loading: getDeviceIsLoading(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    tangoActions: bindActionCreators(tangoActions, dispatch)
+    fetchDevice: device => dispatch(fetchDevice(device))
   };
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(deviceViewer);
+)(DeviceViewer));

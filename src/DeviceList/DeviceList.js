@@ -1,40 +1,43 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import classNames from 'classnames';
 
-import * as tangoActions from '../actions/tango';
-import * as deviceListActions from '../actions/deviceList';
-import './DeviceList.css';
+import { fetchDeviceNames } from '../actions/tango';
+import { setDeviceFilter } from '../actions/deviceList';
 
+import { getFilter } from '../selectors/filtering';
 import {
   getFilteredDeviceNames,
   getHasDevices,
-  getFilter,
-  getSelectedDeviceName
-} from '../selectors/deviceList';
+  getCurrentDeviceName,
+  getDeviceNamesAreLoading
+} from '../selectors/devices';
 
-const DeviceEntry = ({name, onClick, isSelected}) => (
-  <div className={classNames('entry', {selected: isSelected})} onClick={() => onClick(name)}>
-    {name}
-  </div>
+import './DeviceList.css';
+
+const DeviceEntry = ({name, isSelected}) => (
+  <Link to={'/devices/'+name}>
+    <div className={classNames('entry', {selected: isSelected})}>
+      {name}
+    </div>
+  </Link>
 );
 
 class DeviceList extends React.Component {
   componentWillMount() {
-    this.props.tangoActions.getDevices();
+    this.props.fetchDeviceNames();
   }
 
   handleTextChange(event) {
-    this.props.deviceListActions.setDeviceFilter(event.target.value)
+    this.props.setFilter(event.target.value);
   }
   
   render() {
     const entries = this.props.deviceNames.map((name, i) =>
       <DeviceEntry
-        isSelected={name === this.props.selectedDeviceName}
+        isSelected={name === this.props.currentDeviceName}
         key={i} name={name}
-        onClick={() => this.props.tangoActions.getDeviceInfo(name)}
       />
     );
 
@@ -45,11 +48,7 @@ class DeviceList extends React.Component {
           <input type="text" placeholder="Search" value={this.props.filter} onChange={event => this.handleTextChange(event)} />
         </div>
         <div className="list">
-        {
-          this.props.hasDevices
-          ? entries
-          : <p>No Data</p>
-        }
+        {this.props.loading && entries}
         </div>
       </div>
     );
@@ -59,16 +58,17 @@ class DeviceList extends React.Component {
 function mapStateToProps(state) {
   return {
     deviceNames: getFilteredDeviceNames(state),
-    selectedDeviceName: getSelectedDeviceName(state),
+    currentDeviceName: getCurrentDeviceName(state),
     hasDevices: getHasDevices(state),
-    filter: getFilter(state)
+    filter: getFilter(state),
+    loading: getDeviceNamesAreLoading(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    tangoActions: bindActionCreators(tangoActions, dispatch),
-    deviceListActions: bindActionCreators(deviceListActions, dispatch)
+    fetchDeviceNames: () => dispatch(fetchDeviceNames()),
+    setFilter: filter => dispatch(setDeviceFilter(filter)),
   };
 }
 
