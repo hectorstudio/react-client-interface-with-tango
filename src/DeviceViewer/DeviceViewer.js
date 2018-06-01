@@ -30,6 +30,7 @@ const DeviceTables = ({properties, attributes}) =>
     </table>
     
     <h2>Attributes</h2>
+
     <table>
       <tbody>
       {attributes && attributes.map((attr, i) =>
