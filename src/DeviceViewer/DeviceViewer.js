@@ -103,7 +103,6 @@ class DeviceViewer extends Component {
 
 function mapStateToProps(state) {
   return {
-    name: getCurrentDeviceName(state),
     attributes: getFilteredCurrentDeviceAttributes(state),
     properties: getCurrentDeviceProperties(state),
     loading: getDeviceIsLoading(state),
