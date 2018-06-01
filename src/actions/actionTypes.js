@@ -7,6 +7,8 @@ Naming convention:
 - FETCH_XXX_FAILED    Failure to retrieve remote data (typically created in .catch(err => ...))
 - SET_XXX             Set local state synchronously
 
+Avoid GET_XXX in order not to confuse selectors and action creators.
+
 */
 
 export const FETCH_DEVICE_NAMES = 'FETCH_DEVICE_NAMES';
