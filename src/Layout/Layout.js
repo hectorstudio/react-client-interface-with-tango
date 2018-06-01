@@ -11,7 +11,7 @@ import './Layout.css';
 const BaseLayout = ({children}) =>
   <div className="Layout">
     <header>
-      WebJive
+      This application needs a better name.
     </header>
     {children}
   </div>;
