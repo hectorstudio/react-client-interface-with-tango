@@ -1,9 +1,11 @@
+import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 
 import { fetchDevice } from '../actions/tango';
 
-import React, { Component } from 'react';
+import Spinner from '../Spinner/Spinner';
+
 import './DeviceViewer.css';
 
 import {
@@ -60,7 +62,7 @@ class DeviceViewer extends Component {
   render() {
     const {properties, attributes, loading} = this.props;
     const content = loading
-      ? <div className="spinner"/>
+      ? <Spinner/>
       : <DeviceTables attributes={attributes} properties={properties}/>;
 
     return (
