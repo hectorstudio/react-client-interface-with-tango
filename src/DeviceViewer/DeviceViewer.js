@@ -9,39 +9,60 @@ import Spinner from '../Spinner/Spinner';
 import './DeviceViewer.css';
 
 import {
-  getCurrentDeviceAttributes,
   getCurrentDeviceProperties,
   getCurrentDeviceName,
-  getDeviceIsLoading
+  getDeviceIsLoading,
+  getAvailableDataFormats,
+  getFilteredCurrentDeviceAttributes
 } from '../selectors/devices';
+import { setDataFormat } from '../actions/deviceList';
 
-const DeviceTables = ({properties, attributes}) =>
-  <div className="list">
+const PropertyTable = ({properties}) => 
+  <div>
     <h2>Properties</h2>
     <table>
       <tbody>
-      {properties && properties.map((prop, i) =>
+      {properties && properties.map(({name, value}, i) =>
         <tr key={i}>
-          <td>{prop.name}</td>
-          <td>{prop.value}</td>
-        </tr>
-      )}
-      </tbody>
-    </table>
-    
-    <h2>Attributes</h2>
-
-    <table>
-      <tbody>
-      {attributes && attributes.map((attr, i) =>
-        <tr key={i}>
-          <td>{attr.name}</td>
-          <td>{attr.value}</td>
+          <td>{name}</td>
+          <td>{value}</td>
         </tr>
       )}
       </tbody>
     </table>
   </div>;
+
+const AttributeTable = ({attributes, dataFormats, onSetDataFormat}) =>
+  <div>
+    <h2>Attributes</h2>
+    <select onChange={e => onSetDataFormat(e.target.value)}>
+      {dataFormats.map((format, i) => <option key={i}>{format}</option>)}
+    </select>
+    <table>
+      <tbody>
+      {attributes && attributes.map(({name, value}, i) =>
+        <tr key={i}>
+          <td>{name}</td>
+          <td>{value}</td>
+        </tr>
+      )}
+      </tbody>
+    </table>
+  </div>;
+
+const DeviceTables = ({properties, attributes, dataFormats, onSetDataFormat}) => {
+  const hasAttrs = attributes.length > 0;
+  const hasProps = properties.length > 0;
+
+  return hasAttrs && hasProps
+    ? <div>
+        {hasProps > 0 && <PropertyTable properties={properties}/>}
+        {hasAttrs > 0 && <AttributeTable attributes={attributes} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat}/>}
+      </div>
+    : <div>
+        No information is available for this device.
+      </div>; 
+};
 
 class DeviceViewer extends Component {
   parseDevice(props) {
@@ -61,10 +82,15 @@ class DeviceViewer extends Component {
   }
 
   render() {
-    const {properties, attributes, loading} = this.props;
+    const {properties, attributes, loading, dataFormats, selectDataFormat} = this.props;
     const content = loading
       ? <Spinner/>
-      : <DeviceTables attributes={attributes} properties={properties}/>;
+      : <DeviceTables
+          attributes={attributes}
+          properties={properties}
+          dataFormats={dataFormats}
+          onSetDataFormat={selectDataFormat}
+        />;
 
     return (
       <div className="device-viewer">
@@ -78,19 +104,23 @@ class DeviceViewer extends Component {
 function mapStateToProps(state) {
   return {
     name: getCurrentDeviceName(state),
-    attributes: getCurrentDeviceAttributes(state),
+    attributes: getFilteredCurrentDeviceAttributes(state),
     properties: getCurrentDeviceProperties(state),
-    loading: getDeviceIsLoading(state)
+    loading: getDeviceIsLoading(state),
+    dataFormats: getAvailableDataFormats(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchDevice: device => dispatch(fetchDevice(device))
+    fetchDevice: device => dispatch(fetchDevice(device)),
+    selectDataFormat: format => dispatch(setDataFormat(format))
   };
 }
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DeviceViewer));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(DeviceViewer)
+);

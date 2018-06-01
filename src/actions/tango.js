@@ -48,6 +48,7 @@ export function fetchDevice(name){
           name
           attributes {
             name
+            dataformat
             value
           }
           properties{

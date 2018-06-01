@@ -20,12 +20,12 @@ export const getCurrentDeviceName = createSelector(
 
 export const getCurrentDeviceAttributes = createSelector(
     getCurrentDevice,
-    device => device ? device.attributes : []
+    device => device ? device.attributes || [] : []
 );
 
 export const getCurrentDeviceProperties = createSelector(
     getCurrentDevice,
-    device => device ? device.properties : []
+    device => device ? device.properties || [] : []
 );
 
 export const getHasDevices = createSelector(
@@ -47,4 +47,22 @@ export const getDeviceIsLoading = createSelector(
 export const getDeviceNamesAreLoading = createSelector(
     getDevicesState,
     state => state.loadingNames
+);
+
+export const getAvailableDataFormats = createSelector(
+    getCurrentDeviceAttributes,
+    attrs => Object.keys(attrs.reduce((accum, attr) => ({
+        ...accum, [attr.dataformat]: true
+    }), {}))
+);
+
+export const getActiveDataFormat = createSelector(
+    getDevicesState,
+    state => state.activeDataFormat
+);
+
+export const getFilteredCurrentDeviceAttributes = createSelector(
+    getCurrentDeviceAttributes,
+    getActiveDataFormat,
+    (attrs, format) => attrs.filter(attr => attr.dataformat === format)
 );

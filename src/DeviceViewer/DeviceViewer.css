@@ -14,6 +14,6 @@
     border-bottom: 1px solid lightgray;
 }
 
-.device-viewer table tr td:first-child {
+.device-viewer table tr td {
     padding-right: 2em;
 }
