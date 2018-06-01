@@ -1,4 +1,5 @@
 import * as types from './actionTypes';
+import { displayError } from './ui';
 
 const client = require('graphql-client')({
   url: '/db'
@@ -18,38 +19,45 @@ function callServiceGraphQL(query) {
   })
 }
 
-export function setDevices(data) {
-  return {type: types.SET_DEVICES, list: data};
-}
-
-
-export function setHighlightedDevice(name, data) {
-  return {type: types.SET_HIGHLIGHTED_DEVICE, name: name, info: data};
-}
-
-
-export function getDevices() {
-    var query = `query{
-       devices{
+export function fetchDeviceNames() {
+  return dispatch => {
+    dispatch({type: types.FETCH_DEVICE_NAMES});
+    callServiceGraphQL(`
+      query {
+        devices {
           name
         }
-      }`;
-  return dispatch => callServiceGraphQL(query)
-    .then(json => dispatch(setDevices(json.data.devices)));
+      }
+    `)
+    .then(json => json.data.devices.map(device => device.name))
+    .then(names => dispatch({type: types.FETCH_DEVICE_NAMES_SUCCESS, names}))
+    .catch(err => dispatch(displayError(err.toString())))
+  };
 }
 
-export function getDeviceInfo(name){
-  var query = `query{
-      devices(pattern: "${name}" ){
-        name
-        attributes{
-          name
-        }
-        properties{
-          name
-        }
-      }}`;
-  return dispatch => callServiceGraphQL(query)
-    .then(json => dispatch(setHighlightedDevice(name, json.data.devices[0])));
+export function fetchDeviceSuccess(device) {
+  return {type: types.FETCH_DEVICE_SUCCESS, device};
+}
 
+export function fetchDevice(name){
+  return dispatch => {
+    dispatch({type: 'FETCH_DEVICE', name});
+    callServiceGraphQL(`
+      query {
+        devices(pattern: "${name}") {
+          name
+          attributes {
+            name
+            value
+          }
+          properties{
+            name
+            value
+          }
+        }
+      }
+    `)
+    .then(json => dispatch(fetchDeviceSuccess(json.data.devices[0])))
+    .catch(err => dispatch(displayError(err.toString())));
+  }
 }

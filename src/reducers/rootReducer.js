@@ -1,10 +1,13 @@
 import {combineReducers} from 'redux';
-import deviceList from './deviceList';
-import deviceViewer from './deviceViewer';
+
+import devices from './devices';
+import filtering from './filtering';
+import ui from './ui';
 
 const rootReducer = combineReducers({
-  deviceList,
-  deviceViewer
+  devices,
+  filtering,
+  ui,
 });
 
 export default rootReducer;

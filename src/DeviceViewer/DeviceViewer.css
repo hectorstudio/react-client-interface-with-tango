@@ -1,3 +1,35 @@
 .device-viewer {
     padding: 1em;
 }
+
+.device-viewer h1 {
+    font-weight: lighter;
+    font-size: 2em;
+}
+
+.device-viewer h2 {
+    font-weight: lighter;
+    font-size: 1.5em;
+    margin-top: 1em;
+    border-bottom: 1px solid lightgray;
+}
+
+.device-viewer table tr td:first-child {
+    padding-right: 2em;
+}
+
+.device-viewer .spinner {
+    border: 0.8em solid #f3f3f3;
+    border-top: 0.8em solid #3498db;
+    border-radius: 50%;
+    width: 5em;
+    height: 5em;
+    animation: spin 2s linear infinite;
+    margin-left: 2em;
+    margin-top: 2em;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

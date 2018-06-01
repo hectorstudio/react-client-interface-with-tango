@@ -27,3 +27,11 @@
 	border-bottom: 1px solid lightgray;
 	margin-bottom: 0.5em;
 }
+
+.device-list .search input {
+	width: 100%;
+}
+
+.device-list a:hover {
+	text-decoration: none;
+}
