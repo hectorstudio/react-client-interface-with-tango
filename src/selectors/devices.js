@@ -34,7 +34,7 @@ export const getHasDevices = createSelector(
 );
 
 function matchesFilter(name, filter) {
-    const words = filter.split(/\s/);
+    const words = filter.split(/\s+/);
     const matched = words.filter(word => name.toUpperCase().indexOf(word.toUpperCase()) !== -1);
     return matched.length === words.length;
 }
