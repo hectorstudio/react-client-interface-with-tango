@@ -20,12 +20,12 @@ import { setDataFormat } from '../actions/deviceList';
 const PropertyTable = ({properties}) => 
   <div>
     <h2>Properties</h2>
-    <table>
+    <table className="properties">
       <tbody>
       {properties && properties.map(({name, value}, i) =>
         <tr key={i}>
           <td>{name}</td>
-          <td>{value}</td>
+          <td>{value.join('\n')}</td>
         </tr>
       )}
       </tbody>
@@ -38,9 +38,9 @@ const AttributeTable = ({attributes, dataFormats, onSetDataFormat}) =>
     <select onChange={e => onSetDataFormat(e.target.value)}>
       {dataFormats.map((format, i) => <option key={i}>{format}</option>)}
     </select>
-    <table>
+    <table className="attributes">
       <tbody>
-      {attributes && attributes.map(({name, value}, i) =>
+      {attributes && attributes.map(({name, value, datatype}, i) =>
         <tr key={i}>
           <td>{name}</td>
           <td>{value}</td>

@@ -11,7 +11,17 @@
     font-weight: lighter;
     font-size: 1.5em;
     margin-top: 1em;
+    border-bottom: 1px solid gray;
+}
+
+.device-viewer table td {
     border-bottom: 1px solid lightgray;
+    white-space: pre;
+    padding: 0.25em;
+}
+
+.device-viewer table tr:last-child td {
+    border-bottom: none;
 }
 
 .device-viewer table tr td {
