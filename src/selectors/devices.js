@@ -33,10 +33,16 @@ export const getHasDevices = createSelector(
     names => names.length > 0
 );
 
+function matchesFilter(name, filter) {
+    const words = filter.split(/\s/);
+    const matched = words.filter(word => name.toUpperCase().indexOf(word.toUpperCase()) !== -1);
+    return matched.length === words.length;
+}
+
 export const getFilteredDeviceNames = createSelector(
     getDeviceNames,
     getFilter,
-    (names, filter) => names.filter(name => name.toUpperCase().indexOf(filter.toUpperCase()) !== -1)
+    (names, filter) => names.filter(name => matchesFilter(name, filter))
 );
 
 export const getDeviceIsLoading = createSelector(
