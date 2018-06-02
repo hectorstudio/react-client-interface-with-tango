@@ -27,3 +27,25 @@
 .device-viewer table tr td {
     padding-right: 2em;
 }
+
+.device-viewer .format-chooser {
+    margin-top: 1em;
+    list-style-type: none;
+    padding-left: 1em;
+}
+
+.device-viewer .format-chooser li {
+    display: inline-block;
+    border: 1px solid gray;
+    border-radius: 0.25em 0.25em 0 0;
+    padding: 0.5em;
+}
+
+.device-viewer .format-chooser li:hover {
+    cursor: pointer;
+    background-color: lightgray;
+}
+
+.device-viewer .format-chooser li.active {
+    border-bottom: none;
+}

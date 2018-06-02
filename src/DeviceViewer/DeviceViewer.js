@@ -11,10 +11,10 @@ import './DeviceViewer.css';
 
 import {
   getCurrentDeviceProperties,
-  getCurrentDeviceName,
   getDeviceIsLoading,
   getAvailableDataFormats,
-  getFilteredCurrentDeviceAttributes
+  getFilteredCurrentDeviceAttributes,
+  getActiveDataFormat
 } from '../selectors/devices';
 import { setDataFormat } from '../actions/deviceList';
 
@@ -56,12 +56,19 @@ function valueComponent(value, datatype, dataformat) {
   }
 }
 
-const AttributeTable = ({attributes, dataFormats, onSetDataFormat}) =>
+const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) =>
   <div>
     <h2>Attributes</h2>
-    <select onChange={e => onSetDataFormat(e.target.value)}>
-      {dataFormats.map((format, i) => <option key={i}>{format}</option>)}
-    </select>
+
+    <ul className="format-chooser">
+      {dataFormats.map((format, i) =>
+        <li
+          className={format === dataFormat ? 'active' : ''}
+          key={i} onClick={() => onSetDataFormat(format)}>
+            {format}
+          </li>
+      )}
+    </ul>
 
     <table className="attributes">
       <tbody>
@@ -75,14 +82,14 @@ const AttributeTable = ({attributes, dataFormats, onSetDataFormat}) =>
     </table>
   </div>;
 
-const DeviceTables = ({properties, attributes, dataFormats, onSetDataFormat}) => {
+const DeviceTables = ({properties, attributes, dataFormat, dataFormats, onSetDataFormat}) => {
   const hasAttrs = attributes.length > 0;
   const hasProps = properties.length > 0;
 
   return hasAttrs && hasProps
     ? <div>
         {hasProps > 0 && <PropertyTable properties={properties}/>}
-        {hasAttrs > 0 && <AttributeTable attributes={attributes} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat}/>}
+        {hasAttrs > 0 && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat}/>}
       </div>
     : <div>
         No information is available for this device.
@@ -107,13 +114,14 @@ class DeviceViewer extends Component {
   }
 
   render() {
-    const {properties, attributes, loading, dataFormats, selectDataFormat} = this.props;
+    const {properties, attributes, loading, dataFormat, dataFormats, selectDataFormat} = this.props;
     const content = loading
       ? <Spinner/>
       : <DeviceTables
           attributes={attributes}
           properties={properties}
           dataFormats={dataFormats}
+          dataFormat={dataFormat}
           onSetDataFormat={selectDataFormat}
         />;
 
@@ -131,7 +139,8 @@ function mapStateToProps(state) {
     attributes: getFilteredCurrentDeviceAttributes(state),
     properties: getCurrentDeviceProperties(state),
     loading: getDeviceIsLoading(state),
-    dataFormats: getAvailableDataFormats(state)
+    dataFormats: getAvailableDataFormats(state),
+    dataFormat: getActiveDataFormat(state)
   };
 }
 
