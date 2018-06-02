@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import {connect} from 'react-redux';
-import {withRouter} from 'react-router';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 
 import { fetchDevice } from '../actions/tango';
 
@@ -32,18 +33,42 @@ const PropertyTable = ({properties}) =>
     </table>
   </div>;
 
+function valueComponent(value, datatype, dataformat) {
+  if (dataformat !== 'SPECTRUM' || datatype === 'DevString') {
+    return value;
+  } else {
+    const noBrackets = value.substring(1, value.length-1);
+    const entries = noBrackets.split(/\s+/);
+    const values = datatype === 'DevBoolean'
+      ? entries.map(s => Number(s === 'True'))
+      : entries.map(s => Number(s));
+    const data = values.map(value => ({value}));
+    const lineType = datatype === 'DevBoolean' ? 'step' : 'linear';
+
+    return (
+      <LineChart data={data} width={400} height={300}>
+        <YAxis/>
+        <Tooltip/>
+        <CartesianGrid stroke="#f5f5f5"/>
+        <Line dot={false} isAnimationActive={false} type={lineType} dataKey="value" stroke="#ff7300" yAxisId={0}/>
+      </LineChart>
+    );
+  }
+}
+
 const AttributeTable = ({attributes, dataFormats, onSetDataFormat}) =>
   <div>
     <h2>Attributes</h2>
     <select onChange={e => onSetDataFormat(e.target.value)}>
       {dataFormats.map((format, i) => <option key={i}>{format}</option>)}
     </select>
+
     <table className="attributes">
       <tbody>
-      {attributes && attributes.map(({name, value, datatype}, i) =>
+      {attributes && attributes.map(({name, value, datatype, dataformat}, i) =>
         <tr key={i}>
           <td>{name}</td>
-          <td>{value}</td>
+          <td>{valueComponent(value, datatype, dataformat)}</td>
         </tr>
       )}
       </tbody>
