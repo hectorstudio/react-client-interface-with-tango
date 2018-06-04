@@ -46,6 +46,14 @@
     background-color: lightgray;
 }
 
+.device-viewer .format-chooser li.active:hover {
+    background-color: unset;
+}
+
 .device-viewer .format-chooser li.active {
     border-bottom: none;
+}
+
+.device-viewer .no-value {
+    color: red;
 }

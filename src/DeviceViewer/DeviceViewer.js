@@ -34,8 +34,11 @@ const PropertyTable = ({properties}) =>
   </div>;
 
 function valueComponent(value, datatype, dataformat) {
-  if (dataformat !== 'SPECTRUM' || datatype === 'DevString') {
-    return value;
+  // Some special cases, should be refactored later.
+  if (value === null) {
+    return <span className="no-value">No value</span>;
+  } else if (dataformat !== 'SPECTRUM' || datatype === 'DevString') {
+    return value.length < 50000 ? value : 'Value too big to display.';
   } else {
     const noBrackets = value.substring(1, value.length-1);
     const entries = noBrackets.split(/\s+/);
