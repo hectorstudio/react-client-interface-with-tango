@@ -23,12 +23,12 @@ export const init = ( store ) => {
 	ws.addEventListener("message", msg => {
 	    var data = JSON.parse(msg.data);
 	    if (data.events.CHANGE && data){
-	    	console.log(data)
 	    	store.dispatch(receiveChange(data.events.CHANGE))
 	    }
-	    if (data.events.CONFIG && data)
-	        console.log(data)
+	    if (data.events.CONFIG && data){
+	    	
+	    }
 	});
 
 };
-export const emit = ( models ) => ws.send(JSON.stringify({"type": "SUBSCRIBE", "models": models}));
+export const emit = ( type ,models ) => ws.send(JSON.stringify({"type": type, "models": models}));

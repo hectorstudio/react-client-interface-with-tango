@@ -35,19 +35,37 @@ export function fetchDeviceNames() {
   };
 }
 
-export function fetchDeviceSuccess(device, dispatch, emit) {
+export function unSubscribeDevice(device, emit){
+  if(device){
+    let models = [];
+    device.attributes.map(prop => {
+      if(prop.dataformat === "SCALAR"){
+        models.push(device.name + "/" + prop.name )
+      }
+    })
+    emit("UNSUBSCRIBE", models);
+  }
+}
+
+export function subscribeDevice(device, emit){
   let models = [];
   device.attributes.map(prop => {
     if(prop.dataformat === "SCALAR"){
       models.push(device.name + "/" + prop.name )
     }
   })
-  emit(models);
+  emit("SUBSCRIBE", models);
+}
+
+export function fetchDeviceSuccess(device, dispatch, emit) {
+  // Here we subscribe to the scalar values
+  subscribeDevice(device, emit);
   return dispatch({type: types.FETCH_DEVICE_SUCCESS, device});
 }
 
 export function fetchDevice(name){
   return ( dispatch, getState, {emit}) => {
+    unSubscribeDevice(getState().devices.current, emit);
     dispatch({type: 'FETCH_DEVICE', name});
     callServiceGraphQL(`
       query {
