@@ -23,3 +23,5 @@ export const SET_DATA_FORMAT = 'SET_DATA_FORMAT';
 
 export const DISPLAY_ERROR = 'DISPLAY_ERROR';
 export const CLEAR_ERROR = 'CLEAR_ERROR';
+
+export const CHANGE = "CHANGE";

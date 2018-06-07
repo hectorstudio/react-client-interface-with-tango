@@ -35,12 +35,19 @@ export function fetchDeviceNames() {
   };
 }
 
-export function fetchDeviceSuccess(device) {
-  return {type: types.FETCH_DEVICE_SUCCESS, device};
+export function fetchDeviceSuccess(device, dispatch, emit) {
+  let models = [];
+  device.attributes.map(prop => {
+    if(prop.dataformat === "SCALAR"){
+      models.push(device.name + "/" + prop.name )
+    }
+  })
+  emit(models);
+  return dispatch({type: types.FETCH_DEVICE_SUCCESS, device});
 }
 
 export function fetchDevice(name){
-  return dispatch => {
+  return ( dispatch, getState, {emit}) => {
     dispatch({type: 'FETCH_DEVICE', name});
     callServiceGraphQL(`
       query {
@@ -59,7 +66,7 @@ export function fetchDevice(name){
         }
       }
     `)
-    .then(json => dispatch(fetchDeviceSuccess(json.data.devices[0])))
+    .then(json => fetchDeviceSuccess(json.data.devices[0], dispatch, emit))
     .catch(err => dispatch(displayError(err.toString())));
   }
 }
