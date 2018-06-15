@@ -61,7 +61,6 @@
 .device-viewer .quality {
     text-shadow: 0em 0em 0.3em;
     cursor: help;
-    display: inline-block;
     margin-right: 0.5em;
     font-weight: bold;
 }
