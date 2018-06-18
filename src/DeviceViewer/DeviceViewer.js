@@ -59,31 +59,51 @@ function valueComponent(value, datatype, dataformat) {
   }
 }
 
-const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) =>
-  <div>
-    <h2>Attributes</h2>
+const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) => {
+  const QualityIndicator = ({quality}) => {
+    const sub = {
+      'ATTR_VALID': 'valid',
+      'ATTR_INVALID': 'invalid',
+      'ATTR_CHANGING': 'changing',
+      'ATTR_ALARM': 'alarm',
+      'ATTR_WARNING': 'warning'
+    }[quality] || 'invalid';
 
-    <ul className="format-chooser">
-      {dataFormats.map((format, i) =>
-        <li
-          className={format === dataFormat ? 'active' : ''}
-          key={i} onClick={() => onSetDataFormat(format)}>
-            {format}
-          </li>
-      )}
-    </ul>
+    return <span
+      className={`quality quality-${sub}`}
+      title={quality}>● </span>;
+  };
 
-    <table className="attributes">
-      <tbody>
-      {attributes && attributes.map(({name, value, datatype, dataformat}, i) =>
-        <tr key={i}>
-          <td>{name}</td>
-          <td>{valueComponent(value, datatype, dataformat)}</td>
-        </tr>
-      )}
-      </tbody>
-    </table>
-  </div>;
+  return (
+    <div>
+      <h2>Attributes</h2>
+
+      <ul className="format-chooser">
+        {dataFormats.map((format, i) =>
+          <li
+            className={format === dataFormat ? 'active' : ''}
+            key={i} onClick={() => onSetDataFormat(format)}>
+              {format}
+            </li>
+        )}
+      </ul>
+
+      <table className="attributes">
+        <tbody>
+        {attributes && attributes.map(({name, value, quality, datatype, dataformat}, i) =>
+          <tr key={i}>
+            <td>
+              <QualityIndicator quality={quality}/>
+              {name}
+            </td>
+            <td>{valueComponent(value, datatype, dataformat)}</td>
+          </tr>
+        )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 const DeviceTables = ({properties, attributes, dataFormat, dataFormats, onSetDataFormat}) => {
   const hasAttrs = attributes.length > 0;

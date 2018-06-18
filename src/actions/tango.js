@@ -76,6 +76,7 @@ export function fetchDevice(name){
             dataformat
             datatype
             value
+            quality
           }
           properties{
             name
