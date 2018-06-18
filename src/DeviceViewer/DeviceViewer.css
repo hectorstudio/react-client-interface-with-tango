@@ -70,7 +70,8 @@
 }
 
 .device-viewer .quality-invalid {
-	color: lightgray;
+    color: lightgray;
+    text-shadow: none;
 }
 
 .device-viewer .quality-changing {
