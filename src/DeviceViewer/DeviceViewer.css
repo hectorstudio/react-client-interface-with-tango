@@ -1,5 +1,5 @@
-.device-viewer {
-    padding: 1em;
+.device-table {
+    padding:  1em;
 }
 
 .device-viewer h1 {
@@ -28,30 +28,49 @@
     padding-right: 2em;
 }
 
-.device-viewer .format-chooser {
-    margin-top: 1em;
-    list-style-type: none;
-    padding-left: 1em;
+
+.device-menu .tab-chooser{
+    background-color: #5d5d5d;
 }
 
-.device-viewer .format-chooser li {
+.device-menu .format-chooser{
+    background-color: #9e9e9e;
+}
+
+
+.device-header{
+    background-color: black;
+    color: white;
+    font-size: 2em;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.device-viewer .chooser {
+    list-style-type: none;
+    margin-bottom: 0;
+    padding-left: 0;
+}
+
+.device-viewer .chooser li {
     display: inline-block;
     border: 1px solid gray;
-    border-radius: 0.25em 0.25em 0 0;
     padding: 0.5em;
+    color: white;
 }
 
-.device-viewer .format-chooser li:hover {
+.device-viewer .chooser li:hover {
     cursor: pointer;
-    background-color: lightgray;
+    border-bottom: 4px solid #c1dd8c;
 }
 
-.device-viewer .format-chooser li.active:hover {
-    background-color: unset;
+.device-viewer .chooser li.active:hover {
+    border-bottom: 4px solid #c1dd8c;
 }
 
-.device-viewer .format-chooser li.active {
+.device-viewer .chooser li.active {
     border-bottom: none;
+    border-bottom: 4px solid #8abf26;
 }
 
 .device-viewer .no-value {
