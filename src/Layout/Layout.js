@@ -10,9 +10,6 @@ import './Layout.css';
 
 const BaseLayout = ({children}) =>
   <div className="Layout">
-    <header>
-      This application needs a better name.
-    </header>
     {children}
   </div>;
 

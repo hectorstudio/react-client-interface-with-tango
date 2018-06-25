@@ -1,13 +1,13 @@
 import {
   FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS,
-  FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE
+  FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB
 } from '../actions/actionTypes';
 
 export default function devices(state = {
   nameList: [],
   current: null,
   activeDataFormat: null,
-
+  activeTab: "attributes",
   loadingNames: false,
   loadingDevice: false,
 }, action) {
@@ -34,6 +34,9 @@ export default function devices(state = {
 
     case SET_DATA_FORMAT:
       return {...state, activeDataFormat: action.format};
+
+    case SET_TAB:
+      return {...state, activeTab: action.tab};
 
     case CHANGE:
       if(state.current){

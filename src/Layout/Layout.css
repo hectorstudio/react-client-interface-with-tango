@@ -4,7 +4,7 @@
   width: 100%;
   
   display: grid;
-  grid-template-rows: 4em auto;
+  grid-template-rows: 0em auto;
   grid-template-columns: 30em auto;
 }
 
