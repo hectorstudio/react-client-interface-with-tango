@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import {messageTypes, uri} from '../constants/websocket.js';
+import {uri} from '../constants/websocket.js';
 var ws = new WebSocket("ws://" + uri + "/socket", "json");
 
 

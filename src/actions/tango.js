@@ -1,8 +1,9 @@
 import * as types from './actionTypes';
 import { displayError } from './ui';
+import {uri} from '../constants/websocket.js';
 
 const client = require('graphql-client')({
-  url: '/db'
+  url: `http://${uri}/db`
 })
 
 function callServiceGraphQL(query) {
@@ -38,7 +39,7 @@ export function fetchDeviceNames() {
 export function unSubscribeDevice(device, emit){
   if(device){
     let models = [];
-    device.attributes.map(prop => {
+    device.attributes.forEach(prop => {
       if(prop.dataformat === "SCALAR"){
         models.push(device.name + "/" + prop.name )
       }
@@ -49,7 +50,7 @@ export function unSubscribeDevice(device, emit){
 
 export function subscribeDevice(device, emit){
   let models = [];
-  device.attributes.map(prop => {
+  device.attributes.forEach(prop => {
     if(prop.dataformat === "SCALAR"){
       models.push(device.name + "/" + prop.name )
     }
