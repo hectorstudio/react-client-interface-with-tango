@@ -15,7 +15,8 @@ import {
   getAvailableDataFormats,
   getFilteredCurrentDeviceAttributes,
   getActiveDataFormat,
-  getActiveTab
+  getActiveTab,
+  getDeviceNames
 } from '../selectors/devices';
 import { setDataFormat, setTab } from '../actions/deviceList';
 
@@ -32,6 +33,22 @@ const PropertyTable = ({properties}) =>
       </tbody>
     </table>
   </div>;
+
+const switchButton = 'Switch on/off';
+const CommandButton = ({commands}) =>
+    <div class="switch">
+    <form action="/action_page.php">
+     <br></br>
+        {switchButton}
+        <input id="cmn-toggle-1" class="cmn-toggle cmn-toggle-round"  type="checkbox"/>
+        <label for="cmn-toggle-1"></label>
+        <br></br>
+    
+      Set voltage: <input type="text" name="fname"/>
+      <input type="submit" value="Submit"/>
+    </form>
+    </div>
+
 
 function valueComponent(value, datatype, dataformat) {
   // Some special cases, should be refactored later.
@@ -73,7 +90,7 @@ const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) 
       className={`quality quality-${sub}`}
       title={quality}>● </span>;
   };
-
+ 
   return (
     <div>
 
@@ -85,7 +102,7 @@ const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) 
               <QualityIndicator quality={quality}/>
               {name}
             </td>
-            <td>{valueComponent(value, datatype, dataformat)}</td>
+            <td>{valueComponent(value, datatype, dataformat)}</td>              
           </tr>
         )}
         </tbody>
@@ -93,6 +110,8 @@ const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) 
     </div>
   );
 };
+
+
 
 class DeviceMenu extends Component {
 
@@ -119,6 +138,7 @@ class DeviceMenu extends Component {
           <ul className="tab-chooser chooser">
             {<li className={selectedTab === "attributes" ? 'active' : ''} onClick={() => onSetTab("attributes")}>Attributes</li>}
             {hasProps > 0 && <li className={selectedTab === "properties" ? 'active' : ''} onClick={() => onSetTab("properties")}>Properties</li>}
+            {<li className={selectedTab === "commands" ? 'active' : ''} onClick={() => onSetTab("commands")}>Commands</li>}
           </ul>
           {dataTabs}
         </div>
@@ -140,6 +160,7 @@ class DeviceTables extends Component {
       ? <div className="device-table">
           {selectedTab === "properties" && <PropertyTable properties={properties}/>}
           {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat}/>}
+          {selectedTab === "commands" && <CommandButton/>}
         </div>
       : null; 
   }
@@ -164,12 +185,34 @@ class DeviceViewer extends Component {
   }
 
   render() {
-    const {properties, attributes, loading, dataFormat, dataFormats, selectDataFormat, selectTab, activeTab} = this.props;
-    const content = loading
+    const {properties, attributes, loading, dataFormat, dataFormats, selectDataFormat, selectTab, activeTab, device} = this.props;
+    const QualityIndicator = ({state}) => {
+      const sub = {
+        'STATE-ON': 'on',
+        'STATE-OFF': 'off',
+        'STATE-CLOSE': 'close',
+        'STATE-OPEN': 'open',
+        'STATE-INSERT': 'insert',
+        'STATE-EXTRACT': 'extract',
+        'STATE-MOVING': 'moving',
+        'STATE-STANDBY': 'standy',
+        'STATE-FAULT': 'fault',
+        'STATE-INIT': 'init',
+        'STATE-RUNNING': 'running',
+        'STATE-ALARM': 'alarm',
+        'STATE-DISABLE': 'disable',
+        'STATE-UNKNOWN': 'unknown'
+      }[state] || 'invalid';
+      return <span
+      className={`state state-${sub}`}
+      title={state}>● </span>;
+    };
+    const content = loading 
       ? <Spinner/>
       : (<div>
         <div className="device-header">
-          {this.parseDevice(this.props)}
+        <QualityIndicator state={device.state}/>
+        {this.parseDevice(this.props)}
         </div>
         <DeviceMenu
           attributes={attributes}
@@ -188,11 +231,12 @@ class DeviceViewer extends Component {
           selectedTab={activeTab}
         />
         </div>);
-
+        
     return (
       <div className="device-viewer">
         {content}
       </div>
+     
     );
   }
 }
@@ -201,6 +245,7 @@ function mapStateToProps(state) {
   return {
     attributes: getFilteredCurrentDeviceAttributes(state),
     properties: getCurrentDeviceProperties(state),
+    device: getDeviceNames(state),
     loading: getDeviceIsLoading(state),
     dataFormats: getAvailableDataFormats(state),
     dataFormat: getActiveDataFormat(state),
