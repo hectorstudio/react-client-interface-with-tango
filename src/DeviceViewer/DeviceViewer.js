@@ -188,30 +188,34 @@ class DeviceViewer extends Component {
     const {properties, attributes, loading, dataFormat, dataFormats, selectDataFormat, selectTab, activeTab, device} = this.props;
     const QualityIndicator = ({state}) => {
       const sub = {
-        'STATE-ON': 'on',
-        'STATE-OFF': 'off',
-        'STATE-CLOSE': 'close',
-        'STATE-OPEN': 'open',
-        'STATE-INSERT': 'insert',
-        'STATE-EXTRACT': 'extract',
-        'STATE-MOVING': 'moving',
-        'STATE-STANDBY': 'standy',
-        'STATE-FAULT': 'fault',
-        'STATE-INIT': 'init',
-        'STATE-RUNNING': 'running',
-        'STATE-ALARM': 'alarm',
-        'STATE-DISABLE': 'disable',
-        'STATE-UNKNOWN': 'unknown'
+        'ON': 'on',
+        'OFF': 'off',
+        'CLOSE': 'close',
+        'OPEN': 'open',
+        'INSERT': 'insert',
+        'EXTRACT': 'extract',
+        'MOVING': 'moving',
+        'STANDBY': 'standy',
+        'FAULT': 'fault',
+        'INIT': 'init',
+        'RUNNING': 'running',
+        'ALARM': 'alarm',
+        'DISABLE': 'disable',
+        'UNKNOWN': 'unknown'
       }[state] || 'invalid';
       return <span
       className={`state state-${sub}`}
       title={state}>● </span>;
     };
+
+    const stateAttr = attributes.find(attr => attr.name === 'State');
+    const state = stateAttr ? stateAttr.value : null;
+
     const content = loading 
       ? <Spinner/>
       : (<div>
         <div className="device-header">
-        <QualityIndicator state={device.state}/>
+        <QualityIndicator state={state}/>
         {this.parseDevice(this.props)}
         </div>
         <DeviceMenu
