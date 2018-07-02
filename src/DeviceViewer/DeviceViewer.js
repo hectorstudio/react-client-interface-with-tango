@@ -34,22 +34,6 @@ const PropertyTable = ({properties}) =>
     </table>
   </div>;
 
-const switchButton = 'Switch on/off';
-const CommandButton = ({commands}) =>
-    <div class="switch">
-    <form action="/action_page.php">
-     <br></br>
-        {switchButton}
-        <input id="cmn-toggle-1" class="cmn-toggle cmn-toggle-round"  type="checkbox"/>
-        <label for="cmn-toggle-1"></label>
-        <br></br>
-    
-      Set voltage: <input type="text" name="fname"/>
-      <input type="submit" value="Submit"/>
-    </form>
-    </div>
-
-
 function valueComponent(value, datatype, dataformat) {
   // Some special cases, should be refactored later.
   if (value === null) {
@@ -138,7 +122,6 @@ class DeviceMenu extends Component {
           <ul className="tab-chooser chooser">
             {<li className={selectedTab === "attributes" ? 'active' : ''} onClick={() => onSetTab("attributes")}>Attributes</li>}
             {hasProps > 0 && <li className={selectedTab === "properties" ? 'active' : ''} onClick={() => onSetTab("properties")}>Properties</li>}
-            {<li className={selectedTab === "commands" ? 'active' : ''} onClick={() => onSetTab("commands")}>Commands</li>}
           </ul>
           {dataTabs}
         </div>
@@ -160,7 +143,6 @@ class DeviceTables extends Component {
       ? <div className="device-table">
           {selectedTab === "properties" && <PropertyTable properties={properties}/>}
           {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat}/>}
-          {selectedTab === "commands" && <CommandButton/>}
         </div>
       : null; 
   }
