@@ -16,7 +16,8 @@ import {
   getFilteredCurrentDeviceAttributes,
   getActiveDataFormat,
   getActiveTab,
-  getDeviceNames
+  getDeviceNames,
+  getCurrentDeviceState
 } from '../selectors/devices';
 import { setDataFormat, setTab } from '../actions/deviceList';
 
@@ -167,7 +168,7 @@ class DeviceViewer extends Component {
   }
 
   render() {
-    const {properties, attributes, loading, dataFormat, dataFormats, selectDataFormat, selectTab, activeTab, device} = this.props;
+    const {properties, attributes, loading, dataFormat, dataFormats, selectDataFormat, selectTab, activeTab, currentState} = this.props;
     const QualityIndicator = ({state}) => {
       const sub = {
         'ON': 'on',
@@ -189,15 +190,13 @@ class DeviceViewer extends Component {
       className={`state state-${sub}`}
       title={state}>● </span>;
     };
-
-    const stateAttr = attributes.find(attr => attr.name === 'State');
-    const state = stateAttr ? stateAttr.value : null;
-
+    
     const content = loading 
       ? <Spinner/>
       : (<div>
         <div className="device-header">
-        <QualityIndicator state={state}/>
+       
+        <QualityIndicator state={currentState}/>
         {this.parseDevice(this.props)}
         </div>
         <DeviceMenu
@@ -235,7 +234,8 @@ function mapStateToProps(state) {
     loading: getDeviceIsLoading(state),
     dataFormats: getAvailableDataFormats(state),
     dataFormat: getActiveDataFormat(state),
-    activeTab: getActiveTab(state)
+    activeTab: getActiveTab(state),
+    currentState: getCurrentDeviceState(state)
   };
 }
 
