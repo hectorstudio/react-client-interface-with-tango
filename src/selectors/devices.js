@@ -77,3 +77,11 @@ export const getFilteredCurrentDeviceAttributes = createSelector(
     getActiveDataFormat,
     (attrs, format) => attrs.filter(attr => attr.dataformat === format)
 );
+
+export const getCurrentDeviceState = createSelector(
+    getCurrentDeviceAttributes,
+    (attrs) => {
+        const attr = attrs.find(attr => attr.name === 'State');
+        return attr ? attr.value : null;
+    }
+);

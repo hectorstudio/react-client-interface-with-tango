@@ -15,7 +15,9 @@ import {
   getAvailableDataFormats,
   getFilteredCurrentDeviceAttributes,
   getActiveDataFormat,
-  getActiveTab
+  getActiveTab,
+  getDeviceNames,
+  getCurrentDeviceState
 } from '../selectors/devices';
 import { setDataFormat, setTab } from '../actions/deviceList';
 
@@ -73,7 +75,7 @@ const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) 
       className={`quality quality-${sub}`}
       title={quality}>● </span>;
   };
-
+ 
   return (
     <div>
 
@@ -85,7 +87,7 @@ const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) 
               <QualityIndicator quality={quality}/>
               {name}
             </td>
-            <td>{valueComponent(value, datatype, dataformat)}</td>
+            <td>{valueComponent(value, datatype, dataformat)}</td>              
           </tr>
         )}
         </tbody>
@@ -93,6 +95,8 @@ const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) 
     </div>
   );
 };
+
+
 
 class DeviceMenu extends Component {
 
@@ -164,12 +168,36 @@ class DeviceViewer extends Component {
   }
 
   render() {
-    const {properties, attributes, loading, dataFormat, dataFormats, selectDataFormat, selectTab, activeTab} = this.props;
-    const content = loading
+    const {properties, attributes, loading, dataFormat, dataFormats, selectDataFormat, selectTab, activeTab, currentState} = this.props;
+    const QualityIndicator = ({state}) => {
+      const sub = {
+        'ON': 'on',
+        'OFF': 'off',
+        'CLOSE': 'close',
+        'OPEN': 'open',
+        'INSERT': 'insert',
+        'EXTRACT': 'extract',
+        'MOVING': 'moving',
+        'STANDBY': 'standy',
+        'FAULT': 'fault',
+        'INIT': 'init',
+        'RUNNING': 'running',
+        'ALARM': 'alarm',
+        'DISABLE': 'disable',
+        'UNKNOWN': 'unknown'
+      }[state] || 'invalid';
+      return <span
+      className={`state state-${sub}`}
+      title={state}>● </span>;
+    };
+    
+    const content = loading 
       ? <Spinner/>
       : (<div>
         <div className="device-header">
-          {this.parseDevice(this.props)}
+       
+        <QualityIndicator state={currentState}/>
+        {this.parseDevice(this.props)}
         </div>
         <DeviceMenu
           attributes={attributes}
@@ -188,11 +216,12 @@ class DeviceViewer extends Component {
           selectedTab={activeTab}
         />
         </div>);
-
+        
     return (
       <div className="device-viewer">
         {content}
       </div>
+     
     );
   }
 }
@@ -201,10 +230,12 @@ function mapStateToProps(state) {
   return {
     attributes: getFilteredCurrentDeviceAttributes(state),
     properties: getCurrentDeviceProperties(state),
+    device: getDeviceNames(state),
     loading: getDeviceIsLoading(state),
     dataFormats: getAvailableDataFormats(state),
     dataFormat: getActiveDataFormat(state),
-    activeTab: getActiveTab(state)
+    activeTab: getActiveTab(state),
+    currentState: getCurrentDeviceState(state)
   };
 }
 

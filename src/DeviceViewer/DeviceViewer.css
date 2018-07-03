@@ -104,3 +104,52 @@
 .device-viewer .quality-warning {
 	color: orange;
 }
+
+.device-viewer .state {
+    text-shadow: 0em 0em 0.3em;
+    cursor: help;
+    margin-right: 0.5em;
+    font-weight: bold;
+}
+.device-viewer .state-on {
+	color: lightgreen;
+}
+.device-viewer .state-off {
+	color: white;
+}
+.device-viewer .state-close {
+	color: white;
+}
+.device-viewer .state-open {
+	color: lightgreen;
+}
+.device-viewer .state-insert {
+	color: white;
+}
+.device-viewer .state-extract {
+	color: lightgreen;
+}
+.device-viewer .state-moving {
+	color: blue;
+}
+.device-viewer .state-standby {
+	color: yellow;
+}
+.device-viewer .state-fault {
+	color: red;
+}
+.device-viewer .state-init {
+	color: yellow;
+}
+.device-viewer .state-running {
+	color: blue;
+}
+.device-viewer .state-alarm {
+	color: orange;
+}
+.device-viewer .state-display {
+	color: grey;
+}
+.device-viewer .state-unknown {
+	color: black;
+}
