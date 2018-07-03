@@ -28,5 +28,13 @@
   "devDependencies": {
     "redux-logger": "^3.0.6"
   },
-  "proxy": "http://w-v-kitslab-web-0:5004"
+  "proxy": {
+    "/socket": {
+      "target": "ws://w-v-kitslab-web-0:5004",
+      "ws": true
+    },
+    "/db": {
+      "target": "http://w-v-kitslab-web-0:5004"
+    }
+  }
 }

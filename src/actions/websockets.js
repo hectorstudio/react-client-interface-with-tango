@@ -1,20 +1,22 @@
 import * as types from './actionTypes';
-import {uri} from '../constants/websocket.js';
-var ws = new WebSocket("ws://" + uri + "/socket", "json");
 
+function socketUrl() {
+	const loc = window.location;
+	const protocol = loc.protocol.replace('http', 'ws');
+	return protocol + '//' + loc.host + '/socket';
+}
+
+const ws = new WebSocket(socketUrl(), "json");
 
 export function receiveChange(data) {
     return { type: types.CHANGE, data }
 }
-
-
 
 export const init = ( store ) => {
 
 	ws.addEventListener("open", () => {
 	    console.log("Websocket open!")
 	});
-
 
 	ws.addEventListener("error", (e) => {
 	    console.log("Websocket error!", e)
@@ -29,6 +31,6 @@ export const init = ( store ) => {
 	    	
 	    }
 	});
-
 };
-export const emit = ( type ,models ) => ws.send(JSON.stringify({"type": type, "models": models}));
+
+export const emit = (type, models) => ws.send(JSON.stringify({type, models}));
