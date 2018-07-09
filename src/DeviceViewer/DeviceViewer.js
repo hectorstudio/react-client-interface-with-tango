@@ -249,7 +249,6 @@ function mapStateToProps(state) {
     dataFormat: getActiveDataFormat(state),
     activeTab: getActiveTab(state),
     currentState: getCurrentDeviceState(state),
-    comDisplevel: getCommandsDisplevel(state),
     getValue: getCommandValue(state)
   };
 }
