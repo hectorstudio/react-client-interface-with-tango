@@ -91,14 +91,6 @@ export const getCurrentDeviceState = createSelector(
     } 
 );
 
-export const getCommandsDisplevel = createSelector(
-    getCurrentDeviceCommands,
-    coms => { 
-        const com = coms.find(com => com.displevel);
-        return com ? com : null;
-     }
-);
-
 export const getCommandValue = createSelector(
     getDevicesState,
     state => state.commandResults

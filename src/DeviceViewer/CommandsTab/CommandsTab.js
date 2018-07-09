@@ -10,7 +10,7 @@ const CommandsTable = ({commands, submitCommand, getValue, currentDeviceName}) =
 <div>
   <table className="commands">
     <tbody>
-    {commands && commands.map(({name, displevel,outtype, intype, intypedesc, outtypedesc}, i) =>
+    {commands && commands.map(({name, displevel, intype}, i) =>
       <tr key={i}>
         <td>{name}</td>
         <td>{displevel}</td>
@@ -49,17 +49,15 @@ function getSubmittedValue(name, getValue, currentDeviceName){
     event.preventDefault()
     var re = /^[a-z][a-z\s]*$/;
     if(this.props.name === 'DevString' && this.state.value.match(re)){
-      this.props.submitCommand(this.props.name, this.state.value.toString, this.props.currentDeviceName)
-    } if(this.props.name === 'DevBoolean' && this.state.value === (true || false)){
+      this.props.submitCommand(this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
+    } if(this.props.name === 'DevBoolean' && (this.state.value ==="true" || (this.state.value === "false"))){
         this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
     }else{
         this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
-        console.log('asdsadads234', this.props.value);
     }
     this.setState({
         value: ''
       });
-   //alert('A name was submitted: ' + output);
   }
 
   render() {
@@ -77,19 +75,11 @@ function getSubmittedValue(name, getValue, currentDeviceName){
   }
 }
 
-class DisplevelBox extends Component {
-    render() {
-    const {comDisplevel} = this.props;
-    {JSON.stringify(comDisplevel)}
-    return "";
-    }
-  }
-
 function mapStateToProps(state) {
     return {
         commands: getCurrentDeviceCommands(state),
         currentDeviceName: getCurrentDeviceName(state),
-        getValue: getCommandValue(state)
+        getValue: getCommandValue(state),
     };
   }
 
