@@ -1,6 +1,7 @@
 import * as types from './actionTypes';
 import { displayError } from './ui';
 import {uri} from '../constants/websocket.js';
+import { getCurrentDevice } from '../selectors/devices';
 
 const client = require('graphql-client')({
   url: `http://${uri}/db`
@@ -33,6 +34,25 @@ export function fetchDeviceNames() {
     .then(json => json.data.devices.map(device => device.name))
     .then(names => dispatch({type: types.FETCH_DEVICE_NAMES_SUCCESS, names}))
     .catch(err => dispatch(displayError(err.toString())))
+  };
+}
+
+export function submitCommand(command, argin, device) {
+  console.log('submitCommand', command, argin)
+  return (dispatch) => {
+    console.log('submitCommandTest', command, argin, device);
+    callServiceGraphQL(`
+    mutation {
+      executeCommand(command:"${command}" device:"${device}" argin: ${argin}) {
+        ok,
+        message,
+        output
+     }
+    }
+    `)
+    .then(json => json.data.executeCommand.output)
+    .then(result => dispatch( {type: types.EXECUTE_COMMAND_COMPLETE, command, result}))
+    .catch(err => dispatch(displayError(err.toString()))) 
   };
 }
 
@@ -82,6 +102,15 @@ export function fetchDevice(name){
           properties{
             name
             value
+          }
+          commands{
+            name
+            tag 
+            displevel 
+            intype 
+            intypedesc 
+            outtype 
+            outtypedesc 
           }
         }
       }
