@@ -1,6 +1,6 @@
 import {
   FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS,
-  FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB
+  FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB, EXECUTE_COMMAND_COMPLETE
 } from '../actions/actionTypes';
 
 export default function devices(state = {
@@ -10,6 +10,7 @@ export default function devices(state = {
   activeTab: "attributes",
   loadingNames: false,
   loadingDevice: false,
+  commandResults: {},
 }, action) {
   switch (action.type) {
     
@@ -17,6 +18,14 @@ export default function devices(state = {
       return {...state, loadingNames: true};
     case FETCH_DEVICE_NAMES_SUCCESS:
       return {...state, nameList: action.names};
+
+    case EXECUTE_COMMAND_COMPLETE:
+      const oldCommandResults = state.commandResults;
+      const {command, result} = action;
+      const deviceName= state.current.name
+      const commandResults = {...oldCommandResults, deviceName, [command]: result};
+      console.log("result ", commandResults);
+      return {...state, commandResults}
 
     case FETCH_DEVICE:
       return {...state, loadingDevice: true};
