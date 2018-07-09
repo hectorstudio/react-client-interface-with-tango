@@ -28,6 +28,11 @@ export const getCurrentDeviceProperties = createSelector(
     device => device ? device.properties || [] : []
 );
 
+export const getCurrentDeviceCommands = createSelector(
+    getCurrentDevice,
+    device => device ? device.commands || [] : []
+);
+
 export const getHasDevices = createSelector(
     getDeviceNames,
     names => names.length > 0
@@ -83,5 +88,11 @@ export const getCurrentDeviceState = createSelector(
     (attrs) => {
         const attr = attrs.find(attr => attr.name === 'State');
         return attr ? attr.value : null;
-    }
+    } 
 );
+
+export const getCommandValue = createSelector(
+    getDevicesState,
+    state => state.commandResults
+);
+
