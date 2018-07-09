@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
 
-import { fetchDeviceNames } from '../actions/tango';
+import { fetchDeviceNames} from '../actions/tango';
 import { setDeviceFilter } from '../actions/deviceList';
 
 import { getFilter } from '../selectors/filtering';
