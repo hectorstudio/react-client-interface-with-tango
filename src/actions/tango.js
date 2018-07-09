@@ -3,7 +3,7 @@ import { displayError } from './ui';
 import {uri} from '../constants/websocket.js';
 
 const client = require('graphql-client')({
-  url: `http://${uri}/db`
+  url: `/db`
 })
 
 function callServiceGraphQL(query) {
