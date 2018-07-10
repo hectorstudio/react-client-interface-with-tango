@@ -1,6 +1,13 @@
 before_script:
   - docker info
 
+build_image:
+  script:
+    - docker build . -t docker.maxiv.lu.se/webjive-frontend
+    - docker push docker.maxiv.lu.se/webjive-frontend
+  only:
+    - master
+
 deploy_image:
   script:
   - "curl -H 'Authorization: Bearer gOj9o8s3RapHiThfNbImaFYMDoOKTG' -k --request POST https://ansible.maxiv.lu.se/api/v2/job_templates/6/launch/"
