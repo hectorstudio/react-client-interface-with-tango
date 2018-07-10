@@ -5,3 +5,5 @@ build_image:
   script:
     - docker build . -t docker.maxiv.lu.se/webjive-frontend
     - docker push docker.maxiv.lu.se/webjive-frontend
+  only:
+    - master
