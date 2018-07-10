@@ -12,3 +12,5 @@ build_image:
   when: on_success
   script:
   - curl -k --request POST https://ansible.maxiv.lu.se/api/v2/job_templates/6/launch/
+  only:
+    - master
