@@ -20,7 +20,6 @@ import {
   getDeviceNames,
   getCurrentDeviceState,
   getCurrentDeviceCommands,
-  getCommandsDisplevel,
   getCommandValue
 } from '../selectors/devices';
 import { setDataFormat, setTab} from '../actions/deviceList';
