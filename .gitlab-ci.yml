@@ -11,6 +11,6 @@ build_image:
 build_image:
   when: on_success
   script:
-  - curl -k -H "Authorization: Bearer gOj9o8s3RapHiThfNbImaFYMDoOKTG" --request POST https://ansible.maxiv.lu.se/api/v2/job_templates/6/launch/
+    - curl -k -H "Authorization: Bearer gOj9o8s3RapHiThfNbImaFYMDoOKTG" --request POST https://ansible.maxiv.lu.se/api/v2/job_templates/6/launch/
   only:
     - master
