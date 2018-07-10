@@ -49,11 +49,12 @@ function getSubmittedValue(name, getValue, currentDeviceName){
     event.preventDefault()
     if(this.props.name === 'DevString'){
       this.props.submitCommand(this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
-    } if(this.props.name === 'DevBoolean' && (this.state.value ==="true" || (this.state.value === "false"))){
+    }else if(this.props.name === 'DevBoolean' && (this.state.value ==="true" || (this.state.value === "false"))){
         this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
     }else{
         this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
     }
+
     this.setState({
         value: ''
       });
@@ -65,10 +66,10 @@ function getSubmittedValue(name, getValue, currentDeviceName){
     }
     else{
     return (
-      <form onSubmit={this.handleSubmit}>
-          <input type="text" value={this.state.value} onChange={this.handleChange} />
-        <input type="submit" value="Submit" />
-      </form>
+      <div>
+        <input type="text" value={this.state.value} onChange={this.handleChange} />
+        <button onClick={this.handleSubmit}>Submit</button>
+      </div>
     );
   }
   }
@@ -90,5 +91,5 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps,
+    mapDispatchToProps
 )(CommandsTable);
