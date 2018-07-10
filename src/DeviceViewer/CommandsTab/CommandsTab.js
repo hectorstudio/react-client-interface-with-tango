@@ -15,7 +15,7 @@ const CommandsTable = ({commands, submitCommand, getValue, currentDeviceName}) =
         <td>{name}</td>
         <td>{displevel}</td>
         <td>{intype}</td>
-        <td><Calculator submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={intype} getValue={getValue} /></td>
+        <td><InputFields submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={intype} getValue={getValue} /></td>
         <td>{getSubmittedValue(name, getValue, currentDeviceName)}</td>
       </tr>
     )}
@@ -32,7 +32,7 @@ function getSubmittedValue(name, getValue, currentDeviceName){
     }
 }
 
- class Calculator extends Component {
+ class InputFields extends Component {
   
   constructor(props) {
     super(props);
@@ -47,8 +47,7 @@ function getSubmittedValue(name, getValue, currentDeviceName){
 
   handleSubmit(event) {
     event.preventDefault()
-    var re = /^[a-z][a-z\s]*$/;
-    if(this.props.name === 'DevString' && this.state.value.match(re)){
+    if(this.props.name === 'DevString'){
       this.props.submitCommand(this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
     } if(this.props.name === 'DevBoolean' && (this.state.value ==="true" || (this.state.value === "false"))){
         this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
