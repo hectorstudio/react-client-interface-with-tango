@@ -1,21 +1,26 @@
 
 import React, { Component } from 'react';
-import {  getCommandValue, getCurrentDeviceCommands, getCurrentDeviceName
+import {  getCommandValue, getCurrentDeviceCommands, getCurrentDeviceName, getCommandsDisplevel
 } from '../../selectors/devices';
 
 import { submitCommand } from '../../actions/tango';
 import { connect } from 'react-redux';
 
-const CommandsTable = ({commands, submitCommand, getValue, currentDeviceName}) => 
+var array = []
+const CommandsTable = ({commands, submitCommand, getValue, currentDeviceName, displevel}) => 
 <div>
   <table className="commands">
     <tbody>
+    <tr>
+    <DisplevelBox displevel={displevel} array={array} />
+    </tr>
     {commands && commands.map(({name, displevel, intype}, i) =>
       <tr key={i}>
         <td>{name}</td>
         <td>{displevel}</td>
         <td>{intype}</td>
-        <td><Calculator submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={intype} getValue={getValue} /></td>
+        <td>{getDisplevel(displevel, array)}</td>
+        <td><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={intype} getValue={getValue} /></td>
         <td>{getSubmittedValue(name, getValue, currentDeviceName)}</td>
       </tr>
     )}
@@ -32,7 +37,16 @@ function getSubmittedValue(name, getValue, currentDeviceName){
     }
 }
 
- class Calculator extends Component {
+function getDisplevel(displevel, array){
+  var array = array
+  const level = displevel
+  if(array.indexOf(level) == -1){
+      array.push(level)
+  }
+  console.log('TestFunction ', array)
+}
+
+ class InputField extends Component {
   
   constructor(props) {
     super(props);
@@ -75,11 +89,47 @@ function getSubmittedValue(name, getValue, currentDeviceName){
   }
 }
 
+class DisplevelBox extends Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+        isGoing: true,
+      };
+      this.handleInputChange = this.handleInputChange.bind(this);
+  }
+  handleInputChange(event) {
+      const target = event.target;
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      const name = target.name;
+  
+      this.setState({
+        [name]: value
+      });
+    }
+
+  render() {
+  var array =this.props.array
+  const level = JSON.stringify(this.props.displevel)
+  if(array.indexOf(level) == -1){
+      array.push(level)
+  }
+  console.log('Test ', array)
+  var i;
+    return(
+      <td>
+      {array[array.length-1]}
+      <input name="isGoing" type="checkbox" checked={this.state.isGoing} onChange={this.handleInputChange} />
+    </td>
+    )
+  }
+}
+
 function mapStateToProps(state) {
     return {
         commands: getCurrentDeviceCommands(state),
         currentDeviceName: getCurrentDeviceName(state),
         getValue: getCommandValue(state),
+        displevel: getCommandsDisplevel(state)
     };
   }
 
