@@ -90,6 +90,7 @@ export function fetchDevice(name){
       query {
         devices(pattern: "${name}") {
           name
+          state
           attributes {
             name
             dataformat
