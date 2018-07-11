@@ -30,11 +30,15 @@
   },
   "proxy": {
     "/socket": {
-      "target": "ws://w-v-kitslab-web-0:5004",
+      "target": "wss://webjive.maxiv.lu.se",
+      "secure": false,
+      "changeOrigin": true, 
       "ws": true
     },
     "/db": {
-      "target": "http://w-v-kitslab-web-0:5004"
+      "target": "https://webjive.maxiv.lu.se",
+      "secure": false,
+      "changeOrigin": true
     }
   }
 }
