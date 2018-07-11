@@ -4,7 +4,7 @@ import {uri} from '../constants/websocket.js';
 import { getCurrentDevice } from '../selectors/devices';
 
 const client = require('graphql-client')({
-  url: `http://${uri}/db`
+  url: `/db`
 })
 
 function callServiceGraphQL(query) {
@@ -38,9 +38,7 @@ export function fetchDeviceNames() {
 }
 
 export function submitCommand(command, argin, device) {
-  console.log('submitCommand', command, argin)
   return (dispatch) => {
-    console.log('submitCommandTest', command, argin, device);
     callServiceGraphQL(`
     mutation {
       executeCommand(command:"${command}" device:"${device}" argin: ${argin}) {
@@ -100,6 +98,7 @@ export function fetchDevice(name){
       query {
         devices(pattern: "${name}") {
           name
+          state
           attributes {
             name
             dataformat

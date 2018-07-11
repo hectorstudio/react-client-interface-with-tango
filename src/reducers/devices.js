@@ -25,7 +25,6 @@ export default function devices(state = {
       const {command, result} = action;
       const deviceName= state.current.name
       const commandResults = {...oldCommandResults, deviceName, [command]: result};
-      console.log("result ", commandResults);
       return {...state, commandResults}
 
     case ENABLE_DISPLEVEL:

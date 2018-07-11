@@ -18,6 +18,11 @@ export const getCurrentDeviceName = createSelector(
     device => device ? device.name : null
 );
 
+export const getCurrentDeviceState = createSelector(
+    getCurrentDevice,
+    device => device ? device.state : null
+);
+
 export const getCurrentDeviceAttributes = createSelector(
     getCurrentDevice,
     device => device ? device.attributes || [] : []
@@ -81,14 +86,6 @@ export const getFilteredCurrentDeviceAttributes = createSelector(
     getCurrentDeviceAttributes,
     getActiveDataFormat,
     (attrs, format) => attrs.filter(attr => attr.dataformat === format)
-);
-
-export const getCurrentDeviceState = createSelector(
-    getCurrentDeviceAttributes,
-    (attrs) => {
-        const attr = attrs.find(attr => attr.name === 'State');
-        return attr ? attr.value : null;
-    } 
 );
 
 export const getCommandValue = createSelector(
