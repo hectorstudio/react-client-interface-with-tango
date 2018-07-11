@@ -1,145 +1,163 @@
 
 import React, { Component } from 'react';
-import {  getCommandValue, getCurrentDeviceCommands, getCurrentDeviceName, getCommandsDisplevel
+import {
+  getCommandValue, getCurrentDeviceCommands, getCurrentDeviceName, getCommandsDisplevel, getEnableDisplevels
 } from '../../selectors/devices';
 
-import { submitCommand } from '../../actions/tango';
+import { submitCommand, enableDisplevel } from '../../actions/tango';
 import { connect } from 'react-redux';
 
 var array = []
-const CommandsTable = ({commands, submitCommand, getValue, currentDeviceName, displevel}) => 
-<div>
-  <table className="commands">
-    <tbody>
-    <tr>
-    <DisplevelBox displevel={displevel} array={array} />
-    </tr>
-    {commands && commands.map(({name, displevel, intype}, i) =>
+
+const CommandsTable = ({ commands, submitCommand, getValue, currentDeviceName, enabledList, enableDisplevel }) =>
+  <div>
+    <table className="commands">
+      <tbody>
+        <tr>
+          {console.log("commandTable ", enabledList)}
+        <DisplevelBox array={array} commands={commands} enabledList={enabledList} enableDisplevel={enableDisplevel} />
+        </tr>
+        {Object.keys(enabledList).length > 0 ?
+        commands && commands.map(({ name, displevel, intype }, i) => (displevel in enabledList) &&
+          <tr key={i}>
+          <td>{name}</td>
+            <td>{displevel}</td>
+            <td>{intype}</td>
+            <td>{getDisplevel(displevel, array)}</td>
+            <td><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={intype} getValue={getValue} /></td>
+            <td>{getSubmittedValue(name, getValue, currentDeviceName)}</td>
+          </tr>
+      )  :
+      commands && commands.map(({ name, displevel, intype }, i) =>
       <tr key={i}>
-        <td>{name}</td>
+      <td>{name}</td>
         <td>{displevel}</td>
         <td>{intype}</td>
         <td>{getDisplevel(displevel, array)}</td>
         <td><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={intype} getValue={getValue} /></td>
         <td>{getSubmittedValue(name, getValue, currentDeviceName)}</td>
       </tr>
-    )}
-    </tbody>
-  </table>
-</div>;
+        )
+        }
+      </tbody>
+    </table>
+  </div>;
 
-function getSubmittedValue(name, getValue, currentDeviceName){
-    const result = getValue;
-    if(name in result && result['deviceName'] === currentDeviceName){
-        return 'Output: ' + result[name]
-    } else{
-        return "";
-    }
+class DisplevelBox extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isGoing: true,
+    };
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+
+  handleInputChange(event) {
+   // const target = event.target;
+    //const value = target.type === 'checkbox' ? target.checked : target.value;
+    //const name = target.name;
+    event.preventDefault()
+    this.props.enableDisplevel(event.target.value)
+  }
+
+  render() {
+    const listItems = array.map((name) => 
+      <tr key={name.toString()}>
+        <td>
+          <input name="isGoing" type="checkbox" value={name} onChange={this.handleInputChange} />
+          {name}
+        </td>
+      </tr>
+    );
+    return(
+      listItems 
+
+   )   
+
+  }
+
 }
 
-function getDisplevel(displevel, array){
+function getSubmittedValue(name, getValue, currentDeviceName) {
+  const result = getValue;
+  if (typeof result !== 'undefined' && name in result && result['deviceName'] === currentDeviceName) {
+    return 'Output: ' + result[name]
+  } else {
+    return "";
+  }
+}
+
+function getDisplevel(displevel, array) {
   var array = array
   const level = displevel
-  if(array.indexOf(level) == -1){
-      array.push(level)
+  if (array.indexOf(level) == -1) {
+    array.push(level)
   }
-  console.log('TestFunction ', array)
 }
 
- class InputField extends Component {
-  
+class InputField extends Component {
+
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = {value: ''};
+    this.state = { value: '' };
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value});
+    this.setState({ value: event.target.value });
   }
 
   handleSubmit(event) {
     event.preventDefault()
     var re = /^[a-z][a-z\s]*$/;
-    if(this.props.name === 'DevString' && this.state.value.match(re)){
+    if (this.props.name === 'DevString' && this.state.value.match(re)) {
       this.props.submitCommand(this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
-    } if(this.props.name === 'DevBoolean' && (this.state.value ==="true" || (this.state.value === "false"))){
-        this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
-    }else{
-        this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
+    } if (this.props.name === 'DevBoolean' && (this.state.value === "true" || (this.state.value === "false"))) {
+      this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
+    } else {
+      this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
     }
     this.setState({
-        value: ''
-      });
+      value: ''
+    });
   }
 
   render() {
-    if(this.props.name === 'DevVoid'){
+    if (this.props.name === 'DevVoid') {
       return "";
     }
-    else{
-    return (
-      <form onSubmit={this.handleSubmit}>
+    else {
+      return (
+        <form onSubmit={this.handleSubmit}>
           <input type="text" value={this.state.value} onChange={this.handleChange} />
-        <input type="submit" value="Submit" />
-      </form>
-    );
-  }
-  }
-}
-
-class DisplevelBox extends Component {
-  constructor(props) {
-      super(props);
-      this.state = {
-        isGoing: true,
-      };
-      this.handleInputChange = this.handleInputChange.bind(this);
-  }
-  handleInputChange(event) {
-      const target = event.target;
-      const value = target.type === 'checkbox' ? target.checked : target.value;
-      const name = target.name;
-  
-      this.setState({
-        [name]: value
-      });
+          <input type="submit" value="Submit" />
+        </form>
+      );
     }
-
-  render() {
-  var array =this.props.array
-  const level = JSON.stringify(this.props.displevel)
-  if(array.indexOf(level) == -1){
-      array.push(level)
-  }
-  console.log('Test ', array)
-  var i;
-    return(
-      <td>
-      {array[array.length-1]}
-      <input name="isGoing" type="checkbox" checked={this.state.isGoing} onChange={this.handleInputChange} />
-    </td>
-    )
   }
 }
+
 
 function mapStateToProps(state) {
-    return {
-        commands: getCurrentDeviceCommands(state),
-        currentDeviceName: getCurrentDeviceName(state),
-        getValue: getCommandValue(state),
-        displevel: getCommandsDisplevel(state)
-    };
-  }
+  return {
+    commands: getCurrentDeviceCommands(state),
+    currentDeviceName: getCurrentDeviceName(state),
+    getValue: getCommandValue(state),
+    displevel: getCommandsDisplevel(state),
+    enabledList: getEnableDisplevels(state)
+  };
+}
 
 function mapDispatchToProps(dispatch) {
-    return {
-        submitCommand: (command, value, device) => dispatch(submitCommand(command, value, device))
+  return {
+    submitCommand: (command, value, device) => dispatch(submitCommand(command, value, device)),
+    enableDisplevel: (displevel) => dispatch(enableDisplevel(displevel))
   };
 }
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
+  mapStateToProps,
+  mapDispatchToProps,
 )(CommandsTable);

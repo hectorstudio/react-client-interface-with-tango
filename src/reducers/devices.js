@@ -1,5 +1,5 @@
 import {
-  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS,
+  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS, ENABLE_DISPLEVEL, DISABLE_DISPLEVEL,
   FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB, EXECUTE_COMMAND_COMPLETE
 } from '../actions/actionTypes';
 
@@ -11,6 +11,7 @@ export default function devices(state = {
   loadingNames: false,
   loadingDevice: false,
   commandResults: {},
+  enabledDisplevels: [],
 }, action) {
   switch (action.type) {
     
@@ -26,6 +27,19 @@ export default function devices(state = {
       const commandResults = {...oldCommandResults, deviceName, [command]: result};
       console.log("result ", commandResults);
       return {...state, commandResults}
+
+    case ENABLE_DISPLEVEL:
+      const oldDisplevel = state.enabledDisplevels;
+      const{displevel} = action;
+      var enabledDisplevels = {...oldDisplevel, [displevel]: displevel};
+      console.log("enabledDisplevels ", enabledDisplevels);
+      return {...state, enabledDisplevels};
+
+    case DISABLE_DISPLEVEL:
+      state.enabledDisplevels.splice(state.enabledDisplevels.indexOf(displevel), 1);
+      enabledDisplevels = state.enabledDisplevels;
+      console.log("disabledDisplevels ", enabledDisplevels);
+      return {...state, enabledDisplevels};
 
     case FETCH_DEVICE:
       return {...state, loadingDevice: true};

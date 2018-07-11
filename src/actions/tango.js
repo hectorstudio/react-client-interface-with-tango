@@ -78,6 +78,14 @@ export function subscribeDevice(device, emit){
   emit("SUBSCRIBE", models);
 }
 
+export function enableDisplevel(displevel){
+  return dispatch => dispatch({type: types.ENABLE_DISPLEVEL, displevel})
+}
+
+export function disableDisplevel(displevel){
+  return dispatch => dispatch({type: types.ENABLE_DISPLEVEL, displevel})
+}
+
 export function fetchDeviceSuccess(device, dispatch, emit) {
   // Here we subscribe to the scalar values
   subscribeDevice(device, emit);

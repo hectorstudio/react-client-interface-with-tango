@@ -104,3 +104,8 @@ export const getCommandsDisplevel = createSelector(
      }
 );
 
+export const getEnableDisplevels = createSelector(
+    getDevicesState,
+    state => state.enabledDisplevels
+);
+
