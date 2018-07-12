@@ -31,7 +31,7 @@ const DeviceEntry: StatelessComponent<IDeviceEntryProps> = ({name, isSelected}) 
 
 interface IValueProps {
   deviceNames: string[],
-  currentDeviceName: string,
+  currentDeviceName?: string,
   hasDevices: boolean,
   filter: string,
   loading: boolean,

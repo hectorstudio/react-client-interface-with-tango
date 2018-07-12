@@ -1,7 +1,10 @@
 import { createSelector } from 'reselect';
 import { getFilter } from './filtering';
+import { IDevicesState } from '../reducers/devices';
 
-const getDevicesState = state => state.devices;
+function getDevicesState(state): IDevicesState {
+    return state.devices;
+}
 
 export const getDeviceNames = createSelector(
     getDevicesState,
@@ -15,12 +18,12 @@ export const getCurrentDevice = createSelector(
 
 export const getCurrentDeviceName = createSelector(
     getCurrentDevice,
-    device => device ? device.name : null
+    device => device ? device.name : undefined
 );
 
 export const getCurrentDeviceState = createSelector(
     getCurrentDevice,
-    device => device ? device.state : null
+    device => device ? device.state : undefined
 );
 
 export const getCurrentDeviceAttributes = createSelector(
