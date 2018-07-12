@@ -47,7 +47,7 @@ type IDeviceListProps = IValueProps & IHandlerProps;
 class DeviceList extends Component<IDeviceListProps> {
   public constructor(props: IDeviceListProps) {
     super(props);
-    this.handleTextChange.bind(this);
+    this.handleTextChange = this.handleTextChange.bind(this);
   }
 
   public componentWillMount() {
