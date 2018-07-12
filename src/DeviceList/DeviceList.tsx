@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
@@ -16,7 +16,12 @@ import {
 
 import './DeviceList.css';
 
-const DeviceEntry = ({name, isSelected}) => (
+interface IDeviceEntryProps {
+  name: string,
+  isSelected: boolean,
+}
+
+const DeviceEntry: React.SFC<IDeviceEntryProps> = ({name, isSelected}) => (
   <Link to={'/devices/'+name}>
     <div className={classNames('entry', {selected: isSelected})}>
       {name}
@@ -24,16 +29,32 @@ const DeviceEntry = ({name, isSelected}) => (
   </Link>
 );
 
-class DeviceList extends React.Component {
-  componentWillMount() {
-    this.props.fetchDeviceNames();
+interface IValueProps {
+  deviceNames: string[],
+  currentDeviceName: string,
+  hasDevices: boolean,
+  filter: string,
+  loading: boolean,
+}
+
+interface IHandlerProps {
+  onFetchDeviceNames: () => void,
+  onSetFilter: (filter: string) => void,
+}
+
+type IDeviceListProps = IValueProps & IHandlerProps;
+
+class DeviceList extends Component<IDeviceListProps> {
+  public constructor(props: IDeviceListProps) {
+    super(props);
+    this.handleTextChange.bind(this);
   }
 
-  handleTextChange(event) {
-    this.props.setFilter(event.target.value);
+  public componentWillMount() {
+    this.props.onFetchDeviceNames();
   }
   
-  render() {
+  public render() {
     const entries = this.props.deviceNames.map((name, i) =>
       <DeviceEntry
         isSelected={name === this.props.currentDeviceName}
@@ -43,9 +64,8 @@ class DeviceList extends React.Component {
 
     return (
       <div className="device-list">
-        {this.props.selectedDevice}
         <div className="search">
-          <input type="text" placeholder="Search" value={this.props.filter} onChange={event => this.handleTextChange(event)} />
+          <input type="text" placeholder="Search" value={this.props.filter} onChange={this.handleTextChange} />
         </div>
         <div className="list">
         {this.props.loading && entries}
@@ -53,9 +73,13 @@ class DeviceList extends React.Component {
       </div>
     );
   }
+
+  private handleTextChange(event) {
+    this.props.onSetFilter(event.target.value);
+  }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state): IValueProps {
   return {
     deviceNames: getFilteredDeviceNames(state),
     currentDeviceName: getCurrentDeviceName(state),
@@ -65,10 +89,10 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch): IHandlerProps {
   return {
-    fetchDeviceNames: () => dispatch(fetchDeviceNames()),
-    setFilter: filter => dispatch(setDeviceFilter(filter)),
+    onFetchDeviceNames: () => dispatch(fetchDeviceNames()),
+    onSetFilter: filter => dispatch(setDeviceFilter(filter)),
   };
 }
 

@@ -13,6 +13,7 @@
     "no-string-literal": false
   },
   "rules": {
-    "ordered-imports": false
+    "ordered-imports": false,
+    "object-literal-sort-keys": false
   }
 }
