@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, StatelessComponent } from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
@@ -21,7 +21,7 @@ interface IDeviceEntryProps {
   isSelected: boolean,
 }
 
-const DeviceEntry: React.SFC<IDeviceEntryProps> = ({name, isSelected}) => (
+const DeviceEntry: StatelessComponent<IDeviceEntryProps> = ({name, isSelected}) => (
   <Link to={'/devices/'+name}>
     <div className={classNames('entry', {selected: isSelected})}>
       {name}
