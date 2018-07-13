@@ -13,8 +13,9 @@ class CommandsTable extends Component {
 const {commands, submitCommand, getValue, currentDeviceName, displevels, enabledList, enableDisplevel, disableDisplevel } = this.props;
  return(
  <div>
+   {displevels.length > 1 &&
     <DisplevelBox displevels={displevels} enabledList={enabledList} enableDisplevel={enableDisplevel} disableDisplevel={disableDisplevel} />
-    
+  }
     <table className="commands">
       <tbody>
         {commands && commands.map(({ name, displevel, intype }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
@@ -44,7 +45,7 @@ class DisplevelBox extends Component {
 
   render() {
     const inputs = this.props.displevels.map((name, i) => 
-      <span class="checkboxes">
+      <span className="checkboxes">
       <label>
         <input key={i} type="checkbox" checked={this.props.enabledList.indexOf(name) !== -1} onChange={this.handleInputChange.bind(this, name)} /> 
         {name}
@@ -52,7 +53,7 @@ class DisplevelBox extends Component {
       </span>
     );
 
-    return <span class="layout">
+    return <span className="layout">
       {inputs}
     </span>;
   }
