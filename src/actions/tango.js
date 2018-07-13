@@ -1,7 +1,6 @@
 import * as types from './actionTypes';
 import { displayError } from './ui';
 import {uri} from '../constants/websocket.js';
-import { getCurrentDevice } from '../selectors/devices';
 
 const client = require('graphql-client')({
   url: `/db`
@@ -74,6 +73,18 @@ export function subscribeDevice(device, emit){
     }
   })
   emit("SUBSCRIBE", models);
+}
+
+export function enableDisplevel(displevel){
+  return dispatch => dispatch({type: types.ENABLE_DISPLEVEL, displevel})
+}
+
+export function disableDisplevel(displevel){
+  return dispatch => dispatch({type: types.DISABLE_DISPLEVEL, displevel})
+}
+
+export function enableAllDisplevel(){
+  return dispatch => dispatch({type: types.ENABLE_ALL_DISPLEVEL})
 }
 
 export function fetchDeviceSuccess(device, dispatch, emit) {
