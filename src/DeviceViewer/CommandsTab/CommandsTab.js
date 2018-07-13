@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import {
-  getCommandValue, getCurrentDeviceCommands, getCurrentDeviceName, getCommandsDisplevel, getEnableDisplevels, getCommandDisplevels
+  getCommandValue, getCurrentDeviceCommands, getCurrentDeviceName, getEnableDisplevels, getCommandDisplevels
 } from '../../selectors/devices';
 
 import { submitCommand, enableDisplevel, disableDisplevel, enableAllDisplevel } from '../../actions/tango';
