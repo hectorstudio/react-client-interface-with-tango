@@ -79,7 +79,7 @@ class DeviceList extends Component<IDeviceListProps> {
   }
 }
 
-function mapStateToProps(state): IValueProps {
+function mapStateToProps(state) {
   return {
     deviceNames: getFilteredDeviceNames(state),
     currentDeviceName: getCurrentDeviceName(state),
@@ -89,14 +89,14 @@ function mapStateToProps(state): IValueProps {
   };
 }
 
-function mapDispatchToProps(dispatch): IHandlerProps {
+function mapDispatchToProps(dispatch) {
   return {
     onFetchDeviceNames: () => dispatch(fetchDeviceNames()),
     onSetFilter: filter => dispatch(setDeviceFilter(filter)),
   };
 }
 
-export default connect(
+export default connect<IValueProps, IHandlerProps>(
   mapStateToProps,
   mapDispatchToProps
 )(DeviceList);
