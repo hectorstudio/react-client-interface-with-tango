@@ -96,3 +96,23 @@ export const getCommandValue = createSelector(
     state => state.commandResults
 );
 
+export const getCommandDisplevels = createSelector(
+    getCurrentDeviceCommands,
+    commands => Object.keys(commands
+        .map(command => command.displevel)
+        .reduce((accum, displevel) => ({...accum, [displevel]: true}), {}))
+
+    /*commands => Object.keys(
+        commands
+            .map(command => command.displevel)
+            .reduce((accum, curr) => (
+                {...accum, [curr]: true}
+            , {})
+    ))*/
+);
+
+export const getEnableDisplevels = createSelector(
+    getDevicesState,
+    state => state.enabledDisplevels
+);
+

@@ -1,5 +1,5 @@
 import {
-  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS,
+  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS, ENABLE_DISPLEVEL, DISABLE_DISPLEVEL,
   FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB, EXECUTE_COMMAND_COMPLETE
 } from '../actions/actionTypes';
 
@@ -16,6 +16,7 @@ interface IDeviceProperty {
 
 interface IDeviceCommand {
   name: string,
+  displevel: string,
 }
 
 interface IDevice {
@@ -34,6 +35,11 @@ export interface IDevicesState {
   loadingNames: boolean,
   loadingDevice: boolean,
   commandResults: any, // TODO
+  enabledDisplevels: string[],
+}
+
+function unique(list) {
+  return list.filter((x, i) => list.indexOf(x) === i);
 }
 
 export default function devices(state: IDevicesState = {
@@ -42,6 +48,7 @@ export default function devices(state: IDevicesState = {
   loadingNames: false,
   loadingDevice: false,
   commandResults: {},
+  enabledDisplevels: [],
 }, action) {
   switch (action.type) {
     
@@ -57,17 +64,32 @@ export default function devices(state: IDevicesState = {
       const commandResults = {...oldCommandResults, deviceName, [command]: result};
       return {...state, commandResults}
 
+    case ENABLE_DISPLEVEL: {
+      const {displevel} = action;
+      const enabledDisplevels = state.enabledDisplevels.concat(displevel);
+      return {...state, enabledDisplevels};
+    }
+
+    case DISABLE_DISPLEVEL: {
+      const {displevel} = action;
+      const enabledDisplevels = state.enabledDisplevels.filter(level => level !== displevel);
+      return {...state, enabledDisplevels};
+    }
+
     case FETCH_DEVICE:
       return {...state, loadingDevice: true};
+    
     case FETCH_DEVICE_SUCCESS: {
-      const {device: {attributes}} = action;
+      const {device: {attributes, commands}} = action;
       const hasAttrs = attributes && attributes.length > 0;
+      const enabledDisplevels = unique(commands.map(cmd => cmd.displevel));
 
       return {
         ...state,
         current: action.device,
         loadingDevice: false,
-        activeDataFormat: hasAttrs ? attributes[0].dataformat : null
+        activeDataFormat: hasAttrs ? attributes[0].dataformat : null,
+        enabledDisplevels
       };
     }
 
