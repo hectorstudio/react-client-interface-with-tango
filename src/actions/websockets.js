@@ -27,9 +27,11 @@ export const init = ( store ) => {
 	    if (data.events.CHANGE && data){
 	    	store.dispatch(receiveChange(data.events.CHANGE))
 	    }
-	    if (data.events.CONFIG && data){
+	    /*
+		if (data.events.CONFIG && data){
 	    	
-	    }
+		}
+		*/
 	});
 };
 

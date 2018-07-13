@@ -6,14 +6,16 @@ import { emit, init as websocketInit } from '../actions/websockets'
 
 import rootReducer from '../reducers/rootReducer';
 
-const logger = createLogger({});
-
 export default function configureStore() {
-  
+  const {__REDUX_DEVTOOLS_EXTENSION__} = window as any;
+
   const store = createStore(
     rootReducer,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-    applyMiddleware(thunk.withExtraArgument({ emit }), logger)
+    __REDUX_DEVTOOLS_EXTENSION__ && __REDUX_DEVTOOLS_EXTENSION__(),
+    applyMiddleware(
+      thunk.withExtraArgument({ emit }),
+      createLogger({})
+    )
   );
   websocketInit( store );
 
