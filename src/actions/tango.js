@@ -1,7 +1,6 @@
 import * as types from './actionTypes';
 import { displayError } from './ui';
 import {uri} from '../constants/websocket.js';
-import { getCurrentDevice } from '../selectors/devices';
 
 const client = require('graphql-client')({
   url: `/db`
