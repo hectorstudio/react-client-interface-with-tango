@@ -81,7 +81,11 @@ export function enableDisplevel(displevel){
 }
 
 export function disableDisplevel(displevel){
-  return dispatch => dispatch({type: types.ENABLE_DISPLEVEL, displevel})
+  return dispatch => dispatch({type: types.DISABLE_DISPLEVEL, displevel})
+}
+
+export function enableAllDisplevel(){
+  return dispatch => dispatch({type: types.ENABLE_ALL_DISPLEVEL})
 }
 
 export function fetchDeviceSuccess(device, dispatch, emit) {
