@@ -1,82 +1,61 @@
 
 import React, { Component } from 'react';
 import {
-  getCommandValue, getCurrentDeviceCommands, getCurrentDeviceName, getCommandsDisplevel, getEnableDisplevels
+  getCommandValue, getCurrentDeviceCommands, getCurrentDeviceName, getCommandsDisplevel, getEnableDisplevels, getCommandDisplevels
 } from '../../selectors/devices';
 
-import { submitCommand, enableDisplevel } from '../../actions/tango';
+import { submitCommand, enableDisplevel, disableDisplevel, enableAllDisplevel } from '../../actions/tango';
 import { connect } from 'react-redux';
+import './CommandsTab.css';
 
-var array = []
-
-const CommandsTable = ({ commands, submitCommand, getValue, currentDeviceName, enabledList, enableDisplevel }) =>
-  <div>
+class CommandsTable extends Component {
+  render(){
+const {commands, submitCommand, getValue, currentDeviceName, displevels, enabledList, enableDisplevel, disableDisplevel } = this.props;
+ return(
+ <div>
+    <DisplevelBox displevels={displevels} enabledList={enabledList} enableDisplevel={enableDisplevel} disableDisplevel={disableDisplevel} />
+    
     <table className="commands">
       <tbody>
-        <tr>
-          {console.log("commandTable ", enabledList)}
-        <DisplevelBox array={array} commands={commands} enabledList={enabledList} enableDisplevel={enableDisplevel} />
-        </tr>
-        {Object.keys(enabledList).length > 0 ?
-        commands && commands.map(({ name, displevel, intype }, i) => (displevel in enabledList) &&
+        {commands && commands.map(({ name, displevel, intype }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
           <tr key={i}>
-          <td>{name}</td>
-            <td>{displevel}</td>
+            <td>{name}</td>
             <td>{intype}</td>
-            <td>{getDisplevel(displevel, array)}</td>
             <td><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={intype} getValue={getValue} /></td>
             <td>{getSubmittedValue(name, getValue, currentDeviceName)}</td>
           </tr>
-      )  :
-      commands && commands.map(({ name, displevel, intype }, i) =>
-      <tr key={i}>
-      <td>{name}</td>
-        <td>{displevel}</td>
-        <td>{intype}</td>
-        <td>{getDisplevel(displevel, array)}</td>
-        <td><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={intype} getValue={getValue} /></td>
-        <td>{getSubmittedValue(name, getValue, currentDeviceName)}</td>
-      </tr>
-        )
-        }
+      ) }
       </tbody>
     </table>
-  </div>;
+  </div>
+ )
+  }
+      }
 
 class DisplevelBox extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isGoing: true,
-    };
-    this.handleInputChange = this.handleInputChange.bind(this);
-  }
 
-
-  handleInputChange(event) {
-   // const target = event.target;
-    //const value = target.type === 'checkbox' ? target.checked : target.value;
-    //const name = target.name;
-    event.preventDefault()
-    this.props.enableDisplevel(event.target.value)
+  handleInputChange(name, e) {
+    if (e.target.checked) {
+      this.props.enableDisplevel(name);
+    } else {
+      this.props.disableDisplevel(name);
+    }
   }
 
   render() {
-    const listItems = array.map((name) => 
-      <tr key={name.toString()}>
-        <td>
-          <input name="isGoing" type="checkbox" value={name} onChange={this.handleInputChange} />
-          {name}
-        </td>
-      </tr>
+    const inputs = this.props.displevels.map((name, i) => 
+      <span class="checkboxes">
+      <label>
+        <input key={i} type="checkbox" checked={this.props.enabledList.indexOf(name) !== -1} onChange={this.handleInputChange.bind(this, name)} /> 
+        {name}
+        </label>
+      </span>
     );
-    return(
-      listItems 
 
-   )   
-
+    return <span class="layout">
+      {inputs}
+    </span>;
   }
-
 }
 
 function getSubmittedValue(name, getValue, currentDeviceName) {
@@ -88,13 +67,6 @@ function getSubmittedValue(name, getValue, currentDeviceName) {
   }
 }
 
-function getDisplevel(displevel, array) {
-  var array = array
-  const level = displevel
-  if (array.indexOf(level) == -1) {
-    array.push(level)
-  }
-}
 
 class InputField extends Component {
 
@@ -145,7 +117,7 @@ function mapStateToProps(state) {
     commands: getCurrentDeviceCommands(state),
     currentDeviceName: getCurrentDeviceName(state),
     getValue: getCommandValue(state),
-    displevel: getCommandsDisplevel(state),
+    displevels: getCommandDisplevels(state),
     enabledList: getEnableDisplevels(state)
   };
 }
@@ -153,7 +125,10 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     submitCommand: (command, value, device) => dispatch(submitCommand(command, value, device)),
-    enableDisplevel: (displevel) => dispatch(enableDisplevel(displevel))
+    enableDisplevel: (displevel) => dispatch(enableDisplevel(displevel)),
+    disableDisplevel: (displevel) => dispatch(disableDisplevel(displevel)),
+    allDisplevel: (device) => dispatch(enableAllDisplevel(device))
+
   };
 }
 
