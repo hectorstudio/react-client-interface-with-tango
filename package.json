@@ -13,28 +13,41 @@
     "react-redux": "5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.4",
+    "react-scripts-ts": "2.16.0",
     "recharts": "^1.0.0-beta.10",
-    "redux": "4.0.0",
+    "redux": "^3.7.2",
     "redux-thunk": "2.2.0",
     "reselect": "^3.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "test": "react-scripts-ts test --env=jsdom",
+    "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
-    "redux-logger": "^3.0.6"
+    "@types/jest": "^23.1.5",
+    "@types/query-string": "^6.1.0",
+    "@types/react": "^16.4.6",
+    "@types/react-dom": "^16.0.6",
+    "@types/react-redux": "^6.0.4",
+    "@types/react-router-dom": "^4.2.7",
+    "@types/redux-logger": "^3.0.6",
+    "redux-logger": "^3.0.6",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.2"
   },
   "proxy": {
     "/socket": {
-      "target": "ws://w-v-kitslab-web-0:5004",
+      "target": "wss://webjive.maxiv.lu.se",
+      "secure": false,
+      "changeOrigin": true,
       "ws": true
     },
     "/db": {
-      "target": "http://w-v-kitslab-web-0:5004"
+      "target": "https://webjive.maxiv.lu.se",
+      "secure": false,
+      "changeOrigin": true
     }
   }
 }
