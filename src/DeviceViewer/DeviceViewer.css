@@ -28,49 +28,12 @@
     padding-right: 2em;
 }
 
-
-.device-menu .tab-chooser{
-    background-color: #5d5d5d;
-}
-
-.device-menu .format-chooser{
-    background-color: #9e9e9e;
-}
-
-
-.device-header{
+.device-header {
     background-color: black;
     color: white;
     font-size: 2em;
     text-align: center;
     vertical-align: middle;
-}
-
-.device-viewer .chooser {
-    list-style-type: none;
-    margin-bottom: 0;
-    padding-left: 0;
-}
-
-.device-viewer .chooser li {
-    display: inline-block;
-    border: 1px solid gray;
-    padding: 0.5em;
-    color: white;
-}
-
-.device-viewer .chooser li:hover {
-    cursor: pointer;
-    border-bottom: 4px solid #c1dd8c;
-}
-
-.device-viewer .chooser li.active:hover {
-    border-bottom: 4px solid #c1dd8c;
-}
-
-.device-viewer .chooser li.active {
-    border-bottom: none;
-    border-bottom: 4px solid #8abf26;
 }
 
 .device-viewer .no-value {
@@ -152,4 +115,9 @@
 }
 .device-viewer .state-unknown {
 	color: black;
+}
+
+.device-menu ul {
+    margin-top: 0.5em;
+    margin-left: 0.5em;
 }

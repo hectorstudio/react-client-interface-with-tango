@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
+import classNames from 'classnames';
+
 import CommandsTable from './CommandsTab/CommandsTab';
 
 import { fetchDevice, submitCommand } from '../actions/tango';
@@ -106,31 +108,38 @@ const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) 
 
 
 class DeviceMenu extends Component {
-
   render() {
-      const {properties, attributes, dataFormat, dataFormats, onSetDataFormat, onSetTab, selectedTab} = this.props;
+    const {properties, attributes, commands, dataFormat, dataFormats, onSetDataFormat, onSetTab, selectedTab} = this.props;
 
-      const hasAttrs = attributes.length > 0;
-      const hasProps = properties.length > 0;
+    const hasAttrs = attributes.length > 0;
+    const hasProps = properties.length > 0;
+    const hasCommands = commands.length > 0;
 
-      const dataTabs = selectedTab === "attributes" ?
-
-      <ul className="format-chooser chooser">
-            {dataFormats.map((format, i) =>
-              <li
-                className={format === dataFormat ? 'active' : ''}
-                key={i} onClick={() => onSetDataFormat(format)}>
-                  {format}
-                </li>
-            )}
+    const dataTabs = selectedTab === "attributes" ?
+      <ul className='nav nav-pills format-chooser'>
+        {dataFormats.map((format, i) =>
+          <li
+            className='nav-item'
+            key={i} onClick={() => onSetDataFormat(format)}>
+            <a className={classNames('nav-link', {active: format === dataFormat})} href='#'>
+              {format}
+            </a>
+          </li>
+        )}
       </ul> : null;
+
+    const Tab = ({name, title}) => <li className='nav-item'>
+      <a href={`#${name}`} className={classNames('nav-link', {active: selectedTab === name})} onClick={() => onSetTab(name)}>
+        {title}
+      </a>
+    </li>;
 
     return hasAttrs && hasProps
       ? <div className="device-menu">
-          <ul className="tab-chooser chooser">
-            {<li className={selectedTab === "attributes" ? 'active' : ''} onClick={() => onSetTab("attributes")}>Attributes</li>}
-            {hasProps > 0 && <li className={selectedTab === "properties" ? 'active' : ''} onClick={() => onSetTab("properties")}>Properties</li>}
-            {<li className={selectedTab === "commands" ? 'active' : ''} onClick={() => onSetTab("commands")}>Commands</li>}
+          <ul className='nav nav-tabs section-chooser'>
+            {hasProps && <Tab name='properties' title='Properties'/>}
+            {hasAttrs && <Tab name='attributes' title='Attributes'/>}
+            {hasCommands && <Tab name='commands' title='Commands'/>}
           </ul>
           {dataTabs}
         </div>
@@ -201,32 +210,32 @@ class DeviceViewer extends Component {
     
     const content = loading 
       ? <Spinner/>
-      : (<div>
-        <div className="device-header">
-        <QualityIndicator state={currentState}/>
-        {this.parseDevice(this.props)}
-        </div>
-        <DeviceMenu
-          attributes={attributes}
-          properties={properties}
-          commands={commands}
-          dataFormats={dataFormats}
-          dataFormat={dataFormat}
-          selectedTab={activeTab}
-          onSetDataFormat={selectDataFormat}
-          onSetTab={selectTab}
-        />
-        <DeviceTables
-          submitCommand={this.props.submitCommand}
-          getValue= {this.props.getCommandValue}
-          attributes={attributes}
-          properties={properties}
-          commands={commands}
-          dataFormats={dataFormats}
-          dataFormat={dataFormat}
-          selectedTab={activeTab}
-        />
-        </div>);
+      : <div>
+          <div className="device-header">
+            <QualityIndicator state={currentState}/>
+            {this.parseDevice(this.props)}
+          </div>
+          <DeviceMenu
+            attributes={attributes}
+            properties={properties}
+            commands={commands}
+            dataFormats={dataFormats}
+            dataFormat={dataFormat}
+            selectedTab={activeTab}
+            onSetDataFormat={selectDataFormat}
+            onSetTab={selectTab}
+          />
+          <DeviceTables
+            submitCommand={this.props.submitCommand}
+            getValue= {this.props.getCommandValue}
+            attributes={attributes}
+            properties={properties}
+            commands={commands}
+            dataFormats={dataFormats}
+            dataFormat={dataFormat}
+            selectedTab={activeTab}
+          />
+        </div>;
         
     return (
       <div className="device-viewer">
