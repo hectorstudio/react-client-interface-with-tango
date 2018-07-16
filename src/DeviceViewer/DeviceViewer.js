@@ -126,15 +126,15 @@ class DeviceMenu extends Component {
         )}
       </ul> : null;
 
-    const Tab = ({name, title}) => <li
-      className={classNames('nav-items', {active: selectedTab === name})}
-      onClick={() => onSetTab(name)}>
-      {title}
+    const Tab = ({name, title}) => <li className='nav-item'>
+      <a href={`#${name}`} className={classNames('nav-link', {active: selectedTab === name})} onClick={() => onSetTab(name)}>
+        {title}
+      </a>
     </li>;
 
     return hasAttrs && hasProps
       ? <div className="device-menu">
-          <ul className="tab-chooser chooser">
+          <ul className='nav nav-pills'>
             {hasProps && <Tab name='properties' title='Properties'/>}
             {hasAttrs && <Tab name='attributes' title='Attributes'/>}
             {hasCommands && <Tab name='commands' title='Commands'/>}
