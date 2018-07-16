@@ -16,7 +16,7 @@
 
 .layout {
     text-align:left;
-    border: 1px solid #8abf26;
+    border: 1px solid #007bff; /* Bootstrap primary colour */
     padding: 10px;
     border-radius: 7px;
    }
