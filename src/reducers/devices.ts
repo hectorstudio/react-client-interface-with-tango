@@ -82,7 +82,8 @@ export default function devices(state: IDevicesState = {
     case FETCH_DEVICE_SUCCESS: {
       const {device: {attributes, commands}} = action;
       const hasAttrs = attributes && attributes.length > 0;
-      const enabledDisplevels = unique(commands.map(cmd => cmd.displevel));
+      const hasCommands = commands && commands.length > 0;
+      const enabledDisplevels = hasCommands ? unique(commands.map(cmd => cmd.displevel)) : [];
 
       return {
         ...state,
