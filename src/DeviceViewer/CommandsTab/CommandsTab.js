@@ -103,7 +103,7 @@ class InputField extends Component {
       return (
         <div class="input-group">
           <select class="custom-select" id="inputGroupSelect04" value={this.state.value} onChange={this.handleChange}>
-            <option selected>Choose...</option>
+            <option value="" selected disabled hidden>Choose...</option>
             <option value="true">True</option>
             <option value="false">False</option>
           </select>
