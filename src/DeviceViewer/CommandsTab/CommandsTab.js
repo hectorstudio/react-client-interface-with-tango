@@ -101,21 +101,22 @@ class InputField extends Component {
     }
     else if (this.props.name === 'DevBoolean') {
       return (
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
-          </div>
-          <select class="custom-select" id="inputGroupSelect03" value={this.state.value} onChange={this.handleChange}>
+        <div class="input-group">
+          <select class="custom-select" id="inputGroupSelect04" value={this.state.value} onChange={this.handleChange}>
             <option selected>Choose...</option>
             <option value="true">True</option>
             <option value="false">False</option>
           </select>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
+          </div>
         </div>
+
       )
     }
     else {
       return (
-        <div class="input-group mb-3">
+        <div class="input-group">
           <input type="text" class="form-control" value={this.state.value} onChange={this.handleChange} />
           <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
