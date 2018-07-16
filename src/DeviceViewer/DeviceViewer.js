@@ -116,12 +116,14 @@ class DeviceMenu extends Component {
     const hasCommands = commands.length > 0;
 
     const dataTabs = selectedTab === "attributes" ?
-      <ul className="format-chooser chooser">
+      <ul className='nav nav-pills format-chooser'>
         {dataFormats.map((format, i) =>
           <li
-            className={format === dataFormat ? 'active' : ''}
+            className='nav-item'
             key={i} onClick={() => onSetDataFormat(format)}>
-            {format}
+            <a className={classNames('nav-link', {active: format === dataFormat})} href='#'>
+              {format}
+            </a>
           </li>
         )}
       </ul> : null;
@@ -134,7 +136,7 @@ class DeviceMenu extends Component {
 
     return hasAttrs && hasProps
       ? <div className="device-menu">
-          <ul className='nav nav-pills'>
+          <ul className='nav nav-tabs section-chooser'>
             {hasProps && <Tab name='properties' title='Properties'/>}
             {hasAttrs && <Tab name='attributes' title='Attributes'/>}
             {hasCommands && <Tab name='commands' title='Commands'/>}
@@ -208,32 +210,32 @@ class DeviceViewer extends Component {
     
     const content = loading 
       ? <Spinner/>
-      : (<div>
-        <div className="device-header">
-        <QualityIndicator state={currentState}/>
-        {this.parseDevice(this.props)}
-        </div>
-        <DeviceMenu
-          attributes={attributes}
-          properties={properties}
-          commands={commands}
-          dataFormats={dataFormats}
-          dataFormat={dataFormat}
-          selectedTab={activeTab}
-          onSetDataFormat={selectDataFormat}
-          onSetTab={selectTab}
-        />
-        <DeviceTables
-          submitCommand={this.props.submitCommand}
-          getValue= {this.props.getCommandValue}
-          attributes={attributes}
-          properties={properties}
-          commands={commands}
-          dataFormats={dataFormats}
-          dataFormat={dataFormat}
-          selectedTab={activeTab}
-        />
-        </div>);
+      : <div>
+          <div className="device-header">
+            <QualityIndicator state={currentState}/>
+            {this.parseDevice(this.props)}
+          </div>
+          <DeviceMenu
+            attributes={attributes}
+            properties={properties}
+            commands={commands}
+            dataFormats={dataFormats}
+            dataFormat={dataFormat}
+            selectedTab={activeTab}
+            onSetDataFormat={selectDataFormat}
+            onSetTab={selectTab}
+          />
+          <DeviceTables
+            submitCommand={this.props.submitCommand}
+            getValue= {this.props.getCommandValue}
+            attributes={attributes}
+            properties={properties}
+            commands={commands}
+            dataFormats={dataFormats}
+            dataFormat={dataFormat}
+            selectedTab={activeTab}
+          />
+        </div>;
         
     return (
       <div className="device-viewer">
