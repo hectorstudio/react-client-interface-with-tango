@@ -12,12 +12,8 @@ function callServiceGraphQL(query) {
       throw new Error('Not authorized')
     }
   })
-  .then(function(body) {
-    return body;
-  })
-  .catch(function(err) {
-    console.log(err.message)
-  })
+  .then(json => json.data)
+  .catch(err => console.log(err.message))
 }
 
 export function fetchDeviceNames() {
@@ -30,7 +26,7 @@ export function fetchDeviceNames() {
         }
       }
     `)
-    .then(json => json.data.devices.map(device => device.name))
+    .then(data => data.devices.map(device => device.name))
     .then(names => dispatch({type: types.FETCH_DEVICE_NAMES_SUCCESS, names}))
     .catch(err => dispatch(displayError(err.toString())))
   };
@@ -47,32 +43,30 @@ export function submitCommand(command, argin, device) {
      }
     }
     `)
-    .then(json => json.data.executeCommand.output)
+    .then(data => data.executeCommand.output)
     .then(result => dispatch( {type: types.EXECUTE_COMMAND_COMPLETE, command, result}))
     .catch(err => dispatch(displayError(err.toString()))) 
   };
 }
 
 export function unSubscribeDevice(device, emit){
-  if(device){
-    let models = [];
-    device.attributes.forEach(prop => {
-      if(prop.dataformat === "SCALAR"){
-        models.push(device.name + "/" + prop.name )
-      }
-    })
+  if (device && device.attributes) {
+    const models = device.attributes
+      .filter(({dataformat}) => dataformat === 'SCALAR')
+      .map(({name}) => `${device.name}/${name}`);
+
     emit("UNSUBSCRIBE", models);
   }
 }
 
 export function subscribeDevice(device, emit){
-  let models = [];
-  device.attributes.forEach(prop => {
-    if(prop.dataformat === "SCALAR"){
-      models.push(device.name + "/" + prop.name )
-    }
-  })
-  emit("SUBSCRIBE", models);
+  if (device && device.attributes) {
+    const models = device.attributes
+      .filter(({dataformat}) => dataformat === 'SCALAR')
+      .map(({name}) => `${device.name}/${name}`);
+    
+    emit("SUBSCRIBE", models);
+  }
 }
 
 export function enableDisplevel(displevel){
@@ -125,7 +119,7 @@ export function fetchDevice(name){
         }
       }
     `)
-    .then(json => fetchDeviceSuccess(json.data.devices[0], dispatch, emit))
+    .then(data => fetchDeviceSuccess(data.devices[0], dispatch, emit))
     .catch(err => dispatch(displayError(err.toString())));
   }
 }
