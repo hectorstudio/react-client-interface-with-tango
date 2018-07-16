@@ -86,9 +86,10 @@ class InputField extends Component {
     event.preventDefault()
     if(this.props.name === 'DevString'){
       this.props.submitCommand(this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
-    }else if(this.props.name === 'DevBoolean' && (this.state.value ==="true" || (this.state.value === "false"))){
+    }/*else if(this.props.name === 'DevBoolean' && (this.state.value ==="true" || (this.state.value === "false"))){
         this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
-    }else{
+    }*/else{
+        console.log("jfie ", this.state.value)
         this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
     }
 
@@ -100,6 +101,19 @@ class InputField extends Component {
   render() {
     if (this.props.name === 'DevVoid') {
       return "";
+    }
+    else if(this.props.name === 'DevBoolean'){
+      return(
+        <label>
+        <select value={this.state.value} onChange={this.handleChange}>
+        <option value="grapefruit">Grapefruit</option>
+        <option value="true">True</option>
+        <option value="false">False</option>
+      </select>
+
+    <input type="submit" value="Submit" onClick={this.handleSubmit} />
+    </label>
+      )
     }
     else{
     return (
