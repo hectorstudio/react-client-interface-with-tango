@@ -64,8 +64,8 @@ class DeviceList extends Component<IDeviceListProps> {
 
     return (
       <div className="device-list">
-        <div className="search">
-          <input type="text" placeholder="Search" value={this.props.filter} onChange={this.handleTextChange} />
+        <div className="form-group search">
+          <input className="form-control" type="text" placeholder="Search..." value={this.props.filter} onChange={this.handleTextChange} />
         </div>
         <div className="list">
         {this.props.loading && entries}
