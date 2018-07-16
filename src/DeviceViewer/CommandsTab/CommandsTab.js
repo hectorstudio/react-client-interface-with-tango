@@ -9,29 +9,29 @@ import { connect } from 'react-redux';
 import './CommandsTab.css';
 
 class CommandsTable extends Component {
-  render(){
-const {commands, submitCommand, getValue, currentDeviceName, displevels, enabledList, enableDisplevel, disableDisplevel } = this.props;
- return(
- <div>
-   {displevels.length > 1 &&
-    <DisplevelBox displevels={displevels} enabledList={enabledList} enableDisplevel={enableDisplevel} disableDisplevel={disableDisplevel} />
+  render() {
+    const { commands, submitCommand, getValue, currentDeviceName, displevels, enabledList, enableDisplevel, disableDisplevel } = this.props;
+    return (
+      <div>
+        {displevels.length > 1 &&
+          <DisplevelBox displevels={displevels} enabledList={enabledList} enableDisplevel={enableDisplevel} disableDisplevel={disableDisplevel} />
+        }
+        <table className="commands">
+          <tbody>
+            {commands && commands.map(({ name, displevel, intype }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
+              <tr key={i}>
+                <td>{name}</td>
+                <td>{intype}</td>
+                <td><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={intype} getValue={getValue} /></td>
+                <td>{getSubmittedValue(name, getValue, currentDeviceName)}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    )
   }
-    <table className="commands">
-      <tbody>
-        {commands && commands.map(({ name, displevel, intype }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
-          <tr key={i}>
-            <td>{name}</td>
-            <td>{intype}</td>
-            <td><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={intype} getValue={getValue} /></td>
-            <td>{getSubmittedValue(name, getValue, currentDeviceName)}</td>
-          </tr>
-      ) }
-      </tbody>
-    </table>
-  </div>
- )
-  }
-      }
+}
 
 class DisplevelBox extends Component {
 
@@ -44,11 +44,11 @@ class DisplevelBox extends Component {
   }
 
   render() {
-    const inputs = this.props.displevels.map((name, i) => 
+    const inputs = this.props.displevels.map((name, i) =>
       <span className="checkboxes">
-      <label>
-        <input key={i} type="checkbox" checked={this.props.enabledList.indexOf(name) !== -1} onChange={this.handleInputChange.bind(this, name)} /> 
-        {name}
+        <label>
+          <input key={i} type="checkbox" checked={this.props.enabledList.indexOf(name) !== -1} onChange={this.handleInputChange.bind(this, name)} />
+          {name}
         </label>
       </span>
     );
@@ -84,10 +84,10 @@ class InputField extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    if(this.props.name === 'DevString'){
+    if (this.props.name === 'DevString') {
       this.props.submitCommand(this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
-    } else{
-        this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
+    } else {
+      this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
     }
 
     this.setState({
@@ -99,28 +99,30 @@ class InputField extends Component {
     if (this.props.name === 'DevVoid') {
       return "";
     }
-    else if(this.props.name === 'DevBoolean'){
-      return(
-        <div class="input-group drop-down">
-        <div class="input-group-button">
-          <button class="btn" type="button" onClick={this.handleSubmit}>Submit</button>
+    else if (this.props.name === 'DevBoolean') {
+      return (
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
+          </div>
+          <select class="custom-select" id="inputGroupSelect03" value={this.state.value} onChange={this.handleChange}>
+            <option selected>Choose...</option>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
         </div>
-        <select class="custom-select" id="inputDropDown" value={this.state.value} onChange={this.handleChange}>
-          <option selected>Choose...</option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
-      </div>
       )
     }
-    else{
-    return (
-      <div>
-        <input type="text" value={this.state.value} onChange={this.handleChange} />
-        <button onClick={this.handleSubmit}>Submit</button>
-      </div>
-    );
-  }
+    else {
+      return (
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" value={this.state.value} onChange={this.handleChange} />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
+          </div>
+        </div>
+      );
+    }
   }
 }
 
@@ -146,6 +148,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(CommandsTable);
