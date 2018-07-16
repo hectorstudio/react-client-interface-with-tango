@@ -29,11 +29,9 @@
 }
 
 .device-header {
-    background-color: black;
-    color: white;
-    font-size: 2em;
-    text-align: center;
-    vertical-align: middle;
+    font-size: 1.25em;
+    padding: 1em;
+    border-bottom: 1px solid lightgray;
 }
 
 .device-viewer .no-value {
@@ -71,50 +69,69 @@
 .device-viewer .state {
     text-shadow: 0em 0em 0.3em;
     cursor: help;
-    margin-right: 0.5em;
+    margin-right: 0.25em;
     font-weight: bold;
 }
+
 .device-viewer .state-on {
 	color: lightgreen;
 }
+
 .device-viewer .state-off {
-	color: white;
+    color: lightgray;
+    text-shadow: none;
 }
+
 .device-viewer .state-close {
-	color: white;
+    color: lightgray;
+    text-shadow: none;
 }
+
 .device-viewer .state-open {
 	color: lightgreen;
 }
+
 .device-viewer .state-insert {
-	color: white;
+    color: lightgray;
+    text-shadow: none;
 }
+
 .device-viewer .state-extract {
 	color: lightgreen;
 }
+
 .device-viewer .state-moving {
 	color: blue;
 }
+
 .device-viewer .state-standby {
 	color: yellow;
 }
+
 .device-viewer .state-fault {
 	color: red;
 }
+
 .device-viewer .state-init {
 	color: yellow;
 }
+
 .device-viewer .state-running {
 	color: blue;
 }
+
 .device-viewer .state-alarm {
 	color: orange;
 }
+
 .device-viewer .state-display {
-	color: grey;
+    color: lightgray;
+    text-shadow: none;
 }
+
 .device-viewer .state-unknown {
-	color: black;
+    color: lightgray;
+    text-shadow: none;
 }
 
 .device-menu ul {
