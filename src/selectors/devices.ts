@@ -1,7 +1,10 @@
 import { createSelector } from 'reselect';
 import { getFilter } from './filtering';
+import { IDevicesState } from '../reducers/devices';
 
-const getDevicesState = state => state.devices;
+function getDevicesState(state): IDevicesState {
+    return state.devices;
+}
 
 export const getDeviceNames = createSelector(
     getDevicesState,
@@ -15,7 +18,12 @@ export const getCurrentDevice = createSelector(
 
 export const getCurrentDeviceName = createSelector(
     getCurrentDevice,
-    device => device ? device.name : null
+    device => device ? device.name : undefined
+);
+
+export const getCurrentDeviceState = createSelector(
+    getCurrentDevice,
+    device => device ? device.state : undefined
 );
 
 export const getCurrentDeviceAttributes = createSelector(
@@ -26,6 +34,11 @@ export const getCurrentDeviceAttributes = createSelector(
 export const getCurrentDeviceProperties = createSelector(
     getCurrentDevice,
     device => device ? device.properties || [] : []
+);
+
+export const getCurrentDeviceCommands = createSelector(
+    getCurrentDevice,
+    device => device ? device.commands || [] : []
 );
 
 export const getHasDevices = createSelector(
@@ -78,10 +91,28 @@ export const getFilteredCurrentDeviceAttributes = createSelector(
     (attrs, format) => attrs.filter(attr => attr.dataformat === format)
 );
 
-export const getCurrentDeviceState = createSelector(
-    getCurrentDeviceAttributes,
-    (attrs) => {
-        const attr = attrs.find(attr => attr.name === 'State');
-        return attr ? attr.value : null;
-    }
+export const getCommandValue = createSelector(
+    getDevicesState,
+    state => state.commandResults
 );
+
+export const getCommandDisplevels = createSelector(
+    getCurrentDeviceCommands,
+    commands => Object.keys(commands
+        .map(command => command.displevel)
+        .reduce((accum, displevel) => ({...accum, [displevel]: true}), {}))
+
+    /*commands => Object.keys(
+        commands
+            .map(command => command.displevel)
+            .reduce((accum, curr) => (
+                {...accum, [curr]: true}
+            , {})
+    ))*/
+);
+
+export const getEnableDisplevels = createSelector(
+    getDevicesState,
+    state => state.enabledDisplevels
+);
+

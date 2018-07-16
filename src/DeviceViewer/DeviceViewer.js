@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
+import CommandsTable from './CommandsTab/CommandsTab';
 
-import { fetchDevice } from '../actions/tango';
+import { fetchDevice, submitCommand } from '../actions/tango';
 
 import Spinner from '../Spinner/Spinner';
 
@@ -17,9 +18,14 @@ import {
   getActiveDataFormat,
   getActiveTab,
   getDeviceNames,
-  getCurrentDeviceState
+  getCurrentDeviceState,
+  getCurrentDeviceCommands,
+  getCommandValue
 } from '../selectors/devices';
-import { setDataFormat, setTab } from '../actions/deviceList';
+import { setDataFormat, setTab} from '../actions/deviceList';
+
+
+
 
 const PropertyTable = ({properties}) => 
   <div>
@@ -34,6 +40,7 @@ const PropertyTable = ({properties}) =>
       </tbody>
     </table>
   </div>;
+  
 
 function valueComponent(value, datatype, dataformat) {
   // Some special cases, should be refactored later.
@@ -123,6 +130,7 @@ class DeviceMenu extends Component {
           <ul className="tab-chooser chooser">
             {<li className={selectedTab === "attributes" ? 'active' : ''} onClick={() => onSetTab("attributes")}>Attributes</li>}
             {hasProps > 0 && <li className={selectedTab === "properties" ? 'active' : ''} onClick={() => onSetTab("properties")}>Properties</li>}
+            {<li className={selectedTab === "commands" ? 'active' : ''} onClick={() => onSetTab("commands")}>Commands</li>}
           </ul>
           {dataTabs}
         </div>
@@ -135,8 +143,7 @@ class DeviceMenu extends Component {
 class DeviceTables extends Component {
 
   render() {
-      const {properties, attributes, dataFormat, dataFormats, onSetDataFormat, selectedTab} = this.props;
-
+      const {properties, attributes, dataFormat, dataFormats, onSetDataFormat, selectedTab, commands} = this.props;
       const hasAttrs = attributes.length > 0;
       const hasProps = properties.length > 0;
 
@@ -144,6 +151,7 @@ class DeviceTables extends Component {
       ? <div className="device-table">
           {selectedTab === "properties" && <PropertyTable properties={properties}/>}
           {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat}/>}
+          {selectedTab === "commands" && <CommandsTable commands ={commands}/>}
         </div>
       : null; 
   }
@@ -168,7 +176,7 @@ class DeviceViewer extends Component {
   }
 
   render() {
-    const {properties, attributes, loading, dataFormat, dataFormats, selectDataFormat, selectTab, activeTab, currentState} = this.props;
+    const {properties, attributes, loading, dataFormat, dataFormats, selectDataFormat, selectTab, activeTab, currentState, commands} = this.props;    
     const QualityIndicator = ({state}) => {
       const sub = {
         'ON': 'on',
@@ -195,13 +203,13 @@ class DeviceViewer extends Component {
       ? <Spinner/>
       : (<div>
         <div className="device-header">
-       
         <QualityIndicator state={currentState}/>
         {this.parseDevice(this.props)}
         </div>
         <DeviceMenu
           attributes={attributes}
           properties={properties}
+          commands={commands}
           dataFormats={dataFormats}
           dataFormat={dataFormat}
           selectedTab={activeTab}
@@ -209,8 +217,11 @@ class DeviceViewer extends Component {
           onSetTab={selectTab}
         />
         <DeviceTables
+          submitCommand={this.props.submitCommand}
+          getValue= {this.props.getCommandValue}
           attributes={attributes}
           properties={properties}
+          commands={commands}
           dataFormats={dataFormats}
           dataFormat={dataFormat}
           selectedTab={activeTab}
@@ -230,12 +241,14 @@ function mapStateToProps(state) {
   return {
     attributes: getFilteredCurrentDeviceAttributes(state),
     properties: getCurrentDeviceProperties(state),
+    commands: getCurrentDeviceCommands(state),
     device: getDeviceNames(state),
     loading: getDeviceIsLoading(state),
     dataFormats: getAvailableDataFormats(state),
     dataFormat: getActiveDataFormat(state),
     activeTab: getActiveTab(state),
-    currentState: getCurrentDeviceState(state)
+    currentState: getCurrentDeviceState(state),
+    getValue: getCommandValue(state)
   };
 }
 
@@ -243,7 +256,8 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchDevice: device => dispatch(fetchDevice(device)),
     selectDataFormat: format => dispatch(setDataFormat(format)),
-    selectTab: tab => dispatch(setTab(tab))
+    selectTab: tab => dispatch(setTab(tab)),
+    submitCommand: (command, value) => dispatch(submitCommand(command, value))
   };
 }
 

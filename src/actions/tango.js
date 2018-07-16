@@ -36,6 +36,23 @@ export function fetchDeviceNames() {
   };
 }
 
+export function submitCommand(command, argin, device) {
+  return (dispatch) => {
+    callServiceGraphQL(`
+    mutation {
+      executeCommand(command:"${command}" device:"${device}" argin: ${argin}) {
+        ok,
+        message,
+        output
+     }
+    }
+    `)
+    .then(json => json.data.executeCommand.output)
+    .then(result => dispatch( {type: types.EXECUTE_COMMAND_COMPLETE, command, result}))
+    .catch(err => dispatch(displayError(err.toString()))) 
+  };
+}
+
 export function unSubscribeDevice(device, emit){
   if(device){
     let models = [];
@@ -58,6 +75,18 @@ export function subscribeDevice(device, emit){
   emit("SUBSCRIBE", models);
 }
 
+export function enableDisplevel(displevel){
+  return dispatch => dispatch({type: types.ENABLE_DISPLEVEL, displevel})
+}
+
+export function disableDisplevel(displevel){
+  return dispatch => dispatch({type: types.DISABLE_DISPLEVEL, displevel})
+}
+
+export function enableAllDisplevel(){
+  return dispatch => dispatch({type: types.ENABLE_ALL_DISPLEVEL})
+}
+
 export function fetchDeviceSuccess(device, dispatch, emit) {
   // Here we subscribe to the scalar values
   subscribeDevice(device, emit);
@@ -72,6 +101,7 @@ export function fetchDevice(name){
       query {
         devices(pattern: "${name}") {
           name
+          state
           attributes {
             name
             dataformat
@@ -82,6 +112,15 @@ export function fetchDevice(name){
           properties{
             name
             value
+          }
+          commands{
+            name
+            tag 
+            displevel 
+            intype 
+            intypedesc 
+            outtype 
+            outtypedesc 
           }
         }
       }
