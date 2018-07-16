@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
+import classNames from 'classnames';
+
 import CommandsTable from './CommandsTab/CommandsTab';
 
 import { fetchDevice, submitCommand } from '../actions/tango';
@@ -106,31 +108,36 @@ const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) 
 
 
 class DeviceMenu extends Component {
-
   render() {
-      const {properties, attributes, dataFormat, dataFormats, onSetDataFormat, onSetTab, selectedTab} = this.props;
+    const {properties, attributes, commands, dataFormat, dataFormats, onSetDataFormat, onSetTab, selectedTab} = this.props;
 
-      const hasAttrs = attributes.length > 0;
-      const hasProps = properties.length > 0;
+    const hasAttrs = attributes.length > 0;
+    const hasProps = properties.length > 0;
+    const hasCommands = commands.length > 0;
 
-      const dataTabs = selectedTab === "attributes" ?
-
+    const dataTabs = selectedTab === "attributes" ?
       <ul className="format-chooser chooser">
-            {dataFormats.map((format, i) =>
-              <li
-                className={format === dataFormat ? 'active' : ''}
-                key={i} onClick={() => onSetDataFormat(format)}>
-                  {format}
-                </li>
-            )}
+        {dataFormats.map((format, i) =>
+          <li
+            className={format === dataFormat ? 'active' : ''}
+            key={i} onClick={() => onSetDataFormat(format)}>
+            {format}
+          </li>
+        )}
       </ul> : null;
+
+    const Tab = ({name, title}) => <li
+      className={classNames('nav-items', {active: selectedTab === name})}
+      onClick={() => onSetTab(name)}>
+      {title}
+    </li>;
 
     return hasAttrs && hasProps
       ? <div className="device-menu">
           <ul className="tab-chooser chooser">
-            {<li className={selectedTab === "attributes" ? 'active' : ''} onClick={() => onSetTab("attributes")}>Attributes</li>}
-            {hasProps > 0 && <li className={selectedTab === "properties" ? 'active' : ''} onClick={() => onSetTab("properties")}>Properties</li>}
-            {<li className={selectedTab === "commands" ? 'active' : ''} onClick={() => onSetTab("commands")}>Commands</li>}
+            {hasProps && <Tab name='properties' title='Properties'/>}
+            {hasAttrs && <Tab name='attributes' title='Attributes'/>}
+            {hasCommands && <Tab name='commands' title='Commands'/>}
           </ul>
           {dataTabs}
         </div>
