@@ -115,7 +115,7 @@ class DeviceMenu extends Component {
     const hasProps = properties.length > 0;
     const hasCommands = commands.length > 0;
 
-    const dataTabs = selectedTab === "attributes" ?
+    const dataTabs = selectedTab === "attributes" && dataFormats.length > 1 ?
       <ul className='nav nav-pills format-chooser'>
         {dataFormats.map((format, i) =>
           <li
