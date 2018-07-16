@@ -120,7 +120,7 @@ class DeviceMenu extends Component {
         {dataFormats.map((format, i) =>
           <li
             className='nav-item'
-            key={i} onClick={() => onSetDataFormat(format)}>
+            key={i} onClick={e => {e.preventDefault(); onSetDataFormat(format)}}>
             <a className={classNames('nav-link', {active: format === dataFormat})} href='#'>
               {format}
             </a>
