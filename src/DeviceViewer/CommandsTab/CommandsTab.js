@@ -86,8 +86,12 @@ class InputField extends Component {
     event.preventDefault()
     if (this.props.name === 'DevString') {
       this.props.submitCommand(this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
-    } else {
-      this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
+    } else if(this.state.value.length > 0) {
+        if(this.props.name.includes("U") && this.state.value >= 0){
+          this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
+        }else{
+          this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
+        } 
     }
 
     this.setState({
