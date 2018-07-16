@@ -108,6 +108,15 @@ const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) 
 
 
 class DeviceMenu extends Component {
+  handleSelectDataFormat(format, event) {
+    event.preventDefault();
+    this.props.onSetDataFormat(format);
+  }
+
+  handleSelectTab(tab) {
+    this.props.onSetTab(tab);
+  }
+
   render() {
     const {properties, attributes, commands, dataFormat, dataFormats, onSetDataFormat, onSetTab, selectedTab} = this.props;
 
@@ -120,7 +129,7 @@ class DeviceMenu extends Component {
         {dataFormats.map((format, i) =>
           <li
             className='nav-item'
-            key={i} onClick={e => {e.preventDefault(); onSetDataFormat(format)}}>
+            key={i} onClick={this.handleSelectDataFormat.bind(this, format)}>
             <a className={classNames('nav-link', {active: format === dataFormat})} href='#'>
               {format}
             </a>
@@ -129,7 +138,7 @@ class DeviceMenu extends Component {
       </ul> : null;
 
     const Tab = ({name, title}) => <li className='nav-item'>
-      <a href={`#${name}`} className={classNames('nav-link', {active: selectedTab === name})} onClick={() => onSetTab(name)}>
+      <a href={`#${name}`} className={classNames('nav-link', {active: selectedTab === name})} onClick={this.handleSelectTab.bind(this, name)}>
         {title}
       </a>
     </li>;
