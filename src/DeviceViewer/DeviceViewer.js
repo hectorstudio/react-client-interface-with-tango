@@ -42,33 +42,36 @@ const PropertyTable = ({properties}) =>
       </tbody>
     </table>
   </div>;
-  
 
-function valueComponent(value, datatype, dataformat) {
+const ValueDisplay = ({value, datatype, dataformat}) => {
   // Some special cases, should be refactored later.
   if (value === null) {
     return <span className="no-value">No value</span>;
-  } else if (dataformat !== 'SPECTRUM' || datatype === 'DevString') {
-    return value.length < 50000 ? value : 'Value too big to display.';
-  } else {
-    const noBrackets = value.substring(1, value.length-1);
-    const entries = noBrackets.split(/\s+/);
-    const values = datatype === 'DevBoolean'
-      ? entries.map(s => Number(s === 'True'))
-      : entries.map(s => Number(s));
-    const data = values.map(value => ({value}));
-    const lineType = datatype === 'DevBoolean' ? 'step' : 'linear';
-
-    return (
-      <LineChart data={data} width={400} height={300}>
-        <YAxis/>
-        <Tooltip/>
-        <CartesianGrid stroke="#f5f5f5"/>
-        <Line dot={false} isAnimationActive={false} type={lineType} dataKey="value" stroke="#ff7300" yAxisId={0}/>
-      </LineChart>
-    );
   }
-}
+
+  if (dataformat === 'IMAGE') {
+    return 'Images are not supported.';
+  }
+
+  if (dataformat !== 'SPECTRUM' || datatype === 'DevString') {
+    return value.length < 50000 ? value : 'Value too big to display.';
+  }
+
+  const values = datatype === 'DevBoolean'
+    ? value.map(s => Number(s === 'True'))
+    : value;
+  const data = values.map(value => ({value}));
+  const lineType = datatype === 'DevBoolean' ? 'step' : 'linear';
+
+  return (
+    <LineChart data={data} width={400} height={300}>
+      <YAxis/>
+      <Tooltip/>
+      <CartesianGrid stroke="#f5f5f5"/>
+      <Line dot={false} isAnimationActive={false} type={lineType} dataKey="value" stroke="#ff7300" yAxisId={0}/>
+    </LineChart>
+  );
+};
 
 const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) => {
   const QualityIndicator = ({quality}) => {
@@ -96,7 +99,9 @@ const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) 
               <QualityIndicator quality={quality}/>
               {name}
             </td>
-            <td>{valueComponent(value, datatype, dataformat)}</td>              
+            <td>
+              <ValueDisplay value={value} datatype={datatype} dataformat={dataformat}/>
+            </td>
           </tr>
         )}
         </tbody>
@@ -233,26 +238,28 @@ class DeviceViewer extends Component {
             <QualityIndicator state={currentState}/>
             {this.parseDevice(this.props)}
           </div>
-          <DeviceMenu
-            attributes={attributes}
-            properties={properties}
-            commands={commands}
-            dataFormats={dataFormats}
-            dataFormat={dataFormat}
-            selectedTab={activeTab}
-            onSetDataFormat={selectDataFormat}
-            onSetTab={selectTab}
-          />
-          <DeviceTables
-            submitCommand={this.props.submitCommand}
-            getValue= {this.props.getCommandValue}
-            attributes={attributes}
-            properties={properties}
-            commands={commands}
-            dataFormats={dataFormats}
-            dataFormat={dataFormat}
-            selectedTab={activeTab}
-          />
+          <div className="device-body">
+            <DeviceMenu
+              attributes={attributes}
+              properties={properties}
+              commands={commands}
+              dataFormats={dataFormats}
+              dataFormat={dataFormat}
+              selectedTab={activeTab}
+              onSetDataFormat={selectDataFormat}
+              onSetTab={selectTab}
+            />
+            <DeviceTables
+              submitCommand={this.props.submitCommand}
+              getValue= {this.props.getCommandValue}
+              attributes={attributes}
+              properties={properties}
+              commands={commands}
+              dataFormats={dataFormats}
+              dataFormat={dataFormat}
+              selectedTab={activeTab}
+            />
+          </div>
         </div>;
         
     return (
