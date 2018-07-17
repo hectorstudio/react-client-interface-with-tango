@@ -139,9 +139,9 @@
 }
 
 .device-viewer .format-chooser {
-    margin-top: 0.5em;
+    margin: 1em 0em 0em 1em;
 }
 
-.section-chooser .nav-item:first-child {
+.section-chooser .nav-item {
     margin-left: 0.5em;
 }
