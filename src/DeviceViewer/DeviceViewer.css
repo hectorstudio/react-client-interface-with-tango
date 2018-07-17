@@ -82,6 +82,11 @@
     text-shadow: none;
 }
 
+.device-viewer .state-invalid {
+    color: lightgray;
+    text-shadow: none;
+}
+
 .device-viewer .state-close {
     color: lightgray;
     text-shadow: none;
