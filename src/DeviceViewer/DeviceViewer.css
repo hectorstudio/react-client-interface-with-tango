@@ -31,7 +31,6 @@
 .device-header {
     font-size: 1.25em;
     padding: 1em;
-    border-bottom: 1px solid lightgray;
 }
 
 .device-viewer .no-value {
@@ -139,10 +138,10 @@
     text-shadow: none;
 }
 
-.device-viewer .device-body {
-    padding: 0.5em;    
-}
-
 .device-viewer .format-chooser {
     margin-top: 0.5em;
+}
+
+.section-chooser .nav-item:first-child {
+    margin-left: 0.5em;
 }
