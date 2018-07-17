@@ -2,6 +2,8 @@ import * as types from './actionTypes';
 import { displayError } from './ui';
 import {uri} from '../constants/websocket.js';
 
+import { setTab } from './deviceList';
+
 const client = require('graphql-client')({
   url: `/db`
 })
@@ -119,7 +121,12 @@ export function fetchDevice(name){
         }
       }
     `)
-    .then(data => fetchDeviceSuccess(data.devices[0], dispatch, emit))
+    .then(data => {
+      const device = data.devices[0];
+      const firstTab = device.properties.length > 0 ? 'properties' : device.attributes.length ? 'attributes' : 'commands';
+      dispatch(setTab(firstTab));
+      dispatch(fetchDeviceSuccess(device, dispatch, emit));
+    })
     .catch(err => dispatch(displayError(err.toString())));
   }
 }
