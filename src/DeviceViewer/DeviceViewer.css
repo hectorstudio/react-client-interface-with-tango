@@ -142,3 +142,7 @@
 .device-viewer .device-body {
     padding: 0.5em;    
 }
+
+.device-viewer .format-chooser {
+    margin-top: 0.5em;
+}
