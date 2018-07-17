@@ -75,24 +75,37 @@ class InputField extends Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = { value: '' };
+    this.state = { value: '', valid: false};
   }
 
   handleChange(event) {
-    this.setState({ value: event.target.value });
+    if(this.props.name === 'DevBoolean' && event.target.value.length > 0){
+      this.setState({ value: event.target.value, valid: true });
+    }
+    else if(event.target.value.length > 0 && this.props.name !== 'DevString'){
+      if(this.props.name.includes("U") && event.target.value > 0){
+        this.setState({ value: parseInt(event.target.value, 10), valid: true });
+      }
+      if((this.props.name.includes("Long") || this.props.name.includes("Short")) && !this.props.name.includes("U")){
+        this.setState({ value: parseInt(event.target.value, 10), valid: true });
+      }else if(!this.props.name.includes("U")){
+        this.setState({ value: parseFloat(event.target.value, 10), valid: true });
+      }
+    }else if(this.props.name === 'DevString'){
+      this.setState({ value: event.target.value});
+    }else{
+      this.setState({value: '', valid: false });
+    }
   }
 
   handleSubmit(event) {
     event.preventDefault()
-    if (this.props.name === 'DevString') {
+    if(this.props.name === 'DevString'){
       this.props.submitCommand(this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
-    } else {
-      this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
+    }else{
+     this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
     }
-
-    this.setState({
-      value: ''
-    });
+    this.setState({value: '', valid: false });
   }
 
   render() {
@@ -108,18 +121,36 @@ class InputField extends Component {
             <option value="false">False</option>
           </select>
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
+            <button class="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleSubmit}>Submit</button>
           </div>
         </div>
 
       )
     }
-    else {
+    else if (this.props.name.includes("U")) {
       return (
         <div class="input-group">
-          <input type="text" class="form-control" value={this.state.value} onChange={this.handleChange} />
+          <input type="number" min="0" class="form-control" value={this.state.value} onChange={this.handleChange} />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit} disabled={!this.state.valid}>Submit</button>
+          </div>
+        </div>
+      );
+    } else if(this.props.name === 'DevString') {
+      return (
+        <div class="input-group">
+          <input input type="text" class="form-control" value={this.state.value} onChange={this.handleChange} />
           <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
+          </div>
+        </div>
+      );
+    }else {
+      return (
+        <div class="input-group">
+          <input input type="number" class="form-control" value={this.state.value} onChange={this.handleChange} />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleSubmit}>Submit</button>
           </div>
         </div>
       );
