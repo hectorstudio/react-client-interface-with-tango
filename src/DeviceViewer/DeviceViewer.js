@@ -233,28 +233,26 @@ class DeviceViewer extends Component {
             <QualityIndicator state={currentState}/>
             {this.parseDevice(this.props)}
           </div>
-          <div className="device-body">
-            <DeviceMenu
-              attributes={attributes}
-              properties={properties}
-              commands={commands}
-              dataFormats={dataFormats}
-              dataFormat={dataFormat}
-              selectedTab={activeTab}
-              onSetDataFormat={selectDataFormat}
-              onSetTab={selectTab}
-            />
-            <DeviceTables
-              submitCommand={this.props.submitCommand}
-              getValue= {this.props.getCommandValue}
-              attributes={attributes}
-              properties={properties}
-              commands={commands}
-              dataFormats={dataFormats}
-              dataFormat={dataFormat}
-              selectedTab={activeTab}
-            />
-          </div>
+          <DeviceMenu
+            attributes={attributes}
+            properties={properties}
+            commands={commands}
+            dataFormats={dataFormats}
+            dataFormat={dataFormat}
+            selectedTab={activeTab}
+            onSetDataFormat={selectDataFormat}
+            onSetTab={selectTab}
+          />
+          <DeviceTables
+            submitCommand={this.props.submitCommand}
+            getValue= {this.props.getCommandValue}
+            attributes={attributes}
+            properties={properties}
+            commands={commands}
+            dataFormats={dataFormats}
+            dataFormat={dataFormat}
+            selectedTab={activeTab}
+          />
         </div>;
         
     return (
