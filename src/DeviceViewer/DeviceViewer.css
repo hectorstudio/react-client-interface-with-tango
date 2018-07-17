@@ -139,7 +139,6 @@
     text-shadow: none;
 }
 
-.device-menu ul {
-    margin-top: 0.5em;
-    margin-left: 0.5em;
+.device-viewer .device-body {
+    padding: 0.5em;    
 }
