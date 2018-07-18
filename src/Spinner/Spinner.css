@@ -2,7 +2,7 @@
     border: 0.8em solid #f3f3f3;
     border-top: 0.8em solid #3498db;
     border-radius: 50%;
-    width: 5em;
+    width: 5em; 
     height: 5em;
     animation: spin 2s linear infinite, fadein 1s ease-in;
     margin-left: 2em;

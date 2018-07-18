@@ -34,6 +34,7 @@ export function fetchDeviceNames() {
 
 export function submitCommand(command, argin, device) {
   return (dispatch) => {
+    dispatch({type: types.EXECUTE_COMMAND});
     callServiceGraphQL(`
     mutation {
       executeCommand(command:"${command}" device:"${device}" argin: ${argin}) {
