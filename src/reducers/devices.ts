@@ -1,6 +1,6 @@
 import {
   FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS, ENABLE_DISPLEVEL, DISABLE_DISPLEVEL,
-  FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB, EXECUTE_COMMAND_COMPLETE
+  FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB, EXECUTE_COMMAND_COMPLETE, EXECUTE_COMMAND
 } from '../actions/actionTypes';
 
 interface IDeviceAttribute {
@@ -34,6 +34,7 @@ export interface IDevicesState {
   activeTab: string,
   loadingNames: boolean,
   loadingDevice: boolean,
+  loadingOutput,
   commandResults: any, // TODO
   enabledDisplevels: string[],
 }
@@ -47,6 +48,7 @@ export default function devices(state: IDevicesState = {
   activeTab: "attributes",
   loadingNames: false,
   loadingDevice: false,
+  loadingOutput: false,
   commandResults: {},
   enabledDisplevels: [],
 }, action) {
@@ -57,12 +59,15 @@ export default function devices(state: IDevicesState = {
     case FETCH_DEVICE_NAMES_SUCCESS:
       return {...state, nameList: action.names};
 
+    case EXECUTE_COMMAND:
+    return {...state, loadingOutput: true};
+
     case EXECUTE_COMMAND_COMPLETE:
       const oldCommandResults = state.commandResults;
       const {command, result} = action;
       const deviceName = state.current!.name
       const commandResults = {...oldCommandResults, deviceName, [command]: result};
-      return {...state, commandResults}
+      return {...state, loadingOutput: false, commandResults}
 
     case ENABLE_DISPLEVEL: {
       const {displevel} = action;
