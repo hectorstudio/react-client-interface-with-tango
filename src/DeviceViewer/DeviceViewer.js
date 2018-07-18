@@ -232,7 +232,7 @@ class DeviceViewer extends Component {
     };
     
     const content = loading 
-      ? <Spinner/>
+      ? <Spinner size={4}/>
       : <div>
           <div className="device-header">
             <QualityIndicator state={currentState}/>
