@@ -4,6 +4,13 @@ import './Spinner.css';
 
 export default class Spinner extends Component {
     render() {
-        return <div className="spinner"/>;
+        const {size} = this.props;
+        const style = {
+            borderWidth: 0.5 + 'em',
+            width: size + 'em', 
+            height: size + 'em'
+        }
+        return <div className="spinner" style={style}/>;
     }
 }
+

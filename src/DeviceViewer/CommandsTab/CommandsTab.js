@@ -7,7 +7,7 @@ import {
 import { submitCommand, enableDisplevel, disableDisplevel, enableAllDisplevel } from '../../actions/tango';
 import { connect } from 'react-redux';
 import './CommandsTab.css';
-import '../../Spinner/Spinner.css';
+import Spinner from '../../Spinner/Spinner';
 
 class CommandsTable extends Component {
   render() {
@@ -65,7 +65,7 @@ function getSubmittedValue(name, getValue, currentDeviceName, loading) {
   if (typeof result !== 'undefined' && name in result && result['deviceName'] === currentDeviceName) {
     return(
       <td>
-        {loading ? <div className = "spinner" style={{width: 10, height: 10}}> </div> : 'Output: ' + result[name] }
+        {loading ? <Spinner size={2}/> : 'Output: ' + result[name] }
         </td>
     ) 
   } else {
