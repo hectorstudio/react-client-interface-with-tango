@@ -62,15 +62,9 @@ class DisplevelBox extends Component {
 function getSubmittedValue(name, getValue, currentDeviceName) {
   const result = getValue;
   const command= result[currentDeviceName]
-  console.log('command ', command)
   if(typeof command !== 'undefined' && name in command){
-    console.log('blds ', command[currentDeviceName])
     return 'Output: ' + command[name]
-  }
-  /*
-  if (typeof result !== 'undefined' && name in result && result['deviceName'] === currentDeviceName) {
-    return 'Output: ' + result[name]
-  } */else {
+  }else {
     return "";
   } 
 }
