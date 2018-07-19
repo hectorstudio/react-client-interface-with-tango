@@ -65,7 +65,7 @@ function getSubmittedValue(name, getValue, currentDeviceName, loading) {
   if (typeof result !== 'undefined' && name in result && result['deviceName'] === currentDeviceName) {
     return(
       <td>
-        {loading ? <Spinner size={2}/> : 'Output: ' + result[name] }
+        {loading ? <Spinner size={1}/> : 'Output: ' + result[name] }
         </td>
     ) 
   } else {

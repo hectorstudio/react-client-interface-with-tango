@@ -1,22 +1,16 @@
-/* div[data-width="spinnerBig"] */
+
 .spinner {
-    /* border: 0.8em solid #f3f3f3; */
     position: relative;
-    top: -15px;
-    left: -15px;
+    top: -10px;
+    left: -10px;
     border-style: solid;
     border-color: #f3f3f3;
-
     border-top-style: solid;
     border-top-color: #3498db;
-
     border-radius: 50%;
-    /*width: 5em; 
-    height: 5em;*/
-
     animation: spin 2s linear infinite, fadein 1s ease-in;
-    margin-left: 2em;
-    margin-top: 2em;
+    margin-left: 1em;
+    margin-top: 1em;
 }
 
 @keyframes spin {
@@ -28,15 +22,3 @@
     from { opacity: 0; }
     to   { opacity: 1; }
 }
-/*
-div[data-width="spinnerSmall"] {
-    border: 0.8em solid #f3f3f3;
-    border-top: 0.8em solid #3498db;
-    border-radius: 50%;
-    width: 1em; 
-    height: 1em;
-    animation: spin 2s linear infinite, fadein 1s ease-in;
-    margin-left: 2em;
-    margin-top: 2em;
-}
-*/
