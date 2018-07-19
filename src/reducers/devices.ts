@@ -65,8 +65,8 @@ export default function devices(state: IDevicesState = {
       const oldCommandResults = state.commandResults;
       const {command, result} = action;
       const deviceName = state.current!.name
-      const commandResults = {[deviceName]: {...oldCommandResults, [command]: result}}      
-      // const commandResults = {...oldCommandResults, [deviceName]:{[command]: result}};
+      const deviceResults = {...oldCommandResults[deviceName], [command]: result};
+      const commandResults = {...oldCommandResults, [deviceName]: deviceResults};
       return {...state, commandResults}
 
     case ENABLE_DISPLEVEL: {
