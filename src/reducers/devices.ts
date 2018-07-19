@@ -34,7 +34,11 @@ export interface IDevicesState {
   activeTab: string,
   loadingNames: boolean,
   loadingDevice: boolean,
-  commandResults: any, // TODO
+  commandResults: {
+    [device: string]: {
+      [attribute: string]: any
+    }
+  }, // any, // TODO
   enabledDisplevels: string[],
 }
 
@@ -61,7 +65,8 @@ export default function devices(state: IDevicesState = {
       const oldCommandResults = state.commandResults;
       const {command, result} = action;
       const deviceName = state.current!.name
-      const commandResults = {...oldCommandResults, deviceName, [command]: result};
+      const commandResults = {[deviceName]: {...oldCommandResults, [command]: result}}      
+      // const commandResults = {...oldCommandResults, [deviceName]:{[command]: result}};
       return {...state, commandResults}
 
     case ENABLE_DISPLEVEL: {
