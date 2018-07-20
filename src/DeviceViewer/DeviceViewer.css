@@ -33,10 +33,6 @@
     padding: 1em;
 }
 
-.device-viewer .no-value {
-    color: red;
-}
-
 .device-viewer .quality {
     text-shadow: 0em 0em 0.3em;
     cursor: help;
