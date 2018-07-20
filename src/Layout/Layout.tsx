@@ -29,7 +29,7 @@ const DefaultLayout = () =>
 
 const SimpleLayout = () => 
   <BaseLayout>
-    <MainView className="double-column"/>
+    <MainView className="double-column"/> 
   </BaseLayout>;
 
 const Layout = ({location: {search}}) =>

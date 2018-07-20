@@ -68,6 +68,11 @@ export const getDeviceNamesAreLoading = createSelector(
     state => state.loadingNames
 );
 
+export const getCommandsOutputLoading = createSelector(
+    getDevicesState,
+    state => state.loadingOutput
+);
+
 export const getAvailableDataFormats = createSelector(
     getCurrentDeviceAttributes,
     attrs => Object.keys(attrs.reduce((accum, attr) => ({
