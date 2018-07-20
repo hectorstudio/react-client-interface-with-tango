@@ -8,8 +8,8 @@ const client = require('graphql-client')({
   url: `/db`
 })
 
-function callServiceGraphQL(query) {
-  return client.query(query, function(req, res) {
+function callServiceGraphQL(query, variables) {
+  return client.query(query, variables || {}, function(req, res) {
     if(res.status === 401) {
       throw new Error('Not authorized')
     }
@@ -39,27 +39,26 @@ export function submitCommand(command, argin, device) {
     dispatch({type: types.EXECUTE_COMMAND, command});
     argin === '' ?
     callServiceGraphQL(`
-    mutation {
-      executeCommand(command:"${command}" device:"${device}") {
-        ok,
-        message,
+    mutation ExecuteVoidCommand($command: String!, $device: String!) {
+      executeCommand(command: $command, device: $device) {
+        ok
+        message
         output
-     }
-    }
-    `)
+      }
+    }`, {command, device})
     .then(data => data.executeCommand.output)
     .then(result => dispatch( {type: types.EXECUTE_COMMAND_COMPLETE, command, result}))
     .catch(err => dispatch(displayError(err.toString()))) 
     :
     callServiceGraphQL(`
-    mutation {
-      executeCommand(command:"${command}" device:"${device}" argin: ${argin}) {
-        ok,
-        message,
+    mutation ExecuteCommand($command: String!, $device: String!, $argin: ScalarTypes!) {
+      executeCommand(command: $command, device: $device, argin: $argin) {
+        ok
+        message
         output
-     }
+      }
     }
-    `)
+    `, {command, device, argin})
     .then(data => data.executeCommand.output)
     .then(result => dispatch( {type: types.EXECUTE_COMMAND_COMPLETE, command, result}))
     .catch(err => dispatch(displayError(err.toString()))) 
@@ -109,8 +108,8 @@ export function fetchDevice(name){
     unSubscribeDevice(getState().devices.current, emit);
     dispatch({type: 'FETCH_DEVICE', name});
     callServiceGraphQL(`
-      query {
-        devices(pattern: "${name}") {
+      query FetchDevice($name: String) {
+        devices(pattern: $name) {
           name
           state
           attributes {
@@ -135,7 +134,7 @@ export function fetchDevice(name){
           }
         }
       }
-    `)
+    `, {name})
     .then(data => {
       const device = data.devices[0];
       const firstTab = device.properties.length > 0 ? 'properties' : device.attributes.length ? 'attributes' : 'commands';
