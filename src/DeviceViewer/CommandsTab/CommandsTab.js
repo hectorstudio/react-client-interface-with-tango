@@ -61,11 +61,12 @@ class DisplevelBox extends Component {
 
 function getSubmittedValue(name, getValue, currentDeviceName) {
   const result = getValue;
-  if (typeof result !== 'undefined' && name in result && result['deviceName'] === currentDeviceName) {
-    return 'Output: ' + result[name]
-  } else {
+  const command= result[currentDeviceName]
+  if(typeof command !== 'undefined' && name in command){
+    return 'Output: ' + command[name]
+  }else {
     return "";
-  }
+  } 
 }
 
 
