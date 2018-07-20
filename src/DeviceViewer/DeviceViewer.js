@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import classNames from 'classnames';
+import { Helmet } from 'react-helmet';
 
 import CommandsTable from './CommandsTab/CommandsTab';
 
@@ -204,12 +205,15 @@ class DeviceViewer extends Component {
       title={state}>● </span>;
     };
     
+    const deviceName = this.parseDevice(this.props);
     const content = loading 
       ? <Spinner size={4}/>
       : <div>
+          <Helmet>
+            <title>{deviceName}</title>
+          </Helmet>
           <div className="device-header">
-            <QualityIndicator state={currentState}/>
-            {this.parseDevice(this.props)}
+            <QualityIndicator state={currentState}/> {deviceName}
           </div>
           <div className="device-body">
             <DeviceMenu
