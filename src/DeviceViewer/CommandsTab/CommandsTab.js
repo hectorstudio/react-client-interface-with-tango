@@ -23,8 +23,8 @@ class CommandsTable extends Component {
               <tr key={i}>
                 <td>{name}</td>
                 <td>{intype}</td>
-                <td class="input"><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype} getValue={getValue} /></td>
-                {getSubmittedValue(name, getValue, currentDeviceName, loading)}
+                <td className="input"><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype} getValue={getValue} /></td>
+                <td>{getSubmittedValue(name, getValue, currentDeviceName, loading)}</td>
               </tr>
             )}
           </tbody>
@@ -46,7 +46,7 @@ class DisplevelBox extends Component {
 
   render() {
     const inputs = this.props.displevels.map((name, i) =>
-      <span className="checkboxes">
+      <span className="checkboxes" key={i}>
         <label>
           <input key={i} type="checkbox" checked={this.props.enabledList.indexOf(name) !== -1} onChange={this.handleInputChange.bind(this, name)} />
           {name}
@@ -66,11 +66,7 @@ function getSubmittedValue(name, getValue, currentDeviceName, loading) {
   const lodingResult = loading;
   const outputState = lodingResult[currentDeviceName]
   if(typeof command !== 'undefined' && name in command && typeof outputState !== 'undefined' && name in outputState){
-    return(
-      <td>
-        {outputState[name] ? <Spinner size={1}/> : 'Output: ' + command[name]}
-        </td>
-    )
+    return( outputState[name] ? <Spinner size={1}/> : 'Output: ' + command[name])
   }else {
     return "";
   } 
@@ -91,7 +87,7 @@ class InputField extends Component {
       this.setState({ value: event.target.value, valid: true });
     }
     else if(event.target.value.length > 0 && this.props.intype !== 'DevString'){
-      if(this.props.intype.includes("U") && event.target.value > 0){
+      if(this.props.intype.includes("U") && event.target.value >= 0){
         this.setState({ value: parseInt(event.target.value, 10), valid: true });
       }
       if((this.props.intype.includes("Long") || this.props.intype.includes("Short")) && !this.props.intype.includes("U")){
@@ -119,19 +115,19 @@ class InputField extends Component {
   render() {
     if (this.props.intype === 'DevVoid') {
       return(
-        <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
+        <button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
       );
     }
     else if (this.props.intype === 'DevBoolean') {
       return (
-        <div class="input-group">
-          <select class="custom-select" id="inputGroupSelect04" value={this.state.value} onChange={this.handleChange}>
-            <option value="" selected disabled hidden>Choose...</option>
+        <div className="input-group">
+          <select className="custom-select" id="inputGroupSelect04" value={this.state.value} onChange={this.handleChange}>
+            <option value="" defaultValue disabled hidden>Choose...</option>
             <option value="true">True</option>
             <option value="false">False</option>
           </select>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleSubmit}>Submit</button>
+          <div className="input-group-append">
+            <button className="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleSubmit}>Submit</button>
           </div>
         </div>
 
@@ -139,28 +135,28 @@ class InputField extends Component {
     }
     else if (this.props.intype.includes("U")) {
       return (
-        <div class="input-group">
-          <input type="number" min="0" class="form-control" value={this.state.value} onChange={this.handleChange} />
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit} disabled={!this.state.valid}>Submit</button>
+        <div className="input-group">
+          <input type="number" min="0" className="form-control" value={this.state.value} onChange={this.handleChange} />
+          <div className="input-group-append">
+            <button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit} disabled={!this.state.valid}>Submit</button>
           </div>
         </div>
       );
     } else if(this.props.intype === 'DevString') {
       return (
-        <div class="input-group">
-          <input input type="text" class="form-control" value={this.state.value} onChange={this.handleChange} />
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
+        <div className="input-group">
+          <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange} />
+          <div className="input-group-append">
+            <button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
           </div>
         </div>
       );
     }else {
       return (
-        <div class="input-group">
-          <input input type="number" class="form-control" value={this.state.value} onChange={this.handleChange} />
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleSubmit}>Submit</button>
+        <div className="input-group">
+          <input type="number" className="form-control" value={this.state.value} onChange={this.handleChange} />
+          <div className="input-group-append">
+            <button className="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleSubmit}>Submit</button>
           </div>
         </div>
       );
