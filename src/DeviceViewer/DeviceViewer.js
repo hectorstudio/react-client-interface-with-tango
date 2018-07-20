@@ -173,6 +173,11 @@ class DeviceViewer extends Component {
     if (device !== this.parseDevice(prevProps)) {
       this.props.fetchDevice(device);
     }
+
+    const tab = this.parseTab();
+    if (tab !== this.props.activeTab) {
+      this.props.selectTab(tab);
+    }
   }
 
   render() {
