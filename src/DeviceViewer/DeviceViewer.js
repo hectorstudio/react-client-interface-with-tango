@@ -43,26 +43,12 @@ const PropertyTable = ({properties}) =>
     </table>
   </div>;
 
-const ValueDisplay = ({value, datatype, dataformat}) => {
-  // Some special cases, should be refactored later.
-  if (value === null) {
-    return <span className="no-value">No value</span>;
-  }
+const ScalarValueDisplay = ({value, datatype}) =>
+  datatype === 'DevString' && value.length > 50000
+  ? 'Value too big to display.'
+  : value;
 
-  if (dataformat === 'IMAGE') {
-    return 'Images are not supported.';
-  }
-
-  if (dataformat === 'SCALAR') {
-    if (dataformat === 'DevString' && value.length > 50000) {
-      return 'Value too big to display.';
-    }
-
-    return value;
-  }
-
-  // At this point, dataformat is surely SPECTRUM
-
+const SpectrumValueDisplay = ({value, datatype}) => {
   if (datatype === 'DevString') {
     return 'DevString spectra are not yet supported.';
   }
@@ -81,6 +67,22 @@ const ValueDisplay = ({value, datatype, dataformat}) => {
       <Line dot={false} isAnimationActive={false} type={lineType} dataKey="value" stroke="#ff7300" yAxisId={0}/>
     </LineChart>
   );
+};
+
+const ImageValueDisplay = ({value, datatype}) => 'Images are not supported.';
+
+const ValueDisplay = ({value, datatype, dataformat}) => {
+  if (value === null) {
+    return <span className="no-value">No value</span>;
+  }
+
+  const InnerDisplay = {
+    'IMAGE': ImageValueDisplay,
+    'SCALAR': ScalarValueDisplay,
+    'SPECTRUM': SpectrumValueDisplay,
+  }[dataformat];
+
+  return <InnerDisplay value={value} datatype={datatype}/>;
 };
 
 const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) => {
