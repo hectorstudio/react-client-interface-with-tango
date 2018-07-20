@@ -148,18 +148,16 @@ class DeviceMenu extends Component {
       </a>
     </li>;
 
-    return hasAttrs && hasProps
-      ? <div className="device-menu">
-          <ul className='nav nav-tabs section-chooser'>
-            {hasProps && <Tab name='properties' title='Properties'/>}
-            {hasAttrs && <Tab name='attributes' title='Attributes'/>}
-            {hasCommands && <Tab name='commands' title='Commands'/>}
-          </ul>
-          {dataTabs}
-        </div>
-      : <div>
-          No information is available for this device.
-        </div>; 
+    return (
+      <div className="device-menu">
+        <ul className='nav nav-tabs section-chooser'>
+          {hasProps && <Tab name='properties' title='Properties'/>}
+          {hasAttrs && <Tab name='attributes' title='Attributes'/>}
+          {hasCommands && <Tab name='commands' title='Commands'/>}
+        </ul>
+        {selectedTab === 'attributes' && dataTabs}
+      </div>
+    );
   }
 }
 
@@ -170,13 +168,13 @@ class DeviceTables extends Component {
       const hasAttrs = attributes.length > 0;
       const hasProps = properties.length > 0;
 
-    return hasAttrs && hasProps
-      ? <div className="device-table">
-          {selectedTab === "properties" && <PropertyTable properties={properties}/>}
-          {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat}/>}
-          {selectedTab === "commands" && <CommandsTable commands ={commands}/>}
-        </div>
-      : null; 
+    return (
+      <div className="device-table">
+        {selectedTab === "properties" && <PropertyTable properties={properties}/>}
+        {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat}/>}
+        {selectedTab === "commands" && <CommandsTable commands ={commands}/>}
+      </div>
+    );
   }
 }
 
