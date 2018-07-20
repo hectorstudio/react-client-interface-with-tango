@@ -34,8 +34,16 @@ export interface IDevicesState {
   activeTab: string,
   loadingNames: boolean,
   loadingDevice: boolean,
-  loadingOutput,
-  commandResults: any, // TODO
+  loadingOutput: {
+    [device: string]: {
+      [attribute: string]: boolean
+    }
+  },
+  commandResults: {
+    [device: string]: {
+      [attribute: string]: any
+    }
+  }, // any, // TODO
   enabledDisplevels: string[],
 }
 
@@ -48,7 +56,7 @@ export default function devices(state: IDevicesState = {
   activeTab: "attributes",
   loadingNames: false,
   loadingDevice: false,
-  loadingOutput: false,
+  loadingOutput: {},
   commandResults: {},
   enabledDisplevels: [],
 }, action) {
@@ -59,15 +67,26 @@ export default function devices(state: IDevicesState = {
     case FETCH_DEVICE_NAMES_SUCCESS:
       return {...state, nameList: action.names};
 
-    case EXECUTE_COMMAND:
-    return {...state, loadingOutput: true};
+    case EXECUTE_COMMAND: {
+    const oldLoadingOutput = state.loadingOutput
+    const {command} = action;
+    const deviceName = state.current!.name
+    const deviceResults = {...oldLoadingOutput[deviceName], [command]: true};
+    const loadingOutput = {...oldLoadingOutput, [deviceName]: deviceResults};
+    return {...state, loadingOutput}
+    }
 
-    case EXECUTE_COMMAND_COMPLETE:
+    case EXECUTE_COMMAND_COMPLETE: {
       const oldCommandResults = state.commandResults;
       const {command, result} = action;
       const deviceName = state.current!.name
-      const commandResults = {...oldCommandResults, deviceName, [command]: result};
-      return {...state, loadingOutput: false, commandResults}
+      const deviceResults = {...oldCommandResults[deviceName], [command]: result};
+      const commandResults = {...oldCommandResults, [deviceName]: deviceResults};
+      const oldLoadingOutput = state.loadingOutput
+      const deviceLoading = {...oldLoadingOutput[deviceName], [command]: false};
+      const loadingOutput = {...oldLoadingOutput, [deviceName]: deviceLoading};
+      return {...state, loadingOutput, commandResults}
+    }
 
     case ENABLE_DISPLEVEL: {
       const {displevel} = action;
