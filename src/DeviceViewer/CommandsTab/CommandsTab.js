@@ -1,16 +1,17 @@
 
 import React, { Component } from 'react';
 import {
-  getCommandValue, getCurrentDeviceCommands, getCurrentDeviceName, getEnableDisplevels, getCommandDisplevels
+  getCommandValue, getCurrentDeviceCommands, getCurrentDeviceName, getEnableDisplevels, getCommandDisplevels, getCommandsOutputLoading
 } from '../../selectors/devices';
 
 import { submitCommand, enableDisplevel, disableDisplevel, enableAllDisplevel } from '../../actions/tango';
 import { connect } from 'react-redux';
 import './CommandsTab.css';
+import Spinner from '../../Spinner/Spinner';
 
 class CommandsTable extends Component {
   render() {
-    const { commands, submitCommand, getValue, currentDeviceName, displevels, enabledList, enableDisplevel, disableDisplevel } = this.props;
+    const { commands, submitCommand, getValue, currentDeviceName, displevels, enabledList, enableDisplevel, disableDisplevel, loading } = this.props;
     return (
       <div>
         {displevels.length > 1 &&
@@ -23,7 +24,7 @@ class CommandsTable extends Component {
                 <td>{name}</td>
                 <td>{intype}</td>
                 <td><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={intype} getValue={getValue} /></td>
-                <td>{getSubmittedValue(name, getValue, currentDeviceName)}</td>
+                {getSubmittedValue(name, getValue, currentDeviceName, loading)}
               </tr>
             )}
           </tbody>
@@ -59,11 +60,17 @@ class DisplevelBox extends Component {
   }
 }
 
-function getSubmittedValue(name, getValue, currentDeviceName) {
+function getSubmittedValue(name, getValue, currentDeviceName, loading) {
   const result = getValue;
   const command= result[currentDeviceName]
-  if(typeof command !== 'undefined' && name in command){
-    return 'Output: ' + command[name]
+  const lodingResult = loading;
+  const outputState = lodingResult[currentDeviceName]
+  if(typeof command !== 'undefined' && name in command && typeof outputState !== 'undefined' && name in outputState){
+    return(
+      <td>
+        {outputState[name] ? <Spinner size={1}/> : 'Output: ' + command[name]}
+        </td>
+    )
   }else {
     return "";
   } 
@@ -166,7 +173,8 @@ function mapStateToProps(state) {
     currentDeviceName: getCurrentDeviceName(state),
     getValue: getCommandValue(state),
     displevels: getCommandDisplevels(state),
-    enabledList: getEnableDisplevels(state)
+    enabledList: getEnableDisplevels(state),
+    loading: getCommandsOutputLoading(state)
   };
 }
 

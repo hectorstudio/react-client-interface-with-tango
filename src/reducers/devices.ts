@@ -1,6 +1,6 @@
 import {
   FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS, ENABLE_DISPLEVEL, DISABLE_DISPLEVEL,
-  FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB, EXECUTE_COMMAND_COMPLETE
+  FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB, EXECUTE_COMMAND_COMPLETE, EXECUTE_COMMAND
 } from '../actions/actionTypes';
 
 interface IDeviceAttribute {
@@ -34,6 +34,11 @@ export interface IDevicesState {
   activeTab: string,
   loadingNames: boolean,
   loadingDevice: boolean,
+  loadingOutput: {
+    [device: string]: {
+      [attribute: string]: boolean
+    }
+  },
   commandResults: {
     [device: string]: {
       [attribute: string]: any
@@ -51,6 +56,7 @@ export default function devices(state: IDevicesState = {
   activeTab: "attributes",
   loadingNames: false,
   loadingDevice: false,
+  loadingOutput: {},
   commandResults: {},
   enabledDisplevels: [],
 }, action) {
@@ -61,13 +67,26 @@ export default function devices(state: IDevicesState = {
     case FETCH_DEVICE_NAMES_SUCCESS:
       return {...state, nameList: action.names};
 
-    case EXECUTE_COMMAND_COMPLETE:
+    case EXECUTE_COMMAND: {
+    const oldLoadingOutput = state.loadingOutput
+    const {command} = action;
+    const deviceName = state.current!.name
+    const deviceResults = {...oldLoadingOutput[deviceName], [command]: true};
+    const loadingOutput = {...oldLoadingOutput, [deviceName]: deviceResults};
+    return {...state, loadingOutput}
+    }
+
+    case EXECUTE_COMMAND_COMPLETE: {
       const oldCommandResults = state.commandResults;
       const {command, result} = action;
       const deviceName = state.current!.name
       const deviceResults = {...oldCommandResults[deviceName], [command]: result};
       const commandResults = {...oldCommandResults, [deviceName]: deviceResults};
-      return {...state, commandResults}
+      const oldLoadingOutput = state.loadingOutput
+      const deviceLoading = {...oldLoadingOutput[deviceName], [command]: false};
+      const loadingOutput = {...oldLoadingOutput, [deviceName]: deviceLoading};
+      return {...state, loadingOutput, commandResults}
+    }
 
     case ENABLE_DISPLEVEL: {
       const {displevel} = action;
