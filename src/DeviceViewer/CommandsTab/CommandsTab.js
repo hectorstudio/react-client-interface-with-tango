@@ -13,7 +13,7 @@ class CommandsTable extends Component {
   render() {
     const { commands, submitCommand, getValue, currentDeviceName, displevels, enabledList, enableDisplevel, disableDisplevel, loading } = this.props;
     return (
-      <div>
+      <div className="commands-table">
         {displevels.length > 1 &&
           <DisplevelBox displevels={displevels} enabledList={enabledList} enableDisplevel={enableDisplevel} disableDisplevel={disableDisplevel} />
         }
@@ -23,7 +23,7 @@ class CommandsTable extends Component {
               <tr key={i}>
                 <td>{name}</td>
                 <td>{intype}</td>
-                <td><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype} getValue={getValue} /></td>
+                <td class="input"><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype} getValue={getValue} /></td>
                 {getSubmittedValue(name, getValue, currentDeviceName, loading)}
               </tr>
             )}
@@ -119,9 +119,7 @@ class InputField extends Component {
   render() {
     if (this.props.intype === 'DevVoid') {
       return(
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button" style={{position: "relative", left: 220}} onClick={this.handleSubmit}>Submit</button>
-        </div>
+        <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
       );
     }
     else if (this.props.intype === 'DevBoolean') {
