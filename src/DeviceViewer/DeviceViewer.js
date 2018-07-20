@@ -53,8 +53,18 @@ const ValueDisplay = ({value, datatype, dataformat}) => {
     return 'Images are not supported.';
   }
 
-  if (dataformat !== 'SPECTRUM' || datatype === 'DevString') {
-    return value.length < 50000 ? value : 'Value too big to display.';
+  if (dataformat === 'SCALAR') {
+    if (dataformat === 'DevString' && value.length > 50000) {
+      return 'Value too big to display.';
+    }
+
+    return value;
+  }
+
+  // At this point, dataformat is surely SPECTRUM
+
+  if (datatype === 'DevString') {
+    return 'DevString spectra are not yet supported.';
   }
 
   const values = datatype === 'DevBoolean'
