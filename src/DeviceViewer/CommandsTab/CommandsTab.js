@@ -120,8 +120,8 @@ class InputField extends Component {
     if (this.props.intype === 'DevVoid') {
       return(
         <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
-          </div>
+          <button class="btn btn-outline-secondary" type="button" style={{position: "relative", left: 220}} onClick={this.handleSubmit}>Submit</button>
+        </div>
       );
     }
     else if (this.props.intype === 'DevBoolean') {
