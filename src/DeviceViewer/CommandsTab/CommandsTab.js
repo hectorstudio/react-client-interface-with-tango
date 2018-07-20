@@ -13,7 +13,7 @@ class CommandsTable extends Component {
   render() {
     const { commands, submitCommand, getValue, currentDeviceName, displevels, enabledList, enableDisplevel, disableDisplevel, loading } = this.props;
     return (
-      <div>
+      <div className="commands-table">
         {displevels.length > 1 &&
           <DisplevelBox displevels={displevels} enabledList={enabledList} enableDisplevel={enableDisplevel} disableDisplevel={disableDisplevel} />
         }
@@ -23,7 +23,7 @@ class CommandsTable extends Component {
               <tr key={i}>
                 <td>{name}</td>
                 <td>{intype}</td>
-                <td><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={intype} getValue={getValue} /></td>
+                <td class="input"><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype} getValue={getValue} /></td>
                 {getSubmittedValue(name, getValue, currentDeviceName, loading)}
               </tr>
             )}
@@ -87,19 +87,19 @@ class InputField extends Component {
   }
 
   handleChange(event) {
-    if(this.props.name === 'DevBoolean' && event.target.value.length > 0){
+    if(this.props.intype === 'DevBoolean' && event.target.value.length > 0){
       this.setState({ value: event.target.value, valid: true });
     }
-    else if(event.target.value.length > 0 && this.props.name !== 'DevString'){
-      if(this.props.name.includes("U") && event.target.value > 0){
+    else if(event.target.value.length > 0 && this.props.intype !== 'DevString'){
+      if(this.props.intype.includes("U") && event.target.value > 0){
         this.setState({ value: parseInt(event.target.value, 10), valid: true });
       }
-      if((this.props.name.includes("Long") || this.props.name.includes("Short")) && !this.props.name.includes("U")){
+      if((this.props.intype.includes("Long") || this.props.intype.includes("Short")) && !this.props.intype.includes("U")){
         this.setState({ value: parseInt(event.target.value, 10), valid: true });
-      }else if(!this.props.name.includes("U")){
+      }else if(!this.props.intype.includes("U")){
         this.setState({ value: parseFloat(event.target.value, 10), valid: true });
       }
-    }else if(this.props.name === 'DevString'){
+    }else if(this.props.intype === 'DevString'){
       this.setState({ value: event.target.value});
     }else{
       this.setState({value: '', valid: false });
@@ -108,7 +108,7 @@ class InputField extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    if(this.props.name === 'DevString'){
+    if(this.props.intype === 'DevString'){
       this.props.submitCommand(this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
     }else{
      this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
@@ -117,10 +117,12 @@ class InputField extends Component {
   }
 
   render() {
-    if (this.props.name === 'DevVoid') {
-      return "";
+    if (this.props.intype === 'DevVoid') {
+      return(
+        <button class="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
+      );
     }
-    else if (this.props.name === 'DevBoolean') {
+    else if (this.props.intype === 'DevBoolean') {
       return (
         <div class="input-group">
           <select class="custom-select" id="inputGroupSelect04" value={this.state.value} onChange={this.handleChange}>
@@ -135,7 +137,7 @@ class InputField extends Component {
 
       )
     }
-    else if (this.props.name.includes("U")) {
+    else if (this.props.intype.includes("U")) {
       return (
         <div class="input-group">
           <input type="number" min="0" class="form-control" value={this.state.value} onChange={this.handleChange} />
@@ -144,7 +146,7 @@ class InputField extends Component {
           </div>
         </div>
       );
-    } else if(this.props.name === 'DevString') {
+    } else if(this.props.intype === 'DevString') {
       return (
         <div class="input-group">
           <input input type="text" class="form-control" value={this.state.value} onChange={this.handleChange} />

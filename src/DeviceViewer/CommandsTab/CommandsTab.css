@@ -22,3 +22,7 @@
    }
 
    input[type=checkbox] {width:18px; height:18px;}
+  
+.commands-table td.input {
+  text-align: right;
+}
