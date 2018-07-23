@@ -1,5 +1,5 @@
 import {
-  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS, ENABLE_DISPLEVEL, DISABLE_DISPLEVEL,
+  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS, ENABLE_DISPLEVEL, DISABLE_DISPLEVEL, SET_DEVICE_PROPERTY,
   FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB, EXECUTE_COMMAND_COMPLETE, EXECUTE_COMMAND
 } from '../actions/actionTypes';
 
@@ -70,7 +70,6 @@ export default function devices(state: IDevicesState = {
     case EXECUTE_COMMAND: {
     const oldLoadingOutput = state.loadingOutput
     const {command, device} = action;
-    // const deviceName = state.current!.name
     const deviceResults = {...oldLoadingOutput[device], [command]: true};
     const loadingOutput = {...oldLoadingOutput, [device]: deviceResults};
     return {...state, loadingOutput}
@@ -79,7 +78,6 @@ export default function devices(state: IDevicesState = {
     case EXECUTE_COMMAND_COMPLETE: {
       const oldCommandResults = state.commandResults;
       const {command, result, device} = action;
-      // const deviceName = state.current!.name
       const deviceResults = {...oldCommandResults[device], [command]: result};
       const commandResults = {...oldCommandResults, [device]: deviceResults};
       const oldLoadingOutput = state.loadingOutput
@@ -87,6 +85,14 @@ export default function devices(state: IDevicesState = {
       const loadingOutput = {...oldLoadingOutput, [device]: deviceLoading};
       return {...state, loadingOutput, commandResults}
     }
+    
+    case SET_DEVICE_PROPERTY:
+      const oldPropertys = state.current.properties;
+      const {device, name, value} = action;
+      const newPropertys = {...oldPropertys, [name]: value}
+      const properties = newPropertys;
+      return{...state, current: {...state.current, properties}}
+
 
     case ENABLE_DISPLEVEL: {
       const {displevel} = action;
