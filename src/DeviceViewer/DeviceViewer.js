@@ -164,7 +164,6 @@ class DeviceViewer extends Component {
   componentDidMount() {
     const device = this.parseDevice();
     this.props.fetchDevice(device);
-
     const tab = this.parseTab();
     this.props.selectTab(tab);
   }
@@ -237,7 +236,7 @@ class DeviceViewer extends Component {
               selectedTab={activeTab}
             />
           </div>
-        </div>;
+        </div>;    
         
     return (
       <div className="device-viewer">
