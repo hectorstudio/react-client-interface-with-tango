@@ -1,0 +1,13 @@
+.output {
+    text-align:center;
+   }
+
+  .output p{
+    text-align: justify;
+    margin: 0 auto;
+    width: 40em;
+    font-weight: bold;
+    position: relative;
+    top: 40px;
+
+   }

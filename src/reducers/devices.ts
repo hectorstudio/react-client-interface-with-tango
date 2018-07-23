@@ -69,22 +69,22 @@ export default function devices(state: IDevicesState = {
 
     case EXECUTE_COMMAND: {
     const oldLoadingOutput = state.loadingOutput
-    const {command} = action;
-    const deviceName = state.current!.name
-    const deviceResults = {...oldLoadingOutput[deviceName], [command]: true};
-    const loadingOutput = {...oldLoadingOutput, [deviceName]: deviceResults};
+    const {command, device} = action;
+    // const deviceName = state.current!.name
+    const deviceResults = {...oldLoadingOutput[device], [command]: true};
+    const loadingOutput = {...oldLoadingOutput, [device]: deviceResults};
     return {...state, loadingOutput}
     }
 
     case EXECUTE_COMMAND_COMPLETE: {
       const oldCommandResults = state.commandResults;
-      const {command, result} = action;
-      const deviceName = state.current!.name
-      const deviceResults = {...oldCommandResults[deviceName], [command]: result};
-      const commandResults = {...oldCommandResults, [deviceName]: deviceResults};
+      const {command, result, device} = action;
+      // const deviceName = state.current!.name
+      const deviceResults = {...oldCommandResults[device], [command]: result};
+      const commandResults = {...oldCommandResults, [device]: deviceResults};
       const oldLoadingOutput = state.loadingOutput
-      const deviceLoading = {...oldLoadingOutput[deviceName], [command]: false};
-      const loadingOutput = {...oldLoadingOutput, [deviceName]: deviceLoading};
+      const deviceLoading = {...oldLoadingOutput[device], [command]: false};
+      const loadingOutput = {...oldLoadingOutput, [device]: deviceLoading};
       return {...state, loadingOutput, commandResults}
     }
 
