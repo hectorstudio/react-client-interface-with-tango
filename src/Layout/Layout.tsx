@@ -4,6 +4,7 @@ import * as qs from 'query-string';
 
 import DeviceList from '../DeviceList/DeviceList';
 import DeviceViewer from '../DeviceViewer/DeviceViewer';
+import HomeViewer from '../HomeViewer/HomeViewer';
 import ErrorDisplay from '../ErrorDisplay/ErrorDisplay';
 
 import './Layout.css';
@@ -17,6 +18,7 @@ const MainView = ({className}) =>
   <div className={className}>
     <ErrorDisplay/>
     <Route path='/devices/:device*' component={DeviceViewer}/>
+    <Route exact={true} path='/' component={HomeViewer}/>
   </div>;
 
 const DefaultLayout = () =>
