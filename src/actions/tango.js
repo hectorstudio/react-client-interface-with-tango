@@ -35,8 +35,9 @@ export function fetchDeviceNames() {
 }
 
 export function submitCommand(command, argin, device) {
+  console.log('command ', command, 'device ', device)
   return (dispatch) => {
-    dispatch({type: types.EXECUTE_COMMAND, command});
+    dispatch({type: types.EXECUTE_COMMAND, command, device});
     argin === '' ?
     callServiceGraphQL(`
     mutation ExecuteVoidCommand($command: String!, $device: String!) {
@@ -47,7 +48,7 @@ export function submitCommand(command, argin, device) {
       }
     }`, {command, device})
     .then(data => data.executeCommand.output)
-    .then(result => dispatch( {type: types.EXECUTE_COMMAND_COMPLETE, command, result}))
+    .then(result => dispatch( {type: types.EXECUTE_COMMAND_COMPLETE, command, result, device}))
     .catch(err => dispatch(displayError(err.toString()))) 
     :
     callServiceGraphQL(`
