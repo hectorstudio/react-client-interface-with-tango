@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 
 import CommandsTable from './CommandsTab/CommandsTab';
 
-import { fetchDevice, submitCommand, setDeviceProperty } from '../actions/tango';
+import { fetchDevice, submitCommand, setDeviceProperty, deleteDeviceProperty } from '../actions/tango';
 
 import Spinner from '../Spinner/Spinner';
 import ValueDisplay from './ValueDisplay/ValueDisplay';
@@ -31,7 +31,7 @@ import { setDataFormat, setTab} from '../actions/deviceList';
 
 
 
-const PropertyTable = ({properties, setDeviceProperty, currentDeviceName}) => 
+const PropertyTable = ({properties, setDeviceProperty, currentDeviceName, deleteDeviceProperty}) => 
   <div>
     <table className="properties">
       <tbody>
@@ -42,32 +42,76 @@ const PropertyTable = ({properties, setDeviceProperty, currentDeviceName}) =>
         </tr>
       )}
       </tbody>
-      <SetProperty setDeviceProperty={setDeviceProperty} currentDeviceName={currentDeviceName}/>
     </table>
+    <SetProperty setDeviceProperty={setDeviceProperty} currentDeviceName={currentDeviceName} />
+    <DeleteProperty deleteDeviceProperty={deleteDeviceProperty} currentDeviceName={currentDeviceName} />
   </div>;
+
 
 class SetProperty extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = { name: '', value: '', valid: false};
+    this.state = {formValues: {}, valid: false};
   }
 
   handleChange(event) {
-    this.setState({name: event.target.name, value: event.target.value});
+    event.preventDefault();
+        let formValues = this.state.formValues;
+        let name = event.target.name;
+        let value = event.target.value;
+        formValues[name] = value;
+        this.setState({formValues})
   }
 
   handleSubmit(event) {
     event.preventDefault()
-    this.props.setDeviceProperty("sys/tg_test/1", "Hej", "Hejsan")  
+    this.props.setDeviceProperty(this.props.currentDeviceName, this.state.formValues.name, [this.state.formValues.value])  
+    let formValues = this.state.formValues;
+    this.state.formValues["name"] = "";
+    this.state.formValues["value"] = "";
+    this.setState({formValues});
   }
 
   render() {
       return(
         <div className="input-group">
         <div className="input-group-append">
+        <input type="text" name="name" autoComplete="off" value={this.state.formValues["name"]} onChange={this.handleChange} />
+        <input type="text" name="value" value={this.state.formValues["value"]} onChange={this.handleChange} />  
           <button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Add new property</button>
+        </div>
+      </div>
+      );
+    }
+}
+
+class DeleteProperty extends Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {value: '', valid: false};
+  }
+
+  handleChange(event) {
+    event.preventDefault();
+    this.setState({value: event.target.value})
+  }
+  
+  handleSubmit(event) {
+    event.preventDefault()
+    this.props.deleteDeviceProperty(this.props.currentDeviceName, this.state.value)  
+    this.setState({value: ''});
+  }
+
+  render() {
+      return(
+        <div className="input-group">
+        <div className="input-group-append">
+        <input type="text" name="name" autoComplete="off" value={this.state.value} onChange={this.handleChange} /> 
+          <button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Remove property</button>
         </div>
       </div>
       );
@@ -165,13 +209,13 @@ class DeviceMenu extends Component {
 class DeviceTables extends Component {
 
   render() {
-      const {properties, attributes, dataFormat, dataFormats, onSetDataFormat, selectedTab, commands, setDeviceProperty, currentDeviceName} = this.props;
+      const {properties, attributes, dataFormat, dataFormats, onSetDataFormat, selectedTab, commands, setDeviceProperty, currentDeviceName,deleteDeviceProperty} = this.props;
       const hasAttrs = attributes.length > 0;
       const hasProps = properties.length > 0;
 
     return (
       <div className="device-table">
-        {selectedTab === "properties" && <PropertyTable properties={properties} setDeviceProperty ={setDeviceProperty} currentDeviceName={currentDeviceName}/>}
+        {hasProps && selectedTab === "properties" && <PropertyTable properties={properties} setDeviceProperty ={setDeviceProperty} currentDeviceName={currentDeviceName} deleteDeviceProperty={deleteDeviceProperty}/>}
         {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat}/>}
         {selectedTab === "commands" && <CommandsTable commands ={commands}/>}
       </div>
@@ -211,7 +255,21 @@ class DeviceViewer extends Component {
   }
 
   render() {
-    const {properties, attributes, loading, dataFormat, dataFormats, selectDataFormat, selectTab, activeTab, currentState, commands} = this.props;    
+    const {
+      properties,
+      attributes,
+      loading, 
+      dataFormat, 
+      dataFormats, 
+      selectDataFormat, 
+      selectTab, 
+      activeTab, 
+      currentState, 
+      commands,
+      setDeviceProperty,
+      currentDeviceName,
+      deleteDeviceProperty
+    } = this.props;    
     const QualityIndicator = ({state}) => {
       const sub = {
         'ON': 'on',
@@ -256,14 +314,15 @@ class DeviceViewer extends Component {
               onSetTab={selectTab}
             />
             <DeviceTables
-              setDeviceProperty={setDeviceProperty}
               attributes={attributes}
               properties={properties}
               commands={commands}
               dataFormats={dataFormats}
               dataFormat={dataFormat}
               selectedTab={activeTab}
-              currentDeviceName={this.props.currentDeviceName}
+              setDeviceProperty={setDeviceProperty}
+              currentDeviceName={currentDeviceName}
+              deleteDeviceProperty={deleteDeviceProperty}
             />
           </div>
         </div>;    
@@ -299,7 +358,8 @@ function mapDispatchToProps(dispatch) {
     selectDataFormat: format => dispatch(setDataFormat(format)),
     selectTab: tab => dispatch(setTab(tab)),
     submitCommand: (command, value) => dispatch(submitCommand(command, value)),
-    setDeviceProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value))
+    setDeviceProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value)),
+    deleteDeviceProperty: (device, name) => dispatch(deleteDeviceProperty(device, name))
   };
 }
 

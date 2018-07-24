@@ -1,5 +1,5 @@
 import {
-  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS, ENABLE_DISPLEVEL, DISABLE_DISPLEVEL, SET_DEVICE_PROPERTY,
+  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS, ENABLE_DISPLEVEL, DISABLE_DISPLEVEL, SET_DEVICE_PROPERTY, DELETE_DEVICE_PROPERTY,
   FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB, EXECUTE_COMMAND_COMPLETE, EXECUTE_COMMAND
 } from '../actions/actionTypes';
 
@@ -86,13 +86,23 @@ export default function devices(state: IDevicesState = {
       return {...state, loadingOutput, commandResults}
     }
     
-    case SET_DEVICE_PROPERTY:
-      const oldPropertys = state.current!.properties;
-      const {name, value} = action;
-      const newPropertys = {...oldPropertys, [name]: value}
-      const properties = newPropertys;
-      return{...state, current: {...state.current, properties}}
+    case SET_DEVICE_PROPERTY: {
+        const {name, value} = action;
+        const current = state.current!;
+        const oldProperty = current.properties.find(prop => prop.name === name);
+        const properties = oldProperty
+        ? current.properties.map(prop => prop.name === name ? {...prop, value} : prop)
+        : [...current.properties, {name, value}];
 
+        return {...state, current: {...current, properties}};
+      }
+
+    case DELETE_DEVICE_PROPERTY: {
+      const {name} = action;
+      const current = state.current!;
+      const properties = current.properties.filter(prop => prop.name !== name)
+      return {...state, current: {...current, properties}};
+    }
 
     case ENABLE_DISPLEVEL: {
       const {displevel} = action;
