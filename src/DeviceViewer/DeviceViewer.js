@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 
 import CommandsTable from './CommandsTab/CommandsTab';
 
-import { fetchDevice, submitCommand } from '../actions/tango';
+import { fetchDevice, submitCommand, setDeviceProperty } from '../actions/tango';
 
 import Spinner from '../Spinner/Spinner';
 import ValueDisplay from './ValueDisplay/ValueDisplay';
@@ -23,14 +23,15 @@ import {
   getDeviceNames,
   getCurrentDeviceState,
   getCurrentDeviceCommands,
-  getCommandValue
+  getCommandValue,
+  getCurrentDeviceName
 } from '../selectors/devices';
 import { setDataFormat, setTab} from '../actions/deviceList';
 
 
 
 
-const PropertyTable = ({properties}) => 
+const PropertyTable = ({properties, setDeviceProperty, currentDeviceName}) => 
   <div>
     <table className="properties">
       <tbody>
@@ -41,8 +42,37 @@ const PropertyTable = ({properties}) =>
         </tr>
       )}
       </tbody>
+      <SetProperty setDeviceProperty={setDeviceProperty} currentDeviceName={currentDeviceName}/>
     </table>
   </div>;
+
+class SetProperty extends Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = { name: '', value: '', valid: false};
+  }
+
+  handleChange(event) {
+    this.setState({name: event.target.name, value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    event.preventDefault()
+    this.props.setDeviceProperty("sys/tg_test/1", "Hej", "Hejsan")  
+  }
+
+  render() {
+      return(
+        <div className="input-group">
+        <div className="input-group-append">
+          <button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Add new property</button>
+        </div>
+      </div>
+      );
+    }
+}
 
 const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) => {
   const QualityIndicator = ({quality}) => {
@@ -135,13 +165,13 @@ class DeviceMenu extends Component {
 class DeviceTables extends Component {
 
   render() {
-      const {properties, attributes, dataFormat, dataFormats, onSetDataFormat, selectedTab, commands} = this.props;
+      const {properties, attributes, dataFormat, dataFormats, onSetDataFormat, selectedTab, commands, setDeviceProperty, currentDeviceName} = this.props;
       const hasAttrs = attributes.length > 0;
       const hasProps = properties.length > 0;
 
     return (
       <div className="device-table">
-        {selectedTab === "properties" && <PropertyTable properties={properties}/>}
+        {selectedTab === "properties" && <PropertyTable properties={properties} setDeviceProperty ={setDeviceProperty} currentDeviceName={currentDeviceName}/>}
         {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat}/>}
         {selectedTab === "commands" && <CommandsTable commands ={commands}/>}
       </div>
@@ -226,14 +256,14 @@ class DeviceViewer extends Component {
               onSetTab={selectTab}
             />
             <DeviceTables
-              submitCommand={this.props.submitCommand}
-              getValue= {this.props.getCommandValue}
+              setDeviceProperty={setDeviceProperty}
               attributes={attributes}
               properties={properties}
               commands={commands}
               dataFormats={dataFormats}
               dataFormat={dataFormat}
               selectedTab={activeTab}
+              currentDeviceName={this.props.currentDeviceName}
             />
           </div>
         </div>;    
@@ -252,6 +282,7 @@ function mapStateToProps(state) {
     attributes: getFilteredCurrentDeviceAttributes(state),
     properties: getCurrentDeviceProperties(state),
     commands: getCurrentDeviceCommands(state),
+    currentDeviceName: getCurrentDeviceName(state),
     device: getDeviceNames(state),
     loading: getDeviceIsLoading(state),
     dataFormats: getAvailableDataFormats(state),
@@ -267,7 +298,8 @@ function mapDispatchToProps(dispatch) {
     fetchDevice: device => dispatch(fetchDevice(device)),
     selectDataFormat: format => dispatch(setDataFormat(format)),
     selectTab: tab => dispatch(setTab(tab)),
-    submitCommand: (command, value) => dispatch(submitCommand(command, value))
+    submitCommand: (command, value) => dispatch(submitCommand(command, value)),
+    setDeviceProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value))
   };
 }
 

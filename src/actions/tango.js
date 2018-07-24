@@ -68,8 +68,8 @@ export function submitCommand(command, argin, device) {
 export function setDeviceProperty(device, name, value){
   return (dispatch) => {
     callServiceGraphQL(`
-    mutation PutDeviceProperty($device: String!, $name: String!, $value: String!) {
-      PutDeviceProperty(device: $device, name: $name, value: $value) {
+    mutation PutDeviceProperty($device: String!, $name: String!, $value: [String]) {
+      putDeviceProperty(device: $device, name: $name, value: $value) {
         ok
         message
       }

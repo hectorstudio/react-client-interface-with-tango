@@ -87,8 +87,8 @@ export default function devices(state: IDevicesState = {
     }
     
     case SET_DEVICE_PROPERTY:
-      const oldPropertys = state.current.properties;
-      const {device, name, value} = action;
+      const oldPropertys = state.current!.properties;
+      const {name, value} = action;
       const newPropertys = {...oldPropertys, [name]: value}
       const properties = newPropertys;
       return{...state, current: {...state.current, properties}}
