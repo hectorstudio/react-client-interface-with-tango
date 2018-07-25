@@ -35,11 +35,6 @@ export const getCurrentDeviceCommands = createSelector(
     device => device ? device.commands || [] : []
 );
 
-export const getCommandsOutputLoading = createSelector(
-    getDevicesState,
-    state => state.loadingOutput
-);
-
 export const getAvailableDataFormats = createSelector(
     getCurrentDeviceAttributes,
     attrs => Object.keys(attrs.reduce((accum, attr) => ({
