@@ -35,16 +35,6 @@ export const getCurrentDeviceCommands = createSelector(
     device => device ? device.commands || [] : []
 );
 
-export const getDeviceIsLoading = createSelector(
-    getDevicesState,
-    state => state.loadingDevice
-);
-
-export const getDeviceNamesAreLoading = createSelector(
-    getDevicesState,
-    state => state.loadingNames
-);
-
 export const getCommandsOutputLoading = createSelector(
     getDevicesState,
     state => state.loadingOutput
