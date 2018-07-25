@@ -5,11 +5,6 @@ function getDevicesState(state: IRootState) {
     return state.devices;
 }
 
-export const getDeviceNames = createSelector(
-    getDevicesState,
-    state => state.nameList
-);
-
 export const getCurrentDevice = createSelector(
     getDevicesState,
     state => state.current
@@ -38,11 +33,6 @@ export const getCurrentDeviceProperties = createSelector(
 export const getCurrentDeviceCommands = createSelector(
     getCurrentDevice,
     device => device ? device.commands || [] : []
-);
-
-export const getHasDevices = createSelector(
-    getDeviceNames,
-    names => names.length > 0
 );
 
 export const getDeviceIsLoading = createSelector(
