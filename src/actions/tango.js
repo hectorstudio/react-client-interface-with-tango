@@ -85,7 +85,7 @@ export function subscribeDevice(device, emit){
     const models = device.attributes
       .filter(({dataformat}) => dataformat === 'SCALAR')
       .map(({name}) => `${device.name}/${name}`);
-    var query = `
+    const query = `
     subscription newChangeEvent($models:[String]){
       changeEvent(models:$models){
         eventType,
@@ -96,7 +96,7 @@ export function subscribeDevice(device, emit){
         }
       }
     }`;
-    var variables = {"models":models};
+    const variables = {"models":models};
     emit("start", {query,variables});
   }
 }
