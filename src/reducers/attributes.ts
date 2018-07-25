@@ -14,11 +14,11 @@ export interface IAttributesState {
     }
 }
 
-export default function allAttributes(state: IAttributesState = {}, action) {
+export default function attributes(state: IAttributesState = {}, action) {
     switch (action.type) {
     case FETCH_DEVICE_SUCCESS: {
-        const {name, attributes} = action.device;
-        const hash = attributes.reduce((accum, attribute) => ({
+        const {name, attributes: attrs} = action.device;
+        const hash = attrs.reduce((accum, attribute) => ({
             ...accum, [attribute.name]: attribute
         }), {});
         return {...state, [name]: hash};
