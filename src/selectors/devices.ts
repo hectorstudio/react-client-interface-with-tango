@@ -1,9 +1,14 @@
 import { createSelector } from 'reselect';
 import { getFilter } from './filtering';
 import { IDevicesState } from '../reducers/devices';
+import { IDeviceViewState } from '../reducers/deviceView';
 
 function getDevicesState(state): IDevicesState {
     return state.devices;
+}
+
+function getDeviceViewState(state): IDeviceViewState {
+    return state.deviceView;
 }
 
 export const getDeviceNames = createSelector(
@@ -81,12 +86,12 @@ export const getAvailableDataFormats = createSelector(
 );
 
 export const getActiveDataFormat = createSelector(
-    getDevicesState,
+    getDeviceViewState,
     state => state.activeDataFormat
 );
 
 export const getActiveTab = createSelector(
-    getDevicesState,
+    getDeviceViewState,
     state => state.activeTab
 );
 
@@ -117,7 +122,7 @@ export const getCommandDisplevels = createSelector(
 );
 
 export const getEnableDisplevels = createSelector(
-    getDevicesState,
+    getDeviceViewState,
     state => state.enabledDisplevels
 );
 
