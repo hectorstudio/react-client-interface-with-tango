@@ -1,8 +1,7 @@
 import { createSelector } from 'reselect';
-import { getFilter } from './filtering';
-import { IDevicesState } from '../reducers/devices';
+import { IRootState } from '../reducers/rootReducer';
 
-function getDevicesState(state): IDevicesState {
+function getDevicesState(state: IRootState) {
     return state.devices;
 }
 
@@ -44,18 +43,6 @@ export const getCurrentDeviceCommands = createSelector(
 export const getHasDevices = createSelector(
     getDeviceNames,
     names => names.length > 0
-);
-
-function matchesFilter(name, filter) {
-    const words = filter.split(/\s+/);
-    const matched = words.filter(word => name.toUpperCase().indexOf(word.toUpperCase()) !== -1);
-    return matched.length === words.length;
-}
-
-export const getFilteredDeviceNames = createSelector(
-    getDeviceNames,
-    getFilter,
-    (names, filter) => names.filter(name => matchesFilter(name, filter))
 );
 
 export const getDeviceIsLoading = createSelector(
