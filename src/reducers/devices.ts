@@ -1,6 +1,6 @@
 import {
-  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS, ENABLE_DISPLEVEL, DISABLE_DISPLEVEL,
-  FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB, EXECUTE_COMMAND_COMPLETE, EXECUTE_COMMAND
+  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS,
+  FETCH_DEVICE, FETCH_DEVICE_SUCCESS, CHANGE, EXECUTE_COMMAND_COMPLETE, EXECUTE_COMMAND
 } from '../actions/actionTypes';
 
 interface IDeviceAttribute {
@@ -30,8 +30,6 @@ interface IDevice {
 export interface IDevicesState {
   nameList: string[],
   current?: IDevice,
-  activeDataFormat?: string,
-  activeTab: string,
   loadingNames: boolean,
   loadingDevice: boolean,
   loadingOutput: {
@@ -44,21 +42,14 @@ export interface IDevicesState {
       [attribute: string]: any
     }
   }, // any, // TODO
-  enabledDisplevels: string[],
-}
-
-function unique(list) {
-  return list.filter((x, i) => list.indexOf(x) === i);
 }
 
 export default function devices(state: IDevicesState = {
   nameList: [],
-  activeTab: "attributes",
   loadingNames: false,
   loadingDevice: false,
   loadingOutput: {},
   commandResults: {},
-  enabledDisplevels: [],
 }, action) {
   switch (action.type) {
     
@@ -88,41 +79,16 @@ export default function devices(state: IDevicesState = {
       return {...state, loadingOutput, commandResults}
     }
 
-    case ENABLE_DISPLEVEL: {
-      const {displevel} = action;
-      const enabledDisplevels = state.enabledDisplevels.concat(displevel);
-      return {...state, enabledDisplevels};
-    }
-
-    case DISABLE_DISPLEVEL: {
-      const {displevel} = action;
-      const enabledDisplevels = state.enabledDisplevels.filter(level => level !== displevel);
-      return {...state, enabledDisplevels};
-    }
-
     case FETCH_DEVICE:
       return {...state, loadingDevice: true};
     
     case FETCH_DEVICE_SUCCESS: {
-      const {device: {attributes, commands}} = action;
-      const hasAttrs = attributes && attributes.length > 0;
-      const hasCommands = commands && commands.length > 0;
-      const enabledDisplevels = hasCommands ? unique(commands.map(cmd => cmd.displevel)) : [];
-
       return {
         ...state,
         current: action.device,
         loadingDevice: false,
-        activeDataFormat: hasAttrs ? attributes[0].dataformat : null,
-        enabledDisplevels
       };
     }
-
-    case SET_DATA_FORMAT:
-      return {...state, activeDataFormat: action.format};
-
-    case SET_TAB:
-      return {...state, activeTab: action.tab};
 
     case CHANGE: {
       const {current} = state;
