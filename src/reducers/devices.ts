@@ -1,6 +1,5 @@
 import {
-  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS,
-  FETCH_DEVICE, FETCH_DEVICE_SUCCESS, CHANGE, EXECUTE_COMMAND_COMPLETE, EXECUTE_COMMAND
+  FETCH_DEVICE_SUCCESS, CHANGE, EXECUTE_COMMAND_COMPLETE, EXECUTE_COMMAND
 } from '../actions/actionTypes';
 
 interface IDeviceAttribute {
@@ -28,10 +27,7 @@ interface IDevice {
 }
 
 export interface IDevicesState {
-  nameList: string[],
   current?: IDevice,
-  loadingNames: boolean,
-  loadingDevice: boolean,
   loadingOutput: {
     [device: string]: {
       [attribute: string]: boolean
@@ -45,26 +41,17 @@ export interface IDevicesState {
 }
 
 export default function devices(state: IDevicesState = {
-  nameList: [],
-  loadingNames: false,
-  loadingDevice: false,
   loadingOutput: {},
   commandResults: {},
 }, action) {
   switch (action.type) {
-    
-    case FETCH_DEVICE_NAMES:
-      return {...state, loadingNames: true};
-    case FETCH_DEVICE_NAMES_SUCCESS:
-      return {...state, nameList: action.names};
-
     case EXECUTE_COMMAND: {
-    const oldLoadingOutput = state.loadingOutput
-    const {command, device} = action;
-    // const deviceName = state.current!.name
-    const deviceResults = {...oldLoadingOutput[device], [command]: true};
-    const loadingOutput = {...oldLoadingOutput, [device]: deviceResults};
-    return {...state, loadingOutput}
+      const oldLoadingOutput = state.loadingOutput
+      const {command, device} = action;
+      // const deviceName = state.current!.name
+      const deviceResults = {...oldLoadingOutput[device], [command]: true};
+      const loadingOutput = {...oldLoadingOutput, [device]: deviceResults};
+      return {...state, loadingOutput}
     }
 
     case EXECUTE_COMMAND_COMPLETE: {
@@ -79,15 +66,8 @@ export default function devices(state: IDevicesState = {
       return {...state, loadingOutput, commandResults}
     }
 
-    case FETCH_DEVICE:
-      return {...state, loadingDevice: true};
-    
     case FETCH_DEVICE_SUCCESS: {
-      return {
-        ...state,
-        current: action.device,
-        loadingDevice: false,
-      };
+      return {...state, current: action.device};
     }
 
     case CHANGE: {
