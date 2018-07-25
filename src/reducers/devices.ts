@@ -1,5 +1,5 @@
 import {
-  FETCH_DEVICE_SUCCESS, CHANGE, EXECUTE_COMMAND_COMPLETE
+  FETCH_DEVICE_SUCCESS, CHANGE
 } from '../actions/actionTypes';
 
 interface IDeviceAttribute {
@@ -28,31 +28,10 @@ interface IDevice {
 
 export interface IDevicesState {
   current?: IDevice,
-  loadingOutput: {
-    [device: string]: {
-      [attribute: string]: boolean
-    }
-  },
-  commandResults: {
-    [device: string]: {
-      [attribute: string]: any
-    }
-  }, // any, // TODO
 }
 
-export default function devices(state: IDevicesState = {
-  loadingOutput: {},
-  commandResults: {},
-}, action) {
+export default function devices(state: IDevicesState = {}, action) {
   switch (action.type) {
-    case EXECUTE_COMMAND_COMPLETE: {
-      const oldCommandResults = state.commandResults;
-      const {command, result, device} = action;
-      const deviceResults = {...oldCommandResults[device], [command]: result};
-      const commandResults = {...oldCommandResults, [device]: deviceResults};
-      return {...state, commandResults};
-    }
-
     case FETCH_DEVICE_SUCCESS: {
       return {...state, current: action.device};
     }
