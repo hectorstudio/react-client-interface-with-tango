@@ -71,8 +71,12 @@ export function unSubscribeDevice(device, emit){
     const models = device.attributes
       .filter(({dataformat}) => dataformat === 'SCALAR')
       .map(({name}) => `${device.name}/${name}`);
-
-    emit("UNSUBSCRIBE", models);
+    const query =`
+    subscription newChangeEvent($models:[String]){
+      unsubChangeEvent(models:$models)
+    }`
+    const variables = {"models":models}   
+    emit("start", {query,variables});
   }
 }
 
@@ -81,8 +85,19 @@ export function subscribeDevice(device, emit){
     const models = device.attributes
       .filter(({dataformat}) => dataformat === 'SCALAR')
       .map(({name}) => `${device.name}/${name}`);
-    
-    emit("SUBSCRIBE", models);
+    const query = `
+    subscription newChangeEvent($models:[String]){
+      changeEvent(models:$models){
+        eventType,
+        device,
+        name,
+        data {
+          value
+        }
+      }
+    }`;
+    const variables = {"models":models};
+    emit("start", {query,variables});
   }
 }
 

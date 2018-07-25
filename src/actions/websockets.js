@@ -6,7 +6,7 @@ function socketUrl() {
 	return protocol + '//' + loc.host + '/socket';
 }
 
-const ws = new WebSocket(socketUrl(), "json");
+const ws = new WebSocket(socketUrl(), "graphql-ws");
 
 export function receiveChange(data) {
     return { type: types.CHANGE, data }
@@ -23,10 +23,17 @@ export const init = ( store ) => {
 	});
 
 	ws.addEventListener("message", msg => {
-	    var data = JSON.parse(msg.data);
-	    if (data.events.CHANGE && data){
-	    	store.dispatch(receiveChange(data.events.CHANGE))
-	    }
+		const data = JSON.parse(msg.data);
+		if (data.type === "data"){
+			const events = data.payload.data.changeEvent
+			var i;
+			for (i in events){
+				if (events[i]){
+					store.dispatch(receiveChange(events[i]))
+				}
+			}
+		}
+	    
 	    /*
 		if (data.events.CONFIG && data){
 	    	
@@ -35,4 +42,4 @@ export const init = ( store ) => {
 	});
 };
 
-export const emit = (type, models) => ws.send(JSON.stringify({type, models}));
+export const emit = (type, payload) => ws.send(JSON.stringify({type, payload}));
