@@ -9,7 +9,7 @@ import {
   getCommandsOutputLoading
 } from '../../selectors/devices';
 
-import { getEnabledDisplevels } from '../../selectors/deviceView';
+import { getEnabledDisplevels } from '../../selectors/deviceDetail';
 
 import { submitCommand, enableDisplevel, disableDisplevel, enableAllDisplevel } from '../../actions/tango';
 import { connect } from 'react-redux';

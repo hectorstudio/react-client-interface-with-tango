@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 
 import devices, { IDevicesState } from './devices';
-import deviceView, { IDeviceViewState } from './deviceView';
+import deviceView, { IDeviceViewState } from './deviceDetail';
 import deviceList, { IDeviceListState } from './deviceList';
 import loadingStatus, { ILoadingStatusState } from './loadingStatus';
 import ui from './ui';

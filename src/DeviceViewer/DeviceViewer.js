@@ -27,7 +27,7 @@ import {
   getFilteredCurrentDeviceAttributes,
   getActiveDataFormat,
   getActiveTab,
-} from '../selectors/deviceView';
+} from '../selectors/deviceDetail';
 
 import { setDataFormat, setTab} from '../actions/deviceList';
 

@@ -1,4 +1,4 @@
-import { IDeviceViewState } from '../reducers/deviceView';
+import { IDeviceViewState } from '../reducers/deviceDetail';
 import { createSelector } from 'reselect';
 import { getCurrentDeviceAttributes } from './devices';
 
