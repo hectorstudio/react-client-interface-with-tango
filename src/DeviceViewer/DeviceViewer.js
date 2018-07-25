@@ -15,20 +15,21 @@ import './DeviceViewer.css';
 
 import {
   getCurrentDeviceProperties,
+  getCurrentDeviceCommands,
+  getDeviceNames,
   getDeviceIsLoading,
   getAvailableDataFormats,
+  getCurrentDeviceState,
+  getCommandValue,
+} from '../selectors/devices';
+
+import {
   getFilteredCurrentDeviceAttributes,
   getActiveDataFormat,
   getActiveTab,
-  getDeviceNames,
-  getCurrentDeviceState,
-  getCurrentDeviceCommands,
-  getCommandValue
-} from '../selectors/devices';
+} from '../selectors/deviceView';
+
 import { setDataFormat, setTab} from '../actions/deviceList';
-
-
-
 
 const PropertyTable = ({properties}) => 
   <div>

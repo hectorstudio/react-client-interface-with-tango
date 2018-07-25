@@ -1,8 +1,15 @@
 
 import React, { Component } from 'react';
+
 import {
-  getCommandValue, getCurrentDeviceCommands, getCurrentDeviceName, getEnableDisplevels, getCommandDisplevels, getCommandsOutputLoading
+  getCurrentDeviceCommands,
+  getCurrentDeviceName,
+  getCommandValue,
+  getCommandDisplevels,
+  getCommandsOutputLoading
 } from '../../selectors/devices';
+
+import { getEnabledDisplevels } from '../../selectors/deviceView';
 
 import { submitCommand, enableDisplevel, disableDisplevel, enableAllDisplevel } from '../../actions/tango';
 import { connect } from 'react-redux';
@@ -171,7 +178,7 @@ function mapStateToProps(state) {
     currentDeviceName: getCurrentDeviceName(state),
     getValue: getCommandValue(state),
     displevels: getCommandDisplevels(state),
-    enabledList: getEnableDisplevels(state),
+    enabledList: getEnabledDisplevels(state),
     loading: getCommandsOutputLoading(state)
   };
 }
