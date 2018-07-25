@@ -14,7 +14,6 @@ import ValueDisplay from './ValueDisplay/ValueDisplay';
 import './DeviceViewer.css';
 
 import {
-  getCurrentDeviceProperties,
   getCurrentDeviceCommands,
   getAvailableDataFormats,
   getCurrentDeviceState,
@@ -27,6 +26,10 @@ import {
   getActiveDataFormat,
   getActiveTab,
 } from '../selectors/deviceDetail';
+
+import {
+  getCurrentDeviceProperties
+} from '../selectors/currentDevice';
 
 import { setDataFormat, setTab} from '../actions/deviceList';
 
