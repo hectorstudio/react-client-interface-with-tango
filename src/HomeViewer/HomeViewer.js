@@ -15,8 +15,7 @@ class HomeViewer extends Component {
     }
 
     render() {
-        const { getValue } = this.props;
-        const response = getValue["sys/database/2"];
+        const response = this.props.commandOutputs["sys/database/2"];
         if (typeof response !== 'undefined') {
             const output = response["DbInfo"]
             return (
