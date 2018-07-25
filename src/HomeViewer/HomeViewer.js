@@ -6,6 +6,7 @@ import {
 } from '../selectors/devices';
 import { submitCommand } from '../actions/tango';
 import './HomeViewer.css'
+import { getCommandOutputState } from '../selectors/commandOutput';
 
 
 class HomeViewer extends Component {
@@ -37,7 +38,7 @@ class HomeViewer extends Component {
 
 function mapStateToProps(state) {
     return {
-        getValue: getCommandValue(state),
+        commandOutputs: getCommandOutputState(state),
     };
 }
 

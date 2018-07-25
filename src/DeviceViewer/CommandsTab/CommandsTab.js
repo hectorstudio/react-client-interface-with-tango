@@ -1,24 +1,52 @@
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import {
   getCurrentDeviceCommands,
   getCurrentDeviceName,
   getCommandValue,
   getCommandDisplevels,
+  getCurrentDeviceCommandOutputs,
 } from '../../selectors/devices';
 
-import { getEnabledDisplevels } from '../../selectors/deviceDetail';
-import { getCommandsOutputLoading } from '../../selectors/loadingStatus';
+import {
+  getEnabledDisplevels
+} from '../../selectors/deviceDetail';
 
-import { submitCommand, enableDisplevel, disableDisplevel, enableAllDisplevel } from '../../actions/tango';
-import { connect } from 'react-redux';
-import './CommandsTab.css';
+import {
+  getCommandOutputsLoading
+} from '../../selectors/loadingStatus';
+
+import {
+  submitCommand,
+  enableDisplevel,
+  disableDisplevel,
+  enableAllDisplevel
+} from '../../actions/tango';
+
 import Spinner from '../../Spinner/Spinner';
+
+import './CommandsTab.css';
+
+const OutputDisplay = ({value, isLoading}) => isLoading
+  ? <Spinner size={1}/>
+  : value || '';
 
 class CommandsTable extends Component {
   render() {
-    const { commands, submitCommand, getValue, currentDeviceName, displevels, enabledList, enableDisplevel, disableDisplevel, loading } = this.props;
+    const {
+      commands,
+      submitCommand,
+      currentDeviceName,
+      displevels,
+      enabledList,
+      enableDisplevel,
+      disableDisplevel,
+      outputsLoading,
+      commandOutputs
+    } = this.props;
+    
     return (
       <div className="commands-table">
         {displevels.length > 1 &&
@@ -30,8 +58,12 @@ class CommandsTable extends Component {
               <tr key={i}>
                 <td>{name}</td>
                 <td>{intype}</td>
-                <td className="input"><InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype} getValue={getValue} /></td>
-                <td>{getSubmittedValue(name, getValue, currentDeviceName, loading)}</td>
+                <td className="input">
+                  <InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
+                </td>
+                <td>
+                  <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
+                </td>
               </tr>
             )}
           </tbody>
@@ -66,19 +98,6 @@ class DisplevelBox extends Component {
     </span>;
   }
 }
-
-function getSubmittedValue(name, getValue, currentDeviceName, loading) {
-  const result = getValue;
-  const command= result[currentDeviceName]
-  const lodingResult = loading;
-  const outputState = lodingResult[currentDeviceName]
-  if(typeof command !== 'undefined' && name in command && typeof outputState !== 'undefined' && name in outputState){
-    return( outputState[name] ? <Spinner size={1}/> : 'Output: ' + command[name])
-  }else {
-    return "";
-  } 
-}
-
 
 class InputField extends Component {
 
@@ -176,10 +195,11 @@ function mapStateToProps(state) {
   return {
     commands: getCurrentDeviceCommands(state),
     currentDeviceName: getCurrentDeviceName(state),
-    getValue: getCommandValue(state),
     displevels: getCommandDisplevels(state),
     enabledList: getEnabledDisplevels(state),
-    loading: getCommandsOutputLoading(state)
+    
+    commandOutputs: getCurrentDeviceCommandOutputs(state),
+    outputsLoading: getCommandOutputsLoading(state)
   };
 }
 
@@ -189,7 +209,6 @@ function mapDispatchToProps(dispatch) {
     enableDisplevel: (displevel) => dispatch(enableDisplevel(displevel)),
     disableDisplevel: (displevel) => dispatch(disableDisplevel(displevel)),
     allDisplevel: (device) => dispatch(enableAllDisplevel(device))
-
   };
 }
 
