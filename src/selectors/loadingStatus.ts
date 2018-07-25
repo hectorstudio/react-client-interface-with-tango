@@ -10,7 +10,6 @@ export const getDeviceIsLoading = createSelector(
     state => state.loadingDevice
 );
 
-
 export const getDeviceNamesAreLoading = createSelector(
     getLoadingStatusState,
     state => state.loadingNames
