@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
-import { displayError } from './ui';
-import {uri} from '../constants/websocket.js';
+import { displayError } from './error';
+import {uri} from '../constants/websocket';
 
 import { setTab } from './deviceList';
 
