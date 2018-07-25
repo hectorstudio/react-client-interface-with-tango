@@ -5,10 +5,9 @@ import { connect } from 'react-redux';
 import {
   getCurrentDeviceCommands,
   getCurrentDeviceName,
-  getCommandValue,
-  getCommandDisplevels,
   getCurrentDeviceCommandOutputs,
-} from '../../selectors/devices';
+  getCommandDisplevels,
+} from '../../selectors/currentDevice';
 
 import {
   getEnabledDisplevels

@@ -14,10 +14,12 @@ import ValueDisplay from './ValueDisplay/ValueDisplay';
 import './DeviceViewer.css';
 
 import {
+  getCurrentDeviceProperties,
   getCurrentDeviceCommands,
+  getCurrentDeviceName,
+  getCurrentDeviceStateValue,
   getAvailableDataFormats,
-  getCurrentDeviceState,
-} from '../selectors/devices';
+} from '../selectors/currentDevice';
 
 import { getDeviceIsLoading } from '../selectors/loadingStatus';
 
@@ -26,10 +28,6 @@ import {
   getActiveDataFormat,
   getActiveTab,
 } from '../selectors/deviceDetail';
-
-import {
-  getCurrentDeviceProperties
-} from '../selectors/currentDevice';
 
 import { setDataFormat, setTab} from '../actions/deviceList';
 
@@ -259,7 +257,7 @@ function mapStateToProps(state) {
     dataFormats: getAvailableDataFormats(state),
     dataFormat: getActiveDataFormat(state),
     activeTab: getActiveTab(state),
-    currentState: getCurrentDeviceState(state),
+    currentState: getCurrentDeviceStateValue(state)
   };
 }
 

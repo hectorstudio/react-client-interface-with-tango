@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import {
-    getCommandValue
-} from '../selectors/devices';
 import { submitCommand } from '../actions/tango';
 import './HomeViewer.css'
 import { getCommandOutputState } from '../selectors/commandOutput';
