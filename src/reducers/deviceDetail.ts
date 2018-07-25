@@ -8,7 +8,7 @@ import {
 
 import { unique } from './utils';
 
-export interface IDeviceViewState {
+export interface IDeviceDetailState {
   activeDataFormat?: string,
   activeTab: string,
   commandResults: {
@@ -19,7 +19,7 @@ export interface IDeviceViewState {
   enabledDisplevels: string[],
 }
 
-export default function deviceViewer(state: IDeviceViewState = {
+export default function deviceViewer(state: IDeviceDetailState = {
   activeTab: 'properties',
   commandResults: {},
   enabledDisplevels: []

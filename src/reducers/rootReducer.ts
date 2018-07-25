@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 
 import devices, { IDevicesState } from './devices';
-import deviceView, { IDeviceViewState } from './deviceDetail';
+import deviceDetail, { IDeviceDetailState } from './deviceDetail';
 import deviceList, { IDeviceListState } from './deviceList';
 import loadingStatus, { ILoadingStatusState } from './loadingStatus';
 import commandOutput, { ICommandOutputState } from './commandOutput';
@@ -9,7 +9,7 @@ import ui from './ui';
 
 export interface IRootState {
   devices: IDevicesState;
-  deviceView: IDeviceViewState;
+  deviceDetail: IDeviceDetailState;
   deviceList: IDeviceListState;
   loadingStatus: ILoadingStatusState;
   commandOutput: ICommandOutputState;
@@ -17,7 +17,7 @@ export interface IRootState {
 
 const rootReducer = combineReducers<IRootState>({
   devices,
-  deviceView,
+  deviceDetail,
   deviceList,
   loadingStatus,
   commandOutput,

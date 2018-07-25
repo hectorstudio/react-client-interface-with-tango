@@ -1,9 +1,9 @@
-import { IDeviceViewState } from '../reducers/deviceDetail';
 import { createSelector } from 'reselect';
 import { getCurrentDeviceAttributes } from './devices';
+import { IRootState } from '../reducers/rootReducer';
 
-function getDeviceViewState(state): IDeviceViewState {
-    return state.deviceView;
+function getDeviceViewState(state: IRootState) {
+    return state.deviceDetail;
 }
 
 export const getActiveDataFormat = createSelector(
