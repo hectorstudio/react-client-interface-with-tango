@@ -18,7 +18,6 @@ import {
   getCurrentDeviceCommands,
   getAvailableDataFormats,
   getCurrentDeviceState,
-  getCommandValue,
 } from '../selectors/devices';
 
 import { getDeviceIsLoading } from '../selectors/loadingStatus';
@@ -258,7 +257,6 @@ function mapStateToProps(state) {
     dataFormat: getActiveDataFormat(state),
     activeTab: getActiveTab(state),
     currentState: getCurrentDeviceState(state),
-    getValue: getCommandValue(state)
   };
 }
 
