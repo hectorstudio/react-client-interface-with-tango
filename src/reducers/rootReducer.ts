@@ -7,6 +7,7 @@ import loadingStatus, { ILoadingStatusState } from './loadingStatus';
 import commandOutput, { ICommandOutputState } from './commandOutput';
 import currentDeviceInfo, { ICurrentDeviceInfoState } from './currentDeviceInfo';
 import currentDeviceProperties, { ICurrentDevicePropertiesState } from './currentDeviceProperties';
+import currentDeviceAttributes, { ICurrentDeviceAttributesState } from './currentDeviceAttributes';
 
 import ui from './ui';
 
@@ -19,6 +20,7 @@ export interface IRootState {
   
   currentDeviceInfo: ICurrentDeviceInfoState;
   currentDeviceProperties: ICurrentDevicePropertiesState;
+  currentDeviceAttributes: ICurrentDeviceAttributesState,
 }
 
 const rootReducer = combineReducers<IRootState>({
@@ -29,6 +31,7 @@ const rootReducer = combineReducers<IRootState>({
   commandOutput,
   currentDeviceInfo,
   currentDeviceProperties,
+  currentDeviceAttributes,
   ui,
 });
 
