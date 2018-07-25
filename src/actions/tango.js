@@ -69,7 +69,6 @@ export function submitCommand(command, argin, device) {
 export function unSubscribeDevice(device, emit){
   if (device && device.attributes) {
     const models = device.attributes
-      .filter(({dataformat}) => dataformat === 'SCALAR')
       .map(({name}) => `${device.name}/${name}`);
     const query =`
     subscription newChangeEvent($models:[String]){
@@ -83,7 +82,6 @@ export function unSubscribeDevice(device, emit){
 export function subscribeDevice(device, emit){
   if (device && device.attributes) {
     const models = device.attributes
-      .filter(({dataformat}) => dataformat === 'SCALAR')
       .map(({name}) => `${device.name}/${name}`);
     const query = `
     subscription newChangeEvent($models:[String]){
