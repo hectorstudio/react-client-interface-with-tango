@@ -12,7 +12,7 @@ export function getCurrentDeviceName(state: IRootState) {
 }
 
 function getDevices(state: IRootState) {
-    return state.devices2; // TODO: change name, move to other file?
+    return state.devices;
 }
 
 const getCurrentDevice = createSelector(

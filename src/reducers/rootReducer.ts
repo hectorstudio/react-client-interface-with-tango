@@ -1,13 +1,12 @@
 import {combineReducers} from 'redux';
 
-import devices, { IDevicesState } from './devices';
 import deviceDetail, { IDeviceDetailState } from './deviceDetail';
 import deviceList, { IDeviceListState } from './deviceList';
 import loadingStatus, { ILoadingStatusState } from './loadingStatus';
 import commandOutput, { ICommandOutputState } from './commandOutput';
 
 import currentDevice from './currentDevice';
-import devices2, { IDevices2State } from './devices2';
+import devices, { IDevicesState } from './devices';
 import attributes, { IAttributesState } from './attributes';
 import commands, { ICommandsState } from './commands';
 import properties, { IPropertiesState } from './properties';
@@ -19,12 +18,14 @@ export interface IRootState {
   deviceDetail: IDeviceDetailState;
   deviceList: IDeviceListState;
   
-  // Data state
-  devices: IDevicesState;
+  // App State
   loadingStatus: ILoadingStatusState;
+  ui: any;
+
+  // Data state
+  devices: IDevicesState,
   commandOutput: ICommandOutputState;
   currentDevice: string;
-  devices2: IDevices2State,
   attributes: IAttributesState;
   commands: ICommandsState;
   properties: IPropertiesState;
@@ -37,7 +38,6 @@ const rootReducer = combineReducers<IRootState>({
   loadingStatus,
   commandOutput,
   currentDevice,
-  devices2,
   attributes,
   commands,
   properties,
