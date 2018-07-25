@@ -16,11 +16,12 @@ import './DeviceViewer.css';
 import {
   getCurrentDeviceProperties,
   getCurrentDeviceCommands,
-  getDeviceIsLoading,
   getAvailableDataFormats,
   getCurrentDeviceState,
   getCommandValue,
 } from '../selectors/devices';
+
+import { getDeviceIsLoading } from '../selectors/loadingStatus';
 
 import {
   getFilteredCurrentDeviceAttributes,
