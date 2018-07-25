@@ -11,7 +11,7 @@ import attributes, { IAttributesState } from './attributes';
 import commands, { ICommandsState } from './commands';
 import properties, { IPropertiesState } from './properties';
 
-import ui from './ui';
+import error from './error';
 
 export interface IRootState {
   // View state
@@ -20,7 +20,7 @@ export interface IRootState {
   
   // App State
   loadingStatus: ILoadingStatusState;
-  ui: any;
+  error: string;
 
   // Data state
   devices: IDevicesState,
@@ -41,7 +41,7 @@ const rootReducer = combineReducers<IRootState>({
   attributes,
   commands,
   properties,
-  ui,
+  error,
 });
 
 export default rootReducer;

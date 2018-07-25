@@ -1,13 +1,11 @@
 import { DISPLAY_ERROR, CLEAR_ERROR } from '../actions/actionTypes';
 
-export default function ui(state = {
-    error: ''
-}, action) {
+export default function error(state = '', action) {
   switch (action.type) {
     case DISPLAY_ERROR:
-      return {...state, error: action.error};
+      return action.error;
     case CLEAR_ERROR:
-      return {...state, error: null};
+      return null;
     default:
       return state;
   }
