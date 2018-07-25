@@ -15,7 +15,7 @@ export const getDeviceNamesAreLoading = createSelector(
     state => state.loadingNames
 );
 
-export const getCommandsOutputLoading = createSelector(
+export const getCommandOutputsLoading = createSelector(
     getLoadingStatusState,
     state => state.loadingOutput
 );
