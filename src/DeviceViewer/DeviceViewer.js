@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import classNames from 'classnames';
 import { Helmet } from 'react-helmet';
+import 'font-awesome/css/font-awesome.min.css';
+import { Modal, Button } from 'react-bootstrap';
 
 import CommandsTable from './CommandsTab/CommandsTab';
 
@@ -26,26 +28,89 @@ import {
   getCommandValue,
   getCurrentDeviceName
 } from '../selectors/devices';
-import { setDataFormat, setTab} from '../actions/deviceList';
+import { setDataFormat, setTab } from '../actions/deviceList';
 
 
 
 
-const PropertyTable = ({properties, setDeviceProperty, currentDeviceName, deleteDeviceProperty}) => 
+const PropertyTable = ({ properties, setDeviceProperty, currentDeviceName, deleteDeviceProperty }) =>
   <div>
     <table className="properties">
       <tbody>
-      {properties && properties.map(({name, value}, i) =>
-        <tr key={i}>
-          <td>{name}</td>
-          <td>{value.join('\n')}</td>
-        </tr>
-      )}
+        {properties && properties.map(({ name, value }, i) =>
+          <tr key={i}>
+            <td>
+              <EditProperty setDeviceProperty={setDeviceProperty} currentDeviceName={currentDeviceName} name={name} />
+            </td>
+            <td>{name}</td>
+            <td>{value.join('\n')}</td>
+          </tr>
+        )}
       </tbody>
     </table>
+    <br></br>
     <SetProperty setDeviceProperty={setDeviceProperty} currentDeviceName={currentDeviceName} />
     <DeleteProperty deleteDeviceProperty={deleteDeviceProperty} currentDeviceName={currentDeviceName} />
   </div>;
+
+class EditProperty extends Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.state = { value: '', show: false };
+  }
+
+  handleClose() {
+    this.setState({ show: false });
+  }
+
+  handleShow() {
+    this.setState({ show: true });
+  }
+
+  handleChange(event) {
+    event.preventDefault();
+    this.setState({ value: event.target.value })
+  }
+
+  handleSubmit(event) {
+    event.preventDefault()
+    this.props.setDeviceProperty(this.props.currentDeviceName, this.props.name, [this.state.value])
+    this.handleClose();
+    this.setState({ value: '' });
+  }
+  render() {
+    return (
+      <div>
+        <i className="fa fa-pencil" onClick={this.handleShow}></i>
+        {this.state.show &&
+          <Modal.Dialog className="modal-style">
+            <Modal.Header>
+              {console.log('hej')}
+              <Modal.Title>Change value</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <label><span>Name: </span>
+                {this.props.name}</label> <br></br>
+              <label><span>Value: </span>
+                <input type="text" name="value" value={this.state.value} onChange={this.handleChange} />
+              </label>
+            </Modal.Body>
+
+            <Modal.Footer>
+              <Button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Save</Button>
+              <Button className="btn btn-outline-secondary" onClick={this.handleClose}>Cancel</Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        }
+      </div>
+
+    )
+  }
+}
 
 
 class SetProperty extends Component {
@@ -53,38 +118,68 @@ class SetProperty extends Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = {formValues: {}, valid: false};
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.state = { formValues: {}, show: false };
+  }
+
+  handleClose() {
+    this.setState({ show: false });
+  }
+
+  handleShow() {
+    this.setState({ show: true });
   }
 
   handleChange(event) {
     event.preventDefault();
-        let formValues = this.state.formValues;
-        let name = event.target.name;
-        let value = event.target.value;
-        formValues[name] = value;
-        this.setState({formValues})
+    let formValues = this.state.formValues;
+    let name = event.target.name;
+    let value = event.target.value;
+    formValues[name] = value;
+    this.setState({ formValues })
   }
 
   handleSubmit(event) {
     event.preventDefault()
-    this.props.setDeviceProperty(this.props.currentDeviceName, this.state.formValues.name, [this.state.formValues.value])  
+    this.props.setDeviceProperty(this.props.currentDeviceName, this.state.formValues.name, [this.state.formValues.value])
+    this.handleClose();
     let formValues = this.state.formValues;
     this.state.formValues["name"] = "";
     this.state.formValues["value"] = "";
-    this.setState({formValues});
+    this.setState({ formValues });
   }
 
   render() {
-      return(
-        <div className="input-group">
-        <div className="input-group-append">
-        <input type="text" name="name" autoComplete="off" value={this.state.formValues["name"]} onChange={this.handleChange} />
-        <input type="text" name="value" value={this.state.formValues["value"]} onChange={this.handleChange} />  
-          <button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Add new property</button>
-        </div>
+
+    return (
+      <div className="static-modal">
+        <button className="btn btn-outline-secondary" type="button" onClick={this.handleShow}>Add</button>
+
+        {this.state.show &&
+          <Modal.Dialog className='modal-style'>
+            <Modal.Header>
+              <Modal.Title>Create new property</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+              <label><span>Name: </span>
+                <input type="text" name="name" autoComplete="off" value={this.state.formValues["name"]} onChange={this.handleChange} />
+              </label>
+              <label><span>Value: </span>
+                <input type="text" name="value" value={this.state.formValues["value"]} onChange={this.handleChange} />
+              </label>
+            </Modal.Body>
+
+            <Modal.Footer>
+              <Button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Save</Button>
+              <Button className="btn btn-outline-secondary" onClick={this.handleClose}>Cancel</Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        }
       </div>
-      );
-    }
+    );
+  }
 }
 
 class DeleteProperty extends Component {
@@ -92,34 +187,62 @@ class DeleteProperty extends Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = {value: '', valid: false};
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.state = { formValues: {}, show: false };
+  }
+
+  handleClose() {
+    this.setState({ show: false });
+  }
+
+  handleShow() {
+    this.setState({ show: true });
   }
 
   handleChange(event) {
     event.preventDefault();
-    this.setState({value: event.target.value})
+    this.setState({ value: event.target.value })
   }
-  
+
   handleSubmit(event) {
     event.preventDefault()
-    this.props.deleteDeviceProperty(this.props.currentDeviceName, this.state.value)  
-    this.setState({value: ''});
+    this.props.deleteDeviceProperty(this.props.currentDeviceName, this.state.value)
+    this.handleClose();
+    this.setState({ value: '' });
   }
 
   render() {
-      return(
-        <div className="input-group">
-        <div className="input-group-append">
-        <input type="text" name="name" autoComplete="off" value={this.state.value} onChange={this.handleChange} /> 
-          <button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Remove property</button>
-        </div>
+    return (
+      <div className="static-modal">
+        <button className="btn btn-outline-secondary" type="button" onClick={this.handleShow}>Remove</button>
+
+        {this.state.show &&
+          <Modal.Dialog className='modal-style'>
+            <Modal.Header>
+              <Modal.Title>Remove property</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+              <label><span>Name: </span>
+                <input type="text" name="name" autoComplete="off" value={this.state.value} onChange={this.handleChange} />
+              </label>
+            </Modal.Body>
+
+            <Modal.Footer>
+              <Button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Save</Button>
+              <Button className="btn btn-outline-secondary" onClick={this.handleClose}>Cancel</Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+
+        }
       </div>
-      );
-    }
+    );
+  }
 }
 
-const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) => {
-  const QualityIndicator = ({quality}) => {
+const AttributeTable = ({ attributes, dataFormat, dataFormats, onSetDataFormat }) => {
+  const QualityIndicator = ({ quality }) => {
     const sub = {
       'ATTR_VALID': 'valid',
       'ATTR_INVALID': 'invalid',
@@ -132,23 +255,23 @@ const AttributeTable = ({attributes, dataFormat, dataFormats, onSetDataFormat}) 
       className={`quality quality-${sub}`}
       title={quality}>● </span>;
   };
- 
+
   return (
     <div>
 
       <table className="attributes">
         <tbody>
-        {attributes && attributes.map(({name, value, quality, datatype, dataformat}, i) =>
-          <tr key={i}>
-            <td>
-              <QualityIndicator quality={quality}/>
-              {name}
-            </td>
-            <td>
-              <ValueDisplay value={value} datatype={datatype} dataformat={dataformat}/>
-            </td>
-          </tr>
-        )}
+          {attributes && attributes.map(({ name, value, quality, datatype, dataformat }, i) =>
+            <tr key={i}>
+              <td>
+                <QualityIndicator quality={quality} />
+                {name}
+              </td>
+              <td>
+                <ValueDisplay value={value} datatype={datatype} dataformat={dataformat} />
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
@@ -168,7 +291,7 @@ class DeviceMenu extends Component {
   }
 
   render() {
-    const {properties, attributes, commands, dataFormat, dataFormats, onSetDataFormat, onSetTab, selectedTab} = this.props;
+    const { properties, attributes, commands, dataFormat, dataFormats, onSetDataFormat, onSetTab, selectedTab } = this.props;
 
     const hasAttrs = attributes.length > 0;
     const hasProps = properties.length > 0;
@@ -180,15 +303,15 @@ class DeviceMenu extends Component {
           <li
             className='nav-item'
             key={i} onClick={this.handleSelectDataFormat.bind(this, format)}>
-            <a className={classNames('nav-link', {active: format === dataFormat})} href='#'>
+            <a className={classNames('nav-link', { active: format === dataFormat })} href='#'>
               {format}
             </a>
           </li>
         )}
       </ul> : null;
 
-    const Tab = ({name, title}) => <li className='nav-item'>
-      <a href={`#${name}`} className={classNames('nav-link', {active: selectedTab === name})} onClick={this.handleSelectTab.bind(this, name)}>
+    const Tab = ({ name, title }) => <li className='nav-item'>
+      <a href={`#${name}`} className={classNames('nav-link', { active: selectedTab === name })} onClick={this.handleSelectTab.bind(this, name)}>
         {title}
       </a>
     </li>;
@@ -196,9 +319,9 @@ class DeviceMenu extends Component {
     return (
       <div className="device-menu">
         <ul className='nav nav-tabs section-chooser'>
-          {hasProps && <Tab name='properties' title='Properties'/>}
-          {hasAttrs && <Tab name='attributes' title='Attributes'/>}
-          {hasCommands && <Tab name='commands' title='Commands'/>}
+          {hasProps && <Tab name='properties' title='Properties' />}
+          {hasAttrs && <Tab name='attributes' title='Attributes' />}
+          {hasCommands && <Tab name='commands' title='Commands' />}
         </ul>
         {selectedTab === 'attributes' && dataTabs}
       </div>
@@ -209,15 +332,15 @@ class DeviceMenu extends Component {
 class DeviceTables extends Component {
 
   render() {
-      const {properties, attributes, dataFormat, dataFormats, onSetDataFormat, selectedTab, commands, setDeviceProperty, currentDeviceName,deleteDeviceProperty} = this.props;
-      const hasAttrs = attributes.length > 0;
-      const hasProps = properties.length > 0;
+    const { properties, attributes, dataFormat, dataFormats, onSetDataFormat, selectedTab, commands, setDeviceProperty, currentDeviceName, deleteDeviceProperty } = this.props;
+    const hasAttrs = attributes.length > 0;
+    const hasProps = properties.length > 0;
 
     return (
       <div className="device-table">
-        {hasProps && selectedTab === "properties" && <PropertyTable properties={properties} setDeviceProperty ={setDeviceProperty} currentDeviceName={currentDeviceName} deleteDeviceProperty={deleteDeviceProperty}/>}
-        {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat}/>}
-        {selectedTab === "commands" && <CommandsTable commands ={commands}/>}
+        {hasProps && selectedTab === "properties" && <PropertyTable properties={properties} setDeviceProperty={setDeviceProperty} currentDeviceName={currentDeviceName} deleteDeviceProperty={deleteDeviceProperty} />}
+        {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat} />}
+        {selectedTab === "commands" && <CommandsTable commands={commands} />}
       </div>
     );
   }
@@ -230,7 +353,7 @@ class DeviceViewer extends Component {
   }
 
   parseTab() {
-    const {hash} = this.props.history.location;
+    const { hash } = this.props.history.location;
     const tab = hash.substr(1);
     return tab || 'properties';
   }
@@ -258,19 +381,19 @@ class DeviceViewer extends Component {
     const {
       properties,
       attributes,
-      loading, 
-      dataFormat, 
-      dataFormats, 
-      selectDataFormat, 
-      selectTab, 
-      activeTab, 
-      currentState, 
+      loading,
+      dataFormat,
+      dataFormats,
+      selectDataFormat,
+      selectTab,
+      activeTab,
+      currentState,
       commands,
       setDeviceProperty,
       currentDeviceName,
       deleteDeviceProperty
-    } = this.props;    
-    const QualityIndicator = ({state}) => {
+    } = this.props;
+    const QualityIndicator = ({ state }) => {
       const sub = {
         'ON': 'on',
         'OFF': 'off',
@@ -288,50 +411,49 @@ class DeviceViewer extends Component {
         'UNKNOWN': 'unknown'
       }[state] || 'invalid';
       return <span
-      className={`state state-${sub}`}
-      title={state}>● </span>;
+        className={`state state-${sub}`}
+        title={state}>● </span>;
     };
-    
+
     const deviceName = this.parseDevice(this.props);
-    const content = loading 
-      ? <Spinner size={4}/>
+    const content = loading
+      ? <Spinner size={4} />
       : <div>
-          <Helmet>
-            <title>{deviceName}</title>
-          </Helmet>
-          <div className="device-header">
-            <QualityIndicator state={currentState}/> {deviceName}
-          </div>
-          <div className="device-body">
-            <DeviceMenu
-              attributes={attributes}
-              properties={properties}
-              commands={commands}
-              dataFormats={dataFormats}
-              dataFormat={dataFormat}
-              selectedTab={activeTab}
-              onSetDataFormat={selectDataFormat}
-              onSetTab={selectTab}
-            />
-            <DeviceTables
-              attributes={attributes}
-              properties={properties}
-              commands={commands}
-              dataFormats={dataFormats}
-              dataFormat={dataFormat}
-              selectedTab={activeTab}
-              setDeviceProperty={setDeviceProperty}
-              currentDeviceName={currentDeviceName}
-              deleteDeviceProperty={deleteDeviceProperty}
-            />
-          </div>
-        </div>;    
-        
+        <Helmet>
+          <title>{deviceName}</title>
+        </Helmet>
+        <div className="device-header">
+          <QualityIndicator state={currentState} /> {deviceName}
+        </div>
+        <div className="device-body">
+          <DeviceMenu
+            attributes={attributes}
+            properties={properties}
+            commands={commands}
+            dataFormats={dataFormats}
+            dataFormat={dataFormat}
+            selectedTab={activeTab}
+            onSetDataFormat={selectDataFormat}
+            onSetTab={selectTab}
+          />
+          <DeviceTables
+            attributes={attributes}
+            properties={properties}
+            commands={commands}
+            dataFormats={dataFormats}
+            dataFormat={dataFormat}
+            selectedTab={activeTab}
+            setDeviceProperty={setDeviceProperty}
+            currentDeviceName={currentDeviceName}
+            deleteDeviceProperty={deleteDeviceProperty}
+          />
+        </div>
+      </div>;
+
     return (
       <div className="device-viewer">
         {content}
       </div>
-     
     );
   }
 }
