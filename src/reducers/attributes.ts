@@ -26,8 +26,15 @@ export default function allAttributes(state: IAttributesState = {}, action) {
 
     case CHANGE: {
         const {data: {value}, name, device} = action.data;
-        const old = state[device];
-        return {...state, [device]: {...old, [name]: value}};
+        const oldDevice = state[device];
+        const oldAttribute = oldDevice[name];
+        return {
+            ...state,
+            [device]: {
+                ...oldDevice,
+                [name]: {...oldAttribute, value}
+            }
+        };
     }
     
     default:

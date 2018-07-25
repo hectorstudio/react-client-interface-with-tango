@@ -1,48 +1,63 @@
 import { createSelector } from 'reselect';
 import { IRootState } from '../reducers/rootReducer';
+import { objectValues, uniqueStrings } from './utils';
+import { getCommandOutputState } from './commandOutput';
 
-const getCurrentDeviceInfoState = (state: IRootState) => state.currentDeviceInfo;
-const getCurrentDeviceAttributesState = (state: IRootState) => state.currentDeviceAttributes;
-const getCurrentDevicePropertiesState = (state: IRootState) => state.currentDeviceProperties;
-
-export const getCurrentDeviceName = createSelector(
-    getCurrentDeviceInfoState,
-    info => info.name
-);
-
-export const getCurrentDeviceAttributes = createSelector(
-    getCurrentDeviceAttributesState,
-    state => Object.keys(state).map(name => ({...state[name], name}))
-);
-
-export const getCurrentDeviceProperties = createSelector(
-    getCurrentDevicePropertiesState,
-    state => state
-);
-
-const getCurrentDeviceState = (state: IRootState) => state.currentDevice;
 const getAttributesState = (state: IRootState) => state.attributes;
 const getCommandsState = (state: IRootState) => state.commands;
 const getPropertiesState = (state: IRootState) => state.properties;
 
-function objectValues(obj) {
-    return Object.keys(obj).map(key => obj[key]);
+export function getCurrentDeviceName(state: IRootState) {
+    return state.currentDevice;
 }
 
-export const getCurrentDeviceAttributes2 = createSelector(
+function getDevices(state: IRootState) {
+    return state.devices2; // TODO: change name, move to other file?
+}
+
+const getCurrentDevice = createSelector(
+    getDevices,
+    getCurrentDeviceName,
+    (devices, name) => devices[name]
+);
+
+export const getCurrentDeviceAttributes = createSelector(
     getAttributesState,
-    getCurrentDeviceState,
+    getCurrentDeviceName,
     (attributes, current) => objectValues(attributes[current])
 );
 
-export const getCurrentDeviceCommands2 = createSelector(
+export const getCurrentDeviceCommands = createSelector(
     getCommandsState,
-    getCurrentDeviceState,
+    getCurrentDeviceName,
     (commands, current) => objectValues(commands[current])
 );
 
-export const getCurrentDeviceProperties2 = createSelector(
+export const getCurrentDeviceProperties = createSelector(
     getPropertiesState,
-    getCurrentDeviceState,
+    getCurrentDeviceName,
     (properties, current) => objectValues(properties[current])
+);
+
+export const getCurrentDeviceStateValue = createSelector(
+    getCurrentDevice,
+    device => (device || {}).state
+);
+
+export const getAvailableDataFormats = createSelector(
+    getCurrentDeviceAttributes,
+    attrs => uniqueStrings(attrs.map(attr => attr.dataformat))
+);
+
+export const getCommandDisplevels = createSelector(
+    getCurrentDeviceCommands,
+    commands => Object.keys(commands
+        .map(command => command.displevel)
+        .reduce((accum, displevel) => ({...accum, [displevel]: true}), {}))
+);
+
+export const getCurrentDeviceCommandOutputs = createSelector(
+    getCurrentDeviceName,
+    getCommandOutputState,
+    (name, output) => output[name!] || {}
 );

@@ -14,7 +14,7 @@ import {
 
 import {
   getCurrentDeviceName,
-} from '../selectors/devices';
+} from '../selectors/currentDevice';
 
 import './DeviceList.css';
 import { getDeviceNamesAreLoading } from '../selectors/loadingStatus';

@@ -18,9 +18,10 @@ export default function allDevices(state: IDevices2State = {}, action) {
             attributes,
             properties,
             commands,
+            name,
             ...core
         } = action.device;
-        return {...state, [name]: core};
+        return {...state, [name]: {...core, name}};
     }
     
     default:
