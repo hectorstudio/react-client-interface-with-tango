@@ -6,10 +6,13 @@ import classNames from 'classnames';
 import { fetchDeviceNames} from '../actions/tango';
 import { setDeviceFilter } from '../actions/deviceList';
 
-import { getFilter } from '../selectors/filtering';
 import {
+  getFilter,
   getFilteredDeviceNames,
   getHasDevices,
+} from '../selectors/deviceList';
+
+import {
   getCurrentDeviceName,
   getDeviceNamesAreLoading
 } from '../selectors/devices';

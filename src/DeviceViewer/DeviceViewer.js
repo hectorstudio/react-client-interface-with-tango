@@ -16,7 +16,6 @@ import './DeviceViewer.css';
 import {
   getCurrentDeviceProperties,
   getCurrentDeviceCommands,
-  getDeviceNames,
   getDeviceIsLoading,
   getAvailableDataFormats,
   getCurrentDeviceState,
@@ -253,7 +252,6 @@ function mapStateToProps(state) {
     attributes: getFilteredCurrentDeviceAttributes(state),
     properties: getCurrentDeviceProperties(state),
     commands: getCurrentDeviceCommands(state),
-    device: getDeviceNames(state),
     loading: getDeviceIsLoading(state),
     dataFormats: getAvailableDataFormats(state),
     dataFormat: getActiveDataFormat(state),
