@@ -6,10 +6,10 @@ import {
   getCurrentDeviceName,
   getCommandValue,
   getCommandDisplevels,
-  getCommandsOutputLoading
 } from '../../selectors/devices';
 
 import { getEnabledDisplevels } from '../../selectors/deviceDetail';
+import { getCommandsOutputLoading } from '../../selectors/loadingStatus';
 
 import { submitCommand, enableDisplevel, disableDisplevel, enableAllDisplevel } from '../../actions/tango';
 import { connect } from 'react-redux';
