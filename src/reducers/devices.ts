@@ -130,8 +130,8 @@ export default function devices(state: IDevicesState = {
         const currentAttributes = current.attributes;
         if (currentAttributes) {
           const attributes = currentAttributes.map(attr => {
-            if(action.data && action.data[current.name + "/" + attr.name] ){
-              attr.value = action.data[current.name + "/" + attr.name].value.toString();
+            if(action.data && (action.data.device === current.name) && (action.data.name === attr.name)){
+              attr.value = action.data.data.value.toString();
             }
             return attr;
           });
