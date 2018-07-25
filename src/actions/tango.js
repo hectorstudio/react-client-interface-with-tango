@@ -117,6 +117,16 @@ export function fetchDeviceSuccess(device, dispatch, emit) {
   return dispatch({type: types.FETCH_DEVICE_SUCCESS, device});
 }
 
+export function selectDevice(name) {
+  return (dispatch, getState, {emit}) => {
+    const device = getState().allDevices[name]; // TODO
+    dispatch({type: 'SELECT_DEVICE', name});
+    if (!device) {
+      dispatch(fetchDevice(name));
+    }
+  }
+}
+
 export function fetchDevice(name){
   return ( dispatch, getState, {emit}) => {
     unSubscribeDevice(getState().devices.current, emit);
