@@ -131,7 +131,8 @@ export default function devices(state: IDevicesState = {
         if (currentAttributes) {
           const attributes = currentAttributes.map(attr => {
             if(action.data && (action.data.device === current.name) && (action.data.name === attr.name)){
-              attr.value = action.data.data.value.toString();
+              const value = action.data.data.value;
+              return {...attr, value};
             }
             return attr;
           });
