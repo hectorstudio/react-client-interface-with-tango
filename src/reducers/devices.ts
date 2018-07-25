@@ -45,25 +45,12 @@ export default function devices(state: IDevicesState = {
   commandResults: {},
 }, action) {
   switch (action.type) {
-    case EXECUTE_COMMAND: {
-      const oldLoadingOutput = state.loadingOutput
-      const {command, device} = action;
-      // const deviceName = state.current!.name
-      const deviceResults = {...oldLoadingOutput[device], [command]: true};
-      const loadingOutput = {...oldLoadingOutput, [device]: deviceResults};
-      return {...state, loadingOutput}
-    }
-
     case EXECUTE_COMMAND_COMPLETE: {
       const oldCommandResults = state.commandResults;
       const {command, result, device} = action;
-      // const deviceName = state.current!.name
       const deviceResults = {...oldCommandResults[device], [command]: result};
       const commandResults = {...oldCommandResults, [device]: deviceResults};
-      const oldLoadingOutput = state.loadingOutput
-      const deviceLoading = {...oldLoadingOutput[device], [command]: false};
-      const loadingOutput = {...oldLoadingOutput, [device]: deviceLoading};
-      return {...state, loadingOutput, commandResults}
+      return {...state, commandResults};
     }
 
     case FETCH_DEVICE_SUCCESS: {

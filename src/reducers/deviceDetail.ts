@@ -11,11 +11,6 @@ import { unique } from './utils';
 export interface IDeviceViewState {
   activeDataFormat?: string,
   activeTab: string,
-  loadingOutput: {
-    [device: string]: {
-      [attribute: string]: boolean
-    }
-  },
   commandResults: {
     [device: string]: {
       [attribute: string]: any // TODO
@@ -26,7 +21,6 @@ export interface IDeviceViewState {
 
 export default function deviceViewer(state: IDeviceViewState = {
   activeTab: 'properties',
-  loadingOutput: {},
   commandResults: {},
   enabledDisplevels: []
 }, action) {
