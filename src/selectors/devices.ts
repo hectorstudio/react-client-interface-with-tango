@@ -26,11 +26,6 @@ export const getCurrentDeviceAttributes = createSelector(
     device => device ? device.attributes || [] : []
 );
 
-export const getCurrentDeviceProperties = createSelector(
-    getCurrentDevice,
-    device => device ? device.properties || [] : []
-);
-
 export const getCurrentDeviceCommands = createSelector(
     getCurrentDevice,
     device => device ? device.commands || [] : []
