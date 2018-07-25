@@ -3,6 +3,7 @@ import { displayError } from './error';
 import {uri} from '../constants/websocket';
 
 import { setTab } from './deviceList';
+import { queryExistsDevice } from '../selectors/queries';
 
 const client = require('graphql-client')({
   url: `/db`
@@ -119,9 +120,8 @@ export function fetchDeviceSuccess(device, dispatch, emit) {
 
 export function selectDevice(name) {
   return (dispatch, getState, {emit}) => {
-    const device = getState().allDevices[name]; // TODO
     dispatch({type: 'SELECT_DEVICE', name});
-    if (!device) {
+    if (!queryExistsDevice(getState(), name)) {
       dispatch(fetchDevice(name));
     }
   }

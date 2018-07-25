@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 
 import CommandsTable from './CommandsTab/CommandsTab';
 
-import { fetchDevice, submitCommand } from '../actions/tango';
+import { selectDevice, submitCommand } from '../actions/tango';
 
 import Spinner from '../Spinner/Spinner';
 import ValueDisplay from './ValueDisplay/ValueDisplay';
@@ -164,7 +164,7 @@ class DeviceViewer extends Component {
 
   componentDidMount() {
     const device = this.parseDevice();
-    this.props.fetchDevice(device);
+    this.props.selectDevice(device);
     const tab = this.parseTab();
     this.props.selectTab(tab);
   }
@@ -172,7 +172,7 @@ class DeviceViewer extends Component {
   componentDidUpdate(prevProps) {
     const device = this.parseDevice();
     if (device !== this.parseDevice(prevProps)) {
-      this.props.fetchDevice(device);
+      this.props.selectDevice(device);
     }
 
     const tab = this.parseTab();
@@ -263,7 +263,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchDevice: device => dispatch(fetchDevice(device)),
+    selectDevice: device => dispatch(selectDevice(device)),
     selectDataFormat: format => dispatch(setDataFormat(format)),
     selectTab: tab => dispatch(setTab(tab)),
     submitCommand: (command, value) => dispatch(submitCommand(command, value))
