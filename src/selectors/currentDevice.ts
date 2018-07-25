@@ -1,10 +1,21 @@
 import { createSelector } from 'reselect';
 import { IRootState } from '../reducers/rootReducer';
 
-const getCurrentDeviceInfo = (state: IRootState) => state.currentDeviceInfo;
-export const getCurrentDeviceProperties = (state: IRootState) => state.currentDeviceProperties;
+const getCurrentDeviceInfoState = (state: IRootState) => state.currentDeviceInfo;
+const getCurrentDeviceAttributesState = (state: IRootState) => state.currentDeviceAttributes;
+const getCurrentDevicePropertiesState = (state: IRootState) => state.currentDeviceProperties;
 
 export const getCurrentDeviceName = createSelector(
-    getCurrentDeviceInfo,
+    getCurrentDeviceInfoState,
     info => info.name
+);
+
+export const getCurrentDeviceAttributes = createSelector(
+    getCurrentDeviceAttributesState,
+    state => Object.keys(state).map(name => ({...state[name], name}))
+);
+
+export const getCurrentDeviceProperties = createSelector(
+    getCurrentDevicePropertiesState,
+    state => state
 );

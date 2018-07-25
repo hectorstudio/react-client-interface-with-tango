@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { getCurrentDeviceAttributes } from './devices';
+import { getCurrentDeviceAttributes } from './currentDevice';
 import { IRootState } from '../reducers/rootReducer';
 
 function getDeviceViewState(state: IRootState) {
