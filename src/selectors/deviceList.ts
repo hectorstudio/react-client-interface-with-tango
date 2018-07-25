@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { getDeviceNames } from './devices';
+import { IRootState } from '../reducers/rootReducer';
 
 function matchesFilter(name, filter) {
     const words = filter.split(/\s+/);
@@ -7,10 +7,17 @@ function matchesFilter(name, filter) {
     return matched.length === words.length;
 }
 
-const getFilteringState = state => state.deviceList;
+function getDeviceListState(state: IRootState) {
+    return state.deviceList;
+}
+
+export const getDeviceNames = createSelector(
+    getDeviceListState,
+    state => state.nameList
+);
 
 export const getFilter = createSelector(
-    getFilteringState,
+    getDeviceListState,
     state => state.filter
 );
 
@@ -18,4 +25,9 @@ export const getFilteredDeviceNames = createSelector(
     getDeviceNames,
     getFilter,
     (names, filter) => names.filter(name => matchesFilter(name, filter))
+);
+
+export const getHasDevices = createSelector(
+    getDeviceNames,
+    names => names.length > 0
 );
