@@ -1,14 +1,20 @@
 import {combineReducers} from 'redux';
 
-import devices from './devices';
-import filtering from './filtering';
+import devices, { IDevicesState } from './devices';
+import deviceView, { IDeviceViewState } from './deviceView';
+import deviceList, { IDeviceListState } from './deviceList';
 import ui from './ui';
-import deviceView from './deviceView';
 
-const rootReducer = combineReducers({
+export interface IRootState {
+  devices: IDevicesState,
+  deviceView: IDeviceViewState,
+  deviceList: IDeviceListState,
+}
+
+const rootReducer = combineReducers<IRootState>({
   devices,
   deviceView,
-  filtering,
+  deviceList,
   ui,
 });
 
