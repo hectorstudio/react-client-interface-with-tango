@@ -36,29 +36,36 @@ class ImageValueDisplay extends React.Component {
     return index;
   }
 
-  componentDidMount() {
-      const canvas = document.getElementById(this.props.name);
-      const context = canvas.getContext('2d');
-      const imgLength = this.props.value.length;
+  updateCanvas(){
+    const canvas = document.getElementById(this.props.name);
+    const context = canvas.getContext('2d');
+    const imgLength = this.props.value.length;
 
-      const imgData = context.createImageData(imgLength, imgLength);
-      canvas.width  = imgLength;
-      canvas.height = imgLength;
+    const imgData = context.createImageData(imgLength, imgLength);
+    canvas.width  = imgLength;
+    canvas.height = imgLength;
 
-      this.props.value.forEach((outerArray, y) => {
-        outerArray.forEach((value, x) => {
-          var index = this.getIndicesForCoord(x,y, imgData.width);
-          imgData.data[index+0] = parseInt(value, 10);
-          imgData.data[index+1] = parseInt(value, 10);
-          imgData.data[index+2] = parseInt(value, 10);
-          imgData.data[index+3] = parseInt(value, 10); 
-        });
+    this.props.value.forEach((outerArray, y) => {
+      outerArray.forEach((value, x) => {
+        var index = this.getIndicesForCoord(x,y, imgData.width);
+        imgData.data[index+0] = parseInt(value, 10);
+        imgData.data[index+1] = parseInt(value, 10);
+        imgData.data[index+2] = parseInt(value, 10);
+        imgData.data[index+3] = parseInt(value, 10); 
       });
-      context.putImageData(imgData, 0, 0);
-    
+    });
+    context.putImageData(imgData, 0, 0); 
   }
 
+  componentDidMount() {
+    this.updateCanvas();
+  }
+
+  
   render() {
+    if(document.getElementById(this.props.name)){
+      this.updateCanvas();
+    }
     return <canvas id={this.props.name} />
   }
 }

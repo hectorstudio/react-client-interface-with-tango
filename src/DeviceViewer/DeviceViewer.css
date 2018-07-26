@@ -141,3 +141,11 @@
 .section-chooser .nav-item {
     margin-left: 0.5em;
 }
+
+
+.modal-style{
+    display: block; 
+    width:80% !important; top:20%;
+    padding-left: 700px;
+}
+

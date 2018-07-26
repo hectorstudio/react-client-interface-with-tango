@@ -21,7 +21,6 @@ import {
   submitCommand,
   enableDisplevel,
   disableDisplevel,
-  enableAllDisplevel
 } from '../../actions/tango';
 
 import Spinner from '../../Spinner/Spinner';
@@ -207,7 +206,6 @@ function mapDispatchToProps(dispatch) {
     submitCommand: (command, value, device) => dispatch(submitCommand(command, value, device)),
     enableDisplevel: (displevel) => dispatch(enableDisplevel(displevel)),
     disableDisplevel: (displevel) => dispatch(disableDisplevel(displevel)),
-    allDisplevel: (device) => dispatch(enableAllDisplevel(device))
   };
 }
 

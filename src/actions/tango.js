@@ -21,7 +21,9 @@ import {
 
   DISABLE_DISPLEVEL,
   ENABLE_DISPLEVEL,
-  ENABLE_ALL_DISPLEVEL,
+  
+  SET_DEVICE_PROPERTY,
+  DELETE_DEVICE_PROPERTY,
 } from './actionTypes';
 
 const client = require('graphql-client')({
@@ -55,7 +57,6 @@ export function fetchDeviceNames() {
 }
 
 export function submitCommand(command, argin, device) {
-  console.log('command ', command, 'device ', device)
   return (dispatch) => {
     dispatch({type: EXECUTE_COMMAND, command, device});
     argin === '' ?
@@ -84,6 +85,36 @@ export function submitCommand(command, argin, device) {
     .then(result => dispatch( {type: EXECUTE_COMMAND_COMPLETE, command, result}))
     .catch(err => dispatch(displayError(err.toString()))) 
   };
+}
+
+export function setDeviceProperty(device, name, value){
+  return (dispatch) => {
+    callServiceGraphQL(`
+    mutation PutDeviceProperty($device: String!, $name: String!, $value: [String]) {
+      putDeviceProperty(device: $device, name: $name, value: $value) {
+        ok
+        message
+      }
+    }
+    `, {device, name, value})
+    .then(dispatch( {type: SET_DEVICE_PROPERTY, name, value}))
+    .catch(err => dispatch(displayError(err.toString()))) 
+  }; 
+}
+
+export function deleteDeviceProperty(device, name){
+  return (dispatch) => {
+    callServiceGraphQL(`
+    mutation DelteDeviceProperty($device: String!, $name: String!) {
+      deleteDeviceProperty(device: $device, name: $name) {
+        ok
+        message
+      }
+    }
+    `, {device, name})
+    .then(dispatch( {type: DELETE_DEVICE_PROPERTY, name}))
+    .catch(err => dispatch(displayError(err.toString()))) 
+  }; 
 }
 
 export function unSubscribeDevice(device, emit){
@@ -119,16 +150,12 @@ export function subscribeDevice(device, emit){
   }
 }
 
-export function enableDisplevel(displevel){
+export function enableDisplevel(displevel) {
   return dispatch => dispatch({type: ENABLE_DISPLEVEL, displevel})
 }
 
-export function disableDisplevel(displevel){
+export function disableDisplevel(displevel) {
   return dispatch => dispatch({type: DISABLE_DISPLEVEL, displevel})
-}
-
-export function enableAllDisplevel(){
-  return dispatch => dispatch({type: ENABLE_ALL_DISPLEVEL})
 }
 
 export function fetchDeviceSuccess(device) {
