@@ -159,14 +159,12 @@ class DeviceViewer extends Component {
   parseTab() {
     const {hash} = this.props.history.location;
     const tab = hash.substr(1);
-    return tab || 'properties';
+    return tab || undefined;
   }
 
   componentDidMount() {
     const device = this.parseDevice();
     this.props.selectDevice(device);
-    const tab = this.parseTab();
-    this.props.selectTab(tab);
   }
 
   componentDidUpdate(prevProps) {
@@ -176,7 +174,7 @@ class DeviceViewer extends Component {
     }
 
     const tab = this.parseTab();
-    if (tab !== this.props.activeTab) {
+    if (tab && tab !== this.props.activeTab) {
       this.props.selectTab(tab);
     }
   }
