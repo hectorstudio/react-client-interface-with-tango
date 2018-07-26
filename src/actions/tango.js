@@ -35,7 +35,6 @@ export function fetchDeviceNames() {
 }
 
 export function submitCommand(command, argin, device) {
-  console.log('command ', command, 'device ', device)
   return (dispatch) => {
     dispatch({type: types.EXECUTE_COMMAND, command, device});
     argin === '' ?
@@ -64,6 +63,36 @@ export function submitCommand(command, argin, device) {
     .then(result => dispatch( {type: types.EXECUTE_COMMAND_COMPLETE, command, result}))
     .catch(err => dispatch(displayError(err.toString()))) 
   };
+}
+
+export function setDeviceProperty(device, name, value){
+  return (dispatch) => {
+    callServiceGraphQL(`
+    mutation PutDeviceProperty($device: String!, $name: String!, $value: [String]) {
+      putDeviceProperty(device: $device, name: $name, value: $value) {
+        ok
+        message
+      }
+    }
+    `, {device, name, value})
+    .then(dispatch( {type: types.SET_DEVICE_PROPERTY, name, value}))
+    .catch(err => dispatch(displayError(err.toString()))) 
+  }; 
+}
+
+export function deleteDeviceProperty(device, name){
+  return (dispatch) => {
+    callServiceGraphQL(`
+    mutation DelteDeviceProperty($device: String!, $name: String!) {
+      deleteDeviceProperty(device: $device, name: $name) {
+        ok
+        message
+      }
+    }
+    `, {device, name})
+    .then(dispatch( {type: types.DELETE_DEVICE_PROPERTY, name}))
+    .catch(err => dispatch(displayError(err.toString()))) 
+  }; 
 }
 
 export function unSubscribeDevice(device, emit){
