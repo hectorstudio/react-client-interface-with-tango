@@ -40,7 +40,7 @@ const PropertyTable = ({ properties, setDeviceProperty, currentDeviceName, delet
         {properties && properties.map(({ name, value }, i) =>
           <tr key={i}>
             <td>
-              <EditProperty setDeviceProperty={setDeviceProperty} deleteDeviceProperty={deleteDeviceProperty} currentDeviceName={currentDeviceName} name={name} />
+              <EditProperty setDeviceProperty={setDeviceProperty} deleteDeviceProperty={deleteDeviceProperty} currentDeviceName={currentDeviceName} name={name} value={value} />
             </td>
             <td>{name}</td>
             <td>{value.join('\n')}</td>
@@ -62,11 +62,11 @@ class EditProperty extends Component {
     this.removeShow = this.removeShow.bind(this);
     this.removeClose = this.removeClose.bind(this);
     this.removeProp = this.removeProp.bind(this);
-    this.state = { value: '', show: false, remove: false };
+    this.state = { value: this.props.value, show: false, remove: false };
   }
 
   handleClose() {
-    this.setState({ show: false });
+    this.setState({ value: this.props.value, show: false });
   }
 
   handleShow() {
@@ -83,7 +83,6 @@ class EditProperty extends Component {
 
   removeProp() {
     event.preventDefault()
-    console.log('fef ', this.props.name)
     this.props.deleteDeviceProperty(this.props.currentDeviceName, this.props.name)
     this.removeClose();
   }
@@ -97,7 +96,7 @@ class EditProperty extends Component {
     event.preventDefault()
     this.props.setDeviceProperty(this.props.currentDeviceName, this.props.name, [this.state.value])
     this.handleClose();
-    this.setState({ value: '' });
+    this.setState({ value: this.state.value });
   }
   render() {
     return (
