@@ -40,7 +40,7 @@ const PropertyTable = ({ properties, setDeviceProperty, currentDeviceName, delet
         {properties && properties.map(({ name, value }, i) =>
           <tr key={i}>
             <td>
-              <EditProperty setDeviceProperty={setDeviceProperty} currentDeviceName={currentDeviceName} name={name} />
+              <EditProperty setDeviceProperty={setDeviceProperty} deleteDeviceProperty={deleteDeviceProperty} currentDeviceName={currentDeviceName} name={name} />
             </td>
             <td>{name}</td>
             <td>{value.join('\n')}</td>
@@ -50,7 +50,6 @@ const PropertyTable = ({ properties, setDeviceProperty, currentDeviceName, delet
     </table>
     <br></br>
     <SetProperty setDeviceProperty={setDeviceProperty} currentDeviceName={currentDeviceName} />
-    <DeleteProperty deleteDeviceProperty={deleteDeviceProperty} currentDeviceName={currentDeviceName} />
   </div>;
 
 class EditProperty extends Component {
@@ -60,7 +59,10 @@ class EditProperty extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.state = { value: '', show: false };
+    this.removeShow = this.removeShow.bind(this);
+    this.removeClose = this.removeClose.bind(this);
+    this.removeProp = this.removeProp.bind(this);
+    this.state = { value: '', show: false, remove: false };
   }
 
   handleClose() {
@@ -69,6 +71,21 @@ class EditProperty extends Component {
 
   handleShow() {
     this.setState({ show: true });
+  }
+
+  removeClose() {
+    this.setState({ remove: false });
+  }
+
+  removeShow() {
+    this.setState({ remove: true });
+  }
+
+  removeProp() {
+    event.preventDefault()
+    console.log('fef ', this.props.name)
+    this.props.deleteDeviceProperty(this.props.currentDeviceName, this.props.name)
+    this.removeClose();
   }
 
   handleChange(event) {
@@ -85,12 +102,32 @@ class EditProperty extends Component {
   render() {
     return (
       <div>
+        <i className="fa fa-trash" onClick={this.removeShow}></i> &nbsp;
         <i className="fa fa-pencil" onClick={this.handleShow}></i>
+
+        {this.state.remove &&
+          <Modal.Dialog className="modal-style">
+            <Modal.Header>
+              <Modal.Title>Remove property</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>
+                Are you sure you want to remove property {this.props.name}?
+            </p>
+            </Modal.Body>
+
+            <Modal.Footer>
+              <Button className="btn btn-outline-secondary" onClick={this.removeProp}>Yes</Button>
+              <Button className="btn btn-outline-secondary" onClick={this.removeClose}>No</Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+
+        }
+
         {this.state.show &&
           <Modal.Dialog className="modal-style">
             <Modal.Header>
-              {console.log('hej')}
-              <Modal.Title>Change value</Modal.Title>
+              <Modal.Title>Edit property</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <label><span>Name: </span>
@@ -101,7 +138,7 @@ class EditProperty extends Component {
             </Modal.Body>
 
             <Modal.Footer>
-              <Button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Save</Button>
+              <Button className="btn btn-outline-secondary" onClick={this.handleSubmit}>Save</Button>
               <Button className="btn btn-outline-secondary" onClick={this.handleClose}>Cancel</Button>
             </Modal.Footer>
           </Modal.Dialog>
@@ -120,7 +157,7 @@ class SetProperty extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.state = { formValues: {}, show: false };
+    this.state = { formValues: {}, show: false, valid: false };
   }
 
   handleClose() {
@@ -138,6 +175,11 @@ class SetProperty extends Component {
     let value = event.target.value;
     formValues[name] = value;
     this.setState({ formValues })
+    if (this.state.formValues["name"].length > 0) {
+      this.setState({ valid: true })
+    } else {
+      this.setState({ valid: false })
+    }
   }
 
   handleSubmit(event) {
@@ -147,14 +189,14 @@ class SetProperty extends Component {
     let formValues = this.state.formValues;
     this.state.formValues["name"] = "";
     this.state.formValues["value"] = "";
-    this.setState({ formValues });
+    this.setState({ formValues, valid: false });
   }
 
   render() {
 
     return (
       <div className="static-modal">
-        <button className="btn btn-outline-secondary" type="button" onClick={this.handleShow}>Add</button>
+        <button className="btn btn-outline-secondary" type="button" onClick={this.handleShow}>Add new property</button>
 
         {this.state.show &&
           <Modal.Dialog className='modal-style'>
@@ -172,69 +214,10 @@ class SetProperty extends Component {
             </Modal.Body>
 
             <Modal.Footer>
-              <Button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Save</Button>
+              <Button className="btn btn-outline-secondary" onClick={this.handleSubmit} disabled={!this.state.valid}>Save</Button>
               <Button className="btn btn-outline-secondary" onClick={this.handleClose}>Cancel</Button>
             </Modal.Footer>
           </Modal.Dialog>
-        }
-      </div>
-    );
-  }
-}
-
-class DeleteProperty extends Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleShow = this.handleShow.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.state = { formValues: {}, show: false };
-  }
-
-  handleClose() {
-    this.setState({ show: false });
-  }
-
-  handleShow() {
-    this.setState({ show: true });
-  }
-
-  handleChange(event) {
-    event.preventDefault();
-    this.setState({ value: event.target.value })
-  }
-
-  handleSubmit(event) {
-    event.preventDefault()
-    this.props.deleteDeviceProperty(this.props.currentDeviceName, this.state.value)
-    this.handleClose();
-    this.setState({ value: '' });
-  }
-
-  render() {
-    return (
-      <div className="static-modal">
-        <button className="btn btn-outline-secondary" type="button" onClick={this.handleShow}>Remove</button>
-
-        {this.state.show &&
-          <Modal.Dialog className='modal-style'>
-            <Modal.Header>
-              <Modal.Title>Remove property</Modal.Title>
-            </Modal.Header>
-
-            <Modal.Body>
-              <label><span>Name: </span>
-                <input type="text" name="name" autoComplete="off" value={this.state.value} onChange={this.handleChange} />
-              </label>
-            </Modal.Body>
-
-            <Modal.Footer>
-              <Button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Save</Button>
-              <Button className="btn btn-outline-secondary" onClick={this.handleClose}>Cancel</Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-
         }
       </div>
     );
