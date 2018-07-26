@@ -1,5 +1,7 @@
 import {
-    FETCH_DEVICE_SUCCESS
+    FETCH_DEVICE_SUCCESS,
+    DELETE_DEVICE_PROPERTY_SUCCESS,
+    SET_DEVICE_PROPERTY_SUCCESS,
 } from '../actions/actionTypes';
 
 interface IDeviceProperty {
@@ -23,6 +25,19 @@ export default function properties(state: IPropertiesState = {}, action) {
         return {...state, [name]: hash};
     }
     
+    case SET_DEVICE_PROPERTY_SUCCESS: {
+        const {device, name, value} = action;
+        const forDevice = state[device];
+        return {...state, [device]: {...forDevice, [name]: {name, value}}};
+    }
+    
+    case DELETE_DEVICE_PROPERTY_SUCCESS: {
+        const {device, name} = action;
+        const forDevice = {...state[device]};
+        delete forDevice[name];
+        return {...state, [device]: forDevice};
+    }
+
     default:
         return state;
     }

@@ -23,7 +23,12 @@ import {
   ENABLE_DISPLEVEL,
   
   SET_DEVICE_PROPERTY,
+  SET_DEVICE_PROPERTY_SUCCESS,
+  SET_DEVICE_PROPERTY_FAILED,
+
   DELETE_DEVICE_PROPERTY,
+  DELETE_DEVICE_PROPERTY_SUCCESS,
+  DELETE_DEVICE_PROPERTY_FAILED,
 } from './actionTypes';
 
 const client = require('graphql-client')({
@@ -87,32 +92,38 @@ export function submitCommand(command, argin, device) {
   };
 }
 
-export function setDeviceProperty(device, name, value){
+export function setDeviceProperty(device, name, value) {
   return (dispatch) => {
-    callServiceGraphQL(`
-    mutation PutDeviceProperty($device: String!, $name: String!, $value: [String]) {
-      putDeviceProperty(device: $device, name: $name, value: $value) {
-        ok
-        message
+    dispatch({type: SET_DEVICE_PROPERTY, device, name, value});
+    return callServiceGraphQL(`
+      mutation PutDeviceProperty($device: String!, $name: String!, $value: [String]) {
+        putDeviceProperty(device: $device, name: $name, value: $value) {
+          ok
+          message
+        }
       }
-    }
     `, {device, name, value})
-    .then(dispatch( {type: SET_DEVICE_PROPERTY, name, value}))
+    .then(() => dispatch({type: SET_DEVICE_PROPERTY_SUCCESS, device, name, value}))
     .catch(err => dispatch(displayError(err.toString()))) 
   }; 
 }
 
-export function deleteDeviceProperty(device, name){
+export function deleteDeviceProperty(device, name) {
   return (dispatch) => {
-    callServiceGraphQL(`
-    mutation DelteDeviceProperty($device: String!, $name: String!) {
-      deleteDeviceProperty(device: $device, name: $name) {
-        ok
-        message
+    dispatch( {type: DELETE_DEVICE_PROPERTY, device, name});
+    return callServiceGraphQL(`
+      mutation DeleteDeviceProperty($device: String!, $name: String!) {
+        deleteDeviceProperty(device: $device, name: $name) {
+          ok
+          message
+        }
       }
-    }
     `, {device, name})
-    .then(dispatch( {type: DELETE_DEVICE_PROPERTY, name}))
+    .then(res => res.deleteDeviceProperty.message[0])
+    .then(message => message === "Success"
+      ? dispatch({type: DELETE_DEVICE_PROPERTY_SUCCESS, device, name})
+      : dispatch({type: DELETE_DEVICE_PROPERTY_FAILED, device, name, message})
+    )
     .catch(err => dispatch(displayError(err.toString()))) 
   }; 
 }
