@@ -9,7 +9,7 @@ function socketUrl() {
 const ws = new WebSocket(socketUrl(), "graphql-ws");
 
 export function receiveChange(data) {
-    return { type: types.CHANGE, data }
+    return { type: types.ATTRIBUTE_CHANGE, data }
 }
 
 export const init = ( store ) => {

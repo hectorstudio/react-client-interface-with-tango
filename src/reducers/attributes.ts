@@ -1,5 +1,5 @@
 import {
-    FETCH_DEVICE_SUCCESS, CHANGE
+    FETCH_DEVICE_SUCCESS, ATTRIBUTE_CHANGE
 } from '../actions/actionTypes';
 
 interface IDeviceAttribute {
@@ -24,7 +24,7 @@ export default function attributes(state: IAttributesState = {}, action) {
         return {...state, [name]: hash};
     }
 
-    case CHANGE: {
+    case ATTRIBUTE_CHANGE: {
         const {data: {value}, name, device} = action.data;
         const oldDevice = state[device];
         const oldAttribute = oldDevice[name];

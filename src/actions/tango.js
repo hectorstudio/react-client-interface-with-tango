@@ -1,10 +1,28 @@
-import * as types from './actionTypes';
 import { displayError } from './error';
 import {uri} from '../constants/websocket';
 
 import { setTab } from './deviceList';
 import { queryExistsDevice, queryDeviceWithName } from '../selectors/queries';
 import { getCurrentDeviceName } from '../selectors/currentDevice';
+
+import {
+  FETCH_DEVICE,
+  FETCH_DEVICE_SUCCESS,
+  FETCH_DEVICE_FAILED,
+
+  FETCH_DEVICE_NAMES,
+  FETCH_DEVICE_NAMES_SUCCESS,
+  
+  EXECUTE_COMMAND,
+  EXECUTE_COMMAND_COMPLETE,
+
+  SELECT_DEVICE,
+  SELECT_DEVICE_SUCCESS,
+
+  DISABLE_DISPLEVEL,
+  ENABLE_DISPLEVEL,
+  ENABLE_ALL_DISPLEVEL,
+} from './actionTypes';
 
 const client = require('graphql-client')({
   url: `/db`
@@ -22,7 +40,7 @@ function callServiceGraphQL(query, variables) {
 
 export function fetchDeviceNames() {
   return dispatch => {
-    dispatch({type: types.FETCH_DEVICE_NAMES});
+    dispatch({type: FETCH_DEVICE_NAMES});
     callServiceGraphQL(`
       query {
         devices {
@@ -31,7 +49,7 @@ export function fetchDeviceNames() {
       }
     `)
     .then(data => data.devices.map(device => device.name))
-    .then(names => dispatch({type: types.FETCH_DEVICE_NAMES_SUCCESS, names}))
+    .then(names => dispatch({type: FETCH_DEVICE_NAMES_SUCCESS, names}))
     .catch(err => dispatch(displayError(err.toString())))
   };
 }
@@ -39,7 +57,7 @@ export function fetchDeviceNames() {
 export function submitCommand(command, argin, device) {
   console.log('command ', command, 'device ', device)
   return (dispatch) => {
-    dispatch({type: types.EXECUTE_COMMAND, command, device});
+    dispatch({type: EXECUTE_COMMAND, command, device});
     argin === '' ?
     callServiceGraphQL(`
     mutation ExecuteVoidCommand($command: String!, $device: String!) {
@@ -50,7 +68,7 @@ export function submitCommand(command, argin, device) {
       }
     }`, {command, device})
     .then(data => data.executeCommand.output)
-    .then(result => dispatch( {type: types.EXECUTE_COMMAND_COMPLETE, command, result, device}))
+    .then(result => dispatch( {type: EXECUTE_COMMAND_COMPLETE, command, result, device}))
     .catch(err => dispatch(displayError(err.toString()))) 
     :
     callServiceGraphQL(`
@@ -63,7 +81,7 @@ export function submitCommand(command, argin, device) {
     }
     `, {command, device, argin})
     .then(data => data.executeCommand.output)
-    .then(result => dispatch( {type: types.EXECUTE_COMMAND_COMPLETE, command, result}))
+    .then(result => dispatch( {type: EXECUTE_COMMAND_COMPLETE, command, result}))
     .catch(err => dispatch(displayError(err.toString()))) 
   };
 }
@@ -102,27 +120,27 @@ export function subscribeDevice(device, emit){
 }
 
 export function enableDisplevel(displevel){
-  return dispatch => dispatch({type: types.ENABLE_DISPLEVEL, displevel})
+  return dispatch => dispatch({type: ENABLE_DISPLEVEL, displevel})
 }
 
 export function disableDisplevel(displevel){
-  return dispatch => dispatch({type: types.DISABLE_DISPLEVEL, displevel})
+  return dispatch => dispatch({type: DISABLE_DISPLEVEL, displevel})
 }
 
 export function enableAllDisplevel(){
-  return dispatch => dispatch({type: types.ENABLE_ALL_DISPLEVEL})
+  return dispatch => dispatch({type: ENABLE_ALL_DISPLEVEL})
 }
 
 export function fetchDeviceSuccess(device) {
   return (dispatch, getState, {emit}) => {
     subscribeDevice(device, emit);
-    return dispatch({type: types.FETCH_DEVICE_SUCCESS, device});
+    return dispatch({type: FETCH_DEVICE_SUCCESS, device});
   }
 }
 
 export function selectDevice(name) {
   return (dispatch, getState) => {
-    dispatch({type: types.SELECT_DEVICE, name});
+    dispatch({type: SELECT_DEVICE, name});
     
     const device = queryDeviceWithName(getState(), name);
     if (device) {
@@ -130,7 +148,7 @@ export function selectDevice(name) {
     }
 
     dispatch(fetchDevice(name)).then(action => {
-      if (action.type === types.FETCH_DEVICE_SUCCESS) {
+      if (action.type === FETCH_DEVICE_SUCCESS) {
         const newDevice = action.device;
         return dispatch(selectDeviceSuccess(newDevice));
       }
@@ -139,14 +157,14 @@ export function selectDevice(name) {
 }
 
 function selectDeviceSuccess(device) {
-  return {type: types.SELECT_DEVICE_SUCCESS, device};
+  return {type: SELECT_DEVICE_SUCCESS, device};
 }
 
 export function fetchDevice(name){
   return ( dispatch, getState, {emit}) => {
     const name = getCurrentDeviceName(getState());
     unSubscribeDevice(name, emit);
-    dispatch({type: types.FETCH_DEVICE, name});
+    dispatch({type: FETCH_DEVICE, name});
     return callServiceGraphQL(`
       query FetchDevice($name: String) {
         devices(pattern: $name) {
@@ -177,7 +195,7 @@ export function fetchDevice(name){
     `, {name})
     .then(data => {
       const device = data.devices[0];
-      return dispatch(device ? fetchDeviceSuccess(device) : {type: types.FETCH_DEVICE_FAILED, name});
+      return dispatch(device ? fetchDeviceSuccess(device) : {type: FETCH_DEVICE_FAILED, name});
     })
     .catch(err => dispatch(displayError(err.toString())));
   }
