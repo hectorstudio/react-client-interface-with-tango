@@ -3,7 +3,8 @@ import { displayError } from './error';
 import {uri} from '../constants/websocket';
 
 import { setTab } from './deviceList';
-import { queryExistsDevice } from '../selectors/queries';
+import { queryExistsDevice, queryDeviceWithName } from '../selectors/queries';
+import { getCurrentDeviceName } from '../selectors/currentDevice';
 
 const client = require('graphql-client')({
   url: `/db`
@@ -112,26 +113,39 @@ export function enableAllDisplevel(){
   return dispatch => dispatch({type: types.ENABLE_ALL_DISPLEVEL})
 }
 
-export function fetchDeviceSuccess(device, dispatch, emit) {
-  // Here we subscribe to the scalar values
-  subscribeDevice(device, emit);
-  return dispatch({type: types.FETCH_DEVICE_SUCCESS, device});
+export function fetchDeviceSuccess(device) {
+  return (dispatch, getState, {emit}) => {
+    subscribeDevice(device, emit);
+    return dispatch({type: types.FETCH_DEVICE_SUCCESS, device});
+  }
 }
 
 export function selectDevice(name) {
-  return (dispatch, getState, {emit}) => {
-    dispatch({type: 'SELECT_DEVICE', name});
-    if (!queryExistsDevice(getState(), name)) {
-      dispatch(fetchDevice(name));
+  return (dispatch, getState) => {
+    dispatch({type: types.SELECT_DEVICE, name});
+    
+    const device = queryDeviceWithName(getState(), name);
+    if (device) {
+      return dispatch(selectDeviceSuccess(device));
     }
+
+    dispatch(fetchDevice(name)).then(action => {
+      const newDevice = action.device;
+      return dispatch(selectDeviceSuccess(newDevice));
+    })
   }
+}
+
+function selectDeviceSuccess(device) {
+  return {type: types.SELECT_DEVICE_SUCCESS, device};
 }
 
 export function fetchDevice(name){
   return ( dispatch, getState, {emit}) => {
-    unSubscribeDevice(getState().devices.current, emit);
-    dispatch({type: 'FETCH_DEVICE', name});
-    callServiceGraphQL(`
+    const name = getCurrentDeviceName(getState());
+    unSubscribeDevice(name, emit);
+    dispatch({type: types.FETCH_DEVICE, name});
+    return callServiceGraphQL(`
       query FetchDevice($name: String) {
         devices(pattern: $name) {
           name
@@ -161,9 +175,7 @@ export function fetchDevice(name){
     `, {name})
     .then(data => {
       const device = data.devices[0];
-      const firstTab = device.properties.length > 0 ? 'properties' : device.attributes.length ? 'attributes' : 'commands';
-      dispatch(setTab(firstTab));
-      dispatch(fetchDeviceSuccess(device, dispatch, emit));
+      return dispatch(fetchDeviceSuccess(device));
     })
     .catch(err => dispatch(displayError(err.toString())));
   }
