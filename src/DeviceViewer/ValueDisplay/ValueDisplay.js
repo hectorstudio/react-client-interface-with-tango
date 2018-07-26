@@ -29,10 +29,48 @@ const SpectrumValueDisplay = ({value, datatype}) => {
   );
 };
 
-const ImageValueDisplay = ({value, datatype}) =>
-  'Images are not supported.';
+class ImageValueDisplay extends React.Component {
 
-const ValueDisplay = ({value, datatype, dataformat}) => {
+  getIndicesForCoord(x, y, width) {
+    var index = y * (width * 4) + x * 4;
+    return index;
+  }
+
+  updateCanvas(){
+    const canvas = document.getElementById(this.props.name);
+    const context = canvas.getContext('2d');
+    const imgLength = this.props.value.length;
+
+    const imgData = context.createImageData(imgLength, imgLength);
+    canvas.width  = imgLength;
+    canvas.height = imgLength;
+
+    this.props.value.forEach((outerArray, y) => {
+      outerArray.forEach((value, x) => {
+        var index = this.getIndicesForCoord(x,y, imgData.width);
+        imgData.data[index+0] = parseInt(value, 10);
+        imgData.data[index+1] = parseInt(value, 10);
+        imgData.data[index+2] = parseInt(value, 10);
+        imgData.data[index+3] = parseInt(value, 10); 
+      });
+    });
+    context.putImageData(imgData, 0, 0); 
+  }
+
+  componentDidMount() {
+    this.updateCanvas();
+  }
+
+  
+  render() {
+    if(document.getElementById(this.props.name)){
+      this.updateCanvas();
+    }
+    return <canvas id={this.props.name} />
+  }
+}
+
+const ValueDisplay = ({value, datatype, dataformat, name}) => {
   if (value === null) {
     return <span className="no-value">No value</span>;
   }
@@ -43,7 +81,7 @@ const ValueDisplay = ({value, datatype, dataformat}) => {
     'SPECTRUM': SpectrumValueDisplay,
   }[dataformat];
 
-  return <InnerDisplay value={value} datatype={datatype}/>;
+  return <InnerDisplay value={value} datatype={datatype} name={name}/>;
 };
 
 export default ValueDisplay;
