@@ -11,17 +11,11 @@ import { unique } from '../utils';
 export interface IDeviceDetailState {
   activeDataFormat?: string,
   activeTab: string,
-  commandResults: {
-    [device: string]: {
-      [attribute: string]: any;
-    }
-  },
   enabledDisplevels: string[],
 }
 
 export default function deviceViewer(state: IDeviceDetailState = {
   activeTab: 'properties',
-  commandResults: {},
   enabledDisplevels: []
 }, action) {
   switch (action.type) {
