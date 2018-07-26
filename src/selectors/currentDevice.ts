@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { IRootState } from '../reducers/rootReducer';
-import { objectValues, uniqueStrings } from './utils';
+import { objectValues, unique } from '../utils';
 import { getCommandOutputState } from './commandOutput';
 
 const getAttributesState = (state: IRootState) => state.attributes;
@@ -46,7 +46,7 @@ export const getCurrentDeviceStateValue = createSelector(
 
 export const getAvailableDataFormats = createSelector(
     getCurrentDeviceAttributes,
-    attrs => uniqueStrings(attrs.map(attr => attr.dataformat))
+    attrs => unique(attrs.map(attr => attr.dataformat))
 );
 
 export const getCommandDisplevels = createSelector(
