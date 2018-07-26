@@ -130,8 +130,10 @@ export function selectDevice(name) {
     }
 
     dispatch(fetchDevice(name)).then(action => {
-      const newDevice = action.device;
-      return dispatch(selectDeviceSuccess(newDevice));
+      if (action.type === types.FETCH_DEVICE_SUCCESS) {
+        const newDevice = action.device;
+        return dispatch(selectDeviceSuccess(newDevice));
+      }
     })
   }
 }
@@ -175,7 +177,7 @@ export function fetchDevice(name){
     `, {name})
     .then(data => {
       const device = data.devices[0];
-      return dispatch(fetchDeviceSuccess(device));
+      return dispatch(device ? fetchDeviceSuccess(device) : {type: types.FETCH_DEVICE_FAILED, name});
     })
     .catch(err => dispatch(displayError(err.toString())));
   }
