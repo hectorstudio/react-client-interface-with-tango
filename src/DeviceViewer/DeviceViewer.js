@@ -250,7 +250,7 @@ const AttributeTable = ({ attributes, dataFormat, dataFormats, onSetDataFormat }
                 {name}
               </td>
               <td>
-                <ValueDisplay value={value} datatype={datatype} dataformat={dataformat} />
+                <ValueDisplay value={value} datatype={datatype} dataformat={dataformat} name={name} />
               </td>
             </tr>
           )}
