@@ -1,5 +1,5 @@
 import {
-  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS, ENABLE_DISPLEVEL, DISABLE_DISPLEVEL,
+  FETCH_DEVICE_NAMES, FETCH_DEVICE_NAMES_SUCCESS, ENABLE_DISPLEVEL, DISABLE_DISPLEVEL, SET_DEVICE_PROPERTY, DELETE_DEVICE_PROPERTY,
   FETCH_DEVICE, FETCH_DEVICE_SUCCESS, SET_DATA_FORMAT, CHANGE, SET_TAB, EXECUTE_COMMAND_COMPLETE, EXECUTE_COMMAND
 } from '../actions/actionTypes';
 
@@ -70,7 +70,6 @@ export default function devices(state: IDevicesState = {
     case EXECUTE_COMMAND: {
     const oldLoadingOutput = state.loadingOutput
     const {command, device} = action;
-    // const deviceName = state.current!.name
     const deviceResults = {...oldLoadingOutput[device], [command]: true};
     const loadingOutput = {...oldLoadingOutput, [device]: deviceResults};
     return {...state, loadingOutput}
@@ -79,13 +78,30 @@ export default function devices(state: IDevicesState = {
     case EXECUTE_COMMAND_COMPLETE: {
       const oldCommandResults = state.commandResults;
       const {command, result, device} = action;
-      // const deviceName = state.current!.name
       const deviceResults = {...oldCommandResults[device], [command]: result};
       const commandResults = {...oldCommandResults, [device]: deviceResults};
       const oldLoadingOutput = state.loadingOutput
       const deviceLoading = {...oldLoadingOutput[device], [command]: false};
       const loadingOutput = {...oldLoadingOutput, [device]: deviceLoading};
       return {...state, loadingOutput, commandResults}
+    }
+    
+    case SET_DEVICE_PROPERTY: {
+        const {name, value} = action;
+        const current = state.current!;
+        const oldProperty = current.properties.find(prop => prop.name === name);
+        const properties = oldProperty
+        ? current.properties.map(prop => prop.name === name ? {...prop, value} : prop)
+        : [...current.properties, {name, value}];
+
+        return {...state, current: {...current, properties}};
+      }
+
+    case DELETE_DEVICE_PROPERTY: {
+      const {name} = action;
+      const current = state.current!;
+      const properties = current.properties.filter(prop => prop.name !== name)
+      return {...state, current: {...current, properties}};
     }
 
     case ENABLE_DISPLEVEL: {
