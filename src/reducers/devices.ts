@@ -11,7 +11,7 @@ export interface IDevicesState {
     [name: string]: IDevice;
 }
 
-export default function allDevices(state: IDevicesState = {}, action) {
+export default function devices(state: IDevicesState = {}, action) {
     switch (action.type) {
     case FETCH_DEVICE_SUCCESS: {
         const {
