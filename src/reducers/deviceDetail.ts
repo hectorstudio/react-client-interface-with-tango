@@ -1,9 +1,9 @@
 import {
   ENABLE_DISPLEVEL,
   DISABLE_DISPLEVEL,
-  FETCH_DEVICE_SUCCESS,
   SET_DATA_FORMAT,
-  SET_TAB
+  SET_TAB,
+  SELECT_DEVICE_SUCCESS
 } from "../actions/actionTypes";
 
 import { unique } from './utils';
@@ -37,15 +37,17 @@ export default function deviceViewer(state: IDeviceDetailState = {
       return {...state, enabledDisplevels};
     }
 
-    case FETCH_DEVICE_SUCCESS: {
+    case SELECT_DEVICE_SUCCESS: {
       const device = action.device;
       const commands = device.commands || [];
       const attributes = device.attributes || [];
+      const properties = device.properties || [];
 
       const enabledDisplevels = unique(commands.map(cmd => cmd.displevel));
       const activeDataFormat = attributes.length ? attributes[0].dataformat : null;
+      const activeTab = properties.length ? 'properties' : attributes.length ? 'attributes' : 'commands';
 
-      return {...state, enabledDisplevels, activeDataFormat};
+      return {...state, enabledDisplevels, activeDataFormat, activeTab};
     }
 
     case SET_DATA_FORMAT:

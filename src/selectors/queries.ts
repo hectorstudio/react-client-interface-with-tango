@@ -1,5 +1,5 @@
 import { IRootState } from '../reducers/rootReducer';
 
-export function queryExistsDevice(state: IRootState, name: string) {
-    return state.devices[name] != null;
+export function queryDeviceWithName(state: IRootState, name: string) {
+    return state.devices[name];
 }
