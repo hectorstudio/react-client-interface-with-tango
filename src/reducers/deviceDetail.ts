@@ -6,14 +6,14 @@ import {
   SELECT_DEVICE_SUCCESS
 } from "../actions/actionTypes";
 
-import { unique } from './utils';
+import { unique } from '../utils';
 
 export interface IDeviceDetailState {
   activeDataFormat?: string,
   activeTab: string,
   commandResults: {
     [device: string]: {
-      [attribute: string]: any // TODO
+      [attribute: string]: any;
     }
   },
   enabledDisplevels: string[],
