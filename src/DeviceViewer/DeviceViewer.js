@@ -40,9 +40,9 @@ const PropertyTable = ({ properties, setDeviceProperty, currentDeviceName, delet
         {properties && properties.map(({ name, value }, i) =>
           <tr key={i}>
             <td>
-              <EditProperty setDeviceProperty={setDeviceProperty} deleteDeviceProperty={deleteDeviceProperty} currentDeviceName={currentDeviceName} name={name} value={value} />
+               <EditProperty setDeviceProperty={setDeviceProperty} deleteDeviceProperty={deleteDeviceProperty} currentDeviceName={currentDeviceName} name={name} value={value} />
             </td>
-            <td>{name}</td>
+           <td>{name}</td>
             <td>{value.join('\n')}</td>
           </tr>
         )}
