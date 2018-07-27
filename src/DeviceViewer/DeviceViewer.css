@@ -149,3 +149,14 @@
     padding-left: 700px;
 }
 
+.device-viewer tr i {
+    visibility: hidden;
+}
+
+.device-viewer tr:hover i {
+    visibility: visible;
+}
+
+.device-viewer .properties tr td.actions {
+    padding-right: 0.25em;
+}
