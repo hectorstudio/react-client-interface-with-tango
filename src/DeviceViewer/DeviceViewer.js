@@ -156,7 +156,7 @@ class SetProperty extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.state = { formValues: {}, show: false, valid: false };
+    this.state = { formValues: {name: "", value: ""}, show: false, valid: false };
   }
 
   handleClose() {
