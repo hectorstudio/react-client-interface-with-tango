@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import {
-    getCommandValue
-} from '../selectors/devices';
 import { submitCommand } from '../actions/tango';
 import './HomeViewer.css'
+import { getCommandOutputState } from '../selectors/commandOutput';
 
 
 class HomeViewer extends Component {
@@ -14,8 +12,7 @@ class HomeViewer extends Component {
     }
 
     render() {
-        const { getValue } = this.props;
-        const response = getValue["sys/database/2"];
+        const response = this.props.commandOutputs["sys/database/2"];
         if (typeof response !== 'undefined') {
             const output = response["DbInfo"]
             return (
@@ -37,7 +34,7 @@ class HomeViewer extends Component {
 
 function mapStateToProps(state) {
     return {
-        getValue: getCommandValue(state),
+        commandOutputs: getCommandOutputState(state),
     };
 }
 

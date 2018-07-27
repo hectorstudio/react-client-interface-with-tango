@@ -1,8 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import { clearError } from '../actions/ui';
-import { getError } from '../selectors/ui';
+import { clearError } from '../actions/error';
+import { getError } from '../selectors/error';
 
 import './ErrorDisplay.css';
 
