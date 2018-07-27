@@ -40,9 +40,7 @@ function callServiceGraphQL(query, variables) {
     if(res.status === 401) {
       throw new Error('Not authorized')
     }
-  })
-  .then(json => json.data)
-  .catch(err => console.log(err.message))
+  });
 }
 
 export function fetchDeviceNames() {
@@ -55,7 +53,7 @@ export function fetchDeviceNames() {
         }
       }
     `)
-    .then(data => data.devices.map(device => device.name))
+    .then(({data}) => data.devices.map(device => device.name))
     .then(names => dispatch({type: FETCH_DEVICE_NAMES_SUCCESS, names}))
     .catch(err => dispatch(displayError(err.toString())))
   };
@@ -73,7 +71,7 @@ export function submitCommand(command, argin, device) {
         output
       }
     }`, {command, device})
-    .then(data => data.executeCommand.output)
+    .then(({data}) => data.executeCommand.output)
     .then(result => dispatch( {type: EXECUTE_COMMAND_COMPLETE, command, result, device}))
     .catch(err => dispatch(displayError(err.toString()))) 
     :
@@ -86,7 +84,7 @@ export function submitCommand(command, argin, device) {
       }
     }
     `, {command, device, argin})
-    .then(data => data.executeCommand.output)
+    .then(({data}) => data.executeCommand.output)
     .then(result => dispatch( {type: EXECUTE_COMMAND_COMPLETE, command, result}))
     .catch(err => dispatch(displayError(err.toString()))) 
   };
@@ -231,7 +229,11 @@ export function fetchDevice(name){
         }
       }
     `, {name})
-    .then(data => {
+    .then(({data, errors}) => {
+      if (errors) {
+        dispatch(displayError(errors.map(error => error.message).join('\n\n')));
+      }
+
       const device = data.devices[0];
       return dispatch(device ? fetchDeviceSuccess(device) : {type: FETCH_DEVICE_FAILED, name});
     })
