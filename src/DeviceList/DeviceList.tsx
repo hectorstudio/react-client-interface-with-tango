@@ -6,15 +6,18 @@ import classNames from 'classnames';
 import { fetchDeviceNames} from '../actions/tango';
 import { setDeviceFilter } from '../actions/deviceList';
 
-import { getFilter } from '../selectors/filtering';
 import {
+  getFilter,
   getFilteredDeviceNames,
   getHasDevices,
+} from '../selectors/deviceList';
+
+import {
   getCurrentDeviceName,
-  getDeviceNamesAreLoading
-} from '../selectors/devices';
+} from '../selectors/currentDevice';
 
 import './DeviceList.css';
+import { getDeviceNamesAreLoading } from '../selectors/loadingStatus';
 
 interface IDeviceEntryProps {
   name: string,
@@ -55,7 +58,12 @@ class DeviceList extends Component<IDeviceListProps> {
   }
   
   public render() {
-    const entries = this.props.deviceNames.map((name, i) =>
+    const {
+      deviceNames,
+      filter,
+    } = this.props;
+
+    const entries = deviceNames.map((name, i) =>
       <DeviceEntry
         isSelected={name === this.props.currentDeviceName}
         key={i} name={name}
@@ -65,10 +73,10 @@ class DeviceList extends Component<IDeviceListProps> {
     return (
       <div className="device-list">
         <div className="form-group search">
-          <input className="form-control" type="text" placeholder="Search..." value={this.props.filter} onChange={this.handleTextChange} />
+          <input className="form-control" type="text" placeholder="Search..." value={filter} onChange={this.handleTextChange}/>
         </div>
         <div className="list">
-        {this.props.loading && entries}
+          {entries}
         </div>
       </div>
     );
