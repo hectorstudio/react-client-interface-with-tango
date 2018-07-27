@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import classNames from 'classnames';
@@ -44,7 +44,7 @@ const PropertyTable = ({ properties, setDeviceProperty, deviceName, deleteDevice
       <tbody>
         {properties && properties.map(({ name, value }, i) =>
           <tr key={i}>
-            <td>
+            <td className="actions">
                <EditProperty setDeviceProperty={setDeviceProperty} deleteDeviceProperty={deleteDeviceProperty} deviceName={deviceName} name={name} value={value} />
             </td>
            <td>{name}</td>
@@ -105,7 +105,7 @@ class EditProperty extends Component {
   }
   render() {
     return (
-      <div>
+      <Fragment>
         <i className="fa fa-trash" onClick={this.removeShow}></i> &nbsp;
         <i className="fa fa-pencil" onClick={this.handleShow}></i>
 
@@ -147,7 +147,7 @@ class EditProperty extends Component {
             </Modal.Footer>
           </Modal.Dialog>
         }
-      </div>
+      </Fragment>
 
     )
   }
