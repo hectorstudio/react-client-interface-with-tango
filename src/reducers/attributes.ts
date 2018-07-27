@@ -18,7 +18,7 @@ export default function attributes(state: IAttributesState = {}, action) {
     switch (action.type) {
     case FETCH_DEVICE_SUCCESS: {
         const {name, attributes: attrs} = action.device;
-        const hash = attrs.reduce((accum, attribute) => ({
+        const hash = (attrs || []).reduce((accum, attribute) => ({
             ...accum, [attribute.name]: attribute
         }), {});
         return {...state, [name]: hash};
