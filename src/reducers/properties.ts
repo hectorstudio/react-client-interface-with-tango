@@ -19,7 +19,7 @@ export default function properties(state: IPropertiesState = {}, action) {
     switch (action.type) {
     case FETCH_DEVICE_SUCCESS: {
         const {name, properties: props} = action.device;
-        const hash = props.reduce((accum, property) => ({
+        const hash = (props || []).reduce((accum, property) => ({
             ...accum, [property.name]: property
         }), {});
         return {...state, [name]: hash};
