@@ -1,46 +1,37 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { submitCommand } from '../actions/tango';
+import { executeCommand } from '../actions/tango';
 import './HomeViewer.css'
 import { getCommandOutputState } from '../selectors/commandOutput';
+import { queryDeviceCommandOutput } from '../selectors/queries';
+import { getServerSummary } from '../selectors/server';
 
 
 class HomeViewer extends Component {
     componentDidMount() {
-        this.props.submitCommand("DbInfo", "", "sys/database/2");
+        this.props.onFetchStatus();
     }
 
     render() {
-        const response = this.props.commandOutputs["sys/database/2"];
-        if (typeof response !== 'undefined') {
-            const output = response["DbInfo"]
-            return (
-                Object.keys(output).map(i =>
-                    <div className="output">
-                        {output[i] === " " ?
-                            <br />
-                            :
-                            <p key={i} value={i}>{output[i]}</p>
-                        }
-                    </div>
-                )
-            )
-        } else {
-            return ""
-        }
+        const output = this.props.output;
+        return output ? (
+            <div className="home-viewer">
+                {output.map((line, i) => <p key={i}>{line}</p>)}
+            </div>
+        ) : null;
     }
 }
 
 function mapStateToProps(state) {
     return {
-        commandOutputs: getCommandOutputState(state),
+        output: getServerSummary(state),
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        submitCommand: (command, value, device) => dispatch(submitCommand(command, value, device)),
+        onFetchStatus: () => dispatch(executeCommand('DbInfo', '', 'sys/database/2')),
     };
 }
 
