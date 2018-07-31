@@ -103,7 +103,10 @@ class InputField extends Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleExecute = this.handleExecute.bind(this);
-    this.state = { value: '', valid: false};
+    this.state = {
+      value: '',
+      valid: this.props.intype === 'DevString'
+    };
   }
 
   handleChange(event) {
@@ -120,7 +123,7 @@ class InputField extends Component {
         this.setState({ value: parseFloat(event.target.value, 10), valid: true });
       }
     }else if(this.props.intype === 'DevString'){
-      this.setState({ value: event.target.value});
+      this.setState({ value: event.target.value, valid: true});
     }else{
       this.setState({value: '', valid: false });
     }
@@ -137,54 +140,39 @@ class InputField extends Component {
   }
 
   render() {
-    if (this.props.intype === 'DevVoid') {
-      return(
+    const intype = this.props.intype;
+    let inner = null;
+
+    if (intype === 'DevVoid') {
+      return (
         <button className="btn btn-outline-secondary" type="button" onClick={this.handleExecute}>Execute</button>
       );
     }
-    else if (this.props.intype === 'DevBoolean') {
-      return (
-        <div className="input-group">
-          <select className="custom-select" id="inputGroupSelect04" value={this.state.value} onChange={this.handleChange}>
-            <option value="" defaultValue disabled hidden>Choose...</option>
-            <option value="true">True</option>
-            <option value="false">False</option>
-          </select>
-          <div className="input-group-append">
-            <button className="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleExecute}>Execute</button>
-          </div>
-        </div>
 
-      )
+    if (intype === 'DevBoolean') {
+      inner = (
+        <select className="custom-select" id="inputGroupSelect04" value={this.state.value} onChange={this.handleChange}>
+          <option value="" defaultValue disabled hidden>Choose...</option>
+          <option value="true">True</option>
+          <option value="false">False</option>
+        </select>
+      );
+    } else if (intype.includes("U")) {
+      inner = <input type="number" min="0" className="form-control" value={this.state.value} onChange={this.handleChange}/>;
+    } else if (intype === 'DevString') {
+      inner = <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange}/>;
+    } else {
+      inner = <input type="number" className="form-control" value={this.state.value} onChange={this.handleChange}/>;
     }
-    else if (this.props.intype.includes("U")) {
-      return (
-        <div className="input-group">
-          <input type="number" min="0" className="form-control" value={this.state.value} onChange={this.handleChange} />
-          <div className="input-group-append">
-            <button className="btn btn-outline-secondary" type="button" onClick={this.handleExecute} disabled={!this.state.valid}>Execute</button>
-          </div>
+
+    return (
+      <div className="input-group">
+        {inner}
+        <div className="input-group-append">
+          <button className="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleExecute}>Execute</button>
         </div>
-      );
-    } else if(this.props.intype === 'DevString') {
-      return (
-        <div className="input-group">
-          <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange} />
-          <div className="input-group-append">
-            <button className="btn btn-outline-secondary" type="button" onClick={this.handleExecute}>Execute</button>
-          </div>
-        </div>
-      );
-    }else {
-      return (
-        <div className="input-group">
-          <input type="number" className="form-control" value={this.state.value} onChange={this.handleChange} />
-          <div className="input-group-append">
-            <button className="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleExecute}>Execute</button>
-          </div>
-        </div>
-      );
-    }
+      </div>
+    );
   }
 }
 
