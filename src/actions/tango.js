@@ -59,7 +59,7 @@ export function fetchDeviceNames() {
   };
 }
 
-export function submitCommand(command, argin, device) {
+export function executeCommand(command, argin, device) {
   return (dispatch) => {
     dispatch({type: EXECUTE_COMMAND, command, device});
     argin === '' ?

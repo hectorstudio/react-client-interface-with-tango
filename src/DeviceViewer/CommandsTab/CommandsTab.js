@@ -18,7 +18,7 @@ import {
 } from '../../selectors/loadingStatus';
 
 import {
-  submitCommand,
+  executeCommand,
   enableDisplevel,
   disableDisplevel,
 } from '../../actions/tango';
@@ -35,7 +35,7 @@ class CommandsTable extends Component {
   render() {
     const {
       commands,
-      submitCommand,
+      onExecute,
       currentDeviceName,
       displevels,
       enabledList,
@@ -57,7 +57,7 @@ class CommandsTable extends Component {
                 <td>{name}</td>
                 <td>{intype}</td>
                 <td className="input">
-                  <InputField submitCommand={submitCommand} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
+                  <InputField onExecute={onExecute} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
                 </td>
                 <td>
                   <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
@@ -102,7 +102,7 @@ class InputField extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleExecute = this.handleExecute.bind(this);
     this.state = { value: '', valid: false};
   }
 
@@ -126,12 +126,12 @@ class InputField extends Component {
     }
   }
 
-  handleSubmit(event) {
+  handleExecute(event) {
     event.preventDefault()
     if(this.props.intype === 'DevString'){
-      this.props.submitCommand(this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
+      this.props.onExecute(this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
     }else{
-     this.props.submitCommand(this.props.name, this.state.value, this.props.currentDeviceName)
+     this.props.onExecute(this.props.name, this.state.value, this.props.currentDeviceName)
     }
     this.setState({value: '', valid: false });
   }
@@ -139,7 +139,7 @@ class InputField extends Component {
   render() {
     if (this.props.intype === 'DevVoid') {
       return(
-        <button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
+        <button className="btn btn-outline-secondary" type="button" onClick={this.handleExecute}>Executet</button>
       );
     }
     else if (this.props.intype === 'DevBoolean') {
@@ -151,7 +151,7 @@ class InputField extends Component {
             <option value="false">False</option>
           </select>
           <div className="input-group-append">
-            <button className="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleSubmit}>Submit</button>
+            <button className="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleExecute}>Execute</button>
           </div>
         </div>
 
@@ -162,7 +162,7 @@ class InputField extends Component {
         <div className="input-group">
           <input type="number" min="0" className="form-control" value={this.state.value} onChange={this.handleChange} />
           <div className="input-group-append">
-            <button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit} disabled={!this.state.valid}>Submit</button>
+            <button className="btn btn-outline-secondary" type="button" onClick={this.handleExecute} disabled={!this.state.valid}>Execute</button>
           </div>
         </div>
       );
@@ -171,7 +171,7 @@ class InputField extends Component {
         <div className="input-group">
           <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange} />
           <div className="input-group-append">
-            <button className="btn btn-outline-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
+            <button className="btn btn-outline-secondary" type="button" onClick={this.handleExecute}>Execute</button>
           </div>
         </div>
       );
@@ -180,7 +180,7 @@ class InputField extends Component {
         <div className="input-group">
           <input type="number" className="form-control" value={this.state.value} onChange={this.handleChange} />
           <div className="input-group-append">
-            <button className="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleSubmit}>Submit</button>
+            <button className="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleExecute}>Execute</button>
           </div>
         </div>
       );
@@ -203,7 +203,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    submitCommand: (command, value, device) => dispatch(submitCommand(command, value, device)),
+    onExecute: (command, value, device) => dispatch(executeCommand(command, value, device)),
     enableDisplevel: (displevel) => dispatch(enableDisplevel(displevel)),
     disableDisplevel: (displevel) => dispatch(disableDisplevel(displevel)),
   };
