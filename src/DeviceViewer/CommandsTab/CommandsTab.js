@@ -55,7 +55,6 @@ class CommandsTable extends Component {
             {commands && commands.map(({ name, displevel, intype }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
               <tr key={i}>
                 <td>{name}</td>
-                <td>{intype}</td>
                 <td className="input">
                   <InputField onExecute={onExecute} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
                 </td>
@@ -158,11 +157,11 @@ class InputField extends Component {
         </select>
       );
     } else if (intype.includes("U")) {
-      inner = <input type="number" min="0" className="form-control" value={this.state.value} onChange={this.handleChange}/>;
+      inner = <input type="number" min="0" className="form-control" value={this.state.value} onChange={this.handleChange} placeholder={intype}/>;
     } else if (intype === 'DevString') {
-      inner = <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange}/>;
+      inner = <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange} placeholder={intype}/>;
     } else {
-      inner = <input type="number" className="form-control" value={this.state.value} onChange={this.handleChange}/>;
+      inner = <input type="number" className="form-control" value={this.state.value} onChange={this.handleChange} placeholder={intype}/>;
     }
 
     return (

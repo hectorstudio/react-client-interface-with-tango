@@ -26,3 +26,7 @@
 .commands-table td.input {
   text-align: right;
 }
+
+.commands-table input::placeholder {
+  color: rgba(1, 1, 1, 0.25);
+}
