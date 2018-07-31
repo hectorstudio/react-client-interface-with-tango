@@ -139,7 +139,7 @@ class InputField extends Component {
   render() {
     if (this.props.intype === 'DevVoid') {
       return(
-        <button className="btn btn-outline-secondary" type="button" onClick={this.handleExecute}>Executet</button>
+        <button className="btn btn-outline-secondary" type="button" onClick={this.handleExecute}>Execute</button>
       );
     }
     else if (this.props.intype === 'DevBoolean') {
