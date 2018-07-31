@@ -10,7 +10,6 @@ import CommandsTable from './CommandsTab/CommandsTab';
 
 import {
   selectDevice,
-  submitCommand,
   setDeviceProperty,
   deleteDeviceProperty
 } from '../actions/tango';
@@ -461,7 +460,6 @@ function mapDispatchToProps(dispatch) {
     selectDevice: device => dispatch(selectDevice(device)),
     selectDataFormat: format => dispatch(setDataFormat(format)),
     selectTab: tab => dispatch(setTab(tab)),
-    submitCommand: (command, value) => dispatch(submitCommand(command, value)),
     setDeviceProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value)),
     deleteDeviceProperty: (device, name) => dispatch(deleteDeviceProperty(device, name))
   };
