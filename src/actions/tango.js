@@ -85,7 +85,7 @@ export function executeCommand(command, argin, device) {
     }
     `, {command, device, argin})
     .then(({data}) => data.executeCommand.output)
-    .then(result => dispatch( {type: EXECUTE_COMMAND_COMPLETE, command, result}))
+    .then(result => dispatch( {type: EXECUTE_COMMAND_COMPLETE, command, result, device}))
     .catch(err => dispatch(displayError(err.toString()))) 
   };
 }
