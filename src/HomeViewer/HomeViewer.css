@@ -1,13 +1,13 @@
-.output {
+.home-viewer {
     text-align:center;
    }
 
-  .output p{
+  .home-viewer p {
     text-align: justify;
     margin: 0 auto;
     width: 40em;
     font-weight: bold;
     position: relative;
     top: 40px;
-
+    white-space: pre;
    }
