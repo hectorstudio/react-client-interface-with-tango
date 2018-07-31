@@ -61,29 +61,17 @@ export function fetchDeviceNames() {
 
 export function executeCommand(command, argin, device) {
   return (dispatch) => {
-    dispatch({type: EXECUTE_COMMAND, command, device});
-    argin === '' ?
+    const params = argin ? {command, argin, device} : {command, device};
+    dispatch({type: EXECUTE_COMMAND, ...params});
     callServiceGraphQL(`
-    mutation ExecuteVoidCommand($command: String!, $device: String!) {
-      executeCommand(command: $command, device: $device) {
-        ok
-        message
-        output
-      }
-    }`, {command, device})
-    .then(({data}) => data.executeCommand.output)
-    .then(result => dispatch( {type: EXECUTE_COMMAND_COMPLETE, command, result, device}))
-    .catch(err => dispatch(displayError(err.toString()))) 
-    :
-    callServiceGraphQL(`
-    mutation ExecuteCommand($command: String!, $device: String!, $argin: ScalarTypes!) {
+    mutation ExecuteCommand($command: String!, $device: String!, $argin: ScalarTypes) {
       executeCommand(command: $command, device: $device, argin: $argin) {
         ok
         message
         output
       }
     }
-    `, {command, device, argin})
+    `, params)
     .then(({data}) => data.executeCommand.output)
     .then(result => dispatch( {type: EXECUTE_COMMAND_COMPLETE, command, result, device}))
     .catch(err => dispatch(displayError(err.toString()))) 
