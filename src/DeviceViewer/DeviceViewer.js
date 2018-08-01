@@ -133,11 +133,12 @@ class EditProperty extends Component {
               <Modal.Title>Edit property</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <label><span>Name: </span>
-                {this.props.name}</label> <br></br>
-              <label><span>Value: </span>
-                <input type="text" name="value" value={this.state.value} onChange={this.handleChange} />
-              </label>
+              <div className="input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">{this.props.name}</span>
+                </div>
+                <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange}/>
+              </div>
             </Modal.Body>
 
             <Modal.Footer>
