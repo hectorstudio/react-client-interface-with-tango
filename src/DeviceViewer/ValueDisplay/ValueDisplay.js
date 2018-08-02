@@ -3,14 +3,21 @@ import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 
 import './ValueDisplay.css';
 
-const ScalarValueDisplay = ({value, datatype}) =>
-  datatype === 'DevString' && value.length > 50000
-  ? 'Value too big to display.'
-  : value;
+const ScalarValueDisplay = ({value, datatype}) => {
+  value = Array.isArray(value) ? value.join('\n') : value;
+
+  if (datatype === 'DevString') {
+    if (value.match(/(  )|(^ )|\t/)) {
+      return <pre>{value}</pre>;
+    }
+  }
+  
+  return value;
+}
 
 const SpectrumValueDisplay = ({value, datatype}) => {
   if (datatype === 'DevString') {
-    return 'DevString spectra are not yet supported.';
+    return value.join('\n');
   }
 
   const values = datatype === 'DevBoolean'
