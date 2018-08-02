@@ -23,7 +23,7 @@ const SpectrumValueDisplay = ({value, datatype}) => {
   const values = datatype === 'DevBoolean'
     ? value.map(val => val ? 1 : 0)
     : value;
-  const data = values ? values.map(value => ({value})) : [];
+  const data = values.map(value => ({value}));
   const lineType = datatype === 'DevBoolean' ? 'step' : 'linear';
 
   return (
