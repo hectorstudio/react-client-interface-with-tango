@@ -11,6 +11,7 @@ import CommandsTable from './CommandsTab/CommandsTab';
 import {
   selectDevice,
   setDeviceProperty,
+  setDeviceAttribute,
   deleteDeviceProperty
 } from '../actions/tango';
 
@@ -235,7 +236,7 @@ class SetProperty extends Component {
   }
 }
 
-const AttributeTable = ({ attributes, dataFormat, dataFormats, onSetDataFormat }) => {
+const AttributeTable = ({ attributes, setDeviceAttribute, deviceName }) => {
   const QualityIndicator = ({ quality }) => {
     const sub = {
       'ATTR_VALID': 'valid',
@@ -249,20 +250,19 @@ const AttributeTable = ({ attributes, dataFormat, dataFormats, onSetDataFormat }
       className={`quality quality-${sub}`}
       title={quality}>● </span>;
   };
-
   return (
     <div>
 
       <table className="attributes">
         <tbody>
-          {attributes && attributes.map(({ name, value, quality, datatype, dataformat }, i) =>
+          {attributes && attributes.map(({ name, value, quality, datatype, dataformat, writable }, i) =>
             <tr key={i}>
               <td>
                 <QualityIndicator quality={quality} />
                 {name}
               </td>
               <td>
-                <ValueDisplay name={name} value={value} datatype={datatype} dataformat={dataformat} />
+                <ValueDisplay name={name} deviceName={deviceName} writable={writable} setDeviceAttribute={setDeviceAttribute} value={value} datatype={datatype} dataformat={dataformat} />
               </td>
             </tr>
           )}
@@ -326,14 +326,14 @@ class DeviceMenu extends Component {
 class DeviceTables extends Component {
 
   render() {
-    const { properties, attributes, dataFormat, dataFormats, onSetDataFormat, selectedTab, commands, setDeviceProperty, deviceName, deleteDeviceProperty } = this.props;
+    const { properties, attributes, dataFormat, dataFormats, onSetDataFormat, selectedTab, commands, setDeviceProperty, setDeviceAttribute, deviceName, deleteDeviceProperty } = this.props;
     const hasAttrs = attributes.length > 0;
     const hasProps = properties.length > 0;
 
     return (
       <div className="device-table">
         {hasProps && selectedTab === "properties" && <PropertyTable properties={properties} setDeviceProperty={setDeviceProperty} deviceName={deviceName} deleteDeviceProperty={deleteDeviceProperty} />}
-        {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat} />}
+        {selectedTab === "attributes" && <AttributeTable attributes={attributes} setDeviceAttribute={setDeviceAttribute} deviceName={deviceName} />}
         {selectedTab === "commands" && <CommandsTable commands={commands} />}
       </div>
     );
@@ -382,6 +382,7 @@ class DeviceViewer extends Component {
       currentState,
       commands,
       setDeviceProperty,
+      setDeviceAttribute,
       deviceName,
       deleteDeviceProperty
     } = this.props;
@@ -435,6 +436,7 @@ class DeviceViewer extends Component {
             dataFormat={dataFormat}
             selectedTab={activeTab}
             setDeviceProperty={setDeviceProperty}
+            setDeviceAttribute={setDeviceAttribute}
             deviceName={deviceName}
             deleteDeviceProperty={deleteDeviceProperty}
           />
@@ -469,6 +471,7 @@ function mapDispatchToProps(dispatch) {
     selectDataFormat: format => dispatch(setDataFormat(format)),
     selectTab: tab => dispatch(setTab(tab)),
     setDeviceProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value)),
+    setDeviceAttribute: (device, name, value) => dispatch(setDeviceAttribute(device, name, value)),
     deleteDeviceProperty: (device, name) => dispatch(deleteDeviceProperty(device, name))
   };
 }

@@ -1,18 +1,44 @@
 import React, { Component } from 'react';
 import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 
+import MotorInput from './MotorInput';
 import './ValueDisplay.css';
 
-const ScalarValueDisplay = ({value, datatype}) => {
+const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDeviceAttribute}) => {
   value = Array.isArray(value) ? value.join('\n') : value;
+
+  var handleKey = (deviceName, attributeName, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if ([13, 38, 40].includes(e.keyCode)) {
+      setDeviceAttribute(deviceName, attributeName, e.target.valueAsNumber)
+    }
+  }
 
   if (datatype === 'DevString') {
     if (value.match(/(  )|(^ )|\t/)) {
       return <pre>{value}</pre>;
     }
   }
-  
-  return value;
+
+  if(writable==="WRITE"){
+    return<MotorInput
+      save={setDeviceAttribute.bind(this, deviceName, name)}
+      saveStep={null}
+      step={1}
+      value={value}
+      motorName={name}
+      label={name}
+      suffix="&deg;"
+      decimalPoints="2"
+      state={2}
+      stop={null}
+      disabled={false}
+    />
+    //return <input type="number" className="form-control" defaultValue={value} onKeyUp={handleKey.bind(this, deviceName, name)}/> 
+  }else{
+    return value;
+  }
 }
 
 const SpectrumValueDisplay = ({value, datatype}) => {
@@ -77,7 +103,7 @@ class ImageValueDisplay extends React.Component {
   }
 }
 
-const ValueDisplay = ({value, datatype, dataformat, name}) => {
+const ValueDisplay = ({value, deviceName, writable, setDeviceAttribute,  datatype, dataformat, name}) => {
   if (value === null) {
     return <span className="no-value">No value</span>;
   }
@@ -88,7 +114,7 @@ const ValueDisplay = ({value, datatype, dataformat, name}) => {
     'SPECTRUM': SpectrumValueDisplay,
   }[dataformat];
 
-  return <InnerDisplay value={value} datatype={datatype} name={name}/>;
+  return <InnerDisplay value={value} datatype={datatype} name={name} deviceName={deviceName} writable={writable} setDeviceAttribute={setDeviceAttribute}/>;
 };
 
 export default ValueDisplay;
