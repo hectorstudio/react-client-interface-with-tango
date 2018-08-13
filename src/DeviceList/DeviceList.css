@@ -10,13 +10,11 @@
 	padding: 0.1em 1em;
 }
 
-.device-list .entry:hover {
-	background-color: lightgray;
-	cursor: pointer;
-}
-
 .device-list .entry.selected {
-	background-color: peachpuff;
+	background-color: #007bff;
+	color: white;
+	width: fit-content;
+	border-radius: 1em;
 }
 
 .device-list .search {
@@ -34,4 +32,32 @@
 
 .device-list a:hover {
 	text-decoration: none;
+}
+
+.device-list ul {
+	list-style-type: none;
+	padding-left: 1em;
+	user-select: none;
+}
+
+.device-list .expander-arrow {
+	display: inline-block;
+	width: 1.25em;
+	color: gray;
+}
+
+.device-list .expander-arrow.auto {
+	color: lightgray;
+}
+
+.device-list .expander-arrow:before {
+	content: "\025B6";
+}
+
+.device-list .expander-arrow.expanded:before {
+	content: "\025BC";
+}
+
+.device-list ul li {
+	cursor: pointer;
 }
