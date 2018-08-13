@@ -100,7 +100,7 @@ class DeviceList extends Component<IDeviceListProps> {
       const subEntries = families.map(family => {
         const members = sort(
           triplets
-            .filter(([,family2,]) => family2 === family)
+            .filter(([domain2,family2,]) => domain2 === domain && family2 === family)
             .map(([,,member]) => member)
         );
         
