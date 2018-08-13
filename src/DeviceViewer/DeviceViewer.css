@@ -149,14 +149,22 @@
     padding-left: 700px;
 }
 
-.device-viewer tr i {
+.device-viewer .properties tr i {
     visibility: hidden;
 }
 
-.device-viewer tr:hover i {
+.device-viewer .properties tr:hover i {
     visibility: visible;
 }
 
 .device-viewer .properties tr td.actions {
     padding-right: 0.25em;
+}
+
+.device-viewer .attributes tr i {
+    cursor: help;
+}
+
+.device-viewer .attributes td:last-child {
+    padding-right: 0.5em;
 }
