@@ -40,9 +40,22 @@
 	user-select: none;
 }
 
-.device-list ul .expander-arrow {
+.device-list .expander-arrow {
 	display: inline-block;
 	width: 1.25em;
+	color: gray;
+}
+
+.device-list .expander-arrow.auto {
+	color: lightgray;
+}
+
+.device-list .expander-arrow:before {
+	content: "\025B6";
+}
+
+.device-list .expander-arrow.expanded:before {
+	content: "\025BC";
 }
 
 .device-list ul li {
