@@ -10,14 +10,19 @@ import {
   getFilter,
   getFilteredDeviceNames,
   getHasDevices,
+  getExpandedDomains,
+  getExpandedFamilies,
 } from '../selectors/deviceList';
 
 import {
   getCurrentDeviceName,
 } from '../selectors/currentDevice';
 
+import {
+  getDeviceNamesAreLoading
+} from '../selectors/loadingStatus';
+
 import './DeviceList.css';
-import { getDeviceNamesAreLoading } from '../selectors/loadingStatus';
 
 import { unique } from '../utils';
 
@@ -184,8 +189,8 @@ function mapStateToProps(state) {
     filter: getFilter(state),
     loading: getDeviceNamesAreLoading(state),
 
-    expandedDomains: state.deviceList.expandedDomains,
-    expandedFamilies: state.deviceList.expandedFamilies,
+    expandedDomains: getExpandedDomains(state),
+    expandedFamilies: getExpandedFamilies(state),
   };
 }
 
