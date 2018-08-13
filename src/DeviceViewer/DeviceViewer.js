@@ -255,7 +255,7 @@ const AttributeTable = ({ attributes, dataFormat, dataFormats, onSetDataFormat }
 
       <table className="attributes">
         <tbody>
-          {attributes && attributes.map(({ name, value, quality, datatype, dataformat }, i) =>
+          {attributes && attributes.map(({ name, value, quality, datatype, dataformat, description }, i) =>
             <tr key={i}>
               <td>
                 <QualityIndicator quality={quality} />
@@ -263,6 +263,9 @@ const AttributeTable = ({ attributes, dataFormat, dataFormats, onSetDataFormat }
               </td>
               <td>
                 <ValueDisplay name={name} value={value} datatype={datatype} dataformat={dataformat} />
+              </td>
+              <td>
+                <i className='fa fa-info-circle' title={description}/>
               </td>
             </tr>
           )}
