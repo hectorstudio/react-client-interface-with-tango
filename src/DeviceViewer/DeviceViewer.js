@@ -235,6 +235,11 @@ class SetProperty extends Component {
   }
 }
 
+const DescriptionDisplay = ({description}) => <i
+  className={classNames('fa fa-info-circle', {'no-description': description === 'No description'})}
+  title={description}
+/>;
+
 const AttributeTable = ({ attributes, dataFormat, dataFormats, onSetDataFormat }) => {
   const QualityIndicator = ({ quality }) => {
     const sub = {
@@ -252,7 +257,6 @@ const AttributeTable = ({ attributes, dataFormat, dataFormats, onSetDataFormat }
 
   return (
     <div>
-
       <table className="attributes">
         <tbody>
           {attributes && attributes.map(({ name, value, quality, datatype, dataformat, description }, i) =>
@@ -265,7 +269,7 @@ const AttributeTable = ({ attributes, dataFormat, dataFormats, onSetDataFormat }
                 <ValueDisplay name={name} value={value} datatype={datatype} dataformat={dataformat} />
               </td>
               <td>
-                <i className='fa fa-info-circle' title={description}/>
+                <DescriptionDisplay description={description} />
               </td>
             </tr>
           )}
