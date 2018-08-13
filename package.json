@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "alphanum-sort": "^1.0.2",
     "axios": "0.18.0",
     "bootstrap": "^4.1.1",
     "classnames": "^2.2.5",
