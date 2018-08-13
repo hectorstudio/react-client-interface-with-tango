@@ -46,10 +46,6 @@
 	color: gray;
 }
 
-.device-list .expander-arrow.auto {
-	color: lightgray;
-}
-
 .device-list .expander-arrow:before {
 	content: "\025B6";
 }

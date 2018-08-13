@@ -3,6 +3,7 @@ import {
     SET_SEARCH_FILTER,
     TOGGLE_EXPAND_DOMAIN,
     TOGGLE_EXPAND_FAMILY,
+    SELECT_DEVICE,
 } from '../actions/actionTypes';
 
 export interface IDeviceListState {
@@ -11,6 +12,18 @@ export interface IDeviceListState {
 
     expandedDomains: string[];
     expandedFamilies: string[];
+}
+
+function toggleElement(array, element) {
+    if (array.indexOf(element) === -1) {
+        return array.concat(element);
+    } else {
+        return array.filter(element2 => element2 !== element);
+    }
+}
+
+function enableElement(array, element) {
+    return array.indexOf(element) === -1 ? array.concat(element) : array;
 }
 
 export default function deviceList(state: IDeviceListState = {
@@ -28,20 +41,23 @@ export default function deviceList(state: IDeviceListState = {
         return {...state, filter: action.filter};  
 
     case TOGGLE_EXPAND_DOMAIN: {
-        const domain = action.domain;
-        const isExpanded = state.expandedDomains.indexOf(domain) !== -1;
-        return isExpanded
-            ? {...state, expandedDomains: state.expandedDomains.filter(domain2 => domain !== domain2)}
-            : {...state, expandedDomains: state.expandedDomains.concat(domain)};
+        return {...state, expandedDomains: toggleElement(state.expandedDomains, action.domain)};
     }
 
     case TOGGLE_EXPAND_FAMILY: {
         const {domain, family} = action;
-        const key = [domain, family].join('/');
-        const isExpanded = state.expandedFamilies.indexOf(key) !== -1;
-        return isExpanded
-            ? {...state, expandedFamilies: state.expandedFamilies.filter(key2 => key !== key2)}
-            : {...state, expandedFamilies: state.expandedFamilies.concat(key)};
+        const domainFamily = `${domain}/${family}`;
+        return {...state, expandedFamilies: toggleElement(state.expandedFamilies, domainFamily)};
+    }
+
+    case SELECT_DEVICE: {
+        const [domain, family,] = action.name.split('/');
+        const domainFamily = `${domain}/${family}`;
+        return {
+            ...state, 
+            expandedDomains: enableElement(state.expandedDomains, domain),
+            expandedFamilies: enableElement(state.expandedFamilies, domainFamily),
+        };
     }
 
     default:
