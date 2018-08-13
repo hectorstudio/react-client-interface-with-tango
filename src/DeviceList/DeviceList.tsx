@@ -2,6 +2,7 @@ import React, { Component, StatelessComponent } from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
+// import ReactCSSTransitionGroup from 'react-transition-group';
 
 import { fetchDeviceNames} from '../actions/tango';
 import { setDeviceFilter, toggleExpandDomain, toggleExpandFamily } from '../actions/deviceList';
@@ -39,10 +40,9 @@ const DeviceEntry: StatelessComponent<IDeviceEntryProps> = ({domain, family, mem
   </Link>
 );
 
-const ExpanderArrow: StatelessComponent<{isExpanded: boolean}> = ({isExpanded}) => (
+const ExpanderArrow: StatelessComponent<{isExpanded: boolean, autoExpanded?: boolean}> = ({isExpanded, autoExpanded}) => (
   <span
-    className='expander-arrow'
-    dangerouslySetInnerHTML={{ __html: isExpanded ? '&#9660;' : '&#9654'}}
+    className={classNames('expander-arrow', {expanded: isExpanded, auto: autoExpanded})}
   />
 );
 
@@ -109,14 +109,18 @@ class DeviceList extends Component<IDeviceListProps> {
         });
 
         const key = `${domain}/${family}`;
+        const innerAutoExpanded = selectedTriplet != null && selectedTriplet[0] === domain && selectedTriplet[1] === family;
         const innerIsExpanded =
-          (selectedTriplet && selectedTriplet[0] === domain && selectedTriplet[1] === family) ||
+          innerAutoExpanded ||
           this.props.filter.length > 0 ||
           this.props.expandedFamilies.indexOf(key) !== -1;
 
         return (
-          <li key={key} onClick={this.handleToggleFamily.bind(null, domain, family)}>
-            <ExpanderArrow isExpanded={innerIsExpanded}/>
+          <li
+            key={key}
+            onClick={this.handleToggleFamily.bind(null, domain, family)}
+          >
+            <ExpanderArrow isExpanded={innerIsExpanded} autoExpanded={innerAutoExpanded}/>
             {family}
             {innerIsExpanded && <ul>
               {subSubEntries}
@@ -125,14 +129,18 @@ class DeviceList extends Component<IDeviceListProps> {
         );
       });
 
+      const autoExpanded = selectedTriplet != null && selectedTriplet[0] === domain;
       const isExpanded =
-        (selectedTriplet && selectedTriplet[0] === domain) ||
+        autoExpanded ||
         this.props.filter.length > 0 ||
         this.props.expandedDomains.indexOf(domain) !== -1;
 
       return (
-        <li key={domain} onClick={this.handleToggleDomain.bind(null, domain)}>
-          <ExpanderArrow isExpanded={isExpanded}/>
+        <li
+          key={domain}
+          onClick={this.handleToggleDomain.bind(null, domain)}
+        >
+          <ExpanderArrow isExpanded={isExpanded} autoExpanded={autoExpanded}/>
           {domain}
           {isExpanded && <ul>
             {subEntries}
