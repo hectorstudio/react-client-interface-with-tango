@@ -2,7 +2,6 @@ import React, { Component, StatelessComponent } from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
-// import ReactCSSTransitionGroup from 'react-transition-group';
 
 import { fetchDeviceNames} from '../actions/tango';
 import { setDeviceFilter, toggleExpandDomain, toggleExpandFamily } from '../actions/deviceList';
@@ -142,9 +141,7 @@ class DeviceList extends Component<IDeviceListProps> {
         >
           <ExpanderArrow isExpanded={isExpanded} autoExpanded={autoExpanded}/>
           {domain}
-          {isExpanded && <ul>
-            {subEntries}
-          </ul>}
+          {isExpanded && <ul>{subEntries}</ul>}
         </li>
       );
     });
