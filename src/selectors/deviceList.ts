@@ -31,3 +31,13 @@ export const getHasDevices = createSelector(
     getDeviceNames,
     names => names.length > 0
 );
+
+export const getExpandedDomains = createSelector(
+    getDeviceListState,
+    state => state.expandedDomains
+);
+
+export const getExpandedFamilies = createSelector(
+    getDeviceListState,
+    state => state.expandedFamilies
+);
