@@ -45,9 +45,9 @@ const DeviceEntry: StatelessComponent<IDeviceEntryProps> = ({domain, family, mem
   </Link>
 );
 
-const ExpanderArrow: StatelessComponent<{isExpanded: boolean, autoExpanded?: boolean}> = ({isExpanded, autoExpanded}) => (
+const ExpanderArrow: StatelessComponent<{isExpanded: boolean}> = ({isExpanded}) => (
   <span
-    className={classNames('expander-arrow', {expanded: isExpanded, auto: autoExpanded})}
+    className={classNames('expander-arrow', {expanded: isExpanded})}
   />
 );
 
@@ -84,8 +84,7 @@ class DeviceList extends Component<IDeviceListProps> {
   }
   
   public render() {
-    const { filter, currentDeviceName } = this.props;
-    const selectedTriplet = currentDeviceName ? currentDeviceName.split('/') : null;
+    const {filter} = this.props;
 
     const triplets = this.props.deviceNames.map(name => name.split('/'));
     const domains = unique(triplets.map(([domain,,]) => domain));
@@ -114,10 +113,8 @@ class DeviceList extends Component<IDeviceListProps> {
         });
 
         const key = `${domain}/${family}`;
-        const innerAutoExpanded = selectedTriplet != null && selectedTriplet[0] === domain && selectedTriplet[1] === family;
         const innerIsExpanded =
-          innerAutoExpanded ||
-          this.props.filter.length > 0 ||
+          filter.length > 0 ||
           this.props.expandedFamilies.indexOf(key) !== -1;
 
         return (
@@ -125,7 +122,7 @@ class DeviceList extends Component<IDeviceListProps> {
             key={key}
             onClick={this.handleToggleFamily.bind(null, domain, family)}
           >
-            <ExpanderArrow isExpanded={innerIsExpanded} autoExpanded={innerAutoExpanded}/>
+            <ExpanderArrow isExpanded={innerIsExpanded}/>
             {family}
             {innerIsExpanded && <ul>
               {subSubEntries}
@@ -134,9 +131,7 @@ class DeviceList extends Component<IDeviceListProps> {
         );
       });
 
-      const autoExpanded = selectedTriplet != null && selectedTriplet[0] === domain;
       const isExpanded =
-        autoExpanded ||
         this.props.filter.length > 0 ||
         this.props.expandedDomains.indexOf(domain) !== -1;
 
@@ -145,7 +140,7 @@ class DeviceList extends Component<IDeviceListProps> {
           key={domain}
           onClick={this.handleToggleDomain.bind(null, domain)}
         >
-          <ExpanderArrow isExpanded={isExpanded} autoExpanded={autoExpanded}/>
+          <ExpanderArrow isExpanded={isExpanded}/>
           {domain}
           {isExpanded && <ul>{subEntries}</ul>}
         </li>
