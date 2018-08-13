@@ -17,7 +17,7 @@ const ScalarValueDisplay = ({value, datatype}) => {
 
 const SpectrumValueDisplay = ({value, datatype}) => {
   if (datatype === 'DevString') {
-    return value.join('\n');
+    return Array.isArray(value) ? value.join('\n') : value;
   }
 
   const values = datatype === 'DevBoolean'
