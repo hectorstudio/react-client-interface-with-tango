@@ -5,7 +5,7 @@
   
   display: grid;
   grid-template-rows: 0em auto;
-  grid-template-columns: 30em auto;
+  grid-template-columns: 22em auto;
 }
 
 .Layout header {
