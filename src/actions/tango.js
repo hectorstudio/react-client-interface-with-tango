@@ -200,6 +200,7 @@ export function fetchDevice(name){
             datatype
             value
             quality
+            description
           }
           properties{
             name
