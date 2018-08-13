@@ -2,6 +2,7 @@ import React, { Component, StatelessComponent } from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
+import sort from 'alphanum-sort';
 
 import { fetchDeviceNames} from '../actions/tango';
 import { setDeviceFilter, toggleExpandDomain, toggleExpandFamily } from '../actions/deviceList';
@@ -97,7 +98,7 @@ class DeviceList extends Component<IDeviceListProps> {
       );
 
       const subEntries = families.map(family => {
-        const members = unique(
+        const members = sort(
           triplets
             .filter(([,family2,]) => family2 === family)
             .map(([,,member]) => member)
