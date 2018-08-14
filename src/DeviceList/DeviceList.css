@@ -54,6 +54,10 @@
 	content: "\025BC";
 }
 
+.device-list.has-search .expander-arrow {
+	display: none;
+}
+
 .device-list ul li {
 	cursor: pointer;
 }
