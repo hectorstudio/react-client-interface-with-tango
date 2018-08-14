@@ -132,7 +132,7 @@ class DeviceList extends Component<IDeviceListProps> {
       });
 
       const isExpanded =
-        this.props.filter.length > 0 ||
+        filter.length > 0 ||
         this.props.expandedDomains.indexOf(domain) !== -1;
 
       return (
@@ -147,8 +147,9 @@ class DeviceList extends Component<IDeviceListProps> {
       );
     });
 
+    const className = classNames('device-list', {'has-search': filter.length > 0});
     return (
-      <div className="device-list">
+      <div className={className}>
         <div className="form-group search">
           <input className="form-control" type="text" placeholder="Search..." value={filter} onChange={this.handleTextChange}/>
         </div>
