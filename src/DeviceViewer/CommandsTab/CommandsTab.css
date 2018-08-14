@@ -31,12 +31,22 @@
   color: rgba(1, 1, 1, 0.25);
 }
 
-.commands-table .output-display .output::before {
+.commands-table .output-display .arrow {
+  float: left;
+}
+
+.commands-table .output-display .arrow::before {
   content: "\02192 ";
   color: lightgray;
 }
 
+.commands-table .output-display .output {
+  float: left;
+}
+
+/*
 .commands-table .output-display .input::before {
   content: "\02190 ";
   color: lightgray;
 }
+*/
