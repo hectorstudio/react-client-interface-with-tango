@@ -32,7 +32,7 @@ const OutputDisplay = ({value, isLoading}) => isLoading
   : (
     value ? (
       <div className='output-display'>
-        {/* <div className='input'></div> */}
+        <div className='arrow'/>
         <div className='output'>{value || ''}</div>
       </div>
     ) : null
