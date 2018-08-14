@@ -161,12 +161,22 @@
     visibility: visible;
 }
 
-.device-viewer .properties tr td.actions {
+.device-viewer .properties td.actions {
+    width: 1%;
     padding-right: 0.25em;
+}
+
+.device-viewer .properties td.name {
+    width: 1%;
 }
 
 .device-viewer .attributes tr i {
     cursor: help;
+}
+
+.device-viewer .attributes td.name,
+.device-viewer .attributes td.description {
+    width: 1%;
 }
 
 .device-viewer td:last-child {
