@@ -238,6 +238,7 @@ class SetProperty extends Component {
 const DescriptionDisplay = ({description}) => <i
   className={classNames('fa fa-info-circle', {'no-description': description === 'No description'})}
   title={description}
+  onClick={alert.bind(null, description)}
 />;
 
 const AttributeTable = ({ attributes, dataFormat, dataFormats, onSetDataFormat }) => {
