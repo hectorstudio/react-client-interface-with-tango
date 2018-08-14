@@ -14,6 +14,10 @@
     border-bottom: 1px solid gray;
 }
 
+.device-viewer table {
+    width: 100%;
+}
+
 .device-viewer table td {
     border-bottom: 1px solid lightgray;
     white-space: pre;
