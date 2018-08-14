@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
 import sort from 'alphanum-sort';
+import queryString from 'query-string'
 
 import { fetchDeviceNames} from '../actions/tango';
 import { setDeviceFilter, toggleExpandDomain, toggleExpandFamily } from '../actions/deviceList';
@@ -63,7 +64,7 @@ interface IValueProps {
 }
 
 interface IHandlerProps {
-  onFetchDeviceNames: () => void;
+  onInit: () => void;
   onSetFilter: (filter: string) => void;
   onToggleDomain: (domain: string) => void;
   onToggleFamily: (domain: string, family: string) => void;
@@ -80,9 +81,21 @@ class DeviceList extends Component<IDeviceListProps> {
   }
 
   public componentWillMount() {
-    this.props.onFetchDeviceNames();
+    this.props.onInit();
   }
-  
+
+  public componentDidMount() {
+    const filter = this.parseFilter();
+    this.props.onSetFilter(filter);
+  }
+
+  public componentDidUpdate(prevProps) {
+    const filter = this.parseFilter();
+    if (filter !== this.parseFilter(prevProps)) {
+      this.props.onSetFilter(filter);
+    }
+  }
+
   public render() {
     const {filter} = this.props;
 
@@ -151,7 +164,9 @@ class DeviceList extends Component<IDeviceListProps> {
     return (
       <div className={className}>
         <div className="form-group search">
-          <input className="form-control" type="text" placeholder="Search..." value={filter} onChange={this.handleTextChange}/>
+          <form>
+            <input name='filter' className="form-control" type="text" placeholder="Search..." value={filter} onChange={this.handleTextChange}/>
+          </form>
         </div>
         <div className="list">
           <ul>
@@ -176,6 +191,11 @@ class DeviceList extends Component<IDeviceListProps> {
     event.preventDefault();
     this.props.onToggleFamily(domain, family);
   }
+
+  private parseFilter(props?) {
+    const search = (props || this.props).location.search;
+    return queryString.parse(search).filter || '';
+  }
 }
 
 function mapStateToProps(state) {
@@ -193,7 +213,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onFetchDeviceNames: () => dispatch(fetchDeviceNames()),
+    onInit: () => dispatch(fetchDeviceNames()),
     onSetFilter: filter => dispatch(setDeviceFilter(filter)),
 
     onToggleDomain: domain => dispatch(toggleExpandDomain(domain)),
