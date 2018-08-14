@@ -29,7 +29,14 @@ import './CommandsTab.css';
 
 const OutputDisplay = ({value, isLoading}) => isLoading
   ? <Spinner size={1}/>
-  : value || '';
+  : (
+    value ? (
+      <div className='output-display'>
+        {/* <div className='input'></div> */}
+        <div className='output'>{value || ''}</div>
+      </div>
+    ) : null
+  );
 
 class CommandsTable extends Component {
   render() {
@@ -54,12 +61,13 @@ class CommandsTable extends Component {
           <tbody>
             {commands && commands.map(({ name, displevel, intype }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
               <tr key={i}>
-                <td>{name}</td>
+                <td>
+                  {name}
+                  <br/>
+                  <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
+                </td>
                 <td className="input">
                   <InputField onExecute={onExecute} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
-                </td>
-                <td>
-                  <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
                 </td>
               </tr>
             )}
