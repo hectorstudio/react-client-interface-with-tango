@@ -43,10 +43,10 @@ const PropertyTable = ({ properties, setDeviceProperty, deviceName, deleteDevice
       <tbody>
         {properties && properties.map(({ name, value }, i) =>
           <tr key={i}>
+           <td className="name">{name}</td>
             <td className="actions">
                <EditProperty setDeviceProperty={setDeviceProperty} deleteDeviceProperty={deleteDeviceProperty} deviceName={deviceName} name={name} value={value} />
             </td>
-           <td>{name}</td>
             <td>{value.join('\n')}</td>
           </tr>
         )}
@@ -261,14 +261,14 @@ const AttributeTable = ({ attributes, dataFormat, dataFormats, onSetDataFormat }
         <tbody>
           {attributes && attributes.map(({ name, value, quality, datatype, dataformat, description }, i) =>
             <tr key={i}>
-              <td>
+              <td className='name'>
                 <QualityIndicator quality={quality} />
                 {name}
               </td>
-              <td>
+              <td className='value'>
                 <ValueDisplay name={name} value={value} datatype={datatype} dataformat={dataformat} />
               </td>
-              <td>
+              <td className='description'>
                 <DescriptionDisplay description={description} />
               </td>
             </tr>
