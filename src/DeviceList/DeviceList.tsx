@@ -33,18 +33,24 @@ interface IDeviceEntryProps {
   family: string;
   member: string;
   isSelected: boolean;
+  filter?: string;
 }
 
-const DeviceEntry: StatelessComponent<IDeviceEntryProps> = ({domain, family, member, isSelected}) => (
-  <Link
-    onClick={e => e.stopPropagation()}
-    to={`/devices/${domain}/${family}/${member}`}
-  >
-    <div className={classNames('entry', {selected: isSelected})}>
-      {member}
-    </div>
-  </Link>
-);
+const DeviceEntry: StatelessComponent<IDeviceEntryProps> = ({domain, family, member, isSelected, filter}) => {
+  const pathname = `/devices/${domain}/${family}/${member}`;
+  const to = filter == null ? pathname : {
+    pathname,
+    search: `?filter=${filter}`
+  };
+
+  return (
+    <Link to={to} onClick={e => e.stopPropagation()}>
+      <div className={classNames('entry', {selected: isSelected})}>
+        {member}
+      </div>
+    </Link>
+  );
+};
 
 const ExpanderArrow: StatelessComponent<{isExpanded: boolean}> = ({isExpanded}) => (
   <span
@@ -86,13 +92,13 @@ class DeviceList extends Component<IDeviceListProps> {
 
   public componentDidMount() {
     const filter = this.parseFilter();
-    this.props.onSetFilter(filter);
+    this.props.onSetFilter(filter || '');
   }
 
   public componentDidUpdate(prevProps) {
     const filter = this.parseFilter();
     if (filter !== this.parseFilter(prevProps)) {
-      this.props.onSetFilter(filter);
+      this.props.onSetFilter(filter || '');
     }
   }
 
@@ -118,9 +124,16 @@ class DeviceList extends Component<IDeviceListProps> {
         
         const subSubEntries = members.map(member => {
           const name = `${domain}/${family}/${member}`;
+          const parsedFilter = this.parseFilter();
           return (
             <li key={name}>
-              <DeviceEntry isSelected={name === this.props.currentDeviceName} domain={domain} family={family} member={member}/>
+              <DeviceEntry
+                isSelected={name === this.props.currentDeviceName}
+                domain={domain}
+                family={family}
+                member={member}
+                filter={parsedFilter}
+              />
             </li>
           );
         });
@@ -194,7 +207,7 @@ class DeviceList extends Component<IDeviceListProps> {
 
   private parseFilter(props?) {
     const search = (props || this.props).location.search;
-    return queryString.parse(search).filter || '';
+    return queryString.parse(search).filter;
   }
 }
 
