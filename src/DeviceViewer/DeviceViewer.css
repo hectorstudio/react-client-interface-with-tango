@@ -165,7 +165,7 @@
     cursor: help;
 }
 
-.device-viewer .attributes td:last-child {
+.device-viewer td:last-child {
     padding-right: 0.5em;
 }
 
