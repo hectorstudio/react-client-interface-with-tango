@@ -25,7 +25,7 @@ const PropertyTable = ({ properties, deviceName, onSetDeviceProperty, onDeleteDe
     <br></br>
     <SetProperty
         deviceName={deviceName}
-        setDeviceProperty={setDeviceProperty}
+        onSetDeviceProperty={onSetDeviceProperty}
     />
   </div>;
 
