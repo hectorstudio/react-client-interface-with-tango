@@ -162,7 +162,7 @@ class DeviceTables extends Component {
 
     return (
       <div className="device-table">
-        {hasProps && selectedTab === "properties" && <PropertyTable properties={properties} onSetDeviceProperty={onSetDeviceProperty} deviceName={deviceName} deleteDeviceProperty={deleteDeviceProperty} />}
+        {hasProps && selectedTab === "properties" && <PropertyTable properties={properties} onSetDeviceProperty={onSetDeviceProperty} deviceName={deviceName} onDeleteDeviceProperty={onDeleteDeviceProperty} />}
         {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat} />}
         {selectedTab === "commands" && <CommandsTable commands={commands} />}
       </div>
