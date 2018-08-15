@@ -143,7 +143,6 @@ class DeviceMenu extends Component {
 }
 
 class DeviceTables extends Component {
-
   render() {
     const {
       properties,
@@ -153,9 +152,9 @@ class DeviceTables extends Component {
       onSetDataFormat,
       selectedTab,
       commands,
-      setDeviceProperty,
+      onSetDeviceProperty,
       deviceName,
-      deleteDeviceProperty
+      onDeleteDeviceProperty
     } = this.props;
     
     const hasAttrs = attributes.length > 0;
@@ -163,7 +162,7 @@ class DeviceTables extends Component {
 
     return (
       <div className="device-table">
-        {hasProps && selectedTab === "properties" && <PropertyTable properties={properties} setDeviceProperty={setDeviceProperty} deviceName={deviceName} deleteDeviceProperty={deleteDeviceProperty} />}
+        {hasProps && selectedTab === "properties" && <PropertyTable properties={properties} onSetDeviceProperty={onSetDeviceProperty} deviceName={deviceName} deleteDeviceProperty={deleteDeviceProperty} />}
         {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat} />}
         {selectedTab === "commands" && <CommandsTable commands={commands} />}
       </div>
@@ -212,9 +211,9 @@ class DeviceViewer extends Component {
       activeTab,
       currentState,
       commands,
-      setDeviceProperty,
+      onSetDeviceProperty,
       deviceName,
-      deleteDeviceProperty
+      onDeleteDeviceProperty
     } = this.props;
     const QualityIndicator = ({ state }) => {
       const sub = {
@@ -265,9 +264,9 @@ class DeviceViewer extends Component {
             dataFormats={dataFormats}
             dataFormat={dataFormat}
             selectedTab={activeTab}
-            setDeviceProperty={setDeviceProperty}
+            onSetDeviceProperty={onSetDeviceProperty}
             deviceName={deviceName}
-            deleteDeviceProperty={deleteDeviceProperty}
+            onDeleteDeviceProperty={onDeleteDeviceProperty}
           />
         </div>
       </div>;
@@ -299,8 +298,8 @@ function mapDispatchToProps(dispatch) {
     selectDevice: device => dispatch(selectDevice(device)),
     selectDataFormat: format => dispatch(setDataFormat(format)),
     selectTab: tab => dispatch(setTab(tab)),
-    setDeviceProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value)),
-    deleteDeviceProperty: (device, name) => dispatch(deleteDeviceProperty(device, name))
+    onSetDeviceProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value)),
+    onDeleteDeviceProperty: (device, name) => dispatch(deleteDeviceProperty(device, name))
   };
 }
 

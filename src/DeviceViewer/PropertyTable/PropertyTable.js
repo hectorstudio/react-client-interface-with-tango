@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-const PropertyTable = ({ properties, setDeviceProperty, deviceName, deleteDeviceProperty }) =>
+const PropertyTable = ({ properties, deviceName, onSetDeviceProperty, onDeleteDeviceProperty }) =>
   <div>
     <table className="properties">
       <tbody>
@@ -13,8 +13,8 @@ const PropertyTable = ({ properties, setDeviceProperty, deviceName, deleteDevice
                     deviceName={deviceName}
                     name={name}
                     value={value}
-                    setDeviceProperty={setDeviceProperty}
-                    deleteDeviceProperty={deleteDeviceProperty}
+                    onSetDeviceProperty={onSetDeviceProperty}
+                    onDeleteDeviceProperty={onDeleteDeviceProperty}
                 />
             </td>
             <td>{value.join('\n')}</td>
@@ -60,7 +60,7 @@ class EditProperty extends Component {
 
   removeProp() {
     event.preventDefault()
-    this.props.deleteDeviceProperty(this.props.deviceName, this.props.name)
+    this.props.onDeleteDeviceProperty(this.props.deviceName, this.props.name)
     this.removeClose();
   }
 
@@ -71,10 +71,11 @@ class EditProperty extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    this.props.setDeviceProperty(this.props.deviceName, this.props.name, [this.state.value])
+    this.props.onSetDeviceProperty(this.props.deviceName, this.props.name, [this.state.value])
     this.handleClose();
     this.setState({ value: this.state.value });
   }
+
   render() {
     return (
       <Fragment>
@@ -161,7 +162,7 @@ class SetProperty extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    this.props.setDeviceProperty(this.props.deviceName, this.state.formValues.name, [this.state.formValues.value])
+    this.props.onSetDeviceProperty(this.props.deviceName, this.state.formValues.name, [this.state.formValues.value])
     this.handleClose();
     let formValues = this.state.formValues;
     this.state.formValues["name"] = "";
