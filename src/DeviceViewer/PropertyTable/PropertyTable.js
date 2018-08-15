@@ -1,8 +1,21 @@
 import React, { Component, Fragment } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+
+import {
+    getCurrentDeviceProperties,
+    getCurrentDeviceName
+} from '../../selectors/currentDevice';
+
+import {
+    setDeviceProperty,
+    deleteDeviceProperty
+} from '../../actions/tango';
+
+import './PropertyTable.css';
 
 const PropertyTable = ({ properties, deviceName, onSetDeviceProperty, onDeleteDeviceProperty }) =>
-  <div>
+  <div className='PropertyTable'>
     <table className="properties">
       <tbody>
         {properties && properties.map(({ name, value }, i) =>
@@ -209,4 +222,21 @@ class SetProperty extends Component {
   }
 }
 
-export default PropertyTable;
+function mapStateToProps(state) {
+    return {
+        properties: getCurrentDeviceProperties(state),
+        deviceName: getCurrentDeviceName(state),
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        onSetDeviceProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value)),
+        onDeleteDeviceProperty: (device, name) => dispatch(deleteDeviceProperty(device, name)),
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(PropertyTable);

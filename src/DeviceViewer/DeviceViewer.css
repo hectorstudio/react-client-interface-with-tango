@@ -153,23 +153,6 @@
     padding-left: 700px;
 }
 
-.device-viewer .properties tr i {
-    visibility: hidden;
-}
-
-.device-viewer .properties tr:hover i {
-    visibility: visible;
-}
-
-.device-viewer .properties td.actions {
-    width: 1%;
-    padding-right: 0.25em;
-}
-
-.device-viewer .properties td.name {
-    width: 1%;
-}
-
 .device-viewer .attributes tr i {
     cursor: help;
 }
