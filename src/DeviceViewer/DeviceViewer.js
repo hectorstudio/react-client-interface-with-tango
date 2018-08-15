@@ -95,7 +95,16 @@ class DeviceMenu extends Component {
   }
 
   render() {
-    const { properties, attributes, commands, dataFormat, dataFormats, onSetDataFormat, onSetTab, selectedTab } = this.props;
+    const {
+      properties,
+      attributes,
+      commands,
+      dataFormat,
+      dataFormats,
+      selectedTab,
+      onSetDataFormat,
+      onSetTab,
+    } = this.props;
 
     const hasAttrs = attributes.length > 0;
     const hasProps = properties.length > 0;
@@ -136,7 +145,19 @@ class DeviceMenu extends Component {
 class DeviceTables extends Component {
 
   render() {
-    const { properties, attributes, dataFormat, dataFormats, onSetDataFormat, selectedTab, commands, setDeviceProperty, deviceName, deleteDeviceProperty } = this.props;
+    const {
+      properties,
+      attributes,
+      dataFormat,
+      dataFormats,
+      onSetDataFormat,
+      selectedTab,
+      commands,
+      setDeviceProperty,
+      deviceName,
+      deleteDeviceProperty
+    } = this.props;
+    
     const hasAttrs = attributes.length > 0;
     const hasProps = properties.length > 0;
 
