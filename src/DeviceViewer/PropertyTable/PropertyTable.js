@@ -9,7 +9,13 @@ const PropertyTable = ({ properties, setDeviceProperty, deviceName, deleteDevice
           <tr key={i}>
            <td className="name">{name}</td>
             <td className="actions">
-               <EditProperty setDeviceProperty={setDeviceProperty} deleteDeviceProperty={deleteDeviceProperty} deviceName={deviceName} name={name} value={value} />
+                <EditProperty
+                    deviceName={deviceName}
+                    name={name}
+                    value={value}
+                    setDeviceProperty={setDeviceProperty}
+                    deleteDeviceProperty={deleteDeviceProperty}
+                />
             </td>
             <td>{value.join('\n')}</td>
           </tr>
@@ -17,7 +23,10 @@ const PropertyTable = ({ properties, setDeviceProperty, deviceName, deleteDevice
       </tbody>
     </table>
     <br></br>
-    <SetProperty setDeviceProperty={setDeviceProperty} deviceName={deviceName} />
+    <SetProperty
+        deviceName={deviceName}
+        setDeviceProperty={setDeviceProperty}
+    />
   </div>;
 
 class EditProperty extends Component {
