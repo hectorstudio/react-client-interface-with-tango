@@ -91,46 +91,46 @@ class EditProperty extends Component {
 
     render() {
         return (
-        <Fragment>
-            <i className="fa fa-trash" onClick={this.removeShow}></i> &nbsp;
-            <i className="fa fa-pencil" onClick={this.handleShow}></i>
+            <Fragment>
+                <i className="fa fa-trash" onClick={this.removeShow}></i> &nbsp;
+                <i className="fa fa-pencil" onClick={this.handleShow}></i>
 
-            {this.state.remove &&
-            <Modal.Dialog className="modal-style">
-                <Modal.Header>
-                    <Modal.Title>Remove property</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>
-                        Are you sure you want to remove property {this.props.name}?
-                    </p>
-                </Modal.Body>
+                {this.state.remove &&
+                <Modal.Dialog className="modal-style">
+                    <Modal.Header>
+                        <Modal.Title>Remove property</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <p>
+                            Are you sure you want to remove property {this.props.name}?
+                        </p>
+                    </Modal.Body>
 
-                <Modal.Footer>
-                    <Button className="btn btn-outline-secondary" onClick={this.removeProp}>Yes</Button>
-                    <Button className="btn btn-outline-secondary" onClick={this.removeClose}>No</Button>
-                </Modal.Footer>
-            </Modal.Dialog>}
+                    <Modal.Footer>
+                        <Button className="btn btn-outline-secondary" onClick={this.removeProp}>Yes</Button>
+                        <Button className="btn btn-outline-secondary" onClick={this.removeClose}>No</Button>
+                    </Modal.Footer>
+                </Modal.Dialog>}
 
-            {this.state.show &&
-            <Modal.Dialog className="modal-style">
-                <Modal.Header>
-                <Modal.Title>Edit property</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="input-group">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text">{this.props.name}</span>
+                {this.state.show &&
+                <Modal.Dialog className="modal-style">
+                    <Modal.Header>
+                    <Modal.Title>Edit property</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="input-group">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">{this.props.name}</span>
+                            </div>
+                            <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange}/>
                         </div>
-                        <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange}/>
-                    </div>
-                </Modal.Body>
+                    </Modal.Body>
 
-                <Modal.Footer>
-                    <Button className="btn btn-outline-secondary" onClick={this.handleSubmit}>Save</Button>
-                    <Button className="btn btn-outline-secondary" onClick={this.handleClose}>Cancel</Button>
-                </Modal.Footer>
-            </Modal.Dialog>}
+                    <Modal.Footer>
+                        <Button className="btn btn-outline-secondary" onClick={this.handleSubmit}>Save</Button>
+                        <Button className="btn btn-outline-secondary" onClick={this.handleClose}>Cancel</Button>
+                    </Modal.Footer>
+                </Modal.Dialog>}
             </Fragment>
         );
     }
