@@ -10,8 +10,6 @@ import PropertyTable from './PropertyTable/PropertyTable';
 
 import {
   selectDevice,
-  setDeviceProperty,
-  deleteDeviceProperty
 } from '../actions/tango';
 
 import Spinner from '../Spinner/Spinner';
@@ -153,8 +151,6 @@ class DeviceTables extends Component {
       selectedTab,
       commands,
       deviceName,
-      onSetDeviceProperty,
-      onDeleteDeviceProperty
     } = this.props;
     
     const hasAttrs = attributes.length > 0;
@@ -162,12 +158,7 @@ class DeviceTables extends Component {
 
     return (
       <div className="device-table">
-        {hasProps && selectedTab === "properties" && <PropertyTable
-          properties={properties}
-          deviceName={deviceName}
-          onSetDeviceProperty={onSetDeviceProperty}
-          onDeleteDeviceProperty={onDeleteDeviceProperty}
-        />}
+        {hasProps && selectedTab === "properties" && <PropertyTable/>}
         {selectedTab === "attributes" && <AttributeTable
           attributes={attributes}
           dataFormat={dataFormat}
@@ -221,9 +212,7 @@ class DeviceViewer extends Component {
       activeTab,
       currentState,
       commands,
-      onSetDeviceProperty,
       deviceName,
-      onDeleteDeviceProperty
     } = this.props;
     
     const QualityIndicator = ({ state }) => {
@@ -275,9 +264,7 @@ class DeviceViewer extends Component {
             dataFormats={dataFormats}
             dataFormat={dataFormat}
             selectedTab={activeTab}
-            onSetDeviceProperty={onSetDeviceProperty}
             deviceName={deviceName}
-            onDeleteDeviceProperty={onDeleteDeviceProperty}
           />
         </div>
       </div>;
@@ -309,8 +296,6 @@ function mapDispatchToProps(dispatch) {
     selectDevice: device => dispatch(selectDevice(device)),
     selectDataFormat: format => dispatch(setDataFormat(format)),
     selectTab: tab => dispatch(setTab(tab)),
-    onSetDeviceProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value)),
-    onDeleteDeviceProperty: (device, name) => dispatch(deleteDeviceProperty(device, name))
   };
 }
 
