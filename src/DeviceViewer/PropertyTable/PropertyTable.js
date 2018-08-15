@@ -20,7 +20,9 @@ const PropertyTable = ({ properties, deviceName, onSetDeviceProperty, onDeleteDe
             <tbody>
             {properties && properties.map(({ name, value }, i) =>
                 <tr key={i}>
-                <td className="name">{name}</td>
+                    <td className="name">
+                        {name}
+                    </td>
                     <td className="actions">
                         <EditProperty
                             deviceName={deviceName}
@@ -30,7 +32,9 @@ const PropertyTable = ({ properties, deviceName, onSetDeviceProperty, onDeleteDe
                             onDeleteDeviceProperty={onDeleteDeviceProperty}
                         />
                     </td>
-                    <td>{value.join('\n')}</td>
+                    <td>
+                        {value.join('\n')}
+                    </td>
                 </tr>
             )}
             </tbody>
@@ -115,7 +119,7 @@ class EditProperty extends Component {
                 {this.state.show &&
                 <Modal.Dialog className="modal-style">
                     <Modal.Header>
-                    <Modal.Title>Edit property</Modal.Title>
+                        <Modal.Title>Edit property</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div className="input-group">
@@ -186,28 +190,32 @@ class SetProperty extends Component {
                 {this.state.show &&
                 <Modal.Dialog className='modal-style'>
                     <Modal.Header>
-                    <Modal.Title>Create new property</Modal.Title>
+                        <Modal.Title>Create new property</Modal.Title>
                     </Modal.Header>
 
                     <Modal.Body>
-                    <div className="input-group mb-3">
-                        <div className="input-group-prepend">
-                        <span className="input-group-text">Name</span>
+                        <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">Name</span>
+                            </div>
+                            <input type="text" name="name" className="form-control" autocomplete="off" value={this.state.formValues["name"]} onChange={this.handleChange} />
                         </div>
-                        <input type="text" name="name" className="form-control" autocomplete="off" value={this.state.formValues["name"]} onChange={this.handleChange} />
-                    </div>
 
-                    <div className="input-group mb-3">
-                        <div className="input-group-prepend">
-                        <span className="input-group-text">Value</span>
+                        <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">Value</span>
+                            </div>
+                            <input type="text" name="value" className="form-control" value={this.state.formValues["value"]} onChange={this.handleChange} />
                         </div>
-                        <input type="text" name="value" className="form-control" value={this.state.formValues["value"]} onChange={this.handleChange} />
-                    </div>
                     </Modal.Body>
 
                     <Modal.Footer>
-                    <Button className="btn btn-outline-secondary" onClick={this.handleSubmit} disabled={!this.state.valid}>Save</Button>
-                    <Button className="btn btn-outline-secondary" onClick={this.handleClose}>Cancel</Button>
+                        <Button className="btn btn-outline-secondary" onClick={this.handleSubmit} disabled={!this.state.valid}>
+                            Save
+                        </Button>
+                        <Button className="btn btn-outline-secondary" onClick={this.handleClose}>
+                            Cancel
+                        </Button>
                     </Modal.Footer>
                 </Modal.Dialog>}
             </div>
