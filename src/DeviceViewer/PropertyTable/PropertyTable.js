@@ -128,6 +128,9 @@ class EditProperty extends Component {
                             </div>
                             <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange}/>
                         </div>
+                        <div style={{whiteSpace: 'normal', fontStyle: 'italic', paddingTop: '0.5em'}}>
+                            WARNING: Property values will currently be set as singular values, i.e., arrays of strings are not yet supported.
+                        </div>
                     </Modal.Body>
 
                     <Modal.Footer>
