@@ -152,8 +152,8 @@ class DeviceTables extends Component {
       onSetDataFormat,
       selectedTab,
       commands,
-      onSetDeviceProperty,
       deviceName,
+      onSetDeviceProperty,
       onDeleteDeviceProperty
     } = this.props;
     
@@ -162,8 +162,18 @@ class DeviceTables extends Component {
 
     return (
       <div className="device-table">
-        {hasProps && selectedTab === "properties" && <PropertyTable properties={properties} onSetDeviceProperty={onSetDeviceProperty} deviceName={deviceName} onDeleteDeviceProperty={onDeleteDeviceProperty} />}
-        {selectedTab === "attributes" && <AttributeTable attributes={attributes} dataFormat={dataFormat} dataFormats={dataFormats} onSetDataFormat={onSetDataFormat} />}
+        {hasProps && selectedTab === "properties" && <PropertyTable
+          properties={properties}
+          deviceName={deviceName}
+          onSetDeviceProperty={onSetDeviceProperty}
+          onDeleteDeviceProperty={onDeleteDeviceProperty}
+        />}
+        {selectedTab === "attributes" && <AttributeTable
+          attributes={attributes}
+          dataFormat={dataFormat}
+          dataFormats={dataFormats}
+          onSetDataFormat={onSetDataFormat}
+        />}
         {selectedTab === "commands" && <CommandsTable commands={commands} />}
       </div>
     );
@@ -215,6 +225,7 @@ class DeviceViewer extends Component {
       deviceName,
       onDeleteDeviceProperty
     } = this.props;
+    
     const QualityIndicator = ({ state }) => {
       const sub = {
         'ON': 'on',
