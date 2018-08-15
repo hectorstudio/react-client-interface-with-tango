@@ -73,7 +73,7 @@ class ImageValueDisplay extends React.Component {
     image.forEach((outerArray, y) => {
       outerArray.forEach((value, x) => {
         const index = this.getIndicesForCoord(x,y, imgData.width);
-        const normal = 255 * (value / max);
+        const normal = 255 * (value / (max === 0 ? 1 : max));
         imgData.data[index+0] = normal;
         imgData.data[index+1] = normal;
         imgData.data[index+2] = normal;
