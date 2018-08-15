@@ -15,32 +15,32 @@ import {
 import './PropertyTable.css';
 
 const PropertyTable = ({ properties, deviceName, onSetDeviceProperty, onDeleteDeviceProperty }) =>
-  <div className='PropertyTable'>
-    <table className="properties">
-      <tbody>
-        {properties && properties.map(({ name, value }, i) =>
-          <tr key={i}>
-           <td className="name">{name}</td>
-            <td className="actions">
-                <EditProperty
-                    deviceName={deviceName}
-                    name={name}
-                    value={value}
-                    onSetDeviceProperty={onSetDeviceProperty}
-                    onDeleteDeviceProperty={onDeleteDeviceProperty}
-                />
-            </td>
-            <td>{value.join('\n')}</td>
-          </tr>
-        )}
-      </tbody>
-    </table>
-    <br></br>
-    <SetProperty
-        deviceName={deviceName}
-        onSetDeviceProperty={onSetDeviceProperty}
-    />
-  </div>;
+    <div className='PropertyTable'>
+        <table className="properties">
+            <tbody>
+            {properties && properties.map(({ name, value }, i) =>
+                <tr key={i}>
+                <td className="name">{name}</td>
+                    <td className="actions">
+                        <EditProperty
+                            deviceName={deviceName}
+                            name={name}
+                            value={value}
+                            onSetDeviceProperty={onSetDeviceProperty}
+                            onDeleteDeviceProperty={onDeleteDeviceProperty}
+                        />
+                    </td>
+                    <td>{value.join('\n')}</td>
+                </tr>
+            )}
+            </tbody>
+        </table>
+        <br></br>
+        <SetProperty
+            deviceName={deviceName}
+            onSetDeviceProperty={onSetDeviceProperty}
+        />
+    </div>;
 
 class EditProperty extends Component {
     constructor(props) {
