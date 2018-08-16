@@ -188,6 +188,7 @@ class DeviceList extends Component<IDeviceListProps> {
               autoCapitalize='off'
               autoCorrect='off'
               spellCheck={false}
+              title={`Filter on multiple terms, or prefix the query with 'glob:' to perform globbing, e.g. glob:sys/tg_test/+(1|2|3) or glob:sys/**`}
             />
           </form>
         </div>

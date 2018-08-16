@@ -6,7 +6,7 @@ import { IRootState } from '../reducers/rootReducer';
 function matchesFilter(name: string, filter: string) {
     if (filter.match(/^glob:/)) {
         const glob = filter.replace(/^glob:/, '');
-        return minimatch(name, glob);
+        return minimatch(name, glob, {nocase: true});
     }
 
     const words = filter.split(/\s+/);
