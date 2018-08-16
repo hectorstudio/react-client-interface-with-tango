@@ -14,24 +14,6 @@
     border-bottom: 1px solid gray;
 }
 
-.device-viewer table {
-    width: 100%;
-}
-
-.device-viewer table td {
-    border-bottom: 1px solid lightgray;
-    white-space: pre;
-    padding: 0.25em;
-}
-
-.device-viewer table tr:last-child td {
-    border-bottom: none;
-}
-
-.device-viewer table tr td {
-    padding-right: 2em;
-}
-
 .device-header {
     font-size: 1.25em;
     padding: 1em;
@@ -153,19 +135,6 @@
     padding-left: 700px;
 }
 
-.device-viewer .attributes tr i {
-    cursor: help;
-}
-
-.device-viewer .attributes td.name,
-.device-viewer .attributes td.description {
-    width: 1%;
-}
-
-.device-viewer td:last-child {
-    padding-right: 0.5em;
-}
-
 .device-viewer .spinner {
     margin-left: auto;
     margin-right: auto;
@@ -175,3 +144,37 @@
 .device-viewer .no-description {
     color: lightgray;
 }
+
+/* ATTRIBUTES */
+
+.device-viewer table.attributes {
+    width: 100%;
+}
+
+.device-viewer table.attributes td {
+    border-bottom: 1px solid lightgray;
+    white-space: pre;
+    padding: 0.25em;
+}
+
+.device-viewer table.attributes tr:last-child td {
+    border-bottom: none;
+}
+
+.device-viewer table.attributes tr td {
+    padding-right: 2em;
+}
+
+.device-viewer table.attributes td:last-child {
+    padding-right: 0.5em;
+}
+
+.device-viewer table.attributes tr i {
+    cursor: help;
+}
+
+.device-viewer table.attributes td.name,
+.device-viewer table.attributes td.description {
+    width: 1%;
+}
+
