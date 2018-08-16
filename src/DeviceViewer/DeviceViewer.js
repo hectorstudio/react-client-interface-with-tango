@@ -7,6 +7,7 @@ import 'font-awesome/css/font-awesome.min.css';
 
 import CommandsTable from './CommandsTab/CommandsTab';
 import PropertyTable from './PropertyTable/PropertyTable';
+import ServerInfo from './ServerInfo/ServerInfo';
 
 import {
   selectDevice,
@@ -130,6 +131,7 @@ class DeviceMenu extends Component {
     return (
       <div className="device-menu">
         <ul className='nav nav-tabs section-chooser'>
+          <Tab name='server' title='Server'/>
           {hasProps && <Tab name='properties' title='Properties' />}
           {hasAttrs && <Tab name='attributes' title='Attributes' />}
           {hasCommands && <Tab name='commands' title='Commands' />}
@@ -166,6 +168,7 @@ class DeviceTables extends Component {
           onSetDataFormat={onSetDataFormat}
         />}
         {selectedTab === "commands" && <CommandsTable commands={commands} />}
+        {selectedTab === 'server' && <ServerInfo/>}
       </div>
     );
   }
