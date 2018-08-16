@@ -24,6 +24,7 @@
 	background-color: rgba(255, 255, 255, 0.75);
 	border-bottom: 1px solid lightgray;
 	margin-bottom: 0.5em;
+	z-index: 1;
 }
 
 .device-list .search input {
@@ -54,6 +55,7 @@
 
 .device-list .expander-arrow.expanded {
 	transform: rotate(90deg);
+	z-index: -1;
 }
 
 .device-list.has-search .expander-arrow {
