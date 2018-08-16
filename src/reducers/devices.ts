@@ -5,6 +5,10 @@ import {
 interface IDevice {
     name: string;
     state: string;
+    server: {
+        id: string;
+        host: string;
+    }
 }
 
 export interface IDevicesState {

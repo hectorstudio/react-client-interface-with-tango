@@ -44,9 +44,12 @@
   float: left;
 }
 
-/*
-.commands-table .output-display .input::before {
-  content: "\02190 ";
-  color: lightgray;
+.commands-table table {
+  width: 100%;
 }
-*/
+
+.commands-table td {
+  border-bottom: 1px solid lightgray;
+  white-space: pre;
+  padding: 0.25em;
+}
