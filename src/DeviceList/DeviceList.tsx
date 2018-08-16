@@ -178,7 +178,17 @@ class DeviceList extends Component<IDeviceListProps> {
       <div className={className}>
         <div className="form-group search">
           <form>
-            <input name='filter' className="form-control" type="text" placeholder="Search..." value={filter} onChange={this.handleTextChange}/>
+            <input
+              name='filter'
+              className="form-control"
+              type="text"
+              placeholder="Search..."
+              value={filter}
+              onChange={this.handleTextChange}
+              autoCapitalize='off'
+              autoCorrect='off'
+              spellCheck={false}
+            />
           </form>
         </div>
         <div className="list">
