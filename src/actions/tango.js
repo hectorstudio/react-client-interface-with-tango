@@ -194,6 +194,10 @@ export function fetchDevice(name){
         devices(pattern: $name) {
           name
           state
+          server {
+            id
+            host
+          }
           attributes {
             name
             dataformat
