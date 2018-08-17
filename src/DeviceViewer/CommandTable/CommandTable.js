@@ -53,11 +53,11 @@ class CommandTable extends Component {
     } = this.props;
     
     return (
-      <div className="commands-table">
+      <div className="CommandTable">
         {displevels.length > 1 &&
           <DisplevelBox displevels={displevels} enabledList={enabledList} enableDisplevel={enableDisplevel} disableDisplevel={disableDisplevel} />
         }
-        <table className="commands">
+        <table className='separated'>
           <tbody>
             {commands && commands.map(({ name, displevel, intype }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
               <tr key={i}>
@@ -74,7 +74,7 @@ class CommandTable extends Component {
           </tbody>
         </table>
       </div>
-    )
+    );
   }
 }
 

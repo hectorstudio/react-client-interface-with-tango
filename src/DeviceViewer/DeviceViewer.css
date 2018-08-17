@@ -19,6 +19,14 @@
     padding: 1em;
 }
 
+.DeviceViewer table.separated tr {
+    border-bottom: 1px solid lightgray;
+}
+
+.DeviceViewer table.separated tr:last-child {
+    border-bottom: none;
+}
+
 .DeviceViewer .state {
     text-shadow: 0em 0em 0.3em;
     cursor: help;
