@@ -66,3 +66,18 @@ export const getCurrentDeviceCommandOutputs = createSelector(
     getCommandOutputState,
     (name, output) => output[name!] || {}
 );
+
+export const getCurrentDeviceHasProperties = createSelector(
+    getCurrentDeviceProperties,
+    props => props.length > 0
+);
+
+export const getCurrentDeviceHasAttributes = createSelector(
+    getCurrentDeviceAttributes,
+    attrs => attrs.length > 0
+);
+
+export const getCurrentDeviceHasCommands = createSelector(
+    getCurrentDeviceCommands,
+    cmds => cmds.length > 0
+);
