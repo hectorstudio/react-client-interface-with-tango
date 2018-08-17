@@ -224,7 +224,7 @@ export function fetchDevice(name){
     `, {name})
     .then(({data, errors}) => {
       if (errors) {
-        dispatch(displayError(errors.map(error => error.message).join('\n\n')));
+        // dispatch(displayError(errors.map(error => error.message).join('\n\n')));
       }
 
       const device = data.devices[0];
