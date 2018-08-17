@@ -18,11 +18,12 @@ const DataFormatChooser = ({dataFormats, selected, onSelect}) => {
 	return (
 		<ul className='DataFormatChooser nav nav-pills'>
 		{sortedFormats.map((format) =>
-			<li
-				className='nav-item'
-				key={format} onClick={onSelect.bind(null, format)}
-			>
-				<a className={classNames('nav-link', { active: format === selected })} href='#'>
+			<li className='nav-item' key={format}>
+				<a
+					className={classNames('nav-link', { active: format === selected })}
+					href='#'
+					onClick={e => { e.preventDefault(); onSelect(format); }}
+				>
 					{format}
 				</a>
 			</li>
