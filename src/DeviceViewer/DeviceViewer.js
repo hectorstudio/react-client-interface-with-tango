@@ -5,175 +5,74 @@ import classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import 'font-awesome/css/font-awesome.min.css';
 
-import CommandsTable from './CommandsTab/CommandsTab';
+import AttributeTable from './AttributeTable/AttributeTable';
+import CommandTable from './CommandTable/CommandTable';
 import PropertyTable from './PropertyTable/PropertyTable';
 import ServerInfo from './ServerInfo/ServerInfo';
-
-import {
-  selectDevice,
-} from '../actions/tango';
 
 import Spinner from '../Spinner/Spinner';
 import ValueDisplay from './ValueDisplay/ValueDisplay';
 
-import './DeviceViewer.css';
-
 import {
-  getCurrentDeviceProperties,
-  getCurrentDeviceCommands,
   getCurrentDeviceName,
   getCurrentDeviceStateValue,
-  getAvailableDataFormats,
+  getCurrentDeviceHasAttributes,
+  getCurrentDeviceHasProperties,
+  getCurrentDeviceHasCommands,
 } from '../selectors/currentDevice';
 
 import { getDeviceIsLoading } from '../selectors/loadingStatus';
+import { getActiveTab } from '../selectors/deviceDetail';
 
-import {
-  getFilteredCurrentDeviceAttributes,
-  getActiveDataFormat,
-  getActiveTab,
-} from '../selectors/deviceDetail';
+import { selectDevice } from '../actions/tango';
+import { setDataFormat, setTab } from '../actions/deviceList';
 
-import { setDataFormat, setTab} from '../actions/deviceList';
-
-const DescriptionDisplay = ({description}) => <i
-  className={classNames('fa fa-info-circle', {'no-description': description === 'No description'})}
-  title={description}
-  onClick={alert.bind(null, description)}
-/>;
-
-const AttributeTable = ({ attributes, dataFormat, dataFormats, onSetDataFormat }) => {
-  const QualityIndicator = ({ quality }) => {
-    const sub = {
-      'ATTR_VALID': 'valid',
-      'ATTR_INVALID': 'invalid',
-      'ATTR_CHANGING': 'changing',
-      'ATTR_ALARM': 'alarm',
-      'ATTR_WARNING': 'warning'
-    }[quality] || 'invalid';
-
-    return <span
-      className={`quality quality-${sub}`}
-      title={quality}>● </span>;
-  };
-
-  return (
-    <div>
-      <table className="attributes">
-        <tbody>
-          {attributes && attributes.map(({ name, value, quality, datatype, dataformat, description }, i) =>
-            <tr key={i}>
-              <td className='name'>
-                <QualityIndicator quality={quality} />
-                {name}
-              </td>
-              <td className='value'>
-                <ValueDisplay name={name} value={value} datatype={datatype} dataformat={dataformat} />
-              </td>
-              <td className='description'>
-                <DescriptionDisplay description={description} />
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-
+import './DeviceViewer.css';
 
 class DeviceMenu extends Component {
-  handleSelectDataFormat(format, event) {
-    event.preventDefault();
-    this.props.onSetDataFormat(format);
-  }
-
-  handleSelectTab(tab) {
-    this.props.onSetTab(tab);
-  }
-
   render() {
     const {
-      properties,
-      attributes,
-      commands,
-      dataFormat,
-      dataFormats,
+      hasProperties,
+      hasAttributes,
+      hasCommands,
       selectedTab,
-      onSetDataFormat,
-      onSetTab,
+      onSelectTab,
     } = this.props;
 
-    const hasAttrs = attributes.length > 0;
-    const hasProps = properties.length > 0;
-    const hasCommands = commands.length > 0;
+    const mask = [
+      true,
+      hasProperties,
+      hasAttributes,
+      hasCommands
+    ];
 
-    const dataTabs = selectedTab === "attributes" && dataFormats.length > 1 ?
-      <ul className='nav nav-pills format-chooser'>
-        {dataFormats.map((format, i) =>
-          <li
-            className='nav-item'
-            key={i} onClick={this.handleSelectDataFormat.bind(this, format)}>
-            <a className={classNames('nav-link', { active: format === dataFormat })} href='#'>
-              {format}
+    const tabTitles = ['Server', 'Properties', 'Attributes', 'Commands'];
+    const tabs = tabTitles.map((title, i) => {
+      const name = title.toLowerCase();
+      return !mask[i]
+        ? null
+        : (
+          <li className='nav-item'>
+            <a
+              href={`#${name}`}
+              className={classNames('nav-link', { active: name === selectedTab })}
+              onClick={onSelectTab.bind(null, name)}
+            >
+              {title}
             </a>
           </li>
-        )}
-      </ul> : null;
-
-    const Tab = ({ name, title }) => <li className='nav-item'>
-      <a href={`#${name}`} className={classNames('nav-link', { active: selectedTab === name })} onClick={this.handleSelectTab.bind(this, name)}>
-        {title}
-      </a>
-    </li>;
+        );
+    });
 
     return (
-      <div className="device-menu">
+      <div className="DeviceMenu">
         <ul className='nav nav-tabs section-chooser'>
-          <Tab name='server' title='Server'/>
-          {hasProps && <Tab name='properties' title='Properties' />}
-          {hasAttrs && <Tab name='attributes' title='Attributes' />}
-          {hasCommands && <Tab name='commands' title='Commands' />}
+          {tabs}
         </ul>
-        {selectedTab === 'attributes' && dataTabs}
       </div>
     );
   }
 }
-
-class DeviceTables extends Component {
-  render() {
-    const {
-      properties,
-      attributes,
-      dataFormat,
-      dataFormats,
-      onSetDataFormat,
-      selectedTab,
-      commands,
-      deviceName,
-    } = this.props;
-    
-    const hasAttrs = attributes.length > 0;
-    const hasProps = properties.length > 0;
-
-    return (
-      <div className="device-table">
-        {hasProps && selectedTab === "properties" && <PropertyTable/>}
-        {selectedTab === "attributes" && <AttributeTable
-          attributes={attributes}
-          dataFormat={dataFormat}
-          dataFormats={dataFormats}
-          onSetDataFormat={onSetDataFormat}
-        />}
-        {selectedTab === "commands" && <CommandsTable commands={commands} />}
-        {selectedTab === 'server' && <ServerInfo/>}
-      </div>
-    );
-  }
-}
-
 
 class DeviceViewer extends Component {
   parseDevice(props) {
@@ -188,33 +87,31 @@ class DeviceViewer extends Component {
 
   componentDidMount() {
     const device = this.parseDevice();
-    this.props.selectDevice(device);
+    this.props.onSelectDevice(device);
   }
 
   componentDidUpdate(prevProps) {
     const device = this.parseDevice();
     if (device !== this.parseDevice(prevProps)) {
-      this.props.selectDevice(device);
+      this.props.onSelectDevice(device);
     }
 
     const tab = this.parseTab();
     if (tab && tab !== this.props.activeTab) {
-      this.props.selectTab(tab);
+      this.props.onSelectTab(tab);
     }
   }
 
-  render() {
+  innerContent() {
+    if (this.props.loading) {
+      return <Spinner size={4}/>;
+    }
+
     const {
-      properties,
-      attributes,
       loading,
-      dataFormat,
-      dataFormats,
-      selectDataFormat,
-      selectTab,
-      activeTab,
+      onSelectTab,
+      selectedTab,
       currentState,
-      commands,
       deviceName,
     } = this.props;
     
@@ -240,9 +137,17 @@ class DeviceViewer extends Component {
         title={state}>● </span>;
     };
 
-    const content = loading
-      ? <Spinner size={4} />
-      : <div>
+    const views = {
+      'server': ServerInfo,
+      'properties': PropertyTable,
+      'attributes': AttributeTable,
+      'commands': CommandTable,
+    };
+
+    const CurrentView = views[selectedTab];
+
+    return (
+      <div>
         <Helmet>
           <title>{deviceName}</title>
         </Helmet>
@@ -251,30 +156,24 @@ class DeviceViewer extends Component {
         </div>
         <div className="device-body">
           <DeviceMenu
-            attributes={attributes}
-            properties={properties}
-            commands={commands}
-            dataFormats={dataFormats}
-            dataFormat={dataFormat}
-            selectedTab={activeTab}
-            onSetDataFormat={selectDataFormat}
-            onSetTab={selectTab}
+            selectedTab={selectedTab}
+            onSelectTab={onSelectTab}
+            hasProperties={this.props.hasProperties}
+            hasAttributes={this.props.hasAttributes}
+            hasCommands={this.props.hasCommands}
           />
-          <DeviceTables
-            attributes={attributes}
-            properties={properties}
-            commands={commands}
-            dataFormats={dataFormats}
-            dataFormat={dataFormat}
-            selectedTab={activeTab}
-            deviceName={deviceName}
-          />
+          <div className="device-view">
+            <CurrentView/>
+          </div>
         </div>
-      </div>;
+      </div>
+    );
+  }
 
+  render() {
     return (
-      <div className="device-viewer">
-        {content}
+      <div className="DeviceViewer">
+        {this.innerContent()}
       </div>
     );
   }
@@ -282,13 +181,13 @@ class DeviceViewer extends Component {
 
 function mapStateToProps(state) {
   return {
-    attributes: getFilteredCurrentDeviceAttributes(state),
-    properties: getCurrentDeviceProperties(state),
-    commands: getCurrentDeviceCommands(state),
+    hasAttributes: getCurrentDeviceHasAttributes(state),
+    hasProperties: getCurrentDeviceHasProperties(state),
+    hasCommands: getCurrentDeviceHasCommands(state),
+
     loading: getDeviceIsLoading(state),
-    dataFormats: getAvailableDataFormats(state),
-    dataFormat: getActiveDataFormat(state),
-    activeTab: getActiveTab(state),
+    selectedTab: getActiveTab(state),
+
     currentState: getCurrentDeviceStateValue(state),
     deviceName: getCurrentDeviceName(state),
   };
@@ -296,9 +195,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    selectDevice: device => dispatch(selectDevice(device)),
-    selectDataFormat: format => dispatch(setDataFormat(format)),
-    selectTab: tab => dispatch(setTab(tab)),
+    onSelectDevice: device => dispatch(selectDevice(device)),
+    onSelectTab: tab => dispatch(setTab(tab)),
   };
 }
 
