@@ -58,7 +58,7 @@ const AttributeTable = ({ attributes, selectedFormat, onSelectDataFormat }) => {
 	};
 
 	const dataFormats = Array.from(new Set(attributes.map(attr => attr.dataformat)));
-	const filteredAttributes = attributes.filter(attr => attr.dataformat === selectedFormat);
+	const filteredAttributes = attributes.filter(attr => attr.dataformat === selectedFormat);	
   
 	return (
 	  <div className='AttributeTable'>
@@ -67,7 +67,7 @@ const AttributeTable = ({ attributes, selectedFormat, onSelectDataFormat }) => {
 			selected={selectedFormat}
 			onSelect={onSelectDataFormat}
 		/>
-		<table>
+		<table className='separated'>
 		  <tbody>
 			{filteredAttributes.map(({ name, value, quality, datatype, dataformat, description }, i) =>
 			  <tr key={i}>

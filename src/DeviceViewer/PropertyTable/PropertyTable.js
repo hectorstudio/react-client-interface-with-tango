@@ -16,7 +16,7 @@ import './PropertyTable.css';
 
 const PropertyTable = ({ properties, deviceName, onSetDeviceProperty, onDeleteDeviceProperty }) =>
     <div className='PropertyTable'>
-        <table className="properties">
+        <table className='separated'>
             <tbody>
             {properties && properties.map(({ name, value }, i) =>
                 <tr key={i}>
