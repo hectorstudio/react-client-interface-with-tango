@@ -16,8 +16,8 @@ class HomeViewer extends Component {
     render() {
         const output = this.props.output;
         return output ? (
-            <div className="home-viewer">
-                {output.map((line, i) => <p key={i}>{line}</p>)}
+            <div className="HomeViewer">
+                {output.map((line, i) => <p key={i}>{line.trim()}</p>)}
             </div>
         ) : null;
     }
@@ -35,9 +35,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(HomeViewer)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeViewer);
