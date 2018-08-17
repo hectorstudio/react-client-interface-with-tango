@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import 'font-awesome/css/font-awesome.min.css';
 
-import CommandsTable from './CommandsTab/CommandsTab';
+import CommandsTable from './CommandsTab/CommandsTable';
 import PropertyTable from './PropertyTable/PropertyTable';
 import ServerInfo from './ServerInfo/ServerInfo';
 
