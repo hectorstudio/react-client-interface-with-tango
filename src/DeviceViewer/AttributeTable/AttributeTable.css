@@ -3,20 +3,12 @@
 }
 
 .AttributeTable td {
-    border-bottom: 1px solid lightgray;
     white-space: pre;
     padding: 0.25em;
+    padding-right: 1em;
 }
 
-.AttributeTable tabletr:last-child td {
-    border-bottom: none;
-}
-
-.AttributeTable  tr td {
-    padding-right: 2em;
-}
-
-.AttributeTable  td:last-child {
+.AttributeTable td:last-child {
     padding-right: 0.5em;
 }
 
