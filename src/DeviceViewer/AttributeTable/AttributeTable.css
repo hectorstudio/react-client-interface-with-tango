@@ -1,0 +1,66 @@
+.AttributeTable table {
+    width: 100%;
+}
+
+.AttributeTable td {
+    border-bottom: 1px solid lightgray;
+    white-space: pre;
+    padding: 0.25em;
+}
+
+.AttributeTable tabletr:last-child td {
+    border-bottom: none;
+}
+
+.AttributeTable  tr td {
+    padding-right: 2em;
+}
+
+.AttributeTable  td:last-child {
+    padding-right: 0.5em;
+}
+
+.AttributeTable tr i {
+    cursor: help;
+}
+
+.AttributeTable td.name,
+.AttributeTable td.description {
+    width: 1%;
+}
+
+.AttributeTable .DescriptionDisplay.no-description {
+    color: lightgray;
+}
+
+.AttributeTable .QualityIndicator {
+    text-shadow: 0em 0em 0.3em;
+    cursor: help;
+    margin-right: 0.5em;
+    font-weight: bold;
+}
+
+.AttributeTable .QualityIndicator.quality-valid {
+	color: lightgreen;
+}
+
+.AttributeTable .QualityIndicator.quality-invalid {
+    color: lightgray;
+    text-shadow: none;
+}
+
+.AttributeTable .QualityIndicator.quality-changing {
+	color: blue;
+}
+
+.AttributeTable .QualityIndicator.quality-alarm {
+	color: red;
+}
+
+.AttributeTable .QualityIndicator.quality-warning {
+	color: orange;
+}
+
+.AttributeTable .DataFormatChooser {
+    margin-bottom: 1em;
+}
