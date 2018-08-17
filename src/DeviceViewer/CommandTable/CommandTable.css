@@ -1,55 +1,56 @@
-.checkboxes {
-    text-align:center;
-   }
+.CommandTable .checkboxes {
+  text-align:center;
+}
 
-  .checkboxes input{
-    margin:0;
-    vertical-align: bottom;
-    position: relative;
-    top: -4px;
+.CommandTable .checkboxes input {
+  margin:0;
+  vertical-align: bottom;
+  position: relative;
+  top: -4px;
+}
 
-   }
+.CommandTable .checkboxes label {
+  margin: 10px 20px 20px 3px;
+}
 
-   .checkboxes label{
-     margin: 10px 20px 20px 3px;
-   }
+.CommandTable .layout {
+  text-align:left;
+  border: 1px solid #007bff; /* Bootstrap primary colour */
+  padding: 10px;
+  border-radius: 7px;
+}
 
-.layout {
-    text-align:left;
-    border: 1px solid #007bff; /* Bootstrap primary colour */
-    padding: 10px;
-    border-radius: 7px;
-   }
-
-   input[type=checkbox] {width:18px; height:18px;}
+.CommandTable input[type=checkbox] {
+  width:18px;
+  height:18px;
+}
   
-.commands-table td.input {
+.CommandTable td.input {
   text-align: right;
 }
 
-.commands-table input::placeholder {
+.CommandTable input::placeholder {
   color: rgba(1, 1, 1, 0.25);
 }
 
-.commands-table .output-display .arrow {
+.CommandTable .output-display .arrow {
   float: left;
 }
 
-.commands-table .output-display .arrow::before {
+.CommandTable .output-display .arrow::before {
   content: "\02192 ";
   color: lightgray;
 }
 
-.commands-table .output-display .output {
+.CommandTable .output-display .output {
   float: left;
 }
 
-.commands-table table {
+.CommandTable table {
   width: 100%;
 }
 
-.commands-table td {
-  border-bottom: 1px solid lightgray;
+.CommandTable td {
   white-space: pre;
   padding: 0.25em;
 }

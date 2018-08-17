@@ -1,17 +1,17 @@
-.PropertyTable .properties tr i {
+.PropertyTable tr i {
     visibility: hidden;
 }
 
-.PropertyTable .properties tr:hover i {
+.PropertyTable tr:hover i {
     visibility: visible;
 }
 
-.PropertyTable .properties td.actions {
+.PropertyTable td.actions {
     width: 1%;
     padding-right: 0.25em;
 }
 
-.PropertyTable .properties td.name {
+.PropertyTable td.name {
     width: 1%;
 }
 
