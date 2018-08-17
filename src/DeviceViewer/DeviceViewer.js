@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import 'font-awesome/css/font-awesome.min.css';
 
-import CommandsTable from './CommandsTab/CommandsTable';
+import CommandTable from './CommandTable/CommandTable';
 import PropertyTable from './PropertyTable/PropertyTable';
 import ServerInfo from './ServerInfo/ServerInfo';
 
@@ -167,7 +167,7 @@ class DeviceTables extends Component {
           dataFormats={dataFormats}
           onSetDataFormat={onSetDataFormat}
         />}
-        {selectedTab === "commands" && <CommandsTable commands={commands} />}
+        {selectedTab === "commands" && <CommandTable commands={commands} />}
         {selectedTab === 'server' && <ServerInfo/>}
       </div>
     );

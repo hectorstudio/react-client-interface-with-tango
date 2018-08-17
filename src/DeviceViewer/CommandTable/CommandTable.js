@@ -25,7 +25,7 @@ import {
 
 import Spinner from '../../Spinner/Spinner';
 
-import './CommandsTab.css';
+import './CommandTable.css';
 
 const OutputDisplay = ({value, isLoading}) => isLoading
   ? <Spinner size={1}/>
@@ -38,7 +38,7 @@ const OutputDisplay = ({value, isLoading}) => isLoading
     ) : null
   );
 
-class CommandsTable extends Component {
+class CommandTable extends Component {
   render() {
     const {
       commands,
@@ -207,4 +207,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CommandsTable);
+)(CommandTable);
