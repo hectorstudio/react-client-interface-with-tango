@@ -26,6 +26,10 @@ import {
   SET_DEVICE_PROPERTY_SUCCESS,
   SET_DEVICE_PROPERTY_FAILED,
 
+  SET_DEVICE_ATTRIBUTE,
+  SET_DEVICE_ATTRIBUTE_SUCCESS,
+  SET_DEVICE_ATTRIBUTE_FAILED,
+
   DELETE_DEVICE_PROPERTY,
   DELETE_DEVICE_PROPERTY_SUCCESS,
   DELETE_DEVICE_PROPERTY_FAILED,
@@ -76,6 +80,24 @@ export function executeCommand(command, argin, device) {
     .then(result => dispatch( {type: EXECUTE_COMMAND_COMPLETE, command, result, device}))
     .catch(err => dispatch(displayError(err.toString()))) 
   };
+}
+
+
+export function setDeviceAttribute(device, name, value) {
+  return (dispatch) => {
+    dispatch({type: SET_DEVICE_ATTRIBUTE, device, name, value});
+    return callServiceGraphQL(`
+      mutation SetDeviceAttribute($device: String!, $name: String!, $value: ScalarTypes!) {
+        setAttributeValue(device: $device, name: $name, value: $value) {
+          ok
+          message
+        }
+      }
+    `, {device, name, value})
+    .then(({data}) => data.setAttributeValue.ok)
+    .then(result => dispatch({type: SET_DEVICE_PROPERTY_SUCCESS, device, name, value, result}))
+    .catch(err => dispatch(displayError(err.toString()))) 
+  }; 
 }
 
 export function setDeviceProperty(device, name, value) {
@@ -204,6 +226,7 @@ export function fetchDevice(name){
             datatype
             value
             quality
+            writable
             description
           }
           properties{
