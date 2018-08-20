@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 
+import AttributeInput from '../AttributeInput/AttributeInput';
 import './ValueDisplay.css';
 
-const ScalarValueDisplay = ({value, datatype}) => {
+const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDeviceAttribute}) => {
   value = Array.isArray(value) ? value.join('\n') : value;
 
   if (datatype === 'DevString') {
@@ -11,8 +12,22 @@ const ScalarValueDisplay = ({value, datatype}) => {
       return <pre>{value}</pre>;
     }
   }
-  
-  return value;
+
+  if(writable === "WRITE" || writable === "READ_WITH_WRITE"){
+    return<AttributeInput
+      save={setDeviceAttribute.bind(this, deviceName, name)}
+      value={value}
+      motorName={name}
+      label={name}
+      suffix="&deg;"
+      decimalPoints="2"
+      state={2}
+      stop={null}
+      disabled={false}
+    />
+  }else{
+    return value;
+  }
 }
 
 const SpectrumValueDisplay = ({value, datatype}) => {
@@ -97,7 +112,7 @@ class ImageValueDisplay extends React.Component {
   }
 }
 
-const ValueDisplay = ({value, datatype, dataformat, name}) => {
+const ValueDisplay = ({value, deviceName, writable, setDeviceAttribute,  datatype, dataformat, name}) => {
   if (value === null) {
     return <span className="no-value">No value</span>;
   }
@@ -108,7 +123,7 @@ const ValueDisplay = ({value, datatype, dataformat, name}) => {
     'SPECTRUM': SpectrumValueDisplay,
   }[dataformat];
 
-  return <InnerDisplay value={value} datatype={datatype} name={name}/>;
+  return <InnerDisplay value={value} datatype={datatype} name={name} deviceName={deviceName} writable={writable} setDeviceAttribute={setDeviceAttribute}/>;
 };
 
 export default ValueDisplay;
