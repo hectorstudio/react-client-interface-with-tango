@@ -34,7 +34,7 @@ const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDev
 
 const SpectrumValueDisplay = ({value, datatype}) => {
   if (datatype === 'DevString') {
-    return value.join('\n');
+    return Array.isArray(value) ? value.join('\n') : value;
   }
 
   const values = datatype === 'DevBoolean'
@@ -54,31 +54,51 @@ const SpectrumValueDisplay = ({value, datatype}) => {
 };
 
 class ImageValueDisplay extends React.Component {
+  imageWidth() {
+    return this.props.value[0].length;
+  }
 
-  getIndicesForCoord(x, y, width) {
-    var index = y * (width * 4) + x * 4;
+  imageHeight() {
+    return this.props.value.length;
+  }
+
+  imageMax() {
+    const max = arr => arr.reduce((a, b) => Math.max(a, b));
+    const maxes = this.props.value.map(max);
+    return max(maxes);
+  }
+
+  getIndicesForCoord(x, y) {
+    var index = y * this.imageWidth() * 4 + x * 4;
     return index;
   }
 
   updateCanvas(){
     const canvas = document.getElementById(this.props.name);
     const context = canvas.getContext('2d');
-    const imgLength = this.props.value.length;
 
-    const imgData = context.createImageData(imgLength, imgLength);
-    canvas.width  = imgLength;
-    canvas.height = imgLength;
+    const image = this.props.value;
+    const imgWidth = this.imageWidth();
+    const imgHeight = this.imageHeight();
 
-    this.props.value.forEach((outerArray, y) => {
+    const imgData = context.createImageData(imgWidth, imgHeight);
+    canvas.width  = imgWidth;
+    canvas.height = imgHeight;
+
+    const max = this.imageMax();
+
+    image.forEach((outerArray, y) => {
       outerArray.forEach((value, x) => {
-        var index = this.getIndicesForCoord(x,y, imgData.width);
-        imgData.data[index+0] = parseInt(value, 10);
-        imgData.data[index+1] = parseInt(value, 10);
-        imgData.data[index+2] = parseInt(value, 10);
-        imgData.data[index+3] = parseInt(value, 10); 
+        const index = this.getIndicesForCoord(x,y, imgData.width);
+        const normal = 255 * (value / (max === 0 ? 1 : max));
+        imgData.data[index+0] = normal;
+        imgData.data[index+1] = normal;
+        imgData.data[index+2] = normal;
+        imgData.data[index+3] = 255;
       });
     });
-    context.putImageData(imgData, 0, 0); 
+
+    context.putImageData(imgData, 0, 0);
   }
 
   componentDidMount() {

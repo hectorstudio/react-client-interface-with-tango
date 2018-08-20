@@ -24,7 +24,7 @@ const MainView = ({className}) =>
 const DefaultLayout = () =>
   <BaseLayout>
     <div className="left-column">
-      <DeviceList/>
+      <Route path='/' component={DeviceList}/>
     </div>
     <MainView className="right-column"/>
   </BaseLayout>;

@@ -25,13 +25,20 @@ import {
 
 import Spinner from '../../Spinner/Spinner';
 
-import './CommandsTab.css';
+import './CommandTable.css';
 
 const OutputDisplay = ({value, isLoading}) => isLoading
   ? <Spinner size={1}/>
-  : value || '';
+  : (
+    value ? (
+      <div className='output-display'>
+        <div className='arrow'/>
+        <div className='output'>{value || ''}</div>
+      </div>
+    ) : null
+  );
 
-class CommandsTable extends Component {
+class CommandTable extends Component {
   render() {
     const {
       commands,
@@ -46,27 +53,28 @@ class CommandsTable extends Component {
     } = this.props;
     
     return (
-      <div className="commands-table">
+      <div className="CommandTable">
         {displevels.length > 1 &&
           <DisplevelBox displevels={displevels} enabledList={enabledList} enableDisplevel={enableDisplevel} disableDisplevel={disableDisplevel} />
         }
-        <table className="commands">
+        <table className='separated'>
           <tbody>
             {commands && commands.map(({ name, displevel, intype }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
               <tr key={i}>
-                <td>{name}</td>
+                <td>
+                  {name}
+                  <br/>
+                  <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
+                </td>
                 <td className="input">
                   <InputField onExecute={onExecute} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
-                </td>
-                <td>
-                  <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-    )
+    );
   }
 }
 
@@ -199,4 +207,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CommandsTable);
+)(CommandTable);

@@ -1,0 +1,56 @@
+.CommandTable .checkboxes {
+  text-align:center;
+}
+
+.CommandTable .checkboxes input {
+  margin:0;
+  vertical-align: bottom;
+  position: relative;
+  top: -4px;
+}
+
+.CommandTable .checkboxes label {
+  margin: 10px 20px 20px 3px;
+}
+
+.CommandTable .layout {
+  text-align:left;
+  border: 1px solid #007bff; /* Bootstrap primary colour */
+  padding: 10px;
+  border-radius: 7px;
+}
+
+.CommandTable input[type=checkbox] {
+  width:18px;
+  height:18px;
+}
+  
+.CommandTable td.input {
+  text-align: right;
+}
+
+.CommandTable input::placeholder {
+  color: rgba(1, 1, 1, 0.25);
+}
+
+.CommandTable .output-display .arrow {
+  float: left;
+}
+
+.CommandTable .output-display .arrow::before {
+  content: "\02192 ";
+  color: lightgray;
+}
+
+.CommandTable .output-display .output {
+  float: left;
+}
+
+.CommandTable table {
+  width: 100%;
+}
+
+.CommandTable td {
+  white-space: pre;
+  padding: 0.25em;
+}

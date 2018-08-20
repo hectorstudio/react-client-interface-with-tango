@@ -1,7 +1,14 @@
 import { createSelector } from 'reselect';
+import minimatch from 'minimatch';
+
 import { IRootState } from '../reducers/rootReducer';
 
-function matchesFilter(name, filter) {
+function matchesFilter(name: string, filter: string) {
+    if (filter.match(/^glob:/)) {
+        const glob = filter.replace(/^glob:/, '');
+        return minimatch(name, glob, {nocase: true});
+    }
+
     const words = filter.split(/\s+/);
     const matched = words.filter(word => name.toUpperCase().indexOf(word.toUpperCase()) !== -1);
     return matched.length === words.length;
@@ -30,4 +37,14 @@ export const getFilteredDeviceNames = createSelector(
 export const getHasDevices = createSelector(
     getDeviceNames,
     names => names.length > 0
+);
+
+export const getExpandedDomains = createSelector(
+    getDeviceListState,
+    state => state.expandedDomains
+);
+
+export const getExpandedFamilies = createSelector(
+    getDeviceListState,
+    state => state.expandedFamilies
 );

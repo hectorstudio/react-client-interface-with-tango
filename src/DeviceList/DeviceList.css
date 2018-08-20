@@ -10,13 +10,11 @@
 	padding: 0.1em 1em;
 }
 
-.device-list .entry:hover {
-	background-color: lightgray;
-	cursor: pointer;
-}
-
 .device-list .entry.selected {
-	background-color: peachpuff;
+	background-color: #007bff;
+	color: white;
+	width: fit-content;
+	border-radius: 1em;
 }
 
 .device-list .search {
@@ -26,6 +24,7 @@
 	background-color: rgba(255, 255, 255, 0.75);
 	border-bottom: 1px solid lightgray;
 	margin-bottom: 0.5em;
+	z-index: 1;
 }
 
 .device-list .search input {
@@ -34,4 +33,35 @@
 
 .device-list a:hover {
 	text-decoration: none;
+}
+
+.device-list ul {
+	list-style-type: none;
+	padding-left: 1em;
+	user-select: none;
+}
+
+.device-list .expander-arrow {
+	display: inline-block;
+	margin-right: 0.25em;
+	color: gray;
+	transition: all 0.2s;
+	text-align: center;
+}
+
+.device-list .expander-arrow:before {
+	content: "\025B6";
+}
+
+.device-list .expander-arrow.expanded {
+	transform: rotate(90deg);
+	z-index: -1;
+}
+
+.device-list.has-search .expander-arrow {
+	display: none;
+}
+
+.device-list ul li {
+	cursor: pointer;
 }
