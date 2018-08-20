@@ -94,7 +94,8 @@ export function setDeviceAttribute(device, name, value) {
         }
       }
     `, {device, name, value})
-    .then(() => dispatch({type: SET_DEVICE_PROPERTY_SUCCESS, device, name, value}))
+    .then(({data}) => data.setAttributeValue.ok)
+    .then(result => dispatch({type: SET_DEVICE_PROPERTY_SUCCESS, device, name, value, result}))
     .catch(err => dispatch(displayError(err.toString()))) 
   }; 
 }
@@ -225,11 +226,8 @@ export function fetchDevice(name){
             datatype
             value
             quality
-<<<<<<< HEAD
             writable
-=======
             description
->>>>>>> 5e872bc9fa704917ac79019ce6dfc077bf9f8f1d
           }
           properties{
             name

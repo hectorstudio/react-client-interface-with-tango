@@ -4,9 +4,11 @@ import { connect } from 'react-redux';
 
 import ValueDisplay from '../ValueDisplay/ValueDisplay';
 
+import { setDeviceAttribute } from '../../actions/tango';
+
 import './AttributeTable.css';
 import { getFilteredCurrentDeviceAttributes, getActiveDataFormat } from '../../selectors/deviceDetail';
-import { getCurrentDeviceAttributes } from '../../selectors/currentDevice';
+import { getCurrentDeviceAttributes, getCurrentDeviceName } from '../../selectors/currentDevice';
 import { setDataFormat } from '../../actions/deviceList';
 
 const DataFormatChooser = ({dataFormats, selected, onSelect}) => {
@@ -43,7 +45,7 @@ const DescriptionDisplay = ({description}) => <i
 	onClick={alert.bind(null, description)}
 />;
 
-const AttributeTable = ({ attributes, selectedFormat, onSelectDataFormat }) => {
+const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataFormat, onSetDeviceAttribute }) => {
 	const QualityIndicator = ({ quality }) => {
 	  const sub = {
 		'ATTR_VALID': 'valid',
@@ -59,8 +61,7 @@ const AttributeTable = ({ attributes, selectedFormat, onSelectDataFormat }) => {
 	};
 
 	const dataFormats = Array.from(new Set(attributes.map(attr => attr.dataformat)));
-	const filteredAttributes = attributes.filter(attr => attr.dataformat === selectedFormat);	
-  
+	const filteredAttributes = attributes.filter(attr => attr.dataformat === selectedFormat);
 	return (
 	  <div className='AttributeTable'>
 		<DataFormatChooser
@@ -70,14 +71,14 @@ const AttributeTable = ({ attributes, selectedFormat, onSelectDataFormat }) => {
 		/>
 		<table className='separated'>
 		  <tbody>
-			{filteredAttributes.map(({ name, value, quality, datatype, dataformat, description }, i) =>
+			{filteredAttributes.map(({ name, value, quality, datatype, dataformat, description, writable }, i) =>
 			  <tr key={i}>
 				<td className='name'>
 				  <QualityIndicator quality={quality} />
 				  {name}
 				</td>
 				<td className='value'>
-				  <ValueDisplay name={name} value={value} datatype={datatype} dataformat={dataformat} />
+				  <ValueDisplay name={name} deviceName={deviceName} value={value} datatype={datatype} dataformat={dataformat} writable={writable} setDeviceAttribute={onSetDeviceAttribute} />
 				</td>
 				<td className='description'>
 				  <DescriptionDisplay description={description} />
@@ -94,12 +95,14 @@ function mapStateToProps(state) {
 	return {
 		selectedFormat: getActiveDataFormat(state),
 		attributes: getCurrentDeviceAttributes(state),
+		deviceName: getCurrentDeviceName(state)
 	};
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onSelectDataFormat: format => dispatch(setDataFormat(format))
+		onSelectDataFormat: format => dispatch(setDataFormat(format)),
+		onSetDeviceAttribute: (device, name, value) => dispatch(setDeviceAttribute(device, name, value))
 	};
 }
 
