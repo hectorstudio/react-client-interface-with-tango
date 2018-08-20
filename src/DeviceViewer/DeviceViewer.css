@@ -1,140 +1,106 @@
-.device-table {
-    padding:  1em;
+.DeviceViewer .device-view {
+    margin: 1em;
 }
 
-.device-viewer h1 {
+.DeviceViewer h1 {
     font-weight: lighter;
     font-size: 2em;
 }
 
-.device-viewer h2 {
+.DeviceViewer h2 {
     font-weight: lighter;
     font-size: 1.5em;
     margin-top: 1em;
     border-bottom: 1px solid gray;
 }
 
-.device-viewer table td {
-    border-bottom: 1px solid lightgray;
-    white-space: pre;
-    padding: 0.25em;
-}
-
-.device-viewer table tr:last-child td {
-    border-bottom: none;
-}
-
-.device-viewer table tr td {
-    padding-right: 2em;
-}
-
-.device-header {
+.DeviceViewer .device-header {
     font-size: 1.25em;
     padding: 1em;
 }
 
-.device-viewer .quality {
-    text-shadow: 0em 0em 0.3em;
-    cursor: help;
-    margin-right: 0.5em;
-    font-weight: bold;
+.DeviceViewer table.separated tr {
+    border-bottom: 1px solid lightgray;
 }
 
-.device-viewer .quality-valid {
-	color: lightgreen;
+.DeviceViewer table.separated tr:last-child {
+    border-bottom: none;
 }
 
-.device-viewer .quality-invalid {
-    color: lightgray;
-    text-shadow: none;
-}
-
-.device-viewer .quality-changing {
-	color: blue;
-}
-
-.device-viewer .quality-alarm {
-	color: red;
-}
-
-.device-viewer .quality-warning {
-	color: orange;
-}
-
-.device-viewer .state {
+.DeviceViewer .state {
     text-shadow: 0em 0em 0.3em;
     cursor: help;
     margin-right: 0.25em;
     font-weight: bold;
 }
 
-.device-viewer .state-on {
+.DeviceViewer .state-on {
 	color: lightgreen;
 }
 
-.device-viewer .state-off {
+.DeviceViewer .state-off {
     color: lightgray;
     text-shadow: none;
 }
 
-.device-viewer .state-invalid {
+.DeviceViewer .state-invalid {
     color: lightgray;
     text-shadow: none;
 }
 
-.device-viewer .state-close {
+.DeviceViewer .state-close {
     color: lightgray;
     text-shadow: none;
 }
 
-.device-viewer .state-open {
+.DeviceViewer .state-open {
 	color: lightgreen;
 }
 
-.device-viewer .state-insert {
+.DeviceViewer .state-insert {
     color: lightgray;
     text-shadow: none;
 }
 
-.device-viewer .state-extract {
+.DeviceViewer .state-extract {
 	color: lightgreen;
 }
 
-.device-viewer .state-moving {
+.DeviceViewer .state-moving {
 	color: blue;
 }
 
-.device-viewer .state-standby {
+.DeviceViewer .state-standby {
 	color: yellow;
 }
 
-.device-viewer .state-fault {
+.DeviceViewer .state-fault {
 	color: red;
 }
 
-.device-viewer .state-init {
+.DeviceViewer .state-init {
 	color: yellow;
 }
 
-.device-viewer .state-running {
+.DeviceViewer .state-running {
 	color: blue;
 }
 
-.device-viewer .state-alarm {
+.DeviceViewer .state-alarm {
 	color: orange;
 }
 
-.device-viewer .state-display {
+.DeviceViewer .state-display {
     color: lightgray;
     text-shadow: none;
 }
 
-.device-viewer .state-unknown {
+.DeviceViewer .state-unknown {
     color: lightgray;
     text-shadow: none;
 }
 
-.device-viewer .format-chooser {
+.DeviceViewer .format-chooser {
     margin: 1em 0em 0em 1em;
 }
 
@@ -142,21 +108,14 @@
     margin-left: 0.5em;
 }
 
-
 .modal-style{
     display: block; 
     width:80% !important; top:20%;
     padding-left: 700px;
 }
 
-.device-viewer tr i {
-    visibility: hidden;
-}
-
-.device-viewer tr:hover i {
-    visibility: visible;
-}
-
-.device-viewer .properties tr td.actions {
-    padding-right: 0.25em;
+.DeviceViewer .spinner {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2em;
 }

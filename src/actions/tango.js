@@ -215,13 +215,21 @@ export function fetchDevice(name){
         devices(pattern: $name) {
           name
           state
+          server {
+            id
+            host
+          }
           attributes {
             name
             dataformat
             datatype
             value
             quality
+<<<<<<< HEAD
             writable
+=======
+            description
+>>>>>>> 5e872bc9fa704917ac79019ce6dfc077bf9f8f1d
           }
           properties{
             name
@@ -241,7 +249,7 @@ export function fetchDevice(name){
     `, {name})
     .then(({data, errors}) => {
       if (errors) {
-        dispatch(displayError(errors.map(error => error.message).join('\n\n')));
+        // dispatch(displayError(errors.map(error => error.message).join('\n\n')));
       }
 
       const device = data.devices[0];

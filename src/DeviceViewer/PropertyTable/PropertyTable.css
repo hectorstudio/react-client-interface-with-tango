@@ -1,0 +1,34 @@
+.PropertyTable tr i {
+    visibility: hidden;
+}
+
+.PropertyTable tr:hover i {
+    visibility: visible;
+}
+
+.PropertyTable td.actions {
+    width: 1%;
+    padding-right: 0.25em;
+}
+
+.PropertyTable td.name {
+    width: 1%;
+}
+
+.PropertyTable table {
+    width: 100%;
+}
+
+.PropertyTable table td {
+    border-bottom: 1px solid lightgray;
+    white-space: pre;
+    padding: 0.25em;
+}
+
+.PropertyTable table tr:last-child td {
+    border-bottom: none;
+}
+
+.PropertyTable table tr td {
+    padding-right: 2em;
+}
