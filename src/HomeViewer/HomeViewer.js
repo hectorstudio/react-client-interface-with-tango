@@ -1,23 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+
 import { executeCommand } from '../actions/tango';
-import './HomeViewer.css'
-import { getCommandOutputState } from '../selectors/commandOutput';
-import { queryDeviceCommandOutput } from '../selectors/queries';
 import { getServerSummary } from '../selectors/server';
 
+import './HomeViewer.css'
 
 class HomeViewer extends Component {
     componentDidMount() {
-        this.props.onFetchStatus();
+        this.props.onLoad();
     }
 
     render() {
-        const output = this.props.output;
-        return output ? (
+        const summary = this.props.summary;
+        return summary ? (
             <div className="HomeViewer">
-                {output.map((line, i) => <p key={i}>{line.trim()}</p>)}
+                {summary.map((line, i) => <p key={i}>{line.trim()}</p>)}
             </div>
         ) : null;
     }
@@ -25,13 +24,13 @@ class HomeViewer extends Component {
 
 function mapStateToProps(state) {
     return {
-        output: getServerSummary(state),
+        summary: getServerSummary(state),
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        onFetchStatus: () => dispatch(executeCommand('DbInfo', '', 'sys/database/2')),
+        onLoad: () => dispatch(executeCommand('DbInfo', '', 'sys/database/2')),
     };
 }
 
