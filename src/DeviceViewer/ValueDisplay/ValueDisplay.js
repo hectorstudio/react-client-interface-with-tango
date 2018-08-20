@@ -7,14 +7,6 @@ import './ValueDisplay.css';
 const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDeviceAttribute}) => {
   value = Array.isArray(value) ? value.join('\n') : value;
 
-  var handleKey = (deviceName, attributeName, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if ([13, 38, 40].includes(e.keyCode)) {
-      setDeviceAttribute(deviceName, attributeName, e.target.valueAsNumber)
-    }
-  }
-
   if (datatype === 'DevString') {
     if (value.match(/(  )|(^ )|\t/)) {
       return <pre>{value}</pre>;
@@ -35,7 +27,6 @@ const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDev
       stop={null}
       disabled={false}
     />
-    //return <input type="number" className="form-control" defaultValue={value} onKeyUp={handleKey.bind(this, deviceName, name)}/> 
   }else{
     return value;
   }
