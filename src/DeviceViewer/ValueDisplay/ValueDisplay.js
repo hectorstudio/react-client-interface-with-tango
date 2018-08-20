@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 
-import MotorInput from './MotorInput';
+import AttributeInput from '../AttributeInput/AttributeInput';
 import './ValueDisplay.css';
 
 const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDeviceAttribute}) => {
@@ -13,11 +13,9 @@ const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDev
     }
   }
 
-  if(writable==="WRITE"){
-    return<MotorInput
+  if(writable === "WRITE" || writable === "READ_WITH_WRITE"){
+    return<AttributeInput
       save={setDeviceAttribute.bind(this, deviceName, name)}
-      saveStep={null}
-      step={1}
       value={value}
       motorName={name}
       label={name}

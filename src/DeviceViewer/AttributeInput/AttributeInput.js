@@ -1,9 +1,8 @@
 import React from 'react';
 import cx from 'classnames';
 import { Button } from 'react-bootstrap';
-import './motor.css';
-import './input.css';
-export default class MotorInput extends React.Component {
+import './AttributeInput.css';
+export default class AttributeInput extends React.Component {
 
   constructor(props) {
     super(props);
@@ -12,11 +11,9 @@ export default class MotorInput extends React.Component {
 
     this.handleKey = this.handleKey.bind(this);
     this.stopMotor = this.stopMotor.bind(this, props.motorName);
-    this.stepIncrement = this.stepChange.bind(this, props.motorName, 1);
-    this.stepDecrement = this.stepChange.bind(this, props.motorName, -1);
+
   }
 
-  /* eslint-enable react/no-set-state */
   componentWillReceiveProps(nextProps) {
     if (nextProps.value !== this.props.value) {
       this.refs.motorValue.value = nextProps.value.toFixed(this.props.decimalPoints);
@@ -40,17 +37,7 @@ export default class MotorInput extends React.Component {
       this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
     }
   }
-  /* eslint-enable react/no-set-state */
-
-  stepChange(name, operator) {
-    const { value, step } = this.props;
-    const newValue = value + step * operator;
-
-    this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
-    this.refs.motorValue.defaultValue = newValue;
-    this.props.save(newValue);
-  }
-
+ 
   stopMotor(name) {
     this.props.stop(name);
   }
@@ -69,30 +56,12 @@ export default class MotorInput extends React.Component {
     let data = { state: 'IMMEDIATE', value: step };
 
     return (
-        <div className="motor-input-container">
+        <div className="AttributeInput motor-input-container">
           <form className="form-group" onSubmit={this.handleKey} noValidate>
             <div
               className="rw-widget rw-numberpicker rw-widget-no-right-border"
               style={ { width: '90px', display: 'inline-block' } }
             >
-              <span className="rw-select">
-                <button
-                  type="button"
-                  className="rw-btn"
-                  disabled={this.props.state !== 2 || this.props.disabled}
-                  onClick={this.stepIncrement}
-                >
-                  <i className="rw-i rw-i-caret-up"></i>
-                </button>
-                <button
-                  type="button"
-                  className="rw-btn"
-                  disabled={this.props.state !== 2 || this.props.disabled}
-                  onClick={this.stepDecrement}
-                >
-                  <i className="rw-i rw-i-caret-down"></i>
-                </button>
-              </span>
               <input
                 ref="motorValue"
                 className={inputCSS}
