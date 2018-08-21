@@ -1,7 +1,14 @@
-.device-viewer .no-value {
+.ValueDisplay .no-value {
     color: red;
 }
 
-canvas {
+.ValueDisplay canvas {
     max-width: 100%;
+}
+
+.ValueDisplay.spectrum.DevString p {
+    margin: 0;
+    word-break: break-all;
+    text-indent: -1em;
+    margin-left: 1em;
 }
