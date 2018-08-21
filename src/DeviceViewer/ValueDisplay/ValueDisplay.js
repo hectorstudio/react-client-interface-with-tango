@@ -18,11 +18,8 @@ const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDev
       save={setDeviceAttribute.bind(this, deviceName, name)}
       value={value}
       motorName={name}
-      label={name}
-      suffix="&deg;"
       decimalPoints="2"
       state={2}
-      stop={null}
       disabled={false}
     />
   }else{
