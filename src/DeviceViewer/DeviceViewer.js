@@ -11,7 +11,6 @@ import PropertyTable from './PropertyTable/PropertyTable';
 import ServerInfo from './ServerInfo/ServerInfo';
 
 import Spinner from '../Spinner/Spinner';
-import ValueDisplay from './ValueDisplay/ValueDisplay';
 
 import {
   getCurrentDeviceName,

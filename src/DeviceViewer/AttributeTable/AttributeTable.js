@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 
-import ValueDisplay from '../ValueDisplay/ValueDisplay';
+import ValueDisplay from './ValueDisplay/ValueDisplay';
 
 import { setDeviceAttribute } from '../../actions/tango';
 
@@ -73,9 +73,11 @@ const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataF
 		  <tbody>
 			{filteredAttributes.map(({ name, value, quality, datatype, dataformat, description, writable }, i) =>
 			  <tr key={i}>
-				<td className='name'>
+				<td className='quality'>
 				  <QualityIndicator quality={quality} />
-				  {name}
+				</td>
+				<td className='name'>
+					{name}
 				</td>
 				<td className='value'>
 				  <ValueDisplay name={name} deviceName={deviceName} value={value} datatype={datatype} dataformat={dataformat} writable={writable} setDeviceAttribute={onSetDeviceAttribute} />

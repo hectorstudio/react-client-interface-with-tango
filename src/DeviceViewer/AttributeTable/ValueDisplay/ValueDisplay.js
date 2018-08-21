@@ -29,7 +29,13 @@ const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDev
 
 const SpectrumValueDisplay = ({value, datatype}) => {
   if (datatype === 'DevString') {
-    return Array.isArray(value) ? value.join('\n') : value;
+    if (Array.isArray(value)) {
+      return (
+        value.map((val, i) => <p key={i}>{val}</p>)
+      );
+    } else {
+      return value;
+    }
   }
 
   const values = datatype === 'DevBoolean'
@@ -111,7 +117,7 @@ class ImageValueDisplay extends React.Component {
 
 const ValueDisplay = ({value, deviceName, writable, setDeviceAttribute,  datatype, dataformat, name}) => {
   if (value === null) {
-    return <span className="no-value">No value</span>;
+    return <span className="ValueDisplay no-value">No value</span>;
   }
 
   const InnerDisplay = {
@@ -120,7 +126,20 @@ const ValueDisplay = ({value, deviceName, writable, setDeviceAttribute,  datatyp
     'SPECTRUM': SpectrumValueDisplay,
   }[dataformat];
 
-  return <InnerDisplay value={value} datatype={datatype} name={name} deviceName={deviceName} writable={writable} setDeviceAttribute={setDeviceAttribute}/>;
+  const className = ['ValueDisplay', dataformat.toLowerCase(), datatype].join(' ');
+
+  return (
+    <div className={className}>
+      <InnerDisplay
+        value={value}
+        datatype={datatype}
+        name={name}
+        deviceName={deviceName}
+        writable={writable}
+        setDeviceAttribute={setDeviceAttribute}
+      />
+    </div>
+  );
 };
 
 export default ValueDisplay;
