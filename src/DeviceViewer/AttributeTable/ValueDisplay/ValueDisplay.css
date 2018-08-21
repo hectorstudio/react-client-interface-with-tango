@@ -6,7 +6,8 @@
     max-width: 100%;
 }
 
-.ValueDisplay.spectrum.DevString p {
+.ValueDisplay.DevString p,
+.ValueDisplay.DevEncoded p {
     margin: 0;
     word-break: break-all;
     text-indent: -1em;
