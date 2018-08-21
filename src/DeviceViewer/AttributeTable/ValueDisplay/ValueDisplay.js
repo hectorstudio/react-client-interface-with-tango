@@ -4,12 +4,21 @@ import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 import AttributeInput from '../AttributeInput/AttributeInput';
 import './ValueDisplay.css';
 
-const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDeviceAttribute}) => {
-  value = Array.isArray(value) ? value.join('\n') : value;
+const DevStringValueDisplay = ({value}) => {
+  const values = [].concat(value);
+  return values.map((val, i) => <p key={i}>{val}</p>);
+}
 
-  if (datatype === 'DevString') {
-    if (value.match(/(  )|(^ )|\t/)) {
+const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDeviceAttribute}) => {
+  if (datatype === 'DevString' || datatype === 'DevEncoded') {
+    const joined = Array.isArray(value) ? value.join('\n') : value;
+    
+    // Heuristic to check whether value is meant to be read in preformatted monospace
+    // Example attribute: `Status' of `lab/adlinkiods/ao'
+    if (joined.match(/(\n  )|\t/)) {
       return <pre>{value}</pre>;
+    } else {
+      return <DevStringValueDisplay value={value}/>;
     }
   }
 
@@ -29,13 +38,7 @@ const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDev
 
 const SpectrumValueDisplay = ({value, datatype}) => {
   if (datatype === 'DevString') {
-    if (Array.isArray(value)) {
-      return (
-        value.map((val, i) => <p key={i}>{val}</p>)
-      );
-    } else {
-      return value;
-    }
+    return <DevStringValueDisplay value={value}/>;
   }
 
   const values = datatype === 'DevBoolean'
