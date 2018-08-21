@@ -6,12 +6,8 @@ export default class AttributeInput extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.state = { edited: false };
-
     this.handleKey = this.handleKey.bind(this);
-    this.stopMotor = this.stopMotor.bind(this, props.motorName);
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -28,7 +24,7 @@ export default class AttributeInput extends React.Component {
 
     this.setState({ edited: true });
 
-    if ([13, 38, 40].includes(e.keyCode) && this.props.state === 2) {
+    if ([13].includes(e.keyCode) && this.props.state === 2) {
       this.setState({ edited: false });
       this.props.save(e.target.valueAsNumber);
       this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
@@ -37,13 +33,9 @@ export default class AttributeInput extends React.Component {
       this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
     }
   }
- 
-  stopMotor(name) {
-    this.props.stop(name);
-  }
 
   render() {
-    const { value, motorName, step, suffix, decimalPoints } = this.props;
+    const { value, motorName, decimalPoints } = this.props;
     const valueCropped = value.toFixed(decimalPoints);
     let inputCSS = cx('form-control rw-input', {
       'input-bg-edited': this.state.edited,
@@ -52,8 +44,6 @@ export default class AttributeInput extends React.Component {
       'input-bg-fault': this.props.state <= 1,
       'input-bg-onlimit': this.props.state === 5
     });
-
-    let data = { state: 'IMMEDIATE', value: step };
 
     return (
         <div className="AttributeInput motor-input-container">
@@ -67,38 +57,11 @@ export default class AttributeInput extends React.Component {
                 className={inputCSS}
                 onKeyUp={this.handleKey}
                 type="number"
-                step={step}
                 defaultValue={valueCropped}
                 name={motorName}
                 disabled={this.props.state !== 2 || this.props.disabled}
               />
             </div>
-
-            {/* <span
-              className="rw-widget-right-border"
-              style={{
-                width: '34px',
-                height: '34px',
-                position: 'absolute',
-                display: 'inline-flex',
-                alignItems: 'center',
-                textAlign: 'center',
-                fontSize: '12px',
-                cursor: 'pointer',
-                backgroundColor: '#EAEAEA' }}
-            >
-              {this.props.state !== 2 ?
-                <Button
-                  style={{ width: '100%', height: '100%', display: 'block' }}
-                  className="btn-xs motor-abort rw-widget-no-left-border"
-                  bsStyle="danger"
-                  onClick={this.stopMotor}
-                >
-                  <i className="glyphicon glyphicon-remove" />
-                </Button>
-                : null
-              }
-            </span> */}
           </form>
         </div>
       );
