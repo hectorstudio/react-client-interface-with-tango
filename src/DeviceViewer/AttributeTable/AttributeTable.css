@@ -3,7 +3,7 @@
 }
 
 .AttributeTable td {
-    white-space: pre;
+    /* white-space: pre; */
     padding: 0.25em;
     padding-right: 1em;
 }
@@ -19,6 +19,13 @@
 .AttributeTable td.name,
 .AttributeTable td.description {
     width: 1%;
+}
+
+
+.AttributeTable td.quality {
+    width: 1%;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
 }
 
 .AttributeTable .DescriptionDisplay.no-description {
