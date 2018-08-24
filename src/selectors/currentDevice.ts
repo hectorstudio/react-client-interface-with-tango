@@ -23,7 +23,7 @@ const getCurrentDevice = createSelector(
 
 export const getCurrentDeviceServer = createSelector(
     getCurrentDevice,
-    device => device.server ? device.server[0] : null // [0] due to error (?) in API
+    device => device.server
 );
 
 export const getCurrentDeviceAttributes = createSelector(
