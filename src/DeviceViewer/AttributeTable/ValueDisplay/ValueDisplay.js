@@ -20,12 +20,12 @@ const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDev
     } else {
       return <DevStringValueDisplay value={value}/>;
     }
-  }
-
-  if(writable === "WRITE" || writable === "READ_WITH_WRITE"){
+  }else if(writable === "WRITE" || writable === "READ_WITH_WRITE" && datatype === 'DevDouble' || datatype === 'DevShort'
+  || datatype === 'DevFloat' || datatype === 'DevLong' || datatype === 'DevULong' || datatype === 'DevULong64' || datatype === 'DevUShort' || datatype === 'DevLong64' || datatype === 'DevUChar'){
+    console.log(name)
     return<AttributeInput
       save={setDeviceAttribute.bind(this, deviceName, name)}
-      value={value}
+      value={Number(value)}
       motorName={name}
       decimalPoints="2"
       state={2}
