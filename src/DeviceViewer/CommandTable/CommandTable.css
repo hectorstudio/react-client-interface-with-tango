@@ -54,3 +54,9 @@
   white-space: pre;
   padding: 0.25em;
 }
+
+.CommandTable td.description {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  width: 1%;
+}

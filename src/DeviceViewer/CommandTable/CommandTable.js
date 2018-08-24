@@ -70,7 +70,7 @@ class CommandTable extends Component {
                 <td className="input">
                   <InputField onExecute={onExecute} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
                 </td>
-                <td>
+                <td className='description'>
                   <DescriptionDisplay description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
                 </td>
               </tr>
