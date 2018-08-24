@@ -12,10 +12,6 @@
     padding-right: 0.5em;
 }
 
-.AttributeTable tr i {
-    cursor: help;
-}
-
 .AttributeTable td.name,
 .AttributeTable td.description {
     width: 1%;
@@ -26,10 +22,6 @@
     width: 1%;
     padding-left: 0.25em;
     padding-right: 0.25em;
-}
-
-.AttributeTable .DescriptionDisplay.no-description {
-    color: lightgray;
 }
 
 .AttributeTable .QualityIndicator {
