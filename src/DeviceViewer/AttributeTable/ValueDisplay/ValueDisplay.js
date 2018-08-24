@@ -6,20 +6,28 @@ import './ValueDisplay.css';
 
 const DevStringValueDisplay = ({value}) => {
   const values = [].concat(value);
-  return values.map((val, i) => <p key={i}>{val}</p>);
+
+  // Heuristic to check whether value is meant to be read in preformatted monospace
+  // Example attribute: `Status' of `lab/adlinkiods/ao'
+  const indicators = /(\n  )|\t|(    )/;
+  const pre = values.find(val => val.match(indicators));
+
+  return values.map((val, i) => <p className={pre ? 'pre' : ''} key={i}>{val}</p>);
 }
 
 const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDeviceAttribute}) => {
-  if (datatype === 'DevString' || datatype === 'DevEncoded') {
-    const joined = Array.isArray(value) ? value.join('\n') : value;
-    
-    // Heuristic to check whether value is meant to be read in preformatted monospace
-    // Example attribute: `Status' of `lab/adlinkiods/ao'
-    if (joined.match(/(\n  )|\t/)) {
-      return <pre>{value}</pre>;
-    } else {
-      return <DevStringValueDisplay value={value}/>;
+  if (datatype === 'DevString') {
+    return <DevStringValueDisplay value={value}/>;
+  } else if (datatype === 'DevEncoded') {
+    const [type, payload] = value;
+    if (type !== 'json') {
+      return `Unsupported encoding '${type}'`;
     }
+
+    const json = JSON.stringify(JSON.parse(payload), 4);
+    const lines = json.split('\n');
+    return <DevStringValueDisplay value={lines}/>;
+
   }else if(writable === "WRITE" || writable === "READ_WITH_WRITE" && datatype === 'DevDouble' || datatype === 'DevShort'
   || datatype === 'DevFloat' || datatype === 'DevLong' || datatype === 'DevULong' || datatype === 'DevULong64' || datatype === 'DevUShort' || datatype === 'DevLong64' || datatype === 'DevUChar'){
     console.log(name)
