@@ -13,3 +13,10 @@
     text-indent: -1em;
     margin-left: 1em;
 }
+
+.ValueDisplay p.pre {
+    white-space: pre-wrap;
+    font-family: monospace;
+    overflow: scroll;
+    text-indent: unset;
+}
