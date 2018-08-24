@@ -131,9 +131,7 @@ class DeviceViewer extends Component {
         'DISABLE': 'disable',
         'UNKNOWN': 'unknown'
       }[state] || 'invalid';
-      return <span
-        className={`state state-${sub}`}
-        title={state}>● </span>;
+      return <span className={`state state-${sub}`}>{state}</span>;
     };
 
     const views = {
