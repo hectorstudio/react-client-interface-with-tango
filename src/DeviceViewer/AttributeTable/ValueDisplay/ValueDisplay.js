@@ -15,7 +15,7 @@ const DevStringValueDisplay = ({value}) => {
   return values.map((val, i) => <p className={pre ? 'pre' : ''} key={i}>{val}</p>);
 }
 
-const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDeviceAttribute}) => {
+const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDeviceAttribute, minvalue, maxvalue}) => {
   if (datatype === 'DevString') {
     return <DevStringValueDisplay value={value}/>;
   } else if (datatype === 'DevEncoded') {
@@ -30,7 +30,6 @@ const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDev
 
   }else if(writable === "WRITE" || writable === "READ_WITH_WRITE" && datatype === 'DevDouble' || datatype === 'DevShort'
   || datatype === 'DevFloat' || datatype === 'DevLong' || datatype === 'DevULong' || datatype === 'DevULong64' || datatype === 'DevUShort' || datatype === 'DevLong64' || datatype === 'DevUChar'){
-    console.log(name)
     return<AttributeInput
       save={setDeviceAttribute.bind(this, deviceName, name)}
       value={Number(value)}
@@ -38,6 +37,8 @@ const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDev
       decimalPoints="2"
       state={2}
       disabled={false}
+      maxvalue={maxvalue}
+      minvalue={minvalue} 
     />
   }else{
     return value;
@@ -126,7 +127,7 @@ class ImageValueDisplay extends React.Component {
   }
 }
 
-const ValueDisplay = ({value, deviceName, writable, setDeviceAttribute,  datatype, dataformat, name}) => {
+const ValueDisplay = ({value, deviceName, writable, setDeviceAttribute,  datatype, dataformat, name, minvalue, maxvalue}) => {
   if (value === null) {
     return <span className="ValueDisplay no-value">No value</span>;
   }
@@ -147,6 +148,8 @@ const ValueDisplay = ({value, deviceName, writable, setDeviceAttribute,  datatyp
         name={name}
         deviceName={deviceName}
         writable={writable}
+        maxvalue={maxvalue}
+        minvalue={minvalue} 
         setDeviceAttribute={setDeviceAttribute}
       />
     </div>
