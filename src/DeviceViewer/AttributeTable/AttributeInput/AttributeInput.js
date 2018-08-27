@@ -6,7 +6,7 @@ export default class AttributeInput extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { edited: false };
+    this.state = { edited: false, badEntry: false };
     this.handleKey = this.handleKey.bind(this);
   }
 
@@ -23,6 +23,11 @@ export default class AttributeInput extends React.Component {
     e.stopPropagation();
 
     this.setState({ edited: true });
+    if(e.target.valueAsNumber < Number(this.props.minvalue) || Number(this.props.maxvalue) < e.target.valueAsNumber ){
+      this.setState({ badEntry: true });
+    }else{
+      this.setState({ badEntry: false });
+    }
 
     if ([13].includes(e.keyCode) && this.props.state === 2) {
       this.setState({ edited: false });
@@ -35,13 +40,13 @@ export default class AttributeInput extends React.Component {
   }
 
   render() {
-    const { value, motorName, decimalPoints } = this.props;
+    const { value, motorName, decimalPoints, minvalue, maxvalue } = this.props;
     const valueCropped = value.toFixed(decimalPoints);
     let inputCSS = cx('form-control rw-input', {
-      'input-bg-edited': this.state.edited,
+      'input-bg-edited': this.state.edited && !this.state.badEntry,
       'input-bg-moving': this.props.state === 4 || this.props.state === 3,
       'input-bg-ready': this.props.state === 2,
-      'input-bg-fault': this.props.state <= 1,
+      'input-bg-fault': this.props.state <= 1 || this.state.badEntry,
       'input-bg-onlimit': this.props.state === 5
     });
 

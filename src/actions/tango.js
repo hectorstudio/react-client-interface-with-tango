@@ -228,6 +228,8 @@ export function fetchDevice(name){
             quality
             writable
             description
+            minvalue
+            maxvalue
           }
           properties{
             name
