@@ -1,0 +1,7 @@
+.DescriptionDisplay {
+    cursor: help;
+}
+
+.DescriptionDisplay.no-description {
+    color: lightgray;
+}

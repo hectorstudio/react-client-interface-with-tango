@@ -26,6 +26,7 @@ import {
 import Spinner from '../../Spinner/Spinner';
 
 import './CommandTable.css';
+import DescriptionDisplay from '../DescriptionDisplay/DescriptionDisplay';
 
 const OutputDisplay = ({value, isLoading}) => isLoading
   ? <Spinner size={1}/>
@@ -59,7 +60,7 @@ class CommandTable extends Component {
         }
         <table className='separated'>
           <tbody>
-            {commands && commands.map(({ name, displevel, intype }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
+            {commands && commands.map(({ name, displevel, intype, intypedesc, outtypedesc }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
               <tr key={i}>
                 <td>
                   {name}
@@ -68,6 +69,9 @@ class CommandTable extends Component {
                 </td>
                 <td className="input">
                   <InputField onExecute={onExecute} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
+                </td>
+                <td className='description'>
+                  <DescriptionDisplay description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
                 </td>
               </tr>
             )}
