@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 
 import ValueDisplay from './ValueDisplay/ValueDisplay';
+import DescriptionDisplay from '../DescriptionDisplay/DescriptionDisplay';
 
 import { setDeviceAttribute } from '../../actions/tango';
 
@@ -33,17 +34,6 @@ const DataFormatChooser = ({dataFormats, selected, onSelect}) => {
 		</ul>
 	);
 };
-
-
-const DescriptionDisplay = ({description}) => <i
-	className={classNames(
-		'DescriptionDisplay fa fa-info-circle', {
-		  'no-description': description === 'No description'
-		}
-	)}
-	title={description}
-	onClick={alert.bind(null, description)}
-/>;
 
 const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataFormat, onSetDeviceAttribute }) => {
 	const QualityIndicator = ({ quality }) => {
