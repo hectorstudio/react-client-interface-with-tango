@@ -21,6 +21,7 @@ export default class AttributeInput extends React.Component {
   handleKey(e) {
     e.preventDefault();
     e.stopPropagation();
+    const ENTER_KEY = 13;
     this.setState({ edited: true });
     const value = e.target.valueAsNumber;
     const min = this.props.minvalue;
@@ -29,7 +30,7 @@ export default class AttributeInput extends React.Component {
       this.setState({ badEntry: true });
     }else if(value){
       this.setState({ badEntry: false });
-      if ([13].includes(e.keyCode) && this.props.state === 2) {
+      if ([ENTER_KEY].includes(e.keyCode) && this.props.state === 2) {
         this.setState({ edited: false });
         this.props.save(e.target.valueAsNumber);
         this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
@@ -43,12 +44,16 @@ export default class AttributeInput extends React.Component {
   render() {
     const { value, motorName, decimalPoints, minvalue, maxvalue } = this.props;
     const valueCropped = value.toFixed(decimalPoints);
+
+    const MOVING = 3;
+    const READY = 2;
+    const ISSUE = 1;
+
     let inputCSS = cx('form-control rw-input', {
       'input-bg-edited': this.state.edited && !this.state.badEntry,
-      'input-bg-moving': this.props.state === 4 || this.props.state === 3,
-      'input-bg-ready': this.props.state === 2,
-      'input-bg-fault': this.props.state <= 1 || this.state.badEntry,
-      'input-bg-onlimit': this.props.state === 5
+      'input-bg-moving': this.props.state === MOVING,
+      'input-bg-ready': this.props.state === READY,
+      'input-bg-fault': this.props.state <= ISSUE || this.state.badEntry
     });
 
     return (
