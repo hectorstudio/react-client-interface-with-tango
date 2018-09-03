@@ -6,7 +6,13 @@ export default class AttributeInput extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { edited: false, badEntry: false };
+    this.state = { 
+      edited: false, 
+      badEntry: false, 
+      MOVING: 3,
+      READY: 2,
+      ISSUE: 1
+    };
     this.handleKey = this.handleKey.bind(this);
   }
 
@@ -30,11 +36,11 @@ export default class AttributeInput extends React.Component {
       this.setState({ badEntry: true });
     }else if(value){
       this.setState({ badEntry: false });
-      if ([ENTER_KEY].includes(e.keyCode) && this.props.state === 2) {
+      if ([ENTER_KEY].includes(e.keyCode) && this.props.state === this.state.READY) {
         this.setState({ edited: false });
         this.props.save(e.target.valueAsNumber);
         this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
-      } else if (this.props.state === 4) {
+      } else if (this.props.state === this.state.MOVING) {
         this.setState({ edited: false });
         this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
       }
@@ -45,15 +51,11 @@ export default class AttributeInput extends React.Component {
     const { value, motorName, decimalPoints, minvalue, maxvalue } = this.props;
     const valueCropped = value.toFixed(decimalPoints);
 
-    const MOVING = 3;
-    const READY = 2;
-    const ISSUE = 1;
-
     let inputCSS = cx('form-control rw-input', {
       'input-bg-edited': this.state.edited && !this.state.badEntry,
-      'input-bg-moving': this.props.state === MOVING,
-      'input-bg-ready': this.props.state === READY,
-      'input-bg-fault': this.props.state <= ISSUE || this.state.badEntry
+      'input-bg-moving': this.props.state === this.state.MOVING,
+      'input-bg-ready': this.props.state === this.state.READY,
+      'input-bg-fault': this.props.state <= this.state.ISSUE || this.state.badEntry
     });
 
     return (
