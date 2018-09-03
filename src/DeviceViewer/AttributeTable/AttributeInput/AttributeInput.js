@@ -21,21 +21,22 @@ export default class AttributeInput extends React.Component {
   handleKey(e) {
     e.preventDefault();
     e.stopPropagation();
-
     this.setState({ edited: true });
-    if(e.target.valueAsNumber < Number(this.props.minvalue) || Number(this.props.maxvalue) < e.target.valueAsNumber ){
+    const value = e.target.valueAsNumber;
+    const min = this.props.minvalue;
+    const max = this.props.maxvalue;
+    if(value && ((min && min > value) || (max && value > max))){
       this.setState({ badEntry: true });
-    }else{
+    }else if(value){
       this.setState({ badEntry: false });
-    }
-
-    if ([13].includes(e.keyCode) && this.props.state === 2) {
-      this.setState({ edited: false });
-      this.props.save(e.target.valueAsNumber);
-      this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
-    } else if (this.props.state === 4) {
-      this.setState({ edited: false });
-      this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
+      if ([13].includes(e.keyCode) && this.props.state === 2) {
+        this.setState({ edited: false });
+        this.props.save(e.target.valueAsNumber);
+        this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
+      } else if (this.props.state === 4) {
+        this.setState({ edited: false });
+        this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
+      }
     }
   }
 
