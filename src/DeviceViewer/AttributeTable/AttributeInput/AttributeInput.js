@@ -2,16 +2,20 @@ import React from 'react';
 import cx from 'classnames';
 import { Button } from 'react-bootstrap';
 import './AttributeInput.css';
+
+const ENTER_KEY = 13;
+const MOVING = 3;
+const READY = 2;
+const ISSUE = 1;
+
+
 export default class AttributeInput extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = { 
       edited: false, 
-      badEntry: false, 
-      MOVING: 3,
-      READY: 2,
-      ISSUE: 1
+      badEntry: false
     };
     this.handleKey = this.handleKey.bind(this);
   }
@@ -27,7 +31,7 @@ export default class AttributeInput extends React.Component {
   handleKey(e) {
     e.preventDefault();
     e.stopPropagation();
-    const ENTER_KEY = 13;
+  
     this.setState({ edited: true });
     const value = e.target.valueAsNumber;
     const min = this.props.minvalue;
@@ -36,7 +40,7 @@ export default class AttributeInput extends React.Component {
       this.setState({ badEntry: true });
     }else if(value){
       this.setState({ badEntry: false });
-      if ([ENTER_KEY].includes(e.keyCode) && this.props.state === this.state.READY) {
+      if ([ENTER_KEY].includes(e.keyCode) && this.props.state === READY) {
         this.setState({ edited: false });
         this.props.save(e.target.valueAsNumber);
         this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
@@ -53,9 +57,9 @@ export default class AttributeInput extends React.Component {
 
     let inputCSS = cx('form-control rw-input', {
       'input-bg-edited': this.state.edited && !this.state.badEntry,
-      'input-bg-moving': this.props.state === this.state.MOVING,
-      'input-bg-ready': this.props.state === this.state.READY,
-      'input-bg-fault': this.props.state <= this.state.ISSUE || this.state.badEntry
+      'input-bg-moving': this.props.state === MOVING,
+      'input-bg-ready': this.props.state === READY,
+      'input-bg-fault': this.props.state <= ISSUE || this.state.badEntry
     });
 
     return (
