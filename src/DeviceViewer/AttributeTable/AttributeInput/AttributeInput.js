@@ -2,11 +2,21 @@ import React from 'react';
 import cx from 'classnames';
 import { Button } from 'react-bootstrap';
 import './AttributeInput.css';
+
+const ENTER_KEY = 13;
+const MOVING = 3;
+const READY = 2;
+const ISSUE = 1;
+
+
 export default class AttributeInput extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { edited: false };
+    this.state = { 
+      edited: false, 
+      badEntry: false
+    };
     this.handleKey = this.handleKey.bind(this);
   }
 
@@ -21,28 +31,35 @@ export default class AttributeInput extends React.Component {
   handleKey(e) {
     e.preventDefault();
     e.stopPropagation();
-
+  
     this.setState({ edited: true });
-
-    if ([13].includes(e.keyCode) && this.props.state === 2) {
-      this.setState({ edited: false });
-      this.props.save(e.target.valueAsNumber);
-      this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
-    } else if (this.props.state === 4) {
-      this.setState({ edited: false });
-      this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
+    const value = e.target.valueAsNumber;
+    const min = this.props.minvalue;
+    const max = this.props.maxvalue;
+    if(value != null && ((min != null && min > value) || (max != null && value > max))){
+      this.setState({ badEntry: true });
+    }else if(value != null){
+      this.setState({ badEntry: false });
+      if ([ENTER_KEY].includes(e.keyCode) && this.props.state === READY) {
+        this.setState({ edited: false });
+        this.props.save(e.target.valueAsNumber);
+        this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
+      } else if (this.props.state === this.state.MOVING) {
+        this.setState({ edited: false });
+        this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
+      }
     }
   }
 
   render() {
-    const { value, motorName, decimalPoints } = this.props;
+    const { value, motorName, decimalPoints, minvalue, maxvalue } = this.props;
     const valueCropped = value.toFixed(decimalPoints);
+
     let inputCSS = cx('form-control rw-input', {
-      'input-bg-edited': this.state.edited,
-      'input-bg-moving': this.props.state === 4 || this.props.state === 3,
-      'input-bg-ready': this.props.state === 2,
-      'input-bg-fault': this.props.state <= 1,
-      'input-bg-onlimit': this.props.state === 5
+      'input-bg-edited': this.state.edited && !this.state.badEntry,
+      'input-bg-moving': this.props.state === MOVING,
+      'input-bg-ready': this.props.state === READY,
+      'input-bg-fault': this.props.state <= ISSUE || this.state.badEntry
     });
 
     return (

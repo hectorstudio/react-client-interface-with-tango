@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 
 import ValueDisplay from './ValueDisplay/ValueDisplay';
+import DescriptionDisplay from '../DescriptionDisplay/DescriptionDisplay';
 
 import { setDeviceAttribute } from '../../actions/tango';
 
@@ -34,17 +35,6 @@ const DataFormatChooser = ({dataFormats, selected, onSelect}) => {
 	);
 };
 
-
-const DescriptionDisplay = ({description}) => <i
-	className={classNames(
-		'DescriptionDisplay fa fa-info-circle', {
-		  'no-description': description === 'No description'
-		}
-	)}
-	title={description}
-	onClick={alert.bind(null, description)}
-/>;
-
 const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataFormat, onSetDeviceAttribute }) => {
 	const QualityIndicator = ({ quality }) => {
 	  const sub = {
@@ -71,7 +61,7 @@ const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataF
 		/>
 		<table className='separated'>
 		  <tbody>
-			{filteredAttributes.map(({ name, value, quality, datatype, dataformat, description, writable }, i) =>
+			{filteredAttributes.map(({ name, value, quality, datatype, dataformat, description, writable, maxvalue, minvalue }, i) =>
 			  <tr key={i}>
 				<td className='quality'>
 				  <QualityIndicator quality={quality} />
@@ -80,7 +70,17 @@ const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataF
 					{name}
 				</td>
 				<td className='value'>
-				  <ValueDisplay name={name} deviceName={deviceName} value={value} datatype={datatype} dataformat={dataformat} writable={writable} setDeviceAttribute={onSetDeviceAttribute} />
+					<ValueDisplay 
+						name={name} 
+						deviceName={deviceName} 
+						value={value} 
+						datatype={datatype} 
+						dataformat={dataformat} 
+						writable={writable}
+						maxvalue={maxvalue}
+						minvalue={minvalue} 
+						setDeviceAttribute={onSetDeviceAttribute} 
+					/>
 				</td>
 				<td className='description'>
 				  <DescriptionDisplay description={description} />
