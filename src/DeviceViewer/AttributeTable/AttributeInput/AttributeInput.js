@@ -36,9 +36,9 @@ export default class AttributeInput extends React.Component {
     const value = e.target.valueAsNumber;
     const min = this.props.minvalue;
     const max = this.props.maxvalue;
-    if(value && ((min && min > value) || (max && value > max))){
+    if(value != null && ((min != null && min > value) || (max != null && value > max))){
       this.setState({ badEntry: true });
-    }else if(value){
+    }else if(value != null){
       this.setState({ badEntry: false });
       if ([ENTER_KEY].includes(e.keyCode) && this.props.state === READY) {
         this.setState({ edited: false });
