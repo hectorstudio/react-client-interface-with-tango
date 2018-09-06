@@ -212,8 +212,8 @@ export function fetchDevice(name){
     unSubscribeDevice(name, emit);
     dispatch({type: FETCH_DEVICE, name});
     return callServiceGraphQL(`
-      query FetchDevice($name: String) {
-        devices(pattern: $name) {
+      query FetchDevice($name: String!) {
+        device(name: $name) {
           name
           state
           server {
@@ -228,6 +228,8 @@ export function fetchDevice(name){
             quality
             writable
             description
+            minvalue
+            maxvalue
           }
           properties{
             name
@@ -250,7 +252,7 @@ export function fetchDevice(name){
         // dispatch(displayError(errors.map(error => error.message).join('\n\n')));
       }
 
-      const device = data.devices[0];
+      const {device} = data;
       return dispatch(device ? fetchDeviceSuccess(device) : {type: FETCH_DEVICE_FAILED, name});
     })
     .catch(err => dispatch(displayError(err.toString())));
