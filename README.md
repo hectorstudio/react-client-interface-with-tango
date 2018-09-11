@@ -7,7 +7,7 @@ With this device explorer built on TangoGQL, you can:
 3. View and modify device attributes
 4. View and execute device commands
 
-### Run or Develop Locally
+### Run Locally
 
 1. Clone the repository.
 2. Run `npm install`.
