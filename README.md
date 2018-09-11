@@ -1,4 +1,4 @@
-## WebJive
+# Description
 
 With this device explorer built on TangoGQL, you can:
 
@@ -7,9 +7,13 @@ With this device explorer built on TangoGQL, you can:
 3. View and modify device attributes
 4. View and execute device commands
 
-### Run Locally
+# Usage
 
 1. Clone the repository.
 2. Run `npm install`.
 3. Modify the `proxy` setting in `package.json` to reflect the location of the TangoGQL instance.
 4. Type `npm start`.
+
+# Authors
+
+N/A
