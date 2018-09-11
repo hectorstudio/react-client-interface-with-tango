@@ -1,4 +1,5 @@
 import * as types from './actionTypes';
+// import { ATTRIBUTE_CHANGE } from './actionTypes';
 
 function socketUrl() {
 	const loc = window.location;
@@ -25,11 +26,13 @@ export const init = ( store ) => {
 	ws.addEventListener("message", msg => {
 		const data = JSON.parse(msg.data);
 		if (data.type === "data"){
-			const events = data.payload.data.changeEvent
-			var i;
-			for (i in events){
-				if (events[i]){
-					store.dispatch(receiveChange(events[i]))
+			if (typeof data.payload.data !== 'undefined') {
+				const events = data.payload.data.changeEvent
+				var i;
+				for (i in events){
+					if (events[i]){
+						store.dispatch(receiveChange(events[i]))
+					}
 				}
 			}
 		}

@@ -45,15 +45,11 @@
   },
   "proxy": {
     "/socket": {
-      "target": "wss://webjive.maxiv.lu.se",
-      "secure": false,
-      "changeOrigin": true,
+      "target": "ws://localhost:5004",
       "ws": true
     },
     "/db": {
-      "target": "https://webjive.maxiv.lu.se",
-      "secure": false,
-      "changeOrigin": true
+      "target": "http://localhost:5004"
     }
   }
 }
