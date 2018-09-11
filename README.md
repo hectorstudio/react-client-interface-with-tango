@@ -16,4 +16,4 @@ With this device explorer built on TangoGQL, you can:
 
 # Authors
 
-N/A
+WebJive was written by the KITS Group at MAX IV Laboratory.
