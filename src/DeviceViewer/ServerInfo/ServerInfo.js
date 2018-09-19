@@ -9,14 +9,16 @@ const ServerInfo = ({ server }) => (
     ? 'No server information available.'
     : <div className="ServerInfo">
         <table className="ServerInfo">
-            <tr>
-                <th>Server</th>
-                <td>{server.id}</td>
-            </tr>
-            <tr>
-                <th>Host</th>
-                <td>{server.host}</td>
-            </tr>
+            <tbody>
+                <tr>
+                    <th>Server</th>
+                    <td>{server.id}</td>
+                </tr>
+                <tr>
+                    <th>Host</th>
+                    <td>{server.host}</td>
+                </tr>
+            </tbody>
         </table>
     </div>
 );
