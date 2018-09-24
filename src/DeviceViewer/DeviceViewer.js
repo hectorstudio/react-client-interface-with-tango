@@ -51,7 +51,7 @@ class DeviceMenu extends Component {
       return !mask[i]
         ? null
         : (
-          <li className='nav-item'>
+          <li className='nav-item' key={name}>
             <a
               href={`#${name}`}
               className={classNames('nav-link', { active: name === selectedTab })}
