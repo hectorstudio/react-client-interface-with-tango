@@ -202,7 +202,7 @@ class SetProperty extends Component {
                             <div className="input-group-prepend">
                                 <span className="input-group-text">Name</span>
                             </div>
-                            <input type="text" name="name" className="form-control" autocomplete="off" value={this.state.formValues["name"]} onChange={this.handleChange} />
+                            <input type="text" name="name" className="form-control" autoComplete="off" value={this.state.formValues["name"]} onChange={this.handleChange} />
                         </div>
 
                         <div className="input-group mb-3">
