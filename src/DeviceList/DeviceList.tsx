@@ -3,7 +3,8 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
 import sort from 'alphanum-sort';
-import queryString from 'query-string'
+import queryString from 'query-string';
+import ScrollIntoViewIfNeeded from 'react-scroll-into-view-if-needed';
 
 import { fetchDeviceNames} from '../actions/tango';
 import { setDeviceFilter, toggleExpandDomain, toggleExpandFamily } from '../actions/deviceList';
@@ -126,7 +127,9 @@ class DeviceList extends Component<IDeviceListProps> {
           const name = `${domain}/${family}/${member}`;
           const parsedFilter = this.parseFilter();
           return (
+            <ScrollIntoViewIfNeeded key={name}>
             <li key={name}>
+            
               <DeviceEntry
                 isSelected={name === this.props.currentDeviceName}
                 domain={domain}
@@ -135,6 +138,7 @@ class DeviceList extends Component<IDeviceListProps> {
                 filter={parsedFilter}
               />
             </li>
+            </ScrollIntoViewIfNeeded>
           );
         });
 
