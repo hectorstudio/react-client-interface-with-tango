@@ -6,6 +6,10 @@
     visibility: visible;
 }
 
+.visible{
+    visibility: visible;
+}
+
 .PropertyTable td.actions {
     width: 1%;
     padding-right: 0.25em;
