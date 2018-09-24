@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import {isMobile} from 'react-device-detect';
 
 import {
     getCurrentDeviceProperties,
@@ -96,8 +97,8 @@ class EditProperty extends Component {
     render() {
         return (
             <Fragment>
-                <i className="fa fa-trash" onClick={this.removeShow}></i> &nbsp;
-                <i className="fa fa-pencil" onClick={this.handleShow}></i>
+                <i className={"fa fa-trash " + (isMobile ? "visible" : "")} onClick={this.removeShow}></i> &nbsp;
+                <i className={"fa fa-pencil " + (isMobile ? "visible" : "")} onClick={this.handleShow}></i>
 
                 {this.state.remove &&
                 <Modal.Dialog className="modal-style">
@@ -201,7 +202,7 @@ class SetProperty extends Component {
                             <div className="input-group-prepend">
                                 <span className="input-group-text">Name</span>
                             </div>
-                            <input type="text" name="name" className="form-control" autocomplete="off" value={this.state.formValues["name"]} onChange={this.handleChange} />
+                            <input type="text" name="name" className="form-control" autoComplete="off" value={this.state.formValues["name"]} onChange={this.handleChange} />
                         </div>
 
                         <div className="input-group mb-3">
