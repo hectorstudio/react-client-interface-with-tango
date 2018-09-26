@@ -19,8 +19,6 @@ import {
 
 import {
   executeCommand,
-  enableDisplevel,
-  disableDisplevel,
 } from '../../actions/tango';
 
 import Spinner from '../../Spinner/Spinner';
@@ -47,17 +45,12 @@ class CommandTable extends Component {
       currentDeviceName,
       displevels,
       enabledList,
-      enableDisplevel,
-      disableDisplevel,
       outputsLoading,
       commandOutputs
     } = this.props;
     
     return (
       <div className="CommandTable">
-        {displevels.length > 1 &&
-          <DisplevelBox displevels={displevels} enabledList={enabledList} enableDisplevel={enableDisplevel} disableDisplevel={disableDisplevel} />
-        }
         <table className='separated'>
           <tbody>
             {commands && commands.map(({ name, displevel, intype, intypedesc, outtypedesc }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
@@ -82,31 +75,6 @@ class CommandTable extends Component {
   }
 }
 
-class DisplevelBox extends Component {
-
-  handleInputChange(name, e) {
-    if (e.target.checked) {
-      this.props.enableDisplevel(name);
-    } else {
-      this.props.disableDisplevel(name);
-    }
-  }
-
-  render() {
-    const inputs = this.props.displevels.map((name, i) =>
-      <span className="checkboxes" key={i}>
-        <label>
-          <input key={i} type="checkbox" checked={this.props.enabledList.indexOf(name) !== -1} onChange={this.handleInputChange.bind(this, name)} />
-          {name}
-        </label>
-      </span>
-    );
-
-    return <span className="layout">
-      {inputs}
-    </span>;
-  }
-}
 
 class InputField extends Component {
 
@@ -203,8 +171,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     onExecute: (command, value, device) => dispatch(executeCommand(command, value, device)),
-    enableDisplevel: (displevel) => dispatch(enableDisplevel(displevel)),
-    disableDisplevel: (displevel) => dispatch(disableDisplevel(displevel)),
   };
 }
 
