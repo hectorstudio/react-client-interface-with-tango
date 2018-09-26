@@ -18,13 +18,23 @@ import {
   getCurrentDeviceHasAttributes,
   getCurrentDeviceHasProperties,
   getCurrentDeviceHasCommands,
+  getCurrentDeviceCommands,
+  getCurrentDeviceCommandOutputs,
+  getCommandDisplevels,
 } from '../selectors/currentDevice';
 
-import { getDeviceIsLoading } from '../selectors/loadingStatus';
-import { getActiveTab } from '../selectors/deviceDetail';
 
-import { selectDevice } from '../actions/tango';
+import { getDeviceIsLoading } from '../selectors/loadingStatus';
+import { getActiveTab, getEnabledDisplevels } from '../selectors/deviceDetail';
+
 import { setDataFormat, setTab } from '../actions/deviceList';
+
+import {
+  executeCommand,
+  enableDisplevel,
+  disableDisplevel,
+  selectDevice
+} from '../actions/tango';
 
 import './DeviceViewer.css';
 
@@ -112,6 +122,10 @@ class DeviceViewer extends Component {
       selectedTab,
       currentState,
       deviceName,
+      displevels,
+      enabledList,
+      enableDisplevel,
+      disableDisplevel,
     } = this.props;
     
     const QualityIndicator = ({ state }) => {
@@ -153,6 +167,9 @@ class DeviceViewer extends Component {
         <div className="device-header">
           <QualityIndicator state={currentState} /> {deviceName}
         </div>
+        {displevels.length > 1 &&
+          <DisplevelBox displevels={displevels} enabledList={enabledList} enableDisplevel={enableDisplevel} disableDisplevel={disableDisplevel} />
+        }
         <div className="device-body">
           <DeviceMenu
             selectedTab={selectedTab}
@@ -178,6 +195,32 @@ class DeviceViewer extends Component {
   }
 }
 
+class DisplevelBox extends Component {
+
+  handleInputChange(name, e) {
+    if (e.target.checked) {
+      this.props.enableDisplevel(name);
+    } else {
+      this.props.disableDisplevel(name);
+    }
+  }
+
+  render() {
+    const inputs = this.props.displevels.map((name, i) =>
+      <span className="checkboxes" key={i}>
+        <label>
+          <input key={i} type="checkbox" checked={this.props.enabledList.indexOf(name) !== -1} onChange={this.handleInputChange.bind(this, name)} />
+          {name}
+        </label>
+      </span>
+    );
+
+    return <span className="layout">
+      {inputs}
+    </span>;
+  }
+}
+
 function mapStateToProps(state) {
   return {
     hasAttributes: getCurrentDeviceHasAttributes(state),
@@ -189,6 +232,8 @@ function mapStateToProps(state) {
 
     currentState: getCurrentDeviceStateValue(state),
     deviceName: getCurrentDeviceName(state),
+    enabledList: getEnabledDisplevels(state),
+    displevels: getCommandDisplevels(state),
   };
 }
 
@@ -196,6 +241,8 @@ function mapDispatchToProps(dispatch) {
   return {
     onSelectDevice: device => dispatch(selectDevice(device)),
     onSelectTab: tab => dispatch(setTab(tab)),
+    enableDisplevel: (displevel) => dispatch(enableDisplevel(displevel)),
+    disableDisplevel: (displevel) => dispatch(disableDisplevel(displevel)),
   };
 }
 
