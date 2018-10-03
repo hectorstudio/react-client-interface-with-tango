@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import classNames from "classnames";
 
 import "./Dashboard.css";
 import { connect } from "react-redux";
@@ -40,30 +41,6 @@ const WIDGET_DEFINITIONS = {
   }
 };
 
-const WIDGET_INSTANCE_DEFINITIONS = [
-  {
-    type: "ATTRIBUTE_READ_ONLY",
-    x: 30,
-    y: 100,
-    device: "sys/tg_test/1",
-    attribute: "double_scalar",
-    params: {
-      scientific: true
-    }
-  },
-
-  {
-    type: "ATTRIBUTE_READ_ONLY",
-    x: 70,
-    y: 180,
-    device: "sys/tg_test/1",
-    attribute: "ulong_scalar",
-    params: {
-      scientific: false
-    }
-  }
-];
-
 class RunCanvas extends Component {
   constructor(props) {
     super(props);
@@ -72,8 +49,8 @@ class RunCanvas extends Component {
     };
   }
 
-  componentDidMount() {
-    const models = this.props.widgetInstanceDefinitions.map(
+  connect() {
+    const models = this.props.widgets.map(
       ({ device, attribute }) => `${device}/${attribute}`
     );
 
@@ -118,8 +95,12 @@ class RunCanvas extends Component {
     });
   }
 
-  widgetInstanceDefinitionToWidget(instanceDefinition) {
-    return WIDGET_DEFINITIONS[instanceDefinition.type].component;
+  componentDidMount() {
+    this.connect();
+  }
+
+  componentForWidget(widget) {
+    return WIDGET_DEFINITIONS[widget.type].component;
   }
 
   valueForModel(device, attribute) {
@@ -129,17 +110,65 @@ class RunCanvas extends Component {
 
   render() {
     return (
-      <div
-        className="Canvas"
-        onClick={() => (this.props.onClick ? this.props.onClick() : null)}
-      >
-        {this.props.widgetInstanceDefinitions.map((definition, i) => {
-          const Widget = this.widgetInstanceDefinitionToWidget(definition);
-          const { x, y, device, attribute, params } = definition;
+      <div className="Canvas">
+        {this.props.widgets.map((widget, i) => {
+          const Widget = this.componentForWidget(widget);
+          const { x, y, device, attribute, params } = widget;
           const value = this.valueForModel(device, attribute);
 
           return (
             <div key={i} className="Widget" style={{ left: x, top: y }}>
+              <Widget value={value} params={params} />
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+}
+
+class EditCanvas extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentForWidget(widget) {
+    return WIDGET_DEFINITIONS[widget.type].component;
+  }
+
+  placeholderValueForWidget(widget) {
+    return WIDGET_DEFINITIONS[widget.type].libraryProps.value;
+  }
+
+  handleSelectWidget(i, event) {
+    event.stopPropagation();
+    if (this.props.onSelectWidget) {
+      this.props.onSelectWidget(i);
+    }
+  }
+
+  render() {
+    return (
+      <div
+        className="Canvas edit"
+        onClick={this.handleSelectWidget.bind(this, -1)}
+      >
+        {this.props.widgets.map((widget, i) => {
+          const Widget = this.componentForWidget(widget);
+          const { x, y, device, attribute, params } = widget;
+          const value = this.placeholderValueForWidget(widget);
+          const className = classNames("Widget", {
+            selected: this.props.selectedWidgetIndex === i
+          });
+
+          return (
+            <div
+              key={i}
+              className={className}
+              style={{ left: x, top: y }}
+              onClick={this.handleSelectWidget.bind(this, i)}
+              onMouseMove={e => console.log(e.r)}
+            >
               <Widget value={value} params={params} />
             </div>
           );
@@ -154,41 +183,80 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       mode: "edit",
-      sidebar: "library"
+      sidebar: "library", // Belongs in edit component
+      selectedWidgetIndex: -1, // Belongs in edit component
+      widgets: [
+        {
+          type: "ATTRIBUTE_READ_ONLY",
+          x: 30,
+          y: 100,
+          device: "sys/tg_test/1",
+          attribute: "double_scalar",
+          params: {
+            scientific: true
+          }
+        },
+
+        {
+          type: "ATTRIBUTE_READ_ONLY",
+          x: 70,
+          y: 180,
+          device: "sys/tg_test/1",
+          attribute: "ulong_scalar",
+          params: {
+            scientific: false
+          }
+        }
+      ]
     };
+    this.toggleMode = this.toggleMode.bind(this);
+  }
+
+  toggleMode() {
+    const mode = { edit: "run", run: "edit" }[this.state.mode];
+    this.setState({ mode });
   }
 
   render() {
+    const mode = this.state.mode;
     return (
       <div className="Dashboard">
         <div className="Header">
-          <button style={this.state.mode === 'edit' ? {fontWeight: 'bold'} : {}} onClick={() => this.setState({mode: 'edit'})}>Edit</button>
-          <button style={this.state.mode === 'run' ? {fontWeight: 'bold'} : {}} onClick={() => this.setState({mode: 'run'})}>Run</button>
+          <button
+            onClick={this.toggleMode}
+            className={classNames("fa", {
+              "fa-play": mode === "edit",
+              "fa-pause": mode === "run"
+            })}
+          />
         </div>
-        <RunCanvas
-          onClick={() => this.setState({mode: "library"})}
-          widgetInstanceDefinitions={WIDGET_INSTANCE_DEFINITIONS}
-        />
-        <div className="Inspector">
-          {/*<select>
-            <option>Library</option>
-            <option>Parameters</option>
-          </select>*/}
-
-          {Object.keys(WIDGET_DEFINITIONS).map(key => {
-            const definition = WIDGET_DEFINITIONS[key];
-            const Widget = definition.component;
-            const props = definition.libraryProps;
-            return (
-              <div>
-                <span style={{ fontSize: "10px", fontWeight: "bold" }}>
-                  {definition.name}
-                </span>
-                <Widget {...props} />
-              </div>
-            );
-          })}
-        </div>
+        {mode === "edit" ? (
+          <EditCanvas
+            widgets={this.state.widgets}
+            onSelectWidget={i => this.setState({ selectedWidgetIndex: i })}
+            selectedWidgetIndex={this.state.selectedWidgetIndex}
+            onAddWidget={() => alert("Added!")}
+          />
+        ) : (
+          <RunCanvas widgets={this.state.widgets} />
+        )}
+        {mode === "edit" && (
+          <div className="Inspector">
+            {Object.keys(WIDGET_DEFINITIONS).map(key => {
+              const definition = WIDGET_DEFINITIONS[key];
+              const Widget = definition.component;
+              const props = definition.libraryProps;
+              return (
+                <div key={key}>
+                  <span style={{ fontSize: "10px", fontWeight: "bold" }}>
+                    {definition.name}
+                  </span>
+                  <Widget {...props} />
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   }
