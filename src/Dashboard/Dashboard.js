@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import classNames from "classnames";
-import { DragSource, DragDropContext, DropTarget } from "react-dnd";
+import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { connect } from "react-redux";
 
 import EditCanvas from './EditCanvas/EditCanvas';
 import Library from './Library/Library';
@@ -12,7 +10,6 @@ import RunCanvas from './RunCanvas/RunCanvas';
 import { WIDGET_DEFINITIONS, getWidgetDefinition } from './widgetDefinitions';
 
 import "./Dashboard.css";
-
 
 class Dashboard extends Component {
   constructor(props) {
