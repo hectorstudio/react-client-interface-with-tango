@@ -65,7 +65,7 @@ class Inspector extends Component {
                 <tr>
                   <td>Attribute:</td>
                   <td>
-                    <input type="text" value={attribute}  nChange={e => this.props.onAttributeChange(e.target.value)}/>
+                    <input type="text" value={attribute} onChange={e => this.props.onAttributeChange(e.target.value)}/>
                   </td>
                 </tr>
               )}
@@ -94,40 +94,41 @@ class Dashboard extends Component {
       mode: "edit",
       sidebar: "library", // Belongs in edit component
       selectedWidgetIndex: -1, // Belongs in edit component
-      widgets: [
-        {
-          type: "ATTRIBUTE_READ_ONLY",
-          x: 30,
-          y: 100,
-          device: "sys/tg_test/1",
-          attribute: "double_scalar",
-          params: {
-            showName: false,
-            scientific: true
-          }
-        },
+      widgets: [],
+      // [
+      //   {
+      //     type: "ATTRIBUTE_READ_ONLY",
+      //     x: 30,
+      //     y: 100,
+      //     device: "sys/tg_test/1",
+      //     attribute: "double_scalar",
+      //     params: {
+      //       showName: false,
+      //       scientific: true
+      //     }
+      //   },
 
-        {
-          type: "ATTRIBUTE_READ_ONLY",
-          x: 70,
-          y: 180,
-          device: "sys/tg_test/1",
-          attribute: "ulong_scalar",
-          params: {
-            showName: true,
-            scientific: false
-          }
-        },
+      //   {
+      //     type: "ATTRIBUTE_READ_ONLY",
+      //     x: 70,
+      //     y: 180,
+      //     device: "sys/tg_test/1",
+      //     attribute: "ulong_scalar",
+      //     params: {
+      //       showName: true,
+      //       scientific: false
+      //     }
+      //   },
 
-        {
-          type: "LABEL",
-          x: 340,
-          y: 180,
-          params: {
-            text: "sdfsdf"
-          }
-        }
-      ]
+      //   {
+      //     type: "LABEL",
+      //     x: 340,
+      //     y: 180,
+      //     params: {
+      //       text: "sdfsdf"
+      //     }
+      //   }
+      // ]
     };
     this.toggleMode = this.toggleMode.bind(this);
     this.handleMoveWidget = this.handleMoveWidget.bind(this);
@@ -180,7 +181,7 @@ class Dashboard extends Component {
     this.setState({ widgets });
   }
 
-  updateSelectedDevice(changes) {
+  updateSelectedWidget(changes) {
     const index = this.state.selectedWidgetIndex;
     const widgets = [...this.state.widgets];
     const widget = {...widgets[index], ...changes};
@@ -189,15 +190,11 @@ class Dashboard extends Component {
   }
 
   handleDeviceChange(device) {
-    this.updateSelectedDevice({ device });
+    this.updateSelectedWidget({ device });
   }
   
   handleAttributeChange(attribute) {
-    const index = this.state.selectedWidgetIndex;
-    const widgets = [...this.state.widgets];
-    const widget = {...widgets[index], attribute};
-    widgets.splice(index, 1, widget);
-    this.setState({ widgets });
+    this.updateSelectedWidget({ attribute });
   }
 
   render() {

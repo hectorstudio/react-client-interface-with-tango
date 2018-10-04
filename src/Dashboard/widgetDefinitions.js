@@ -4,11 +4,20 @@ export const WIDGET_DEFINITIONS = [
   {
     type: "ATTRIBUTE_READ_ONLY",
     name: "Read-Only Attribute",
-    component: ({ attribute, value, params: { scientific, showName } }) => (
-      <div style={{ backgroundColor: "#eee", padding: "0.5em" }}>
-        {showName && `${attribute}: `}{scientific ? Number(value).toExponential(2) : value}
-      </div>
-    ),
+    component: ({ attribute, value, params: { scientific, showName } }) => {
+      const displayValue =
+        value == null
+          ? "-"
+          : scientific
+            ? Number(value).toExponential(2)
+            : value;
+      return (
+        <div style={{ backgroundColor: "#eee", padding: "0.5em" }}>
+          {showName && `${attribute}: `}
+          {displayValue}
+        </div>
+      );
+    },
     libraryProps: {
       value: 0,
       params: {}

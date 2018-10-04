@@ -48,7 +48,7 @@ export default class Library extends Component {
   render() {
     return (
       <div className="Library">
-        <h1>Library</h1>
+        <h1>Widget Library</h1>
         {this.props.widgetDefinitions.map((definition, i) => {
           return <LibraryWidget key={i} definition={definition} />;
         })}
