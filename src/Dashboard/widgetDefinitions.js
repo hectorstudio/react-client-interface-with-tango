@@ -24,17 +24,20 @@ export const WIDGET_DEFINITIONS = [
       const labels = (showDevice ? [deviceLabel] : []).concat(
         showAttribute ? [attributeLabel] : []
       );
+      const label =
+        labels.length === 2 ? (
+          <span>
+            {deviceLabel}/{attributeLabel}
+          </span>
+        ) : (
+          labels
+        );
 
       return (
         <div style={{ backgroundColor: "#eee", padding: "0.5em" }}>
-          {labels.length === 2 ? (
-            <span>
-              {deviceLabel}/{attributeLabel}
-            </span>
-          ) : (
-            labels
-          )}
-          : {libraryMode || editMode ? <i>value</i> : displayValue}
+          {label}
+          {showDevice || showAttribute ? ": " : ""}
+          {libraryMode || editMode ? <i>value</i> : displayValue}
         </div>
       );
     },
