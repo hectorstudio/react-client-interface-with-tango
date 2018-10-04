@@ -5,11 +5,12 @@ export const WIDGET_DEFINITIONS = [
     type: "ATTRIBUTE_READ_ONLY",
     name: "Read-Only Attribute",
     component: ({
+      device,
       attribute,
       libraryMode,
       editMode,
       value,
-      params: { scientific, showName }
+      params: { scientific, showDevice, showAttribute }
     }) => {
       const displayValue =
         value == null
@@ -17,16 +18,23 @@ export const WIDGET_DEFINITIONS = [
           : scientific
             ? Number(value).toExponential(2)
             : value;
+
+      const deviceLabel = device || <i>device</i>;
+      const attributeLabel = attribute || <i>attribute</i>;
+      const labels = (showDevice ? [deviceLabel] : []).concat(
+        showAttribute ? [attributeLabel] : []
+      );
+
       return (
         <div style={{ backgroundColor: "#eee", padding: "0.5em" }}>
-          {showName && attribute ? (
-            `${attribute}: `
-          ) : (
+          {labels.length === 2 ? (
             <span>
-              <i>attribute</i>:{" "}
+              {deviceLabel}/{attributeLabel}
             </span>
+          ) : (
+            labels
           )}
-          {libraryMode || editMode ? <i>value</i> : displayValue}
+          : {libraryMode || editMode ? <i>value</i> : displayValue}
         </div>
       );
     },
@@ -39,10 +47,16 @@ export const WIDGET_DEFINITIONS = [
         description: "Sci. Notation"
       },
       {
-        name: "showName",
+        name: "showDevice",
+        type: "boolean",
+        default: false,
+        description: "Show Device"
+      },
+      {
+        name: "showAttribute",
         type: "boolean",
         default: true,
-        description: "Show Name"
+        description: "Show Attribute"
       }
     ]
   },

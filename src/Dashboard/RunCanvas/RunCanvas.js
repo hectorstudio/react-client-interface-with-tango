@@ -83,7 +83,12 @@ export default class RunCanvas extends Component {
 
           return (
             <div key={i} className="Widget" style={{ left: x, top: y }}>
-              <Widget attribute={attribute} value={value} params={params} />
+              <Widget
+                device={device}
+                attribute={attribute}
+                value={value}
+                params={params}
+              />
             </div>
           );
         })}
