@@ -4,7 +4,13 @@ export const WIDGET_DEFINITIONS = [
   {
     type: "ATTRIBUTE_READ_ONLY",
     name: "Read-Only Attribute",
-    component: ({ attribute, value, params: { scientific, showName } }) => {
+    component: ({
+      attribute,
+      libraryMode,
+      editMode,
+      value,
+      params: { scientific, showName }
+    }) => {
       const displayValue =
         value == null
           ? "-"
@@ -13,14 +19,16 @@ export const WIDGET_DEFINITIONS = [
             : value;
       return (
         <div style={{ backgroundColor: "#eee", padding: "0.5em" }}>
-          {showName && `${attribute}: `}
-          {displayValue}
+          {showName && attribute ? (
+            `${attribute}: `
+          ) : (
+            <span>
+              <i>attribute</i>:{" "}
+            </span>
+          )}
+          {libraryMode || editMode ? <i>value</i> : displayValue}
         </div>
       );
-    },
-    libraryProps: {
-      value: 0,
-      params: {}
     },
     fields: ["device", "attribute"],
     params: [
@@ -33,7 +41,7 @@ export const WIDGET_DEFINITIONS = [
       {
         name: "showName",
         type: "boolean",
-        default: false,
+        default: true,
         description: "Show Name"
       }
     ]
@@ -42,29 +50,28 @@ export const WIDGET_DEFINITIONS = [
   {
     type: "MOTOR_CONTROL",
     name: "Motor Control",
-    component: ({ value }) => (
+    component: ({ value, libraryMode, editMode }) => (
       <div>
         <button>+</button>
         <button>-</button> <span>Position: </span>
-        <span>{value}</span>
+        <span>{libraryMode || editMode ? <i>position</i> : value}</span>
       </div>
     ),
-    libraryProps: {
-      value: 0
-    },
     fields: ["device"],
-    params: [{
-      name: "stepSize",
-      type: "number",
-      default: 0,
-      description: "Step Size"
-    }]
+    params: [
+      {
+        name: "stepSize",
+        type: "number",
+        default: 0,
+        description: "Step Size"
+      }
+    ]
   },
 
   {
     type: "LABEL",
     name: "Label",
-    component: ({ editMode, params: { text } }) => (
+    component: ({ editMode, libraryMode, params: { text } }) => (
       <div
         style={{
           backgroundColor: "white",
@@ -72,12 +79,9 @@ export const WIDGET_DEFINITIONS = [
           padding: "0.5em"
         }}
       >
-        {text || "(Empty)"}
+        {text || (editMode || libraryMode ? <i>Your Text Here</i> : null)}
       </div>
     ),
-    libraryProps: {
-      params: { text: "Your Text Here" }
-    },
     fields: [],
     params: [
       {
