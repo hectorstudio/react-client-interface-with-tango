@@ -211,7 +211,11 @@ class Dashboard extends Component {
 
   handleMoveWidget(index, x, y) {
     const widget = this.state.widgets[index];
-    const newPos = { x: widget.x + x, y: widget.y + y };
+    const proposedPos = { x: widget.x + x, y: widget.y + y };
+    const newPos = {
+      x: Math.max(0, proposedPos.x),
+      y: Math.max(0, proposedPos.y)
+    };
     this.updateWidget(index, newPos);
   }
 
