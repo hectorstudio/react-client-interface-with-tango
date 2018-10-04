@@ -110,6 +110,7 @@ class EditCanvas extends Component {
                 onClick={this.handleSelectWidget.bind(this, i)}
               >
                 <Widget
+                  device={device}
                   attribute={attribute}
                   params={params}
                   editMode={true}

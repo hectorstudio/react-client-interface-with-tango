@@ -7,6 +7,7 @@ class LibraryWidget extends Component {
   render() {
     const definition = this.props.definition;
     const Widget = definition.component;
+    const defaultParams = definition.params.reduce((accum, param) => ({...accum, [param.name]: param.default}), {});
 
     return (
       <div className="LibraryWidget">
@@ -15,7 +16,7 @@ class LibraryWidget extends Component {
         </span>
         {this.props.connectDragSource(
           <div>
-            <Widget params={{}} libraryMode={true}/>
+            <Widget params={defaultParams} libraryMode={true}/>
           </div>
         )}
       </div>
