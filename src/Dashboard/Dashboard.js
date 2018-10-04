@@ -36,6 +36,16 @@ class Inspector extends Component {
             onChange={e => this.props.onParamChange(param, e.target.value)}
           />
         );
+      case "number":
+        return (
+          <input
+            type="text"
+            value={value}
+            onChange={e =>
+              this.props.onParamChange(param, Number(e.target.value))
+            }
+          />
+        );
       default:
         return <input type="text" />;
     }
@@ -43,7 +53,7 @@ class Inspector extends Component {
 
   render() {
     const { type, params, device, attribute } = this.props.widget;
-    const definition = getWidgetDefinition(type)
+    const definition = getWidgetDefinition(type);
     const fields = definition.fields;
     const paramDefinitions = definition.params;
 
@@ -57,7 +67,11 @@ class Inspector extends Component {
                 <tr>
                   <td>Device:</td>
                   <td>
-                    <input type="text" value={device} onChange={e => this.props.onDeviceChange(e.target.value)}/>
+                    <input
+                      type="text"
+                      value={device}
+                      onChange={e => this.props.onDeviceChange(e.target.value)}
+                    />
                   </td>
                 </tr>
               )}
@@ -65,7 +79,13 @@ class Inspector extends Component {
                 <tr>
                   <td>Attribute:</td>
                   <td>
-                    <input type="text" value={attribute} onChange={e => this.props.onAttributeChange(e.target.value)}/>
+                    <input
+                      type="text"
+                      value={attribute}
+                      onChange={e =>
+                        this.props.onAttributeChange(e.target.value)
+                      }
+                    />
                   </td>
                 </tr>
               )}
@@ -75,14 +95,14 @@ class Inspector extends Component {
         {fields.length > 0 && <hr />}
         <table>
           <tbody>
-            {paramDefinitions.map(({name, description}) => (
+            {paramDefinitions.map(({ name, description }) => (
               <tr key={name}>
-                <td>{description || name}: </td><td>{this.inputForParam(name, params[name])}</td>
+                <td>{description || name}: </td>
+                <td>{this.inputForParam(name, params[name])}</td>
               </tr>
             ))}
           </tbody>
         </table>
-        {JSON.stringify(params)}
       </div>
     );
   }
@@ -95,7 +115,7 @@ class Dashboard extends Component {
       mode: "edit",
       sidebar: "library", // Belongs in edit component
       selectedWidgetIndex: -1, // Belongs in edit component
-      widgets: [],
+      widgets: []
       // [
       //   {
       //     type: "ATTRIBUTE_READ_ONLY",
@@ -184,7 +204,7 @@ class Dashboard extends Component {
   // Convenience method used by handler methods
   updateWidget(index, changes) {
     const widgets = [...this.state.widgets];
-    const widget = {...widgets[index], ...changes};
+    const widget = { ...widgets[index], ...changes };
     widgets.splice(index, 1, widget);
     this.setState({ widgets });
   }
@@ -198,7 +218,7 @@ class Dashboard extends Component {
   handleDeviceChange(device) {
     this.updateWidget(this.state.selectedWidgetIndex, { device });
   }
-  
+
   handleAttributeChange(attribute) {
     this.updateWidget(this.state.selectedWidgetIndex, { attribute });
   }
@@ -242,7 +262,9 @@ class Dashboard extends Component {
                   this.handleParamChange(param, value)
                 }
                 onDeviceChange={device => this.handleDeviceChange(device)}
-                onAttributeChange={attribute => this.handleAttributeChange(attribute)}
+                onAttributeChange={attribute =>
+                  this.handleAttributeChange(attribute)
+                }
               />
             )}
           </div>
