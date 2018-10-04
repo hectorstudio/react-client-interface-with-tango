@@ -4,20 +4,28 @@ export const WIDGET_DEFINITIONS = [
   {
     type: "ATTRIBUTE_READ_ONLY",
     name: "Read-Only Attribute",
-    component: ({ value, params: { scientific } }) => (
+    component: ({ attribute, value, params: { scientific, showName } }) => (
       <div style={{ backgroundColor: "#eee", padding: "0.5em" }}>
-        {scientific ? Number(value).toExponential(2) : value}
+        {showName && `${attribute}: `}{scientific ? Number(value).toExponential(2) : value}
       </div>
     ),
     libraryProps: {
       value: 0,
       params: {}
     },
+    fields: ["device", "attribute"],
     params: [
       {
         name: "scientific",
         type: "boolean",
-        default: false
+        default: false,
+        description: "Sci. Notation"
+      },
+      {
+        name: "showName",
+        type: "boolean",
+        default: false,
+        description: "Show Name"
       }
     ]
   },
@@ -35,23 +43,34 @@ export const WIDGET_DEFINITIONS = [
     libraryProps: {
       value: 0
     },
+    fields: ["device"],
     params: []
   },
 
   {
     type: "LABEL",
     name: "Label",
-    component: ({ params: { text } }) => (
-      <div style={{ border: "1px solid gray" }}>{text || "(Empty)"}</div>
+    component: ({ editMode, params: { text } }) => (
+      <div
+        style={{
+          backgroundColor: "white",
+          border: editMode ? "1px dashed gray" : "",
+          padding: "0.5em"
+        }}
+      >
+        {text || "(Empty)"}
+      </div>
     ),
     libraryProps: {
       params: { text: "Your Text Here" }
     },
+    fields: [],
     params: [
       {
         name: "text",
         type: "string",
-        default: ""
+        default: "",
+        description: "Text"
       }
     ]
   }
