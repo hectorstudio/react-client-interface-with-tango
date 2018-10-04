@@ -234,6 +234,7 @@ class Dashboard extends Component {
         <div className="Header">
           <button
             onClick={this.toggleMode}
+            style={{fontSize: 'small', padding: '0.5em', width: '2em'}}
             className={classNames("fa", {
               "fa-play": mode === "edit",
               "fa-pause": mode === "run"
