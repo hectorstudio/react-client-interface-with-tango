@@ -96,7 +96,6 @@ export const WIDGET_DEFINITIONS = [
     component: ({ editMode, libraryMode, params: { text } }) => (
       <div
         style={{
-          backgroundColor: "white",
           border: editMode ? "1px dashed gray" : "",
           padding: "0.5em"
         }}
