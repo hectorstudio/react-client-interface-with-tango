@@ -188,7 +188,7 @@ class Dashboard extends Component {
       params
     };
     const widgets = [...this.state.widgets, widget];
-    this.setState({ widgets });
+    this.setState({ widgets, selectedWidgetIndex: widgets.length - 1 });
   }
 
   handleParamChange(param, value) {

@@ -62,10 +62,6 @@ class EditCanvas extends Component {
     return getWidgetDefinition(widget.type).component;
   }
 
-  placeholderValueForWidget(widget) {
-    return getWidgetDefinition(widget.type).libraryProps.value;
-  }
-
   handleSelectWidget(i, event) {
     event.stopPropagation();
     if (this.props.onSelectWidget) {
@@ -103,7 +99,6 @@ class EditCanvas extends Component {
           {this.props.widgets.map((widget, i) => {
             const Widget = this.componentForWidget(widget);
             const { x, y, device, attribute, params } = widget;
-            const value = this.placeholderValueForWidget(widget);
 
             return (
               <EditWidget
@@ -115,7 +110,6 @@ class EditCanvas extends Component {
                 onClick={this.handleSelectWidget.bind(this, i)}
               >
                 <Widget
-                  value={value}
                   attribute={attribute}
                   params={params}
                   editMode={true}
