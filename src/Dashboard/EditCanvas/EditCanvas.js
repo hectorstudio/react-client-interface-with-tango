@@ -85,6 +85,7 @@ class EditCanvas extends Component {
 
   render() {
     const { connectMoveDropTarget, connectLibraryDropTarget } = this.props;
+    const hasWidgets = this.props.widgets.length > 0;
 
     return connectLibraryDropTarget(
       connectMoveDropTarget(
@@ -94,6 +95,11 @@ class EditCanvas extends Component {
           onKeyDown={this.handleKeyDown.bind(this)}
           tabIndex="0"
         >
+          <div className="Placeholder" style={{opacity: hasWidgets ? 0 : 1}}>
+            Add widgets by dragging them from the library and dropping them on
+            the canvas.
+          </div>
+
           {this.props.widgets.map((widget, i) => {
             const Widget = this.componentForWidget(widget);
             const { x, y, device, attribute, params } = widget;

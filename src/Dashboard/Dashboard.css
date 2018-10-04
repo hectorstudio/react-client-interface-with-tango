@@ -73,7 +73,7 @@
 .Dashboard .Sidebar h1 {
   font-size: 1em;
   font-weight: bold;
-  color: #aaa;
+  color: #999;
   margin-bottom: 1em;
 }
 
@@ -84,4 +84,19 @@
 
 .Dashboard .Inspector td:first-child {
   padding-right: 0.5em;
+}
+
+.Dashboard .Canvas.edit .Placeholder {
+  position: relative;
+  width: 15em;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.075);
+  border-radius: 1em;
+  padding: 0.5em;
+  color: gray;
+  transition: opacity 0.1s linear;
+  user-select: none;
 }
