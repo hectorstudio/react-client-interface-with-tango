@@ -82,6 +82,7 @@ class Inspector extends Component {
             ))}
           </tbody>
         </table>
+        {JSON.stringify(params)}
       </div>
     );
   }
@@ -133,6 +134,7 @@ class Dashboard extends Component {
     this.toggleMode = this.toggleMode.bind(this);
     this.handleMoveWidget = this.handleMoveWidget.bind(this);
     this.handleAddWidget = this.handleAddWidget.bind(this);
+    this.handleDeleteWidget = this.handleDeleteWidget.bind(this);
     this.handleParamChange = this.handleParamChange.bind(this);
     this.handleDeviceChange = this.handleDeviceChange.bind(this);
     this.handleAttributeChange = this.handleAttributeChange.bind(this);
@@ -143,12 +145,10 @@ class Dashboard extends Component {
     this.setState({ mode });
   }
 
-  handleMoveWidget(index, x, y) {
+  handleDeleteWidget(index) {
     const widgets = [...this.state.widgets];
-    const oldWidget = widgets[index];
-    const widget = { ...oldWidget, x: oldWidget.x + x, y: oldWidget.y + y };
-    widgets.splice(index, 1, widget);
-    this.setState({ widgets });
+    widgets.splice(index, 1);
+    this.setState({ widgets, selectedWidgetIndex: -1 });
   }
 
   handleAddWidget(definition, x, y) {
@@ -181,20 +181,26 @@ class Dashboard extends Component {
     this.setState({ widgets });
   }
 
-  updateSelectedWidget(changes) {
-    const index = this.state.selectedWidgetIndex;
+  // Convenience method used by handler methods
+  updateWidget(index, changes) {
     const widgets = [...this.state.widgets];
     const widget = {...widgets[index], ...changes};
     widgets.splice(index, 1, widget);
     this.setState({ widgets });
   }
 
+  handleMoveWidget(index, x, y) {
+    const widget = this.state.widgets[index];
+    const newPos = { x: widget.x + x, y: widget.y + y };
+    this.updateWidget(index, newPos);
+  }
+
   handleDeviceChange(device) {
-    this.updateSelectedWidget({ device });
+    this.updateWidget(this.state.selectedWidgetIndex, { device });
   }
   
   handleAttributeChange(attribute) {
-    this.updateSelectedWidget({ attribute });
+    this.updateWidget(this.state.selectedWidgetIndex, { attribute });
   }
 
   render() {
@@ -217,6 +223,7 @@ class Dashboard extends Component {
             onSelectWidget={index =>
               this.setState({ selectedWidgetIndex: index })
             }
+            onDeleteWidget={this.handleDeleteWidget}
             selectedWidgetIndex={this.state.selectedWidgetIndex}
             onAddWidget={this.handleAddWidget}
           />

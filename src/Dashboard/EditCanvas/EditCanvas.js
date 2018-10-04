@@ -3,7 +3,10 @@ import { findDOMNode } from "react-dom";
 import { DragSource, DropTarget } from "react-dnd";
 
 import { DashboardDNDTypes, getWidgetDefinition } from "../widgetDefinitions";
-import dndTypes from '../dndTypes';
+import dndTypes from "../dndTypes";
+
+const BACKSPACE = 8;
+const DELETE = 46;
 
 class EditWidget extends Component {
   render() {
@@ -70,6 +73,12 @@ class EditCanvas extends Component {
     }
   }
 
+  handleKeyDown(event) {
+    if ([BACKSPACE, DELETE].indexOf(event.keyCode) !== -1) {
+      this.props.onDeleteWidget(this.props.selectedWidgetIndex);
+    }
+  }
+
   onMoveWidget(index, x, y) {
     this.props.onMoveWidget(index, x, y);
   }
@@ -82,6 +91,8 @@ class EditCanvas extends Component {
         <div
           className="Canvas edit"
           onClick={this.handleSelectWidget.bind(this, -1)}
+          onKeyDown={this.handleKeyDown.bind(this)}
+          tabIndex="0"
         >
           {this.props.widgets.map((widget, i) => {
             const Widget = this.componentForWidget(widget);
@@ -97,7 +108,12 @@ class EditCanvas extends Component {
                 y={y}
                 onClick={this.handleSelectWidget.bind(this, i)}
               >
-                <Widget value={value} attribute={attribute} params={params} editMode={true}/>
+                <Widget
+                  value={value}
+                  attribute={attribute}
+                  params={params}
+                  editMode={true}
+                />
               </EditWidget>
             );
           })}

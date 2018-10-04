@@ -53,7 +53,12 @@ export const WIDGET_DEFINITIONS = [
       value: 0
     },
     fields: ["device"],
-    params: []
+    params: [{
+      name: "stepSize",
+      type: "number",
+      default: 0,
+      description: "Step Size"
+    }]
   },
 
   {
