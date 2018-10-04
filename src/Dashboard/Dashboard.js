@@ -1,12 +1,32 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import classNames from "classnames";
 
 import "./Dashboard.css";
 import { connect } from "react-redux";
 import { subscribeDevice } from "../actions/tango";
 
-const WIDGET_DEFINITIONS = {
-  ATTRIBUTE_READ_ONLY: {
+import { DragSource, DragDropContext, DropTarget } from "react-dnd";
+import HTML5Backend from "react-dnd-html5-backend";
+
+const editWidgetSource = {
+  beginDrag(props) {
+    return {
+      index: props.index
+    };
+  }
+};
+
+function editWidgetCollect(connect, monitor) {
+  return {
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
+  };
+}
+
+const WIDGET_DEFINITIONS = [
+  {
+    type: "ATTRIBUTE_READ_ONLY",
     name: "Read-Only Attribute",
     component: ({ value, params: { scientific } }) => (
       <div style={{ backgroundColor: "#eee", padding: "0.5em" }}>
@@ -26,7 +46,8 @@ const WIDGET_DEFINITIONS = {
     ]
   },
 
-  MOTOR_CONTROL: {
+  {
+    type: "MOTOR_CONTROL",
     name: "Motor Control",
     component: ({ value }) => (
       <div>
@@ -37,9 +58,32 @@ const WIDGET_DEFINITIONS = {
     ),
     libraryProps: {
       value: 0
-    }
+    },
+    params: []
+  },
+
+  {
+    type: "LABEL",
+    name: "Label",
+    component: ({ params: { text } }) => (
+      <div style={{ border: "1px solid gray" }}>{text || "(Empty)"}</div>
+    ),
+    libraryProps: {
+      params: { text: "Your Text Here" }
+    },
+    params: [
+      {
+        name: "text",
+        type: "string",
+        default: ""
+      }
+    ]
   }
-};
+];
+
+function getWidgetDefinition(type) {
+  return WIDGET_DEFINITIONS.find(definition => definition.type === type);
+}
 
 class RunCanvas extends Component {
   constructor(props) {
@@ -77,6 +121,10 @@ class RunCanvas extends Component {
       const data = JSON.parse(msg.data);
       if (data.type === "data") {
         const changeEvent = data.payload.data.changeEvent;
+        if (changeEvent == null) {
+          return;
+        }
+
         const updatedAttributes = changeEvent.reduce((accum, event) => {
           return {
             [event.device + "/" + event.name]: event.data.value
@@ -100,7 +148,7 @@ class RunCanvas extends Component {
   }
 
   componentForWidget(widget) {
-    return WIDGET_DEFINITIONS[widget.type].component;
+    return getWidgetDefinition(widget.type).component;
   }
 
   valueForModel(device, attribute) {
@@ -127,17 +175,52 @@ class RunCanvas extends Component {
   }
 }
 
+class EditWidget extends Component {
+  render() {
+    const { connectDragSource } = this.props;
+    return connectDragSource(
+      <div
+        className={this.props.isSelected ? "Widget selected" : "Widget"}
+        style={{ left: this.props.x, top: this.props.y }}
+        onClick={this.props.onClick}
+      >
+        {this.props.children}
+      </div>
+    );
+  }
+}
+
+const types = {
+  EDIT_WIDGET: "EDIT_WIDGET",
+  LIBRARY_WIDGET: "LIBRARY_WIDGET"
+};
+
+EditWidget = DragSource(types.EDIT_WIDGET, editWidgetSource, editWidgetCollect)(
+  EditWidget
+);
+
+const editCanvasTarget = {
+  canDrop(props, monitor) {
+    return true;
+  },
+  drop(props, monitor, component) {
+    const { x, y } = monitor.getDifferenceFromInitialOffset();
+    const { index } = monitor.getItem();
+    props.onMoveWidget(index, x, y);
+  }
+};
+
 class EditCanvas extends Component {
   constructor(props) {
     super(props);
   }
 
   componentForWidget(widget) {
-    return WIDGET_DEFINITIONS[widget.type].component;
+    return getWidgetDefinition(widget.type).component;
   }
 
   placeholderValueForWidget(widget) {
-    return WIDGET_DEFINITIONS[widget.type].libraryProps.value;
+    return getWidgetDefinition(widget.type).libraryProps.value;
   }
 
   handleSelectWidget(i, event) {
@@ -147,31 +230,115 @@ class EditCanvas extends Component {
     }
   }
 
+  onMoveWidget(index, x, y) {
+    this.props.onMoveWidget(index, x, y);
+  }
+
+  render() {
+    const { connectMoveDropTarget, connectLibraryDropTarget } = this.props;
+
+    return connectLibraryDropTarget(
+      connectMoveDropTarget(
+        <div
+          className="Canvas edit"
+          onClick={this.handleSelectWidget.bind(this, -1)}
+        >
+          {this.props.widgets.map((widget, i) => {
+            const Widget = this.componentForWidget(widget);
+            const { x, y, device, attribute, params } = widget;
+            const value = this.placeholderValueForWidget(widget);
+
+            return (
+              <EditWidget
+                index={i}
+                key={i}
+                isSelected={this.props.selectedWidgetIndex === i}
+                x={x}
+                y={y}
+                onClick={this.handleSelectWidget.bind(this, i)}
+              >
+                <Widget value={value} params={params} />
+              </EditWidget>
+            );
+          })}
+        </div>
+      )
+    );
+  }
+}
+
+EditCanvas = DropTarget(
+  types.EDIT_WIDGET,
+  editCanvasTarget,
+  (connect, monitor) => ({
+    connectMoveDropTarget: connect.dropTarget()
+  })
+)(EditCanvas);
+
+EditCanvas = DropTarget(
+  types.LIBRARY_WIDGET,
+  {
+    canDrop(props, monitor) {
+      return true;
+    },
+    drop(props, monitor, component) {
+      const {x: x1, y: y1} = ReactDOM.findDOMNode(component).getBoundingClientRect();
+      const {x: x2, y: y2} = monitor.getClientOffset();
+      props.onAddWidget(monitor.getItem().definition, x2 - x1, y2 - y1);
+    }
+  },
+  (connect, monitor) => ({
+    connectLibraryDropTarget: connect.dropTarget()
+  })
+)(EditCanvas);
+
+class LibraryWidget extends Component {
+  render() {
+    const definition = this.props.definition;
+    const Widget = definition.component;
+
+    return (
+      <div className="LibraryWidget">
+        <span style={{ fontSize: "10px", fontWeight: "bold" }}>
+          {definition.name}
+        </span>
+        {this.props.connectDragSource(
+          <div>
+            <Widget {...definition.libraryProps} />
+          </div>
+        )}
+      </div>
+    );
+  }
+}
+
+const libraryWidgetSource = {
+  beginDrag(props) {
+    return {
+      definition: props.definition
+    };
+  }
+};
+
+function libraryWidgetCollect(connect, monitor) {
+  return {
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
+  };
+}
+
+LibraryWidget = DragSource(
+  types.LIBRARY_WIDGET,
+  libraryWidgetSource,
+  libraryWidgetCollect
+)(LibraryWidget);
+
+class Library extends Component {
   render() {
     return (
-      <div
-        className="Canvas edit"
-        onClick={this.handleSelectWidget.bind(this, -1)}
-      >
-        {this.props.widgets.map((widget, i) => {
-          const Widget = this.componentForWidget(widget);
-          const { x, y, device, attribute, params } = widget;
-          const value = this.placeholderValueForWidget(widget);
-          const className = classNames("Widget", {
-            selected: this.props.selectedWidgetIndex === i
-          });
-
-          return (
-            <div
-              key={i}
-              className={className}
-              style={{ left: x, top: y }}
-              onClick={this.handleSelectWidget.bind(this, i)}
-              onMouseMove={e => console.log(e.r)}
-            >
-              <Widget value={value} params={params} />
-            </div>
-          );
+      <div className="Inspector">
+        {WIDGET_DEFINITIONS.map((definition, i) => {
+          return <LibraryWidget key={i} definition={definition} />;
         })}
       </div>
     );
@@ -210,11 +377,37 @@ class Dashboard extends Component {
       ]
     };
     this.toggleMode = this.toggleMode.bind(this);
+    this.handleMoveWidget = this.handleMoveWidget.bind(this);
+    this.handleAddWidget = this.handleAddWidget.bind(this);
   }
 
   toggleMode() {
     const mode = { edit: "run", run: "edit" }[this.state.mode];
     this.setState({ mode });
+  }
+
+  handleMoveWidget(index, x, y) {
+    const widgets = [...this.state.widgets];
+    const oldWidget = widgets[index];
+    const widget = { ...oldWidget, x: oldWidget.x + x, y: oldWidget.y + y };
+    widgets.splice(index, 1, widget);
+    this.setState({ widgets });
+  }
+
+  handleAddWidget(definition, x, y) {
+    const params = definition.params.map(param => ({
+      [param.name]: param.default
+    }));
+    const widget = {
+      type: definition.type,
+      x,
+      y,
+      device: "",
+      attribute: "",
+      params
+    };
+    const widgets = [...this.state.widgets, widget];
+    this.setState({ widgets });
   }
 
   render() {
@@ -233,28 +426,17 @@ class Dashboard extends Component {
         {mode === "edit" ? (
           <EditCanvas
             widgets={this.state.widgets}
+            onMoveWidget={this.handleMoveWidget}
             onSelectWidget={i => this.setState({ selectedWidgetIndex: i })}
             selectedWidgetIndex={this.state.selectedWidgetIndex}
-            onAddWidget={() => alert("Added!")}
+            onAddWidget={this.handleAddWidget}
           />
         ) : (
           <RunCanvas widgets={this.state.widgets} />
         )}
         {mode === "edit" && (
           <div className="Inspector">
-            {Object.keys(WIDGET_DEFINITIONS).map(key => {
-              const definition = WIDGET_DEFINITIONS[key];
-              const Widget = definition.component;
-              const props = definition.libraryProps;
-              return (
-                <div key={key}>
-                  <span style={{ fontSize: "10px", fontWeight: "bold" }}>
-                    {definition.name}
-                  </span>
-                  <Widget {...props} />
-                </div>
-              );
-            })}
+            <Library />
           </div>
         )}
       </div>
@@ -262,4 +444,4 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+export default DragDropContext(HTML5Backend)(Dashboard);
