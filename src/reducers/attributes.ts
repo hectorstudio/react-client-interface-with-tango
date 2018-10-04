@@ -5,6 +5,7 @@ import {
 interface IDeviceAttribute {
     name: string,
     value: any,
+    displevel: string,
     dataformat: string,
 }
 

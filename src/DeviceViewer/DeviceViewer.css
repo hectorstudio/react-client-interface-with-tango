@@ -1,3 +1,30 @@
+.DeviceViewer .checkboxes {
+    text-align:center;
+  }
+  
+  .DeviceViewer .checkboxes input {
+    margin:0;
+    vertical-align: bottom;
+    position: relative;
+    top: -4px;
+  }
+  
+  .DeviceViewer .checkboxes label {
+    margin: 10px 20px 20px 3px;
+  }
+
+  .DeviceViewer input[type=checkbox] {
+    width:18px;
+    height:18px;
+  }
+
+  .DeviceViewer .layout {
+    text-align:left;
+    border: 1px solid #007bff; /* Bootstrap primary colour */
+    padding: 10px;
+    border-radius: 7px;
+  }
+
 .DeviceViewer .device-view {
     margin: 1em;
 }

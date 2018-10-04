@@ -228,6 +228,7 @@ export function fetchDevice(name){
             quality
             writable
             description
+            displevel
             minvalue
             maxvalue
           }
