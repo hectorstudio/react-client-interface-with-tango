@@ -3,6 +3,7 @@ import { findDOMNode } from "react-dom";
 import { DragSource, DropTarget } from "react-dnd";
 
 import { DashboardDNDTypes, getWidgetDefinition } from "../widgetDefinitions";
+import dndTypes from '../dndTypes';
 
 class EditWidget extends Component {
   render() {
@@ -96,7 +97,7 @@ class EditCanvas extends Component {
                 y={y}
                 onClick={this.handleSelectWidget.bind(this, i)}
               >
-                <Widget value={value} params={params} />
+                <Widget value={value} attribute={attribute} params={params} editMode={true}/>
               </EditWidget>
             );
           })}
@@ -107,7 +108,7 @@ class EditCanvas extends Component {
 }
 
 const moveDropTarget = DropTarget(
-  "EDIT_WIDGET",
+  dndTypes.EDIT_WIDGET,
   editCanvasTarget,
   (connect, monitor) => ({
     connectMoveDropTarget: connect.dropTarget()
@@ -115,7 +116,7 @@ const moveDropTarget = DropTarget(
 );
 
 const addFromLibraryDropTarget = DropTarget(
-  "LIBRARY_WIDGET",
+  dndTypes.LIBRARY_WIDGET,
   {
     canDrop(props, monitor) {
       return true;

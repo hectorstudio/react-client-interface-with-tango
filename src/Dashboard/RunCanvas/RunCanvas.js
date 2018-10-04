@@ -10,9 +10,9 @@ export default class RunCanvas extends Component {
   }
 
   connect() {
-    const models = this.props.widgets.map(
-      ({ device, attribute }) => `${device}/${attribute}`
-    );
+    const models = this.props.widgets
+      .filter(({ device }) => device) // Skip widgets without device -- revise this
+      .map(({ device, attribute }) => `${device}/${attribute}`);
 
     this.socket = new WebSocket(
       "ws://localhost:3000/socket?dashboard",
@@ -43,6 +43,7 @@ export default class RunCanvas extends Component {
 
         const updatedAttributes = changeEvent.reduce((accum, event) => {
           return {
+            ...accum,
             [event.device + "/" + event.name]: event.data.value
           };
         }, {});
@@ -82,7 +83,7 @@ export default class RunCanvas extends Component {
 
           return (
             <div key={i} className="Widget" style={{ left: x, top: y }}>
-              <Widget value={value} params={params} />
+              <Widget attribute={attribute} value={value} params={params} />
             </div>
           );
         })}
