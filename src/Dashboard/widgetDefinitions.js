@@ -109,6 +109,9 @@ export const WIDGET_DEFINITIONS = [
             ? Number(value).toExponential(2)
             : value;
 
+      // Ugly logic to deal with all combinations of options and device/attribute presence
+      // This might be simply an unnecessary feature, so don't spend time on improving it yet
+
       const deviceLabel = device || <i>device</i>;
       const attributeLabel = attribute || <i>attribute</i>;
       const labels = (showDevice ? [deviceLabel] : []).concat(
@@ -120,7 +123,7 @@ export const WIDGET_DEFINITIONS = [
             {deviceLabel}/{attributeLabel}
           </span>
         ) : (
-          labels
+          labels.length === 1 ? labels[0] : null
         );
 
       return (

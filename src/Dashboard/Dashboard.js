@@ -40,31 +40,6 @@ class Dashboard extends Component {
     this.handleAttributeChange = this.handleAttributeChange.bind(this);
   }
 
-  componentDidMount() {
-    const client = require("graphql-client")({
-      url: `/db`
-    });
-
-    function callServiceGraphQL(query, variables) {
-      return client.query(query, variables || {}, (req, res) => {
-        if (res.status === 401) {
-          throw new Error("Not authorized");
-        }
-      });
-    }
-
-    callServiceGraphQL(`
-      query {
-        devices {
-          name
-        }
-      }
-    `)
-      .then(res => res.data.devices)
-      .then(devices => devices.map(device => device.name))
-      .then(deviceNames => this.setState({ deviceNames }));
-  }
-
   toggleMode() {
     const mode = { edit: "run", run: "edit" }[this.state.mode];
     this.setState({ mode });
@@ -93,8 +68,8 @@ class Dashboard extends Component {
       type: definition.type,
       x,
       y,
-      device: "",
-      attribute: "",
+      device: null,
+      attribute: null,
       params
     };
     const widgets = [...this.state.widgets, widget];

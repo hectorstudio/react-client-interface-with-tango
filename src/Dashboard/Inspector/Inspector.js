@@ -1,7 +1,69 @@
 import React, { Component } from "react";
 import { getWidgetDefinition } from "../widgetDefinitions";
+import createGQLClient from "graphql-client";
 
 export default class Inspector extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fetchingDeviceNames: true,
+      deviceNames: [], // Should be lifted out to higher component in order to reduce data fetching
+      fetchingAttributeNames: false,
+      attributeNames: []
+    };
+
+    this.handleSelectDevice = this.handleSelectDevice.bind(this);
+    this.handleSelectAttribute = this.handleSelectAttribute.bind(this);
+    this.gqlClient = createGQLClient({ url: "/db " });
+  }
+
+  handleSelectDevice(event) {
+    this.props.onDeviceChange(event.target.value);
+  }
+
+  handleSelectAttribute(event) {
+    this.props.onAttributeChange(event.target.value);
+  }
+
+  componentDidUpdate(prevProps) {
+    const oldWidget = prevProps.widget;
+    const newWidget = this.props.widget;
+    const oldDevice = oldWidget ? oldWidget.device : null;
+    const newDevice = newWidget ? newWidget.device : null;
+
+    if (newDevice && newDevice !== oldDevice) {
+      this.fetchAttributeNames(newDevice);
+    }
+  }
+
+  fetchAttributeNames(device) {
+    this.setState({
+      fetchingAttributeNames: true,
+      attributeNames: []
+    });
+
+    this.callServiceGraphQL(
+      `
+      query FetchNames($device: String!) {
+        device(name: $device) {
+          attributes {
+            name
+          }
+        }
+      }
+  `,
+      { device }
+    )
+      .then(res => {
+        const attributes = res.data.device.attributes;
+        return attributes.map(attribute => attribute.name);
+      })
+      .catch(() => [])
+      .then(attributeNames =>
+        this.setState({ attributeNames, fetchingAttributeNames: false })
+      );
+  }
+
   inputForParam(param, value) {
     const type = this.props.widget.type;
     const widgetDefinition = getWidgetDefinition(type);
@@ -37,7 +99,40 @@ export default class Inspector extends Component {
           />
         );
       default:
-        return <input type="text" />;
+        return (
+          <span>No input for parameter type "{paramDefinition.type}"</span>
+        );
+    }
+  }
+
+  callServiceGraphQL(query, variables) {
+    return this.gqlClient.query(query, variables || {}, (req, res) => {
+      if (res.status === 401) {
+        throw new Error("Not authorized");
+      }
+    });
+  }
+
+  componentDidMount() {
+    this.callServiceGraphQL(
+      `
+      query {
+        devices {
+          name
+        }
+      }
+    `
+    )
+      .then(res => res.data.devices)
+      .then(devices => devices.map(device => device.name))
+      .catch(() => [])
+      .then(deviceNames =>
+        this.setState({ deviceNames, fetchingDeviceNames: false })
+      );
+
+    const widget = this.props.widget;
+    if (widget != null && widget.device != null) {
+      this.fetchAttributeNames(widget.device);
     }
   }
 
@@ -57,8 +152,21 @@ export default class Inspector extends Component {
                 <tr>
                   <td>Device:</td>
                   <td>
-                    <select value={device} onChange={e => this.props.onDeviceChange(e.target.value)}>
-                        {this.props.deviceNames.map((name, i) => <option key={i} value={name}>{name}</option>)}
+                    <select
+                      className="form-control"
+                      value={device || ""}
+                      onChange={this.handleSelectDevice}
+                    >
+                      {device == null && (
+                        <option value="" disabled>
+                          None
+                        </option>
+                      )}
+                      {this.state.deviceNames.map((name, i) => (
+                        <option key={i} value={name}>
+                          {name}
+                        </option>
+                      ))}
                     </select>
                   </td>
                 </tr>
@@ -67,13 +175,23 @@ export default class Inspector extends Component {
                 <tr>
                   <td>Attribute:</td>
                   <td>
-                    <input
-                      type="text"
-                      value={attribute}
-                      onChange={e =>
-                        this.props.onAttributeChange(e.target.value)
-                      }
-                    />
+                    <select
+                      className="form-control"
+                      value={attribute || ""}
+                      onChange={this.handleSelectAttribute}
+                      disabled={device == null}
+                    >
+                      {attribute == null && (
+                        <option value="" disabled>
+                          {device ? "None" : "Select Device First"}
+                        </option>
+                      )}
+                      {this.state.attributeNames.map((name, i) => (
+                        <option key={i} value={name}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
                   </td>
                 </tr>
               )}
