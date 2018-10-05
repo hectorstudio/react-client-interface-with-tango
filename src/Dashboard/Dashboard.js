@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
+import queryString from "query-string";
 
 import EditCanvas from "./EditCanvas/EditCanvas";
 import Library from "./Library/Library";
@@ -111,46 +112,17 @@ class Inspector extends Component {
 class Dashboard extends Component {
   constructor(props) {
     super(props);
+
+    const w = queryString.parse(props.location.search).w;
+    const widgets = w ? JSON.parse(decodeURI(w)) : [];
+
     this.state = {
       mode: "edit",
       sidebar: "library", // Belongs in edit component
       selectedWidgetIndex: -1, // Belongs in edit component
-      widgets: []
-      // [
-      //   {
-      //     type: "ATTRIBUTE_READ_ONLY",
-      //     x: 30,
-      //     y: 100,
-      //     device: "sys/tg_test/1",
-      //     attribute: "double_scalar",
-      //     params: {
-      //       showName: false,
-      //       scientific: true
-      //     }
-      //   },
-
-      //   {
-      //     type: "ATTRIBUTE_READ_ONLY",
-      //     x: 70,
-      //     y: 180,
-      //     device: "sys/tg_test/1",
-      //     attribute: "ulong_scalar",
-      //     params: {
-      //       showName: true,
-      //       scientific: false
-      //     }
-      //   },
-
-      //   {
-      //     type: "LABEL",
-      //     x: 340,
-      //     y: 180,
-      //     params: {
-      //       text: "sdfsdf"
-      //     }
-      //   }
-      // ]
+      widgets,
     };
+
     this.toggleMode = this.toggleMode.bind(this);
     this.handleMoveWidget = this.handleMoveWidget.bind(this);
     this.handleAddWidget = this.handleAddWidget.bind(this);
@@ -210,6 +182,9 @@ class Dashboard extends Component {
 
   updateWidgets(widgets) {
     this.setState({ widgets });
+
+    const w = encodeURI(JSON.stringify(widgets));
+    this.props.history.replace("?w=" + w);
   }
 
   // Convenience method used by handler methods
