@@ -17,14 +17,14 @@
       rgb(232, 239, 249),
       rgb(232, 239, 249) 1px,
       rgba(0, 0, 0, 0) 1px,
-      rgba(0, 0, 0, 0) 3em
+      rgba(0, 0, 0, 0) calc(1em - 1px)
     ),
     repeating-linear-gradient(
       90deg,
       rgb(232, 239, 249),
       rgb(232, 239, 249) 1px,
       rgba(0, 0, 0, 0) 1px,
-      rgba(0, 0, 0, 0) 3em
+      rgba(0, 0, 0, 0) calc(1em - 1px)
     );
   grid-column: 1;
   background-position-x: -1px;
