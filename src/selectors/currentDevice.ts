@@ -54,10 +54,11 @@ export const getAvailableDataFormats = createSelector(
     attrs => unique(attrs.map(attr => attr.dataformat))
 );
 
-export const getCommandDisplevels = createSelector(
+export const getDispLevels = createSelector(
     getCurrentDeviceCommands,
-    commands => Object.keys(commands
-        .map(command => command.displevel)
+    getCurrentDeviceAttributes,
+    (commands, attributes) => Object.keys(commands
+        .map(command => command.displevel).concat(attributes.map(attribute => attribute.displevel))
         .reduce((accum, displevel) => ({...accum, [displevel]: true}), {}))
 );
 
