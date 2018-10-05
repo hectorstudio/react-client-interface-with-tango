@@ -86,10 +86,6 @@
   padding-right: 0.5em;
 }
 
-.Dashboard .Inspector select {
-  max-width: 12em; /* Why do we need this? */
-}
-
 .Dashboard .Canvas.edit .Placeholder {
   position: relative;
   width: 15em;
