@@ -6,6 +6,7 @@ import DeviceList from '../DeviceList/DeviceList';
 import DeviceViewer from '../DeviceViewer/DeviceViewer';
 import HomeViewer from '../HomeViewer/HomeViewer';
 import ErrorDisplay from '../ErrorDisplay/ErrorDisplay';
+import Dashboard from '../Dashboard/Dashboard';
 
 import './Layout.css';
 
@@ -17,8 +18,9 @@ const BaseLayout = ({children}) =>
 const MainView = ({className}) =>
   <div className={className}>
     <ErrorDisplay/>
+    <Route path='/dashboard' exact={true} component={Dashboard}/>
     <Route path='/devices/:device*' component={DeviceViewer}/>
-    <Route exact={true} path='/' component={HomeViewer}/>
+    <Route path='/' exact={true} component={HomeViewer}/>
   </div>;
 
 const DefaultLayout = () =>
