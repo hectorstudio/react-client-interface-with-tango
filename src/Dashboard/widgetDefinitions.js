@@ -109,6 +109,9 @@ export const WIDGET_DEFINITIONS = [
             ? Number(value).toExponential(2)
             : value;
 
+      // Ugly logic to deal with all combinations of options and device/attribute presence
+      // This might be simply an unnecessary feature, so don't spend time on improving it yet
+
       const deviceLabel = device || <i>device</i>;
       const attributeLabel = attribute || <i>attribute</i>;
       const labels = (showDevice ? [deviceLabel] : []).concat(
@@ -120,7 +123,7 @@ export const WIDGET_DEFINITIONS = [
             {deviceLabel}/{attributeLabel}
           </span>
         ) : (
-          labels
+          labels.length === 1 ? labels[0] : null
         );
 
       return (
@@ -154,31 +157,31 @@ export const WIDGET_DEFINITIONS = [
     ]
   },
 
-  {
-    type: "MOTOR_CONTROL",
-    name: "Motor Control",
-    component: ({ value, libraryMode, editMode }) => {
-      const buttonStyle = { fontSize: "small", padding: "0.5em", width: "2em" };
-      const buttonStyle2 = { ...buttonStyle, marginLeft: "-1px" };
-      return (
-        <div>
-          <button style={buttonStyle} className="fa fa-plus" />
-          <button style={buttonStyle2} className="fa fa-minus" />{" "}
-          <span>Position: </span>
-          <span>{libraryMode || editMode ? <i>position</i> : value}</span>
-        </div>
-      );
-    },
-    fields: ["device"],
-    params: [
-      {
-        name: "stepSize",
-        type: "number",
-        default: 0,
-        description: "Step Size"
-      }
-    ]
-  },
+  // {
+  //   type: "MOTOR_CONTROL",
+  //   name: "Motor Control",
+  //   component: ({ value, libraryMode, editMode }) => {
+  //     const buttonStyle = { fontSize: "small", padding: "0.5em", width: "2em" };
+  //     const buttonStyle2 = { ...buttonStyle, marginLeft: "-1px" };
+  //     return (
+  //       <div>
+  //         <button style={buttonStyle} className="fa fa-plus" />
+  //         <button style={buttonStyle2} className="fa fa-minus" />{" "}
+  //         <span>Position: </span>
+  //         <span>{libraryMode || editMode ? <i>position</i> : value}</span>
+  //       </div>
+  //     );
+  //   },
+  //   fields: ["device"],
+  //   params: [
+  //     {
+  //       name: "stepSize",
+  //       type: "number",
+  //       default: 0,
+  //       description: "Step Size"
+  //     }
+  //   ]
+  // },
 
   {
     type: "LABEL",

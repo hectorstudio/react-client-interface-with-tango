@@ -64,6 +64,10 @@ export default class RunCanvas extends Component {
     this.connect();
   }
 
+  componentWillUnmount() {
+    this.socket.close();
+  }
+
   componentForWidget(widget) {
     return getWidgetDefinition(widget.type).component;
   }
