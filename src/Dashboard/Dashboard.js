@@ -156,6 +156,7 @@ class Dashboard extends Component {
     this.toggleMode = this.toggleMode.bind(this);
     this.handleMoveWidget = this.handleMoveWidget.bind(this);
     this.handleAddWidget = this.handleAddWidget.bind(this);
+    this.handleSelectWidget = this.handleSelectWidget.bind(this);
     this.handleDeleteWidget = this.handleDeleteWidget.bind(this);
     this.handleParamChange = this.handleParamChange.bind(this);
     this.handleDeviceChange = this.handleDeviceChange.bind(this);
@@ -167,10 +168,15 @@ class Dashboard extends Component {
     this.setState({ mode });
   }
 
+  handleSelectWidget(index) {
+    this.setState({ selectedWidgetIndex: index });
+  }
+
   handleDeleteWidget(index) {
     const widgets = [...this.state.widgets];
     widgets.splice(index, 1);
-    this.setState({ widgets, selectedWidgetIndex: -1 });
+    this.updateWidgets(widgets);
+    this.setState({ selectedWidgetIndex: -1 });
   }
 
   handleAddWidget(definition, x, y) {
@@ -190,7 +196,8 @@ class Dashboard extends Component {
       params
     };
     const widgets = [...this.state.widgets, widget];
-    this.setState({ widgets, selectedWidgetIndex: widgets.length - 1 });
+    this.updateWidgets(widgets);
+    this.setState({ selectedWidgetIndex: widgets.length - 1 });
   }
 
   handleParamChange(param, value) {
@@ -200,6 +207,10 @@ class Dashboard extends Component {
     const updatedWidget = { ...widget, params };
     const widgets = [...this.state.widgets];
     widgets.splice(index, 1, updatedWidget);
+    this.updateWidgets(widgets);
+  }
+
+  updateWidgets(widgets) {
     this.setState({ widgets });
   }
 
@@ -208,7 +219,7 @@ class Dashboard extends Component {
     const widgets = [...this.state.widgets];
     const widget = { ...widgets[index], ...changes };
     widgets.splice(index, 1, widget);
-    this.setState({ widgets });
+    this.updateWidgets(widgets);
   }
 
   handleMoveWidget(index, x, y) {
@@ -236,7 +247,7 @@ class Dashboard extends Component {
         <div className="Header">
           <button
             onClick={this.toggleMode}
-            style={{fontSize: 'small', padding: '0.5em', width: '2em'}}
+            style={{ fontSize: "small", padding: "0.5em", width: "2em" }}
             className={classNames("fa", {
               "fa-play": mode === "edit",
               "fa-pause": mode === "run"
@@ -247,9 +258,7 @@ class Dashboard extends Component {
           <EditCanvas
             widgets={this.state.widgets}
             onMoveWidget={this.handleMoveWidget}
-            onSelectWidget={index =>
-              this.setState({ selectedWidgetIndex: index })
-            }
+            onSelectWidget={this.handleSelectWidget}
             onDeleteWidget={this.handleDeleteWidget}
             selectedWidgetIndex={this.state.selectedWidgetIndex}
             onAddWidget={this.handleAddWidget}
