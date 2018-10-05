@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
+import queryString from "query-string";
 
 import EditCanvas from "./EditCanvas/EditCanvas";
 import Library from "./Library/Library";
@@ -68,7 +69,6 @@ class Inspector extends Component {
                   <td>Device:</td>
                   <td>
                     <input
-                      placeholder="e.g. sys/tg_test/1"
                       type="text"
                       value={device}
                       onChange={e => this.props.onDeviceChange(e.target.value)}
@@ -81,7 +81,6 @@ class Inspector extends Component {
                   <td>Attribute:</td>
                   <td>
                     <input
-                      placeholder="e.g. ulong_scalar"
                       type="text"
                       value={attribute}
                       onChange={e =>
@@ -113,49 +112,21 @@ class Inspector extends Component {
 class Dashboard extends Component {
   constructor(props) {
     super(props);
+
+    const w = queryString.parse(props.location.search).w;
+    const widgets = w ? JSON.parse(decodeURI(w)) : [];
+
     this.state = {
       mode: "edit",
       sidebar: "library", // Belongs in edit component
       selectedWidgetIndex: -1, // Belongs in edit component
-      widgets: []
-      // [
-      //   {
-      //     type: "ATTRIBUTE_READ_ONLY",
-      //     x: 30,
-      //     y: 100,
-      //     device: "sys/tg_test/1",
-      //     attribute: "double_scalar",
-      //     params: {
-      //       showName: false,
-      //       scientific: true
-      //     }
-      //   },
-
-      //   {
-      //     type: "ATTRIBUTE_READ_ONLY",
-      //     x: 70,
-      //     y: 180,
-      //     device: "sys/tg_test/1",
-      //     attribute: "ulong_scalar",
-      //     params: {
-      //       showName: true,
-      //       scientific: false
-      //     }
-      //   },
-
-      //   {
-      //     type: "LABEL",
-      //     x: 340,
-      //     y: 180,
-      //     params: {
-      //       text: "sdfsdf"
-      //     }
-      //   }
-      // ]
+      widgets,
     };
+
     this.toggleMode = this.toggleMode.bind(this);
     this.handleMoveWidget = this.handleMoveWidget.bind(this);
     this.handleAddWidget = this.handleAddWidget.bind(this);
+    this.handleSelectWidget = this.handleSelectWidget.bind(this);
     this.handleDeleteWidget = this.handleDeleteWidget.bind(this);
     this.handleParamChange = this.handleParamChange.bind(this);
     this.handleDeviceChange = this.handleDeviceChange.bind(this);
@@ -167,10 +138,15 @@ class Dashboard extends Component {
     this.setState({ mode });
   }
 
+  handleSelectWidget(index) {
+    this.setState({ selectedWidgetIndex: index });
+  }
+
   handleDeleteWidget(index) {
     const widgets = [...this.state.widgets];
     widgets.splice(index, 1);
-    this.setState({ widgets, selectedWidgetIndex: -1 });
+    this.updateWidgets(widgets);
+    this.setState({ selectedWidgetIndex: -1 });
   }
 
   handleAddWidget(definition, x, y) {
@@ -190,7 +166,8 @@ class Dashboard extends Component {
       params
     };
     const widgets = [...this.state.widgets, widget];
-    this.setState({ widgets, selectedWidgetIndex: widgets.length - 1 });
+    this.updateWidgets(widgets);
+    this.setState({ selectedWidgetIndex: widgets.length - 1 });
   }
 
   handleParamChange(param, value) {
@@ -200,7 +177,14 @@ class Dashboard extends Component {
     const updatedWidget = { ...widget, params };
     const widgets = [...this.state.widgets];
     widgets.splice(index, 1, updatedWidget);
+    this.updateWidgets(widgets);
+  }
+
+  updateWidgets(widgets) {
     this.setState({ widgets });
+
+    const w = encodeURI(JSON.stringify(widgets));
+    this.props.history.replace("?w=" + w);
   }
 
   // Convenience method used by handler methods
@@ -208,7 +192,7 @@ class Dashboard extends Component {
     const widgets = [...this.state.widgets];
     const widget = { ...widgets[index], ...changes };
     widgets.splice(index, 1, widget);
-    this.setState({ widgets });
+    this.updateWidgets(widgets);
   }
 
   handleMoveWidget(index, x, y) {
@@ -236,7 +220,7 @@ class Dashboard extends Component {
         <div className="Header">
           <button
             onClick={this.toggleMode}
-            style={{fontSize: 'small', padding: '0.5em', width: '2em'}}
+            style={{ fontSize: "small", padding: "0.5em", width: "2em" }}
             className={classNames("fa", {
               "fa-play": mode === "edit",
               "fa-pause": mode === "run"
@@ -247,9 +231,7 @@ class Dashboard extends Component {
           <EditCanvas
             widgets={this.state.widgets}
             onMoveWidget={this.handleMoveWidget}
-            onSelectWidget={index =>
-              this.setState({ selectedWidgetIndex: index })
-            }
+            onSelectWidget={this.handleSelectWidget}
             onDeleteWidget={this.handleDeleteWidget}
             selectedWidgetIndex={this.state.selectedWidgetIndex}
             onAddWidget={this.handleAddWidget}
