@@ -154,31 +154,31 @@ export const WIDGET_DEFINITIONS = [
     ]
   },
 
-  {
-    type: "MOTOR_CONTROL",
-    name: "Motor Control",
-    component: ({ value, libraryMode, editMode }) => {
-      const buttonStyle = { fontSize: "small", padding: "0.5em", width: "2em" };
-      const buttonStyle2 = { ...buttonStyle, marginLeft: "-1px" };
-      return (
-        <div>
-          <button style={buttonStyle} className="fa fa-plus" />
-          <button style={buttonStyle2} className="fa fa-minus" />{" "}
-          <span>Position: </span>
-          <span>{libraryMode || editMode ? <i>position</i> : value}</span>
-        </div>
-      );
-    },
-    fields: ["device"],
-    params: [
-      {
-        name: "stepSize",
-        type: "number",
-        default: 0,
-        description: "Step Size"
-      }
-    ]
-  },
+  // {
+  //   type: "MOTOR_CONTROL",
+  //   name: "Motor Control",
+  //   component: ({ value, libraryMode, editMode }) => {
+  //     const buttonStyle = { fontSize: "small", padding: "0.5em", width: "2em" };
+  //     const buttonStyle2 = { ...buttonStyle, marginLeft: "-1px" };
+  //     return (
+  //       <div>
+  //         <button style={buttonStyle} className="fa fa-plus" />
+  //         <button style={buttonStyle2} className="fa fa-minus" />{" "}
+  //         <span>Position: </span>
+  //         <span>{libraryMode || editMode ? <i>position</i> : value}</span>
+  //       </div>
+  //     );
+  //   },
+  //   fields: ["device"],
+  //   params: [
+  //     {
+  //       name: "stepSize",
+  //       type: "number",
+  //       default: 0,
+  //       description: "Step Size"
+  //     }
+  //   ]
+  // },
 
   {
     type: "LABEL",
