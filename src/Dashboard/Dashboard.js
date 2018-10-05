@@ -68,7 +68,6 @@ class Inspector extends Component {
                   <td>Device:</td>
                   <td>
                     <input
-                      placeholder="e.g. sys/tg_test/1"
                       type="text"
                       value={device}
                       onChange={e => this.props.onDeviceChange(e.target.value)}
@@ -81,7 +80,6 @@ class Inspector extends Component {
                   <td>Attribute:</td>
                   <td>
                     <input
-                      placeholder="e.g. ulong_scalar"
                       type="text"
                       value={attribute}
                       onChange={e =>
