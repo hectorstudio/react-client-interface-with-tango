@@ -1,0 +1,4 @@
+export default {
+    EDIT_WIDGET: "EDIT_WIDGET",
+    LIBRARY_WIDGET: "LIBRARY_WIDGET",
+};
