@@ -8,7 +8,7 @@ import DescriptionDisplay from '../DescriptionDisplay/DescriptionDisplay';
 import { setDeviceAttribute } from '../../actions/tango';
 
 import './AttributeTable.css';
-import { getFilteredCurrentDeviceAttributes, getActiveDataFormat } from '../../selectors/deviceDetail';
+import { getFilteredCurrentDeviceAttributes, getActiveDataFormat, getEnabledDisplevels } from '../../selectors/deviceDetail';
 import { getCurrentDeviceAttributes, getCurrentDeviceName } from '../../selectors/currentDevice';
 import { setDataFormat } from '../../actions/deviceList';
 
@@ -35,7 +35,7 @@ const DataFormatChooser = ({dataFormats, selected, onSelect}) => {
 	);
 };
 
-const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataFormat, onSetDeviceAttribute }) => {
+const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataFormat, onSetDeviceAttribute, enabledList }) => {
 	const QualityIndicator = ({ quality }) => {
 	  const sub = {
 		'ATTR_VALID': 'valid',
@@ -51,7 +51,7 @@ const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataF
 	};
 
 	const dataFormats = Array.from(new Set(attributes.map(attr => attr.dataformat)));
-	const filteredAttributes = attributes.filter(attr => attr.dataformat === selectedFormat);
+	const filteredAttributes = attributes.filter(attr => attr.dataformat === selectedFormat &&  (Object.values(enabledList).indexOf(attr.displevel) > -1));
 	return (
 	  <div className='AttributeTable'>
 		<DataFormatChooser
@@ -97,7 +97,8 @@ function mapStateToProps(state) {
 	return {
 		selectedFormat: getActiveDataFormat(state),
 		attributes: getCurrentDeviceAttributes(state),
-		deviceName: getCurrentDeviceName(state)
+		deviceName: getCurrentDeviceName(state),
+		enabledList: getEnabledDisplevels(state),
 	};
 }
 

@@ -25,7 +25,8 @@
     "recharts": "^1.0.0-beta.10",
     "redux": "^3.7.2",
     "redux-thunk": "2.2.0",
-    "reselect": "^3.0.1"
+    "reselect": "^3.0.1",
+    "scroll-into-view": "^1.9.3"
   },
   "scripts": {
     "start": "react-scripts-ts start",
