@@ -10,6 +10,7 @@ import devices, { IDevicesState } from './devices';
 import attributes, { IAttributesState } from './attributes';
 import commands, { ICommandsState } from './commands';
 import properties, { IPropertiesState } from './properties';
+import modal, { IModalState } from './modals';
 
 import error from './error';
 
@@ -21,6 +22,7 @@ export interface IRootState {
   // App State
   loadingStatus: ILoadingStatusState;
   error: string;
+  modal: IModalState;
 
   // Data state
   devices: IDevicesState,
@@ -42,6 +44,7 @@ const rootReducer = combineReducers<IRootState>({
   commands,
   properties,
   error,
+  modal,
 });
 
 export default rootReducer;
