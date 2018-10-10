@@ -69,7 +69,8 @@ export default class RunCanvas extends Component {
   }
 
   componentForWidget(widget) {
-    return getWidgetDefinition(widget.type).component;
+    return getWidgetDefinition(this.props.widgetDefinitions, widget.type)
+      .component;
   }
 
   valueForModel(device, attribute) {

@@ -181,7 +181,10 @@ class Dashboard extends Component {
               "fa-pause": mode === "run"
             })}
           />
-          <select onChange={this.handleChangeCanvas}>
+          <select
+            style={{ marginLeft: "0.5em" }}
+            onChange={this.handleChangeCanvas}
+          >
             {this.state.canvases.map((canvas, i) => (
               <option key={i} value={i}>
                 {i === 0 ? "Root" : canvas.name}
@@ -192,6 +195,7 @@ class Dashboard extends Component {
         {mode === "edit" ? (
           <EditCanvas
             widgets={widgets}
+            widgetDefinitions={widgetDefinitions}
             onMoveWidget={this.handleMoveWidget}
             onSelectWidget={this.handleSelectWidget}
             onDeleteWidget={this.handleDeleteWidget}
@@ -199,7 +203,7 @@ class Dashboard extends Component {
             onAddWidget={this.handleAddWidget}
           />
         ) : (
-          <RunCanvas widgets={widgets} />
+          <RunCanvas widgets={widgets} widgetDefinitions={widgetDefinitions} />
         )}
         {mode === "edit" && (
           <div className="Sidebar">
@@ -208,7 +212,7 @@ class Dashboard extends Component {
             ) : (
               <Inspector
                 widget={widgets[this.state.selectedWidgetIndex]}
-                widgetDefinitions={WIDGET_DEFINITIONS}
+                widgetDefinitions={widgetDefinitions}
                 deviceNames={this.state.deviceNames}
                 onParamChange={this.handleParamChange}
                 onDeviceChange={this.handleDeviceChange}

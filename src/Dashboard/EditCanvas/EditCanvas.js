@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import { DragSource, DropTarget } from "react-dnd";
 
-import { DashboardDNDTypes, getWidgetDefinition } from "../widgets/widgetDefinitions";
+import { DashboardDNDTypes } from "../widgets/widgetDefinitions";
 import dndTypes from "../dndTypes";
+import { getWidgetDefinition } from "../utils";
 
 const BACKSPACE = 8;
 const DELETE = 46;
@@ -62,7 +63,7 @@ class EditCanvas extends Component {
   }
 
   componentForWidget(widget) {
-    return getWidgetDefinition(widget.type).component;
+    return getWidgetDefinition(this.props.widgetDefinitions, widget.type).component;
   }
 
   handleSelectWidget(i, event) {
@@ -94,7 +95,7 @@ class EditCanvas extends Component {
           onKeyDown={this.handleKeyDown.bind(this)}
           tabIndex="0"
         >
-          <div className="Placeholder" style={{opacity: hasWidgets ? 0 : 1}}>
+          <div className="Placeholder" style={{ opacity: hasWidgets ? 0 : 1 }}>
             Add widgets by dragging them from the library and dropping them on
             the canvas.
           </div>
