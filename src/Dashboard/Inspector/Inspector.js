@@ -142,6 +142,33 @@ export default class Inspector extends Component {
     const fields = definition.fields;
     const paramDefinitions = definition.params;
 
+    const attributeChooser =
+      device === "__parent__" ? (
+        <input
+          className="form-control"
+          type="text"
+          onChange={() => alert("fix this")}
+        />
+      ) : (
+        <select
+          className="form-control"
+          value={attribute || ""}
+          onChange={this.handleSelectAttribute}
+          disabled={device == null}
+        >
+          {attribute == null && (
+            <option value="" disabled>
+              {device ? "None" : "Select Device First"}
+            </option>
+          )}
+          {this.state.attributeNames.map((name, i) => (
+            <option key={i} value={name}>
+              {name}
+            </option>
+          ))}
+        </select>
+      );
+
     return (
       <div className="Inspector">
         <h1>Inspector</h1>
@@ -162,6 +189,9 @@ export default class Inspector extends Component {
                           None
                         </option>
                       )}
+                      {this.props.isRootCanvas === false && (
+                        <option value="__parent__">Parent Device</option>
+                      )}
                       {this.state.deviceNames.map((name, i) => (
                         <option key={i} value={name}>
                           {name}
@@ -174,25 +204,7 @@ export default class Inspector extends Component {
               {fields.indexOf("attribute") !== -1 && (
                 <tr>
                   <td>Attribute:</td>
-                  <td>
-                    <select
-                      className="form-control"
-                      value={attribute || ""}
-                      onChange={this.handleSelectAttribute}
-                      disabled={device == null}
-                    >
-                      {attribute == null && (
-                        <option value="" disabled>
-                          {device ? "None" : "Select Device First"}
-                        </option>
-                      )}
-                      {this.state.attributeNames.map((name, i) => (
-                        <option key={i} value={name}>
-                          {name}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
+                  <td>{attributeChooser}</td>
                 </tr>
               )}
             </tbody>
