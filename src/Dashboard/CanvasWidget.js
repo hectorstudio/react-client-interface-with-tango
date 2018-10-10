@@ -33,6 +33,9 @@ class MiniCanvas extends Component {
   }
 }
 
+// "Canvas widget" is a fairly misleading name
+// It is a widget consisting of a canvas, not a widget residing in one
+
 function canvasWidgetComponent(canvas) {
   return class CanvasWidget extends Component {
     render() {
