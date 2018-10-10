@@ -55,7 +55,7 @@ const recorderSampleValues = Array(100)
           ? this.state.values
           : plotterSampleValues;
   
-      const {nbrDataPoints, width, height, showGrid} = this.props.params;
+      const {nbrDataPoints, width, height, showGrid, yAxisLabel} = this.props.params;
       const lastValues = nbrDataPoints === 0 ? [] : values.slice(-nbrDataPoints);
       return (
         <div
@@ -66,10 +66,14 @@ const recorderSampleValues = Array(100)
           }}
         >
           <LineChart data={lastValues} width={width} height={height}>
-            {liveMode ? <XAxis dataKey="time"><Label  offset="-3" position="insideBottom" value="Δs"/></XAxis>: null }
-            <YAxis/>
-            {liveMode ? <Tooltip/> : null }
-            {showGrid ? <CartesianGrid vertical={false} stroke="#eee" strokeDasharray="5 5" /> : null}
+            {liveMode && <XAxis dataKey="time">
+              <Label  offset={-3} position="insideBottom" value="Δs"/>
+            </XAxis>}
+            <YAxis> 
+              {liveMode && <Label angle={-90} position="insideLeft" value={yAxisLabel}/> }
+            </YAxis>
+            {liveMode && <Tooltip/>}
+            {showGrid && <CartesianGrid vertical={false} stroke="#eee" strokeDasharray="5 5" /> }
             <Line dot={false} isAnimationActive={false} type='linear' dataKey="value" stroke="#ff7300" yAxisId={0}/>
           </LineChart>
         </div>
@@ -308,6 +312,12 @@ export const WIDGET_DEFINITIONS = [
         type: "number",
         default: 200,
         description: "Height (px)"
+      },
+      {
+        name: "yAxisLabel",
+        type: "string",
+        default: "",
+        description: "Label y-axis"
       },
       {
         name: "showGrid",
