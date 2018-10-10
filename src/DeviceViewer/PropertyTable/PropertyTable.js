@@ -9,13 +9,15 @@ import {
 } from '../../selectors/currentDevice';
 
 import {
-    setDeviceProperty,
-    deleteDeviceProperty
-} from '../../actions/tango';
+    DELETE_PROPERTY,
+    CREATE_PROPERTY,
+    EDIT_PROPERTY,
+    setModal,
+} from '../../actions/modal'
 
 import './PropertyTable.css';
 
-const PropertyTable = ({ properties, deviceName, onSetDeviceProperty, onDeleteDeviceProperty }) =>
+const PropertyTable = ({ properties, deviceName, showDeletePropertyDialog, showEditPropertyDialog, showAddPropertyDialog}) =>
     <div className='PropertyTable'>
         <table className='separated'>
             <tbody>
@@ -29,8 +31,9 @@ const PropertyTable = ({ properties, deviceName, onSetDeviceProperty, onDeleteDe
                             deviceName={deviceName}
                             name={name}
                             value={value}
-                            onSetDeviceProperty={onSetDeviceProperty}
-                            onDeleteDeviceProperty={onDeleteDeviceProperty}
+                            showDeletePropertyDialog={showDeletePropertyDialog}
+                            showEditPropertyDialog={showEditPropertyDialog}
+                            
                         />
                     </td>
                     <td>
@@ -43,55 +46,23 @@ const PropertyTable = ({ properties, deviceName, onSetDeviceProperty, onDeleteDe
         <br></br>
         <SetProperty
             deviceName={deviceName}
-            onSetDeviceProperty={onSetDeviceProperty}
+            showAddPropertyDialog={showAddPropertyDialog}
         />
     </div>;
 
 class EditProperty extends Component {
     constructor(props) {
         super(props);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.handleShow = this.handleShow.bind(this);
-        this.handleClose = this.handleClose.bind(this);
         this.removeShow = this.removeShow.bind(this);
-        this.removeClose = this.removeClose.bind(this);
-        this.removeProp = this.removeProp.bind(this);
-        this.state = { value: this.props.value, show: false, remove: false };
-    }
-
-    handleClose() {
-        this.setState({ value: this.props.value, show: false });
     }
 
     handleShow() {
-        this.setState({ show: true });
-    }
-
-    removeClose() {
-        this.setState({ remove: false });
+        this.props.showEditPropertyDialog(this.props.name);
     }
 
     removeShow() {
-        this.setState({ remove: true });
-    }
-
-    removeProp() {
-        event.preventDefault()
-        this.props.onDeleteDeviceProperty(this.props.deviceName, this.props.name)
-        this.removeClose();
-    }
-
-    handleChange(event) {
-        event.preventDefault();
-        this.setState({ value: event.target.value })
-    }
-
-    handleSubmit(event) {
-        event.preventDefault()
-        this.props.onSetDeviceProperty(this.props.deviceName, this.props.name, [this.state.value])
-        this.handleClose();
-        this.setState({ value: this.state.value });
+        this.props.showDeletePropertyDialog(this.props.name);
     }
 
     render() {
@@ -99,46 +70,6 @@ class EditProperty extends Component {
             <Fragment>
                 <i className={"fa fa-trash " + (isMobile ? "visible" : "")} onClick={this.removeShow}></i> &nbsp;
                 <i className={"fa fa-pencil " + (isMobile ? "visible" : "")} onClick={this.handleShow}></i>
-
-                {this.state.remove &&
-                <Modal.Dialog className="modal-style">
-                    <Modal.Header>
-                        <Modal.Title>Remove property</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <p>
-                            Are you sure you want to remove property {this.props.name}?
-                        </p>
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                        <Button className="btn btn-outline-secondary" onClick={this.removeProp}>Yes</Button>
-                        <Button className="btn btn-outline-secondary" onClick={this.removeClose}>No</Button>
-                    </Modal.Footer>
-                </Modal.Dialog>}
-
-                {this.state.show &&
-                <Modal.Dialog className="modal-style">
-                    <Modal.Header>
-                        <Modal.Title>Edit property</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className="input-group">
-                            <div className="input-group-prepend">
-                                <span className="input-group-text">{this.props.name}</span>
-                            </div>
-                            <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange}/>
-                        </div>
-                        <div style={{whiteSpace: 'normal', fontStyle: 'italic', paddingTop: '0.5em'}}>
-                            WARNING: Property values will currently be set as singular values, i.e., arrays of strings are not yet supported.
-                        </div>
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                        <Button className="btn btn-outline-secondary" onClick={this.handleSubmit}>Save</Button>
-                        <Button className="btn btn-outline-secondary" onClick={this.handleClose}>Cancel</Button>
-                    </Modal.Footer>
-                </Modal.Dialog>}
             </Fragment>
         );
     }
@@ -147,81 +78,17 @@ class EditProperty extends Component {
 class SetProperty extends Component {
     constructor(props) {
         super(props);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.handleShow = this.handleShow.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.state = { formValues: {name: "", value: ""}, show: false, valid: false };
-    }
-
-    handleClose() {
-        this.setState({ show: false });
     }
 
     handleShow() {
-        this.setState({ show: true });
-    }
-
-    handleChange(event) {
-        event.preventDefault();
-        let formValues = this.state.formValues;
-        let name = event.target.name;
-        let value = event.target.value;
-        formValues[name] = value;
-        this.setState({ formValues })
-        if (this.state.formValues["name"].length > 0) {
-            this.setState({ valid: true })
-        } else {
-            this.setState({ valid: false })
-        }
-    }
-
-    handleSubmit(event) {
-        event.preventDefault()
-        this.props.onSetDeviceProperty(this.props.deviceName, this.state.formValues.name, [this.state.formValues.value])
-        this.handleClose();
-        let formValues = this.state.formValues;
-        this.state.formValues["name"] = "";
-        this.state.formValues["value"] = "";
-        this.setState({ formValues, valid: false });
+        this.props.showAddPropertyDialog(this.props.deviceName);
     }
 
     render() {
         return (
             <div className="static-modal">
                 <button className="btn btn-outline-secondary" type="button" onClick={this.handleShow}>Add new property</button>
-
-                {this.state.show &&
-                <Modal.Dialog className='modal-style'>
-                    <Modal.Header>
-                        <Modal.Title>Create new property</Modal.Title>
-                    </Modal.Header>
-
-                    <Modal.Body>
-                        <div className="input-group mb-3">
-                            <div className="input-group-prepend">
-                                <span className="input-group-text">Name</span>
-                            </div>
-                            <input type="text" name="name" className="form-control" autoComplete="off" value={this.state.formValues["name"]} onChange={this.handleChange} />
-                        </div>
-
-                        <div className="input-group mb-3">
-                            <div className="input-group-prepend">
-                                <span className="input-group-text">Value</span>
-                            </div>
-                            <input type="text" name="value" className="form-control" value={this.state.formValues["value"]} onChange={this.handleChange} />
-                        </div>
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                        <Button className="btn btn-outline-secondary" onClick={this.handleSubmit} disabled={!this.state.valid}>
-                            Save
-                        </Button>
-                        <Button className="btn btn-outline-secondary" onClick={this.handleClose}>
-                            Cancel
-                        </Button>
-                    </Modal.Footer>
-                </Modal.Dialog>}
             </div>
         );
     }
@@ -236,8 +103,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        onSetDeviceProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value)),
-        onDeleteDeviceProperty: (device, name) => dispatch(deleteDeviceProperty(device, name)),
+        showDeletePropertyDialog: (name) => dispatch(setModal(DELETE_PROPERTY, name)),
+        showAddPropertyDialog: () => dispatch(setModal(CREATE_PROPERTY)),
+        showEditPropertyDialog: (name) => dispatch(setModal(EDIT_PROPERTY, name)),
     };
 }
 
