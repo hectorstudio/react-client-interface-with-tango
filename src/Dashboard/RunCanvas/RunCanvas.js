@@ -14,10 +14,13 @@ export default class RunCanvas extends Component {
       .filter(({ device }) => device) // Skip widgets without device -- revise this
       .map(({ device, attribute }) => `${device}/${attribute}`);
 
-    this.socket = new WebSocket(
-      "ws://localhost:3000/socket?dashboard",
-      "graphql-ws"
-    );
+    function socketUrl() {
+      const loc = window.location;
+      const protocol = loc.protocol.replace("http", "ws");
+      return protocol + "//" + loc.host + "/socket";
+    }
+
+    this.socket = new WebSocket(socketUrl() + "?dashboard", "graphql-ws");
 
     const query = `
           subscription newChangeEvent($models: [String]!) {
