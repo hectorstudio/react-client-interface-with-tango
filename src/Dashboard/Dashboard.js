@@ -9,7 +9,12 @@ import Library from "./Library/Library";
 import RunCanvas from "./RunCanvas/RunCanvas";
 import Inspector from "./Inspector/Inspector";
 
-import { WIDGET_DEFINITIONS, getWidgetDefinition } from "./widgetDefinitions";
+import {
+  WIDGET_DEFINITIONS,
+  getWidgetDefinition
+} from "./widgets/widgetDefinitions";
+
+import { canvasWidgetDefinition } from "./CanvasWidget";
 
 import "./Dashboard.css";
 
@@ -26,7 +31,11 @@ class Dashboard extends Component {
       selectedWidgetIndex: -1, // Belongs in edit component
       selectedCanvasIndex: 0,
       // widgets,
-      canvases: [[], [], []],
+      canvases: [
+        { id: 0, name: "Root", widgets: [] },
+        { id: 1, name: "Another", widgets: [] },
+        { id: 2, name: "Yet another", widgets: [] }
+      ],
       deviceNames: []
     };
 
@@ -53,8 +62,7 @@ class Dashboard extends Component {
   handleDeleteWidget(index) {
     const widgets = [...this.currentWidgets()];
     widgets.splice(index, 1);
-    this.updateWidgets(widgets);
-    this.setState({ selectedWidgetIndex: -1 });
+    this.updateWidgets(widgets, -1);
   }
 
   handleAddWidget(definition, x, y) {
@@ -74,14 +82,12 @@ class Dashboard extends Component {
       params
     };
     const widgets = [...this.currentWidgets(), widget];
-    this.updateWidgets(widgets);
-    this.setState({ selectedWidgetIndex: widgets.length - 1 });
+    this.updateWidgets(widgets, widgets.length - 1);
   }
 
   handleParamChange(param, value) {
     const index = this.state.selectedWidgetIndex;
     const widget = this.selectedWidget();
-
 
     const params = { ...widget.params, [param]: value };
     const updatedWidget = { ...widget, params };
@@ -90,10 +96,16 @@ class Dashboard extends Component {
     this.updateWidgets(widgets);
   }
 
-  updateWidgets(widgets) {
+  updateWidgets(widgets, selectedWidgetIndex) {
+    selectedWidgetIndex =
+      selectedWidgetIndex != null
+        ? selectedWidgetIndex
+        : this.state.selectedWidgetIndex;
+
     const canvases = [...this.state.canvases];
-    canvases[this.state.selectedCanvasIndex] = widgets;
-    this.setState({ canvases });
+    const canvas = { ...canvases[this.state.selectedCanvasIndex], widgets };
+    canvases[this.state.selectedCanvasIndex] = canvas;
+    this.setState({ canvases, selectedWidgetIndex });
 
     // const w = encodeURI(JSON.stringify(widgets));
     // this.props.history.replace("?w=" + w);
@@ -109,7 +121,8 @@ class Dashboard extends Component {
 
   currentWidgets() {
     const { canvases, selectedCanvasIndex } = this.state;
-    return [...canvases[selectedCanvasIndex]];
+    const canvas = canvases[selectedCanvasIndex];
+    return [...canvas.widgets];
   }
 
   selectedWidget() {
@@ -149,6 +162,14 @@ class Dashboard extends Component {
     const widgets = this.currentWidgets();
     const selectedWidget = this.selectedWidget();
 
+    const canvasWidgetDefinitions = this.state.canvases
+      .slice(1)
+      .map(canvasWidgetDefinition);
+    const widgetDefinitions = [
+      ...WIDGET_DEFINITIONS,
+      ...canvasWidgetDefinitions
+    ];
+
     return (
       <div className="Dashboard">
         <div className="Header">
@@ -163,7 +184,7 @@ class Dashboard extends Component {
           <select onChange={this.handleChangeCanvas}>
             {this.state.canvases.map((canvas, i) => (
               <option key={i} value={i}>
-                {i === 0 ? "Root" : `Canvas ${i}`}
+                {i === 0 ? "Root" : canvas.name}
               </option>
             ))}
           </select>
@@ -183,7 +204,7 @@ class Dashboard extends Component {
         {mode === "edit" && (
           <div className="Sidebar">
             {this.state.selectedWidgetIndex === -1 ? (
-              <Library widgetDefinitions={WIDGET_DEFINITIONS} />
+              <Library widgetDefinitions={widgetDefinitions} />
             ) : (
               <Inspector
                 widget={widgets[this.state.selectedWidgetIndex]}

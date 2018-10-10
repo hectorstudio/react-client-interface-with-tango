@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import { DragSource, DropTarget } from "react-dnd";
 
-import { DashboardDNDTypes, getWidgetDefinition } from "../widgetDefinitions";
+import { DashboardDNDTypes, getWidgetDefinition } from "../widgets/widgetDefinitions";
 import dndTypes from "../dndTypes";
 
 const BACKSPACE = 8;

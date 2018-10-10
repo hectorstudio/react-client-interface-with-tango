@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getWidgetDefinition } from "../widgetDefinitions";
+import { getWidgetDefinition } from "../widgets/widgetDefinitions";
 import createGQLClient from "graphql-client";
 
 export default class Inspector extends Component {
