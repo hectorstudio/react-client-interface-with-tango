@@ -127,7 +127,7 @@ export function deleteDeviceProperty(device, name) {
         }
       }
     `, {device, name})
-    .then(res => res.deleteDeviceProperty.message[0])
+    .then(({data}) => data.deleteDeviceProperty.message[0])
     .then(message => message === "Success"
       ? dispatch({type: DELETE_DEVICE_PROPERTY_SUCCESS, device, name})
       : dispatch({type: DELETE_DEVICE_PROPERTY_FAILED, device, name, message})
