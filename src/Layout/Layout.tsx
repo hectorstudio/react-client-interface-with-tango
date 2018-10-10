@@ -7,6 +7,7 @@ import DeviceViewer from '../DeviceViewer/DeviceViewer';
 import HomeViewer from '../HomeViewer/HomeViewer';
 import ErrorDisplay from '../ErrorDisplay/ErrorDisplay';
 import Dashboard from '../Dashboard/Dashboard';
+import ModalDialog from '../Modal/Modal';
 
 import './Layout.css';
 
@@ -18,6 +19,7 @@ const BaseLayout = ({children}) =>
 const MainView = ({className}) =>
   <div className={className}>
     <ErrorDisplay/>
+    <ModalDialog/>
     <Route path='/dashboard' exact={true} component={Dashboard}/>
     <Route path='/devices/:device*' component={DeviceViewer}/>
     <Route path='/' exact={true} component={HomeViewer}/>
