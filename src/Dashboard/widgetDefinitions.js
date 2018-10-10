@@ -307,7 +307,7 @@ export const WIDGET_DEFINITIONS = [
         name: "height",
         type: "number",
         default: 200,
-        description: "height (px)"
+        description: "Height (px)"
       },
       {
         name: "showGrid",
