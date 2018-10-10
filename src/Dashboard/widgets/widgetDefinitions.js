@@ -97,6 +97,7 @@ export const WIDGET_DEFINITIONS = [
   }
 ];
 
+// Remove from here, use utils.js
 export function getWidgetDefinition(type) {
   return WIDGET_DEFINITIONS.find(definition => definition.type === type);
 }

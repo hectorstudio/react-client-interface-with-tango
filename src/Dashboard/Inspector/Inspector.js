@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { getWidgetDefinition } from "../widgets/widgetDefinitions";
 import createGQLClient from "graphql-client";
+import { getWidgetDefinition } from "../utils";
 
 export default class Inspector extends Component {
   constructor(props) {
@@ -66,7 +66,7 @@ export default class Inspector extends Component {
 
   inputForParam(param, value) {
     const type = this.props.widget.type;
-    const widgetDefinition = getWidgetDefinition(type);
+    const widgetDefinition = getWidgetDefinition(this.props.widgetDefinitions, type);
     const paramDefinition = widgetDefinition.params.find(
       paramDef => paramDef.name === param
     );
@@ -137,14 +137,14 @@ export default class Inspector extends Component {
   }
 
   render() {
-    const widget = this.props.widget;
+    const {widget, widgetDefinitions} = this.props;
 
     if (widget == null) {
       return null;
     }
 
     const { type, params, device, attribute } = widget;
-    const definition = getWidgetDefinition(type);
+    const definition = getWidgetDefinition(widgetDefinitions, type);
     const fields = definition.fields;
     const paramDefinitions = definition.params;
 
