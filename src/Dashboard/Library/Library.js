@@ -7,7 +7,10 @@ class LibraryWidget extends Component {
   render() {
     const definition = this.props.definition;
     const Widget = definition.component;
-    const defaultParams = definition.params.reduce((accum, param) => ({...accum, [param.name]: param.default}), {});
+    const defaultParams = definition.params.reduce(
+      (accum, param) => ({ ...accum, [param.name]: param.default }),
+      {}
+    );
 
     return (
       <div className="LibraryWidget">
@@ -16,7 +19,7 @@ class LibraryWidget extends Component {
         </span>
         {this.props.connectDragSource(
           <div>
-            <Widget params={defaultParams} libraryMode={true}/>
+            <Widget params={defaultParams} libraryMode={true} />
           </div>
         )}
       </div>
@@ -47,14 +50,24 @@ LibraryWidget = DragSource(
 
 export default class Library extends Component {
   render() {
+    // Ugly:
+    const builtIn = this.props.widgetDefinitions.filter(
+      definition => definition.type.indexOf("CANVAS_") === -1
+    );
+    const custom = this.props.widgetDefinitions.filter(
+      definition => definition.type.indexOf("CANVAS_") === 0
+    );
+
     return (
       <div className="Library">
         <h1>Built-In</h1>
-        {this.props.widgetDefinitions.map((definition, i) => {
+        {builtIn.map((definition, i) => {
           return <LibraryWidget key={i} definition={definition} />;
         })}
         <h1>Custom</h1>
-        asdas
+        {custom.map((definition, i) => {
+          return <LibraryWidget key={i} definition={definition} />;
+        })}
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getWidgetDefinition } from "../widgetDefinitions";
+import { getWidgetDefinition } from "../widgets/widgetDefinitions";
 
 export default class RunCanvas extends Component {
   constructor(props) {
