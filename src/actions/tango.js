@@ -254,7 +254,7 @@ export function fetchDevice(name){
       }
 
       const {device} = data;
-      return dispatch(device ? fetchDeviceSuccess(device) : {type: FETCH_DEVICE_FAILED, name});
+      return dispatch(device ? fetchDeviceSuccess(device) : dispatch(displayError("The device " + name + " was not found")));
     })
     .catch(err => dispatch(displayError(err.toString())));
   }
