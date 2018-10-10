@@ -57,13 +57,10 @@ class AddProperty extends Component{
         } else {
             this.setState({ valid: false })
         }
-        console.dir(this.state);
     }
 
     onAddProperty(event){
         event.preventDefault();
-        console.dir(this.props);
-        console.dir(this.state);
         this.props.addProperty(this.props.currentDevice, this.state.formValues.name, [this.state.formValues.value]);
         this.props.closeDialog();
 
