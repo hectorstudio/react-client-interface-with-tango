@@ -55,7 +55,7 @@ const recorderSampleValues = Array(100)
           ? this.state.values
           : plotterSampleValues;
   
-      const {nbrDataPoints, width, height, showGrid, yAxisLabel} = this.props.params;
+      const {nbrDataPoints, width, height, showGrid, yAxisLabel, strokeWidth} = this.props.params;
       const lastValues = nbrDataPoints === 0 ? [] : values.slice(-nbrDataPoints);
       return (
         <div
@@ -74,7 +74,7 @@ const recorderSampleValues = Array(100)
             </YAxis>
             {liveMode && <Tooltip/>}
             {showGrid && <CartesianGrid vertical={false} stroke="#eee" strokeDasharray="5 5" /> }
-            <Line dot={false} isAnimationActive={false} type='linear' dataKey="value" stroke="#ff7300" yAxisId={0}/>
+            <Line dot={false} isAnimationActive={false} type='linear' dataKey="value" strokeWidth={strokeWidth} stroke="#ff7300" yAxisId={0}/>
           </LineChart>
         </div>
       );
@@ -324,6 +324,12 @@ export const WIDGET_DEFINITIONS = [
         type: "boolean",
         default: true,
         description: "Show grid"
+      },
+      {
+        name: "strokeWidth",
+        type: "number",
+        default: 1,
+        description: "Stroke width"
       },
     ]
   }
