@@ -1,4 +1,6 @@
 import React from "react";
+import { LineChart, Line, CartesianGrid, Tooltip, YAxis, XAxis, Label } from 'recharts';
+
 
 function randomNumber(limit) {
   return Math.floor(Math.random() * limit);
@@ -12,6 +14,68 @@ const recorderSampleValues = Array(100)
     s: randomNumber(60),
     value: i
   }));
+
+  const plotterSampleValues = Array(100)
+  .fill(0)
+  .map((_, i) => ({
+    value: Math.sin(i/100*Math.PI*2) - 0.5*Math.cos(i/25*Math.PI*2),
+  }));
+
+  class AttributePlotter extends React.Component {
+    constructor(props) {
+      super(props);
+      const time = (new Date()).getTime();
+      this.state = {
+        values: [],
+        startTime: time,
+      };
+    }
+  
+    componentWillReceiveProps(newProps) {
+      if (this.props.editMode || this.props.libraryMode) {
+        return;
+      }
+  
+      const oldValues = this.state.values;
+      const startTime = this.state.startTime;
+      const newValue = newProps.value;
+      //Difference in seconds between "now" and when the plot was created, rounded to one decimal place.
+      const newTime = Math.round( 10 * ((new Date()).getTime() - startTime) / 1000) / 10;
+      if (oldValues.length === 0 || newValue !== oldValues.slice(-1)[0].value) {
+        const values = [
+          ...oldValues,{ value: newValue, time: newTime}
+        ];
+        this.setState(...this.state, { values });
+      }
+    }
+  
+    render() {
+      const liveMode = !this.props.editMode && !this.props.libraryMode;
+      const values = liveMode
+          ? this.state.values
+          : plotterSampleValues;
+  
+      const {nbrDataPoints, width, height, showGrid} = this.props.params;
+      const lastValues = nbrDataPoints === 0 ? [] : values.slice(-nbrDataPoints);
+      return (
+        <div
+          style={{
+            border: "1px solid lightgray",
+            padding: "0.25em",
+            fontSize: "small"
+          }}
+        >
+          <LineChart data={lastValues} width={width} height={height}>
+            {liveMode ? <XAxis dataKey="time"><Label  offset="-3" position="insideBottom" value="Δs"/></XAxis>: null }
+            <YAxis/>
+            {liveMode ? <Tooltip/> : null }
+            {showGrid ? <CartesianGrid vertical={false} stroke="#eee" strokeDasharray="5 5" /> : null}
+            <Line dot={false} isAnimationActive={false} type='linear' dataKey="value" stroke="#ff7300" yAxisId={0}/>
+          </LineChart>
+        </div>
+      );
+    }
+  }
 
 class AttributeRecorder extends React.Component {
   constructor(props) {
@@ -219,6 +283,38 @@ export const WIDGET_DEFINITIONS = [
         default: 5,
         description: "№ Entries"
       }
+    ]
+  },
+  {
+    type: "ATTRIBUTE_PLOTTER",
+    name: "Attribute plotter",
+    component: AttributePlotter,
+    fields: ["device", "attribute"],
+    params: [
+      {
+        name: "nbrDataPoints",
+        type: "number",
+        default: 100,
+        description: "№ Entries"
+      },
+      {
+        name: "width",
+        type: "number",
+        default: 300,
+        description: "Width (px)"
+      },
+      {
+        name: "height",
+        type: "number",
+        default: 200,
+        description: "Height (px)"
+      },
+      {
+        name: "showGrid",
+        type: "boolean",
+        default: true,
+        description: "Show grid"
+      },
     ]
   }
 ];
