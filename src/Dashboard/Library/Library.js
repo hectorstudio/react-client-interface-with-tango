@@ -19,7 +19,7 @@ class LibraryWidget extends Component {
         </span>
         {this.props.connectDragSource(
           <div>
-            <Widget params={defaultParams} libraryMode={true} />
+            <Widget params={defaultParams} mode="library"/>
           </div>
         )}
       </div>

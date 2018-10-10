@@ -22,7 +22,7 @@ export default class AttributeRecorder extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (this.props.editMode || this.props.libraryMode) {
+    if (this.props.mode === "edit" || this.props.mode === "library") {
       return;
     }
 
@@ -50,7 +50,7 @@ export default class AttributeRecorder extends React.Component {
 
   render() {
     const values =
-      this.props.editMode || this.props.libraryMode
+      this.props.mode === "edit" || this.props.mode === "library"
         ? recorderSampleValues
         : this.state.values;
 

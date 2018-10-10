@@ -116,7 +116,7 @@ class EditCanvas extends Component {
                   device={device}
                   attribute={attribute}
                   params={params}
-                  editMode={true}
+                  mode="edit"
                 />
               </EditWidget>
             );

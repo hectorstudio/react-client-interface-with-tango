@@ -4,7 +4,7 @@ const AttributeReadOnly = ({
   device,
   attribute,
   libraryMode,
-  editMode,
+  mode,
   value,
   params: { scientific, showDevice, showAttribute }
 }) => {
@@ -32,7 +32,7 @@ const AttributeReadOnly = ({
     <div style={{ backgroundColor: "#eee", padding: "0.5em" }}>
       {label}
       {showDevice || showAttribute ? ": " : ""}
-      {libraryMode || editMode ? <i>value</i> : displayValue}
+      {mode === "library" || mode === "edit" ? <i>value</i> : displayValue}
     </div>
   );
 };
