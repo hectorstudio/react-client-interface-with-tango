@@ -137,7 +137,13 @@ export default class Inspector extends Component {
   }
 
   render() {
-    const { type, params, device, attribute } = this.props.widget;
+    const widget = this.props.widget;
+
+    if (widget == null) {
+      return null;
+    }
+
+    const { type, params, device, attribute } = widget;
     const definition = getWidgetDefinition(type);
     const fields = definition.fields;
     const paramDefinitions = definition.params;
@@ -147,7 +153,8 @@ export default class Inspector extends Component {
         <input
           className="form-control"
           type="text"
-          onChange={() => alert("fix this")}
+          value={attribute || ""}
+          onChange={this.handleSelectAttribute}
         />
       ) : (
         <select
