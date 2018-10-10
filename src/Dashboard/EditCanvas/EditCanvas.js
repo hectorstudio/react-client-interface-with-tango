@@ -56,6 +56,9 @@ const editCanvasTarget = {
 class EditCanvas extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      mouseIsDown: false
+    };
   }
 
   componentForWidget(widget) {

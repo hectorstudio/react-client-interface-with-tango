@@ -49,10 +49,12 @@ export default class Library extends Component {
   render() {
     return (
       <div className="Library">
-        <h1>Widget Library</h1>
+        <h1>Built-In</h1>
         {this.props.widgetDefinitions.map((definition, i) => {
           return <LibraryWidget key={i} definition={definition} />;
         })}
+        <h1>Custom</h1>
+        asdas
       </div>
     );
   }
