@@ -82,8 +82,6 @@ class Dashboard extends Component {
     const index = this.state.selectedWidgetIndex;
     const widget = this.selectedWidget();
 
-    alert(JSON.stringify(widget));
-    return;
 
     const params = { ...widget.params, [param]: value };
     const updatedWidget = { ...widget, params };
@@ -116,7 +114,7 @@ class Dashboard extends Component {
 
   selectedWidget() {
     const widgets = this.currentWidgets();
-    return widgets[this.selectedWidgetIndex];
+    return widgets[this.state.selectedWidgetIndex];
   }
 
   handleMoveWidget(index, x, y) {
@@ -140,6 +138,10 @@ class Dashboard extends Component {
   handleChangeCanvas(event) {
     const selectedCanvasIndex = parseInt(event.target.value, 10);
     this.setState({ selectedCanvasIndex });
+  }
+
+  isRootCanvas() {
+    return this.state.selectedCanvasIndex === 0;
   }
 
   render() {
@@ -187,13 +189,10 @@ class Dashboard extends Component {
                 widget={widgets[this.state.selectedWidgetIndex]}
                 widgetDefinitions={WIDGET_DEFINITIONS}
                 deviceNames={this.state.deviceNames}
-                onParamChange={(param, value) =>
-                  this.handleParamChange(param, value)
-                }
-                onDeviceChange={device => this.handleDeviceChange(device)}
-                onAttributeChange={attribute =>
-                  this.handleAttributeChange(attribute)
-                }
+                onParamChange={this.handleParamChange}
+                onDeviceChange={this.handleDeviceChange}
+                onAttributeChange={this.handleAttributeChange}
+                isRootCanvas={this.isRootCanvas()}
               />
             )}
           </div>
