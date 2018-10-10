@@ -1,13 +1,14 @@
 import React from "react";
 
-const Label = ({ editMode, libraryMode, params: { text } }) => (
+const Label = ({ mode, params: { text } }) => (
   <div
     style={{
-      border: editMode ? "1px dashed gray" : "",
+      border: mode === "edit" ? "1px dashed gray" : "",
       padding: "0.5em"
     }}
   >
-    {text || (editMode || libraryMode ? <i>Your Text Here</i> : null)}
+    {text ||
+      (mode === "edit" || mode === "library" ? <i>Your Text Here</i> : null)}
   </div>
 );
 

@@ -27,7 +27,7 @@ export default class AttributePlotter extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (this.props.editMode || this.props.libraryMode) {
+    if (this.props.mode === "edit" || this.props.mode === "library") {
       return;
     }
 
@@ -44,7 +44,7 @@ export default class AttributePlotter extends React.Component {
   }
 
   render() {
-    const liveMode = !this.props.editMode && !this.props.libraryMode;
+    const liveMode = this.props.mode !== "edit" && this.props.mode !== "library";
     const values = liveMode ? this.state.values : plotterSampleValues;
 
     const { nbrDataPoints, width, height, showGrid } = this.props.params;
