@@ -1,5 +1,5 @@
 import React from "react";
-import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
+import { LineChart, Line, CartesianGrid, Tooltip, YAxis, XAxis, Label } from 'recharts';
 
 
 function randomNumber(limit) {
@@ -15,7 +15,6 @@ const recorderSampleValues = Array(100)
     value: i
   }));
 
-  const now = new Date();
   const plotterSampleValues = Array(100)
   .fill(0)
   .map((_, i) => ({
@@ -25,8 +24,10 @@ const recorderSampleValues = Array(100)
   class AttributePlotter extends React.Component {
     constructor(props) {
       super(props);
+      const time = (new Date()).getTime();
       this.state = {
-        values: []
+        values: [],
+        startTime: time,
       };
     }
   
@@ -36,19 +37,21 @@ const recorderSampleValues = Array(100)
       }
   
       const oldValues = this.state.values;
+      const startTime = this.state.startTime;
       const newValue = newProps.value;
+      //Difference in seconds between "now" and when the plot was created, rounded to one decimal place.
+      const newTime = Math.round( 10 * ((new Date()).getTime() - startTime) / 1000) / 10;
       if (oldValues.length === 0 || newValue !== oldValues.slice(-1)[0].value) {
         const values = [
-          ...oldValues,{ value: newValue}
+          ...oldValues,{ value: newValue, time: newTime}
         ];
-        this.setState({ values });
+        this.setState(...this.state, { values });
       }
     }
   
     render() {
       const liveMode = !this.props.editMode && !this.props.libraryMode;
-      const values =
-      liveMode
+      const values = liveMode
           ? this.state.values
           : plotterSampleValues;
   
@@ -63,6 +66,7 @@ const recorderSampleValues = Array(100)
           }}
         >
           <LineChart data={lastValues} width={width} height={height}>
+            {liveMode ? <XAxis dataKey="time"><Label  offset="-3" position="insideBottom" value="Δs"/></XAxis>: null }
             <YAxis/>
             {liveMode ? <Tooltip/> : null }
             {showGrid ? <CartesianGrid vertical={false} stroke="#eee" strokeDasharray="5 5" /> : null}
