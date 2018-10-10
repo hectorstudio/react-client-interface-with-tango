@@ -13,20 +13,20 @@ import { WIDGET_DEFINITIONS, getWidgetDefinition } from "./widgetDefinitions";
 
 import "./Dashboard.css";
 
-
-
 class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    const w = queryString.parse(props.location.search).w;
-    const widgets = w ? JSON.parse(decodeURI(w)) : [];
+    // const w = queryString.parse(props.location.search).w;
+    // const widgets = w ? JSON.parse(decodeURI(w)) : [];
 
     this.state = {
       mode: "edit",
       sidebar: "library", // Belongs in edit component
       selectedWidgetIndex: -1, // Belongs in edit component
-      widgets,
+      selectedCanvasIndex: 0,
+      // widgets,
+      canvases: [[], [], []],
       deviceNames: []
     };
 
@@ -38,6 +38,7 @@ class Dashboard extends Component {
     this.handleParamChange = this.handleParamChange.bind(this);
     this.handleDeviceChange = this.handleDeviceChange.bind(this);
     this.handleAttributeChange = this.handleAttributeChange.bind(this);
+    this.handleChangeCanvas = this.handleChangeCanvas.bind(this);
   }
 
   toggleMode() {
@@ -50,7 +51,7 @@ class Dashboard extends Component {
   }
 
   handleDeleteWidget(index) {
-    const widgets = [...this.state.widgets];
+    const widgets = [...this.currentWidgets()];
     widgets.splice(index, 1);
     this.updateWidgets(widgets);
     this.setState({ selectedWidgetIndex: -1 });
@@ -72,38 +73,54 @@ class Dashboard extends Component {
       attribute: null,
       params
     };
-    const widgets = [...this.state.widgets, widget];
+    const widgets = [...this.currentWidgets(), widget];
     this.updateWidgets(widgets);
     this.setState({ selectedWidgetIndex: widgets.length - 1 });
   }
 
   handleParamChange(param, value) {
     const index = this.state.selectedWidgetIndex;
-    const widget = this.state.widgets[index];
+    const widget = this.selectedWidget();
+
+    alert(JSON.stringify(widget));
+    return;
+
     const params = { ...widget.params, [param]: value };
     const updatedWidget = { ...widget, params };
-    const widgets = [...this.state.widgets];
+    const widgets = this.currentWidgets();
     widgets.splice(index, 1, updatedWidget);
     this.updateWidgets(widgets);
   }
 
   updateWidgets(widgets) {
-    this.setState({ widgets });
+    const canvases = [...this.state.canvases];
+    canvases[this.state.selectedCanvasIndex] = widgets;
+    this.setState({ canvases });
 
-    const w = encodeURI(JSON.stringify(widgets));
-    this.props.history.replace("?w=" + w);
+    // const w = encodeURI(JSON.stringify(widgets));
+    // this.props.history.replace("?w=" + w);
   }
 
   // Convenience method used by handler methods
   updateWidget(index, changes) {
-    const widgets = [...this.state.widgets];
+    const widgets = this.currentWidgets();
     const widget = { ...widgets[index], ...changes };
     widgets.splice(index, 1, widget);
     this.updateWidgets(widgets);
   }
 
+  currentWidgets() {
+    const { canvases, selectedCanvasIndex } = this.state;
+    return [...canvases[selectedCanvasIndex]];
+  }
+
+  selectedWidget() {
+    const widgets = this.currentWidgets();
+    return widgets[this.selectedWidgetIndex];
+  }
+
   handleMoveWidget(index, x, y) {
-    const widget = this.state.widgets[index];
+    const widget = this.currentWidgets()[index];
     const proposedPos = { x: widget.x + x, y: widget.y + y };
     const newPos = {
       x: Math.max(0, proposedPos.x),
@@ -120,8 +137,16 @@ class Dashboard extends Component {
     this.updateWidget(this.state.selectedWidgetIndex, { attribute });
   }
 
+  handleChangeCanvas(event) {
+    const selectedCanvasIndex = parseInt(event.target.value, 10);
+    this.setState({ selectedCanvasIndex });
+  }
+
   render() {
     const mode = this.state.mode;
+    const widgets = this.currentWidgets();
+    const selectedWidget = this.selectedWidget();
+
     return (
       <div className="Dashboard">
         <div className="Header">
@@ -133,10 +158,17 @@ class Dashboard extends Component {
               "fa-pause": mode === "run"
             })}
           />
+          <select onChange={this.handleChangeCanvas}>
+            {this.state.canvases.map((canvas, i) => (
+              <option key={i} value={i}>
+                {i === 0 ? "Root" : `Canvas ${i}`}
+              </option>
+            ))}
+          </select>
         </div>
         {mode === "edit" ? (
           <EditCanvas
-            widgets={this.state.widgets}
+            widgets={widgets}
             onMoveWidget={this.handleMoveWidget}
             onSelectWidget={this.handleSelectWidget}
             onDeleteWidget={this.handleDeleteWidget}
@@ -144,7 +176,7 @@ class Dashboard extends Component {
             onAddWidget={this.handleAddWidget}
           />
         ) : (
-          <RunCanvas widgets={this.state.widgets} />
+          <RunCanvas widgets={widgets} />
         )}
         {mode === "edit" && (
           <div className="Sidebar">
@@ -152,7 +184,7 @@ class Dashboard extends Component {
               <Library widgetDefinitions={WIDGET_DEFINITIONS} />
             ) : (
               <Inspector
-                widget={this.state.widgets[this.state.selectedWidgetIndex]}
+                widget={widgets[this.state.selectedWidgetIndex]}
                 widgetDefinitions={WIDGET_DEFINITIONS}
                 deviceNames={this.state.deviceNames}
                 onParamChange={(param, value) =>
