@@ -66,7 +66,10 @@ export default class Inspector extends Component {
 
   inputForParam(param, value) {
     const type = this.props.widget.type;
-    const widgetDefinition = getWidgetDefinition(this.props.widgetDefinitions, type);
+    const widgetDefinition = getWidgetDefinition(
+      this.props.widgetDefinitions,
+      type
+    );
     const paramDefinition = widgetDefinition.params.find(
       paramDef => paramDef.name === param
     );
@@ -137,7 +140,7 @@ export default class Inspector extends Component {
   }
 
   render() {
-    const {widget, widgetDefinitions} = this.props;
+    const { widget, widgetDefinitions } = this.props;
 
     if (widget == null) {
       return null;
@@ -153,7 +156,7 @@ export default class Inspector extends Component {
         <input
           className="form-control"
           type="text"
-          value={attribute || ""}
+          value={attribute || ""}
           onChange={this.handleSelectAttribute}
         />
       ) : (
@@ -217,7 +220,7 @@ export default class Inspector extends Component {
             </tbody>
           </table>
         )}
-        {paramDefinitions.length > 0 && <hr />}
+        {paramDefinitions.length * fields.length > 0 && <hr />}
         <table>
           <tbody>
             {paramDefinitions.map(({ name, description }) => (
