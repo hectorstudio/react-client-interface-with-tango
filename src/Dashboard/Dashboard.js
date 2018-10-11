@@ -18,40 +18,42 @@ import { complexWidgetDefinition } from "./ComplexWidget/ComplexWidget";
 
 import "./Dashboard.css";
 
+const DEFAULT_CANVASES = [
+  {
+    id: 0,
+    name: "Root",
+    widgets: []
+  },
+  {
+    id: 1,
+    name: "Subcanvas 1",
+    widgets: []
+  },
+  {
+    id: 2,
+    name: "Subcanvas 2",
+    widgets: []
+  },
+  {
+    id: 3,
+    name: "Subcanvas 3",
+    widgets: []
+  }
+];
+
 class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    // const w = queryString.parse(props.location.search).w;
-    // const widgets = w ? JSON.parse(decodeURI(w)) : [];
+    const c = queryString.parse(props.location.search).c;
+    const canvases = c ? JSON.parse(decodeURI(c)) : DEFAULT_CANVASES;
 
     this.state = {
       mode: "edit",
       sidebar: "library", // Belongs in edit component
       selectedWidgetIndex: -1, // Belongs in edit component
       selectedCanvasIndex: 0,
-      canvases: [
-        {
-          id: 0,
-          name: "Root",
-          widgets: []
-        },
-        {
-          id: 1,
-          name: "Subcanvas 1",
-          widgets: []
-        },
-        {
-          id: 2,
-          name: "Subcanvas 2",
-          widgets: []
-        },
-        {
-          id: 3,
-          name: "Subcanvas 3",
-          widgets: []
-        }
-      ],
+      canvases,
       deviceNames: [] // Not used?
     };
 
@@ -123,8 +125,8 @@ class Dashboard extends Component {
     canvases[this.state.selectedCanvasIndex] = canvas;
     this.setState({ canvases, selectedWidgetIndex });
 
-    // const w = encodeURI(JSON.stringify(widgets));
-    // this.props.history.replace("?w=" + w);
+    const c = encodeURI(JSON.stringify(this.state.canvases));
+    this.props.history.replace("?c=" + c);
   }
 
   // Convenience method used by handler methods
