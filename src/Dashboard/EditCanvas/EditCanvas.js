@@ -13,12 +13,12 @@ const WarningBadge = () => (
   <div
     style={{
       position: "absolute",
-      marginLeft: "-0.6em",
-      marginTop: "-0.6em",
+      marginLeft: "-10px",
+      marginTop: "-10px",
       backgroundColor: "red",
-      borderRadius: "2em",
-      width: "1.2em",
-      height: "1.2em",
+      borderRadius: "10px",
+      width: "20px",
+      height: "20px",
       color: "white",
       textAlign: "center",
       zIndex: 1000,
@@ -47,7 +47,8 @@ class EditWidget extends Component {
 const editWidgetSource = {
   beginDrag(props) {
     return {
-      index: props.index
+      index: props.index,
+      warning: props.warning,
     };
   }
 };
@@ -67,10 +68,16 @@ const editCanvasTarget = {
   canDrop(props, monitor) {
     return true;
   },
+
   drop(props, monitor, component) {
     const { x, y } = monitor.getDifferenceFromInitialOffset();
-    const { index } = monitor.getItem();
-    props.onMoveWidget(index, x, y);
+    const { index, warning } = monitor.getItem();
+    
+    // This is a fairly ugly hack to compensate for the fact that
+    // a warning badge offsets the position by -10 px hor/ver
+    
+    const compensation = warning ? 10 : 0;
+    props.onMoveWidget(index, x + compensation, y + compensation);
   }
 };
 
