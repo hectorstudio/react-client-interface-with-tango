@@ -14,7 +14,7 @@ import {
   getWidgetDefinition
 } from "./widgets/widgetDefinitions";
 
-import { complexWidgetDefinition } from "./ComplexWidget";
+import { complexWidgetDefinition } from "./ComplexWidget/ComplexWidget";
 
 import "./Dashboard.css";
 
@@ -38,17 +38,17 @@ class Dashboard extends Component {
         },
         {
           id: 1,
-          name: "Canvas 1",
+          name: "Subcanvas 1",
           widgets: []
         },
         {
           id: 2,
-          name: "Canvas 2",
+          name: "Subcanvas 2",
           widgets: []
         },
         {
           id: 3,
-          name: "Canvas 3",
+          name: "Subcanvas 3",
           widgets: []
         }
       ],
