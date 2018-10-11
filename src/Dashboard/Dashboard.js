@@ -181,7 +181,7 @@ class Dashboard extends Component {
     const complexWidgetDefinitions = this.state.canvases
       .slice(1)
       .map(complexWidgetDefinition);
-      
+
     const widgetDefinitions = [
       ...WIDGET_DEFINITIONS,
       ...complexWidgetDefinitions
@@ -189,7 +189,7 @@ class Dashboard extends Component {
 
     return (
       <div className="Dashboard">
-        <div className="Header">
+        <div className="TopBar">
           <button
             onClick={this.toggleMode}
             style={{ fontSize: "small", padding: "0.5em", width: "2em" }}
