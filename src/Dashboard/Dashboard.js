@@ -181,6 +181,7 @@ class Dashboard extends Component {
     const complexWidgetDefinitions = this.state.canvases
       .slice(1)
       .map(complexWidgetDefinition);
+      
     const widgetDefinitions = [
       ...WIDGET_DEFINITIONS,
       ...complexWidgetDefinitions
@@ -192,14 +193,20 @@ class Dashboard extends Component {
           <button
             onClick={this.toggleMode}
             style={{ fontSize: "small", padding: "0.5em", width: "2em" }}
-            className={classNames("fa", {
+            className={classNames("form-control fa", {
               "fa-play": mode === "edit",
               "fa-pause": mode === "run"
             })}
-            disabled={this.state.selectedCanvasIndex !== 0}
+            disabled={!this.isRootCanvas()}
           />
           <select
-            style={{ marginLeft: "0.5em" }}
+            className="form-control"
+            style={{
+              marginLeft: "0.5em",
+              width: "auto",
+              height: "auto",
+              display: "inline"
+            }}
             onChange={this.handleChangeCanvas}
           >
             {this.state.canvases.map((canvas, i) => (
