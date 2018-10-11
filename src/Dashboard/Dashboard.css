@@ -58,7 +58,7 @@
   grid-column: 2;
 }
 
-.Dashboard .Header {
+.Dashboard .TopBar {
   padding: 0.5em;
   background-image: linear-gradient(to bottom, #eee, #ccc);
   grid-row: 1;
