@@ -7,7 +7,10 @@ class LibraryWidget extends Component {
   render() {
     const definition = this.props.definition;
     const Widget = definition.component;
-    const defaultParams = definition.params.reduce((accum, param) => ({...accum, [param.name]: param.default}), {});
+    const defaultParams = definition.params.reduce(
+      (accum, param) => ({ ...accum, [param.name]: param.default }),
+      {}
+    );
 
     return (
       <div className="LibraryWidget">
@@ -16,7 +19,7 @@ class LibraryWidget extends Component {
         </span>
         {this.props.connectDragSource(
           <div>
-            <Widget params={defaultParams} libraryMode={true}/>
+            <Widget params={defaultParams} mode="library" />
           </div>
         )}
       </div>
@@ -47,12 +50,28 @@ LibraryWidget = DragSource(
 
 export default class Library extends Component {
   render() {
+    // Ugly:
+    const builtIn = this.props.widgetDefinitions.filter(
+      definition => definition.type.indexOf("CANVAS_") === -1
+    );
+    const custom = this.props.widgetDefinitions.filter(
+      definition => definition.type.indexOf("CANVAS_") === 0
+    );
+
     return (
       <div className="Library">
-        <h1>Widget Library</h1>
-        {this.props.widgetDefinitions.map((definition, i) => {
+        <h1>Built-In</h1>
+        {builtIn.map((definition, i) => {
           return <LibraryWidget key={i} definition={definition} />;
         })}
+        {this.props.showCustom && (
+          <React.Fragment>
+            <h1>Custom</h1>
+            {custom.map((definition, i) => {
+              return <LibraryWidget key={i} definition={definition} />;
+            })}
+          </React.Fragment>
+        )}
       </div>
     );
   }
