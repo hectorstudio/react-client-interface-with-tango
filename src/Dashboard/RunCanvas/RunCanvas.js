@@ -1,6 +1,29 @@
 import React, { Component } from "react";
 import { getWidgetDefinition } from "../utils";
 
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null };
+  }
+
+  componentDidCatch(error) {
+    this.setState({ error });
+  }
+
+  render() {
+    if (this.state.error == null) {
+      return this.props.children;
+    }
+
+    return (
+      <div style={{ backgroundColor: "#ff8888" }}>
+        {String(this.state.error)}
+      </div>
+    );
+  }
+}
+
 export default class RunCanvas extends Component {
   constructor(props) {
     super(props);
@@ -125,14 +148,16 @@ export default class RunCanvas extends Component {
 
           return (
             <div key={i} className="Widget" style={{ left: x, top: y }}>
-              <Widget
-                mode="run"
-                device={device}
-                attribute={attribute}
-                value={value}
-                params={params}
-                {...extraProps}
-              />
+              <ErrorBoundary>
+                <Widget
+                  mode="run"
+                  device={device}
+                  attribute={attribute}
+                  value={value}
+                  params={params}
+                  {...extraProps}
+                />
+              </ErrorBoundary>
             </div>
           );
         })}
