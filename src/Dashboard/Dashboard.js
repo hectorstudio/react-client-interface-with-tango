@@ -14,7 +14,7 @@ import {
   getWidgetDefinition
 } from "./widgets/widgetDefinitions";
 
-import { canvasWidgetDefinition } from "./CanvasWidget";
+import { complexWidgetDefinition } from "./ComplexWidget";
 
 import "./Dashboard.css";
 
@@ -162,12 +162,12 @@ class Dashboard extends Component {
     const widgets = this.currentWidgets();
     const selectedWidget = this.selectedWidget();
 
-    const canvasWidgetDefinitions = this.state.canvases
+    const complexWidgetDefinitions = this.state.canvases
       .slice(1)
-      .map(canvasWidgetDefinition);
+      .map(complexWidgetDefinition);
     const widgetDefinitions = [
       ...WIDGET_DEFINITIONS,
-      ...canvasWidgetDefinitions
+      ...complexWidgetDefinitions
     ];
 
     return (
@@ -203,7 +203,11 @@ class Dashboard extends Component {
             onAddWidget={this.handleAddWidget}
           />
         ) : (
-          <RunCanvas widgets={widgets} widgetDefinitions={widgetDefinitions} />
+          <RunCanvas
+            widgets={widgets}
+            widgetDefinitions={widgetDefinitions}
+            subCanvases={this.state.canvases.slice(1)}
+          />
         )}
         {mode === "edit" && (
           <div className="Sidebar">

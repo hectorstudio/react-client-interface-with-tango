@@ -10,9 +10,34 @@ export default class RunCanvas extends Component {
   }
 
   connect() {
-    const models = this.props.widgets
+    console.log(this.props.widgets);
+    console.log(this.props.widgetDefinitions);
+    console.log(this.props.subCanvases);
+
+    const canvasModels = this.props.widgets
+      .filter(widget => widget.type.indexOf("CANVAS_") === 0) // All canvas widgets. Ugly
+      .map(widget => {
+        const canvasIndex = parseInt(widget.type.split("_")[1], 10) - 1; // Ugly, ugly, ugly
+        const canvas = this.props.subCanvases[canvasIndex];
+
+        return canvas.widgets.map(subWidget => {
+          const subDevice = (subWidget.device === "__parent__"
+            ? widget
+            : subWidget
+          ).device;
+          return subDevice + "/" + subWidget.attribute;
+        });
+      })
+      .reduce((accum, curr) => [...accum, ...curr], []);
+
+    const widgetModels = this.props.widgets
+      .filter(({ type }) => type.indexOf("CANVAS_" === -1))
       .filter(({ device }) => device) // Skip widgets without device -- revise this
       .map(({ device, attribute }) => `${device}/${attribute}`);
+
+    const models = [...canvasModels, ...widgetModels].filter( // Unique
+      (val, idx, arr) => arr.indexOf(val) === idx
+    );
 
     function socketUrl() {
       const loc = window.location;
