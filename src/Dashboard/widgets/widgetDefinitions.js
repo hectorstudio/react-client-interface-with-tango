@@ -4,6 +4,7 @@ import AttributePlotter from "./AttributePlotter";
 import AttributeRecorder from "./AttributeRecorder";
 import AttributeReadOnly from "./AttributeReadOnly";
 import Label from "./Label";
+import DeviceName from "./DeviceName";
 
 export const WIDGET_DEFINITIONS = [
   {
@@ -99,17 +100,7 @@ export const WIDGET_DEFINITIONS = [
   {
     type: "DEVICE_NAME",
     name: "Device Name",
-    component: ({ device, mode }) => {
-      if (mode === "library" || device == null) {
-        return <i>Device Name</i>;
-      }
-
-      if (device === '__parent__') {
-        return <i>Parent Device</i>;
-      }
-
-      return <span>{device}</span>;
-    },
+    component: DeviceName,
     fields: ["device"],
     params: []
   }
