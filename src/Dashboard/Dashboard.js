@@ -30,13 +30,29 @@ class Dashboard extends Component {
       sidebar: "library", // Belongs in edit component
       selectedWidgetIndex: -1, // Belongs in edit component
       selectedCanvasIndex: 0,
-      // widgets,
       canvases: [
-        { id: 0, name: "Root", widgets: [] },
-        { id: 1, name: "Another", widgets: [] },
-        { id: 2, name: "Yet another", widgets: [] }
+        {
+          id: 0,
+          name: "Root",
+          widgets: []
+        },
+        {
+          id: 1,
+          name: "Canvas 1",
+          widgets: []
+        },
+        {
+          id: 2,
+          name: "Canvas 2",
+          widgets: []
+        },
+        {
+          id: 3,
+          name: "Canvas 3",
+          widgets: []
+        }
       ],
-      deviceNames: []
+      deviceNames: [] // Not used?
     };
 
     this.toggleMode = this.toggleMode.bind(this);
@@ -180,6 +196,7 @@ class Dashboard extends Component {
               "fa-play": mode === "edit",
               "fa-pause": mode === "run"
             })}
+            disabled={this.state.selectedCanvasIndex !== 0}
           />
           <select
             style={{ marginLeft: "0.5em" }}
@@ -191,6 +208,11 @@ class Dashboard extends Component {
               </option>
             ))}
           </select>
+          {false && (
+            <button onClick={() => alert(JSON.stringify(this.state.canvases))}>
+              Dump
+            </button>
+          )}
         </div>
         {mode === "edit" ? (
           <EditCanvas
@@ -212,7 +234,10 @@ class Dashboard extends Component {
         {mode === "edit" && (
           <div className="Sidebar">
             {this.state.selectedWidgetIndex === -1 ? (
-              <Library widgetDefinitions={widgetDefinitions} />
+              <Library
+                widgetDefinitions={widgetDefinitions}
+                showCustom={this.state.selectedCanvasIndex === 0}
+              />
             ) : (
               <Inspector
                 widget={widgets[this.state.selectedWidgetIndex]}

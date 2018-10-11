@@ -9,6 +9,25 @@ import { getWidgetDefinition } from "../utils";
 const BACKSPACE = 8;
 const DELETE = 46;
 
+const WarningBadge = () => (
+  <div
+    style={{
+      position: "absolute",
+      marginLeft: "-0.6em",
+      marginTop: "-0.6em",
+      backgroundColor: "red",
+      borderRadius: "2em",
+      width: "1.2em",
+      height: "1.2em",
+      color: "white",
+      textAlign: "center",
+      zIndex: 1000,
+    }}
+  >
+    <span className="fa fa-exclamation" />
+  </div>
+);
+
 class EditWidget extends Component {
   render() {
     const { connectDragSource } = this.props;
@@ -18,6 +37,7 @@ class EditWidget extends Component {
         style={{ left: this.props.x, top: this.props.y }}
         onClick={this.props.onClick}
       >
+        {this.props.warning && <WarningBadge />}
         {this.props.children}
       </div>
     );
@@ -62,8 +82,12 @@ class EditCanvas extends Component {
     };
   }
 
+  definitionForWidget(widget) {
+    return getWidgetDefinition(this.props.widgetDefinitions, widget.type);
+  }
+
   componentForWidget(widget) {
-    return getWidgetDefinition(this.props.widgetDefinitions, widget.type).component;
+    return this.definitionForWidget(widget).component;
   }
 
   handleSelectWidget(i, event) {
@@ -104,6 +128,12 @@ class EditCanvas extends Component {
             const Widget = this.componentForWidget(widget);
             const { x, y, device, attribute, params } = widget;
 
+            // Show warning if there is no device AND the widget has a device field
+            // Not very pretty; refactor later
+            const warning =
+              device == null &&
+              this.definitionForWidget(widget).fields.indexOf("device") !== -1;
+
             return (
               <EditWidget
                 index={i}
@@ -112,6 +142,7 @@ class EditCanvas extends Component {
                 x={x}
                 y={y}
                 onClick={this.handleSelectWidget.bind(this, i)}
+                warning={warning}
               >
                 <Widget
                   device={device}

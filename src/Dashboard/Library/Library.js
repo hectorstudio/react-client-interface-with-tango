@@ -19,7 +19,7 @@ class LibraryWidget extends Component {
         </span>
         {this.props.connectDragSource(
           <div>
-            <Widget params={defaultParams} mode="library"/>
+            <Widget params={defaultParams} mode="library" />
           </div>
         )}
       </div>
@@ -64,10 +64,14 @@ export default class Library extends Component {
         {builtIn.map((definition, i) => {
           return <LibraryWidget key={i} definition={definition} />;
         })}
-        <h1>Custom</h1>
-        {custom.map((definition, i) => {
-          return <LibraryWidget key={i} definition={definition} />;
-        })}
+        {this.props.showCustom && (
+          <React.Fragment>
+            <h1>Custom</h1>
+            {custom.map((definition, i) => {
+              return <LibraryWidget key={i} definition={definition} />;
+            })}
+          </React.Fragment>
+        )}
       </div>
     );
   }
