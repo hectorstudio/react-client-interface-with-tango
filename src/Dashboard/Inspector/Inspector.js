@@ -217,7 +217,7 @@ export default class Inspector extends Component {
             </tbody>
           </table>
         )}
-        {fields.length > 0 && <hr />}
+        {paramDefinitions.length > 0 && <hr />}
         <table>
           <tbody>
             {paramDefinitions.map(({ name, description }) => (

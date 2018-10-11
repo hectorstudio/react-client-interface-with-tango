@@ -1,8 +1,8 @@
 import React from "react";
 
-import AttributePlotter from './AttributePlotter';
-import AttributeRecorder from './AttributeRecorder';
-import AttributeReadOnly from './AttributeReadOnly';
+import AttributePlotter from "./AttributePlotter";
+import AttributeRecorder from "./AttributeRecorder";
+import AttributeReadOnly from "./AttributeReadOnly";
 import Label from "./Label";
 
 export const WIDGET_DEFINITIONS = [
@@ -62,7 +62,7 @@ export const WIDGET_DEFINITIONS = [
   //     }
   //   ]
   // },
-  
+
   {
     type: "ATTRIBUTE_PLOTTER",
     name: "Attribute plotter",
@@ -92,8 +92,26 @@ export const WIDGET_DEFINITIONS = [
         type: "boolean",
         default: true,
         description: "Show grid"
-      },
+      }
     ]
+  },
+
+  {
+    type: "DEVICE_NAME",
+    name: "Device Name",
+    component: ({ device, mode }) => {
+      if (mode === "library" || device == null) {
+        return <i>Device Name</i>;
+      }
+
+      if (device === '__parent__') {
+        return <i>Parent Device</i>;
+      }
+
+      return <span>{device}</span>;
+    },
+    fields: ["device"],
+    params: []
   }
 ];
 
