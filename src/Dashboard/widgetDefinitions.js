@@ -1,5 +1,6 @@
 import React from "react";
 import { LineChart, Line, CartesianGrid, Tooltip, YAxis, XAxis, Label } from 'recharts';
+import { roundToGrid, expandToGrid } from './Dashboard';
 
 
 function randomNumber(limit) {
@@ -21,7 +22,7 @@ const recorderSampleValues = Array(100)
     value: Math.sin(i/100*Math.PI*2) - 0.5*Math.cos(i/25*Math.PI*2),
   }));
 
-  class AttributePlotter extends React.Component {
+class AttributePlotter extends React.Component {
     constructor(props) {
       super(props);
       const time = (new Date()).getTime();
@@ -35,7 +36,6 @@ const recorderSampleValues = Array(100)
       if (this.props.editMode || this.props.libraryMode) {
         return;
       }
-  
       const oldValues = this.state.values;
       const startTime = this.state.startTime;
       const newValue = newProps.value;
@@ -61,8 +61,9 @@ const recorderSampleValues = Array(100)
         <div
           style={{
             border: "1px solid lightgray",
-            padding: "0.25em",
-            fontSize: "small"
+            fontSize: "small",
+            width: expandToGrid(width) + "px",
+            height: expandToGrid(height) + "px",
           }}
         >
           <LineChart data={lastValues} width={width} height={height}>
@@ -80,6 +81,88 @@ const recorderSampleValues = Array(100)
       );
     }
   }
+
+class Attribute extends React.Component{
+
+  constructor(props) {
+    super(props);
+  };
+
+  render() {
+    const {device,
+    attribute,
+    libraryMode,
+    editMode,
+    value,
+    params: { scientific, showDevice, showAttribute }} = this.props;
+    const displayValue =
+      value == null
+        ? "-"
+        : scientific
+          ? Number(value).toExponential(2)
+          : value;
+
+    const deviceLabel = device || <i>device</i>;
+    const attributeLabel = attribute || <i>attribute</i>;
+    const labels = (showDevice ? [deviceLabel] : []).concat(
+      showAttribute ? [attributeLabel] : []
+    );
+    const label =
+      labels.length === 2 ? (
+        <span>
+          {deviceLabel}/{attributeLabel}
+        </span>
+      ) : (
+        labels.length === 1 ? labels[0] : null
+      );
+      console.log(this.elem)
+    return (
+      <div style={{ backgroundColor: "#eee", padding: "0.5em" }}>
+        {label}
+        {showDevice || showAttribute ? ": " : ""}
+        {libraryMode || editMode ? <i>value</i> : displayValue}
+      </div>
+    );
+  }
+
+/*   ({
+    device,
+    attribute,
+    libraryMode,
+    editMode,
+    value,
+    params: { scientific, showDevice, showAttribute }
+  }) => {
+    const displayValue =
+      value == null
+        ? "-"
+        : scientific
+          ? Number(value).toExponential(2)
+          : value;
+
+    const deviceLabel = device || <i>device</i>;
+    const attributeLabel = attribute || <i>attribute</i>;
+    const labels = (showDevice ? [deviceLabel] : []).concat(
+      showAttribute ? [attributeLabel] : []
+    );
+    const label =
+      labels.length === 2 ? (
+        <span>
+          {deviceLabel}/{attributeLabel}
+        </span>
+      ) : (
+        labels.length === 1 ? labels[0] : null
+      );
+
+    return (
+      <div style={{ backgroundColor: "#eee", padding: "0.5em" }}>
+        {label}
+        {showDevice || showAttribute ? ": " : ""}
+        {libraryMode || editMode ? <i>value</i> : displayValue}
+      </div>
+    );
+  } */
+}
 
 class AttributeRecorder extends React.Component {
   constructor(props) {
@@ -162,46 +245,7 @@ export const WIDGET_DEFINITIONS = [
   {
     type: "ATTRIBUTE_READ_ONLY",
     name: "Read-Only Attribute",
-    component: ({
-      device,
-      attribute,
-      libraryMode,
-      editMode,
-      value,
-      params: { scientific, showDevice, showAttribute }
-    }) => {
-      const displayValue =
-        value == null
-          ? "-"
-          : scientific
-            ? Number(value).toExponential(2)
-            : value;
-
-      // Ugly logic to deal with all combinations of options and device/attribute presence
-      // This might be simply an unnecessary feature, so don't spend time on improving it yet
-
-      const deviceLabel = device || <i>device</i>;
-      const attributeLabel = attribute || <i>attribute</i>;
-      const labels = (showDevice ? [deviceLabel] : []).concat(
-        showAttribute ? [attributeLabel] : []
-      );
-      const label =
-        labels.length === 2 ? (
-          <span>
-            {deviceLabel}/{attributeLabel}
-          </span>
-        ) : (
-          labels.length === 1 ? labels[0] : null
-        );
-
-      return (
-        <div style={{ backgroundColor: "#eee", padding: "0.5em" }}>
-          {label}
-          {showDevice || showAttribute ? ": " : ""}
-          {libraryMode || editMode ? <i>value</i> : displayValue}
-        </div>
-      );
-    },
+    component: Attribute,
     fields: ["device", "attribute"],
     params: [
       {

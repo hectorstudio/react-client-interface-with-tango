@@ -13,7 +13,7 @@ import { WIDGET_DEFINITIONS, getWidgetDefinition } from "./widgetDefinitions";
 
 import "./Dashboard.css";
 
-
+const GRID_TILE_SIZE = 20;
 
 class Dashboard extends Component {
   constructor(props) {
@@ -66,8 +66,8 @@ class Dashboard extends Component {
     );
     const widget = {
       type: definition.type,
-      x,
-      y,
+      x: roundToGrid(x),
+      y: roundToGrid(y),
       device: null,
       attribute: null,
       params
@@ -102,12 +102,13 @@ class Dashboard extends Component {
     this.updateWidgets(widgets);
   }
 
+
   handleMoveWidget(index, x, y) {
     const widget = this.state.widgets[index];
     const proposedPos = { x: widget.x + x, y: widget.y + y };
     const newPos = {
-      x: Math.max(0, proposedPos.x),
-      y: Math.max(0, proposedPos.y)
+      x: Math.max(0, roundToGrid(proposedPos.x)),
+      y: Math.max(0, roundToGrid(proposedPos.y)) 
     };
     this.updateWidget(index, newPos);
   }
@@ -169,6 +170,14 @@ class Dashboard extends Component {
       </div>
     );
   }
+}
+
+export function roundToGrid(val){
+  return val % GRID_TILE_SIZE >= GRID_TILE_SIZE/2 ? val + (GRID_TILE_SIZE - ((val) % GRID_TILE_SIZE)) : val - (val % GRID_TILE_SIZE);
+}
+
+export function expandToGrid(val){
+  return val + (GRID_TILE_SIZE - ((val) % GRID_TILE_SIZE));
 }
 
 export default DragDropContext(HTML5Backend)(Dashboard);
