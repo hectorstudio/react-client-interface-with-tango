@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getWidgetDefinition } from "./widgets/widgetDefinitions";
+import { getWidgetDefinition } from "../widgets/widgetDefinitions";
 
 class MiniCanvas extends Component {
   componentForWidget(widget) {
