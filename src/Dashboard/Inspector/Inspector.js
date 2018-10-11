@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { getWidgetDefinition } from "../widgetDefinitions";
 import createGQLClient from "graphql-client";
+import { getWidgetDefinition } from "../utils";
 
 export default class Inspector extends Component {
   constructor(props) {
@@ -66,7 +66,10 @@ export default class Inspector extends Component {
 
   inputForParam(param, value) {
     const type = this.props.widget.type;
-    const widgetDefinition = getWidgetDefinition(type);
+    const widgetDefinition = getWidgetDefinition(
+      this.props.widgetDefinitions,
+      type
+    );
     const paramDefinition = widgetDefinition.params.find(
       paramDef => paramDef.name === param
     );
@@ -137,10 +140,44 @@ export default class Inspector extends Component {
   }
 
   render() {
-    const { type, params, device, attribute } = this.props.widget;
-    const definition = getWidgetDefinition(type);
+    const { widget, widgetDefinitions } = this.props;
+
+    if (widget == null) {
+      return null;
+    }
+
+    const { type, params, device, attribute } = widget;
+    const definition = getWidgetDefinition(widgetDefinitions, type);
     const fields = definition.fields;
     const paramDefinitions = definition.params;
+
+    const attributeChooser =
+      device === "__parent__" ? (
+        <input
+          className="form-control"
+          type="text"
+          value={attribute || ""}
+          onChange={this.handleSelectAttribute}
+        />
+      ) : (
+        <select
+          className="form-control"
+          value={attribute || ""}
+          onChange={this.handleSelectAttribute}
+          disabled={device == null}
+        >
+          {attribute == null && (
+            <option value="" disabled>
+              {device ? "None" : "Select Device First"}
+            </option>
+          )}
+          {this.state.attributeNames.map((name, i) => (
+            <option key={i} value={name}>
+              {name}
+            </option>
+          ))}
+        </select>
+      );
 
     return (
       <div className="Inspector">
@@ -162,6 +199,9 @@ export default class Inspector extends Component {
                           None
                         </option>
                       )}
+                      {this.props.isRootCanvas === false && (
+                        <option value="__parent__">Parent Device</option>
+                      )}
                       {this.state.deviceNames.map((name, i) => (
                         <option key={i} value={name}>
                           {name}
@@ -174,31 +214,13 @@ export default class Inspector extends Component {
               {fields.indexOf("attribute") !== -1 && (
                 <tr>
                   <td>Attribute:</td>
-                  <td>
-                    <select
-                      className="form-control"
-                      value={attribute || ""}
-                      onChange={this.handleSelectAttribute}
-                      disabled={device == null}
-                    >
-                      {attribute == null && (
-                        <option value="" disabled>
-                          {device ? "None" : "Select Device First"}
-                        </option>
-                      )}
-                      {this.state.attributeNames.map((name, i) => (
-                        <option key={i} value={name}>
-                          {name}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
+                  <td>{attributeChooser}</td>
                 </tr>
               )}
             </tbody>
           </table>
         )}
-        {fields.length > 0 && <hr />}
+        {paramDefinitions.length * fields.length > 0 && <hr />}
         <table>
           <tbody>
             {paramDefinitions.map(({ name, description }) => (

@@ -2,11 +2,31 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import { DragSource, DropTarget } from "react-dnd";
 
-import { DashboardDNDTypes, getWidgetDefinition } from "../widgetDefinitions";
+import { DashboardDNDTypes } from "../widgets/widgetDefinitions";
 import dndTypes from "../dndTypes";
+import { getWidgetDefinition } from "../utils";
 
 const BACKSPACE = 8;
 const DELETE = 46;
+
+const WarningBadge = () => (
+  <div
+    style={{
+      position: "absolute",
+      marginLeft: "-10px",
+      marginTop: "-10px",
+      backgroundColor: "red",
+      borderRadius: "10px",
+      width: "20px",
+      height: "20px",
+      color: "white",
+      textAlign: "center",
+      zIndex: 1000,
+    }}
+  >
+    <span className="fa fa-exclamation" />
+  </div>
+);
 
 class EditWidget extends Component {
   render() {
@@ -17,6 +37,7 @@ class EditWidget extends Component {
         style={{ left: this.props.x, top: this.props.y }}
         onClick={this.props.onClick}
       >
+        {this.props.warning && <WarningBadge />}
         {this.props.children}
       </div>
     );
@@ -26,7 +47,8 @@ class EditWidget extends Component {
 const editWidgetSource = {
   beginDrag(props) {
     return {
-      index: props.index
+      index: props.index,
+      warning: props.warning,
     };
   }
 };
@@ -46,20 +68,33 @@ const editCanvasTarget = {
   canDrop(props, monitor) {
     return true;
   },
+
   drop(props, monitor, component) {
     const { x, y } = monitor.getDifferenceFromInitialOffset();
-    const { index } = monitor.getItem();
-    props.onMoveWidget(index, x, y);
+    const { index, warning } = monitor.getItem();
+    
+    // This is a fairly ugly hack to compensate for the fact that
+    // a warning badge offsets the position by -10 px hor/ver
+    
+    const compensation = warning ? 10 : 0;
+    props.onMoveWidget(index, x + compensation, y + compensation);
   }
 };
 
 class EditCanvas extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      mouseIsDown: false
+    };
+  }
+
+  definitionForWidget(widget) {
+    return getWidgetDefinition(this.props.widgetDefinitions, widget.type);
   }
 
   componentForWidget(widget) {
-    return getWidgetDefinition(widget.type).component;
+    return this.definitionForWidget(widget).component;
   }
 
   handleSelectWidget(i, event) {
@@ -91,7 +126,7 @@ class EditCanvas extends Component {
           onKeyDown={this.handleKeyDown.bind(this)}
           tabIndex="0"
         >
-          <div className="Placeholder" style={{opacity: hasWidgets ? 0 : 1}}>
+          <div className="Placeholder" style={{ opacity: hasWidgets ? 0 : 1 }}>
             Add widgets by dragging them from the library and dropping them on
             the canvas.
           </div>
@@ -99,6 +134,12 @@ class EditCanvas extends Component {
           {this.props.widgets.map((widget, i) => {
             const Widget = this.componentForWidget(widget);
             const { x, y, device, attribute, params } = widget;
+
+            // Show warning if there is no device AND the widget has a device field
+            // Not very pretty; refactor later
+            const warning =
+              device == null &&
+              this.definitionForWidget(widget).fields.indexOf("device") !== -1;
 
             return (
               <EditWidget
@@ -108,12 +149,13 @@ class EditCanvas extends Component {
                 x={x}
                 y={y}
                 onClick={this.handleSelectWidget.bind(this, i)}
+                warning={warning}
               >
                 <Widget
                   device={device}
                   attribute={attribute}
                   params={params}
-                  editMode={true}
+                  mode="edit"
                 />
               </EditWidget>
             );

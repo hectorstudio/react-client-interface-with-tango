@@ -1,5 +1,28 @@
 import React, { Component } from "react";
-import { getWidgetDefinition } from "../widgetDefinitions";
+import { getWidgetDefinition } from "../utils";
+
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null };
+  }
+
+  componentDidCatch(error) {
+    this.setState({ error });
+  }
+
+  render() {
+    if (this.state.error == null) {
+      return this.props.children;
+    }
+
+    return (
+      <div style={{ backgroundColor: "#ff8888" }}>
+        {String(this.state.error)}
+      </div>
+    );
+  }
+}
 
 export default class RunCanvas extends Component {
   constructor(props) {
@@ -10,9 +33,38 @@ export default class RunCanvas extends Component {
   }
 
   connect() {
-    const models = this.props.widgets
-      .filter(({ device }) => device) // Skip widgets without device -- revise this
+    const canvasModels = this.props.widgets
+      .filter(widget => widget.type.indexOf("CANVAS_") === 0) // All canvas widgets. Ugly
+      .filter(widget => widget.device != null)
+      .map(widget => {
+        const canvasIndex = parseInt(widget.type.split("_")[1], 10) - 1; // Ugly, ugly, ugly
+        const canvas = this.props.subCanvases[canvasIndex];
+
+        return canvas.widgets
+          .map(subWidget => {
+            const device = (subWidget.device === "__parent__"
+              ? widget
+              : subWidget
+            ).device;
+            return [device, subWidget.attribute];
+          })
+          .filter(([device, attribute]) => device != null && attribute != null)
+          .map(([device, attribute]) => `${device}/${attribute}`);
+      })
+      .reduce((accum, curr) => [...accum, ...curr], []);
+
+    const widgetModels = this.props.widgets
+      .filter(({ type }) => type.indexOf("CANVAS_" === -1))
+      .filter(({ device }) => device != null) // Skip widgets without device -- revise this
       .map(({ device, attribute }) => `${device}/${attribute}`);
+
+    console.log(canvasModels);
+    console.log(widgetModels);
+
+    const models = [...canvasModels, ...widgetModels].filter(
+      // Unique
+      (val, idx, arr) => arr.indexOf(val) === idx
+    );
 
     function socketUrl() {
       const loc = window.location;
@@ -72,7 +124,8 @@ export default class RunCanvas extends Component {
   }
 
   componentForWidget(widget) {
-    return getWidgetDefinition(widget.type).component;
+    return getWidgetDefinition(this.props.widgetDefinitions, widget.type)
+      .component;
   }
 
   valueForModel(device, attribute) {
@@ -88,14 +141,23 @@ export default class RunCanvas extends Component {
           const { x, y, device, attribute, params } = widget;
           const value = this.valueForModel(device, attribute);
 
+          const extraProps =
+            widget.type.indexOf("CANVAS_") === 0
+              ? { attributes: this.state.attributes }
+              : {};
+
           return (
             <div key={i} className="Widget" style={{ left: x, top: y }}>
-              <Widget
-                device={device}
-                attribute={attribute}
-                value={value}
-                params={params}
-              />
+              <ErrorBoundary>
+                <Widget
+                  mode="run"
+                  device={device}
+                  attribute={attribute}
+                  value={value}
+                  params={params}
+                  {...extraProps}
+                />
+              </ErrorBoundary>
             </div>
           );
         })}
