@@ -36,20 +36,20 @@ class MiniCanvas extends Component {
 // "Canvas widget" is a fairly misleading name
 // It is a widget consisting of a canvas, not a widget residing in one
 
-function canvasWidgetComponent(canvas) {
-  return class CanvasWidget extends Component {
+function complexWidgetComponent(canvas) {
+  return class ComplexWidget extends Component {
     render() {
       return <MiniCanvas widgets={canvas.widgets} />;
     }
   };
 }
 
-export function canvasWidgetDefinition(canvas) {
+export function complexWidgetDefinition(canvas) {
   const { id, name } = canvas;
   return {
     type: `CANVAS_${id}`,
     name,
-    component: canvasWidgetComponent(canvas),
+    component: complexWidgetComponent(canvas),
     fields: ["device"],
     params: []
   };
