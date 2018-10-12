@@ -59,7 +59,7 @@
   grid-column: 2;
 }
 
-.Dashboard .Header {
+.Dashboard .TopBar {
   padding: 0.5em;
   background-image: linear-gradient(to bottom, #eee, #ccc);
   grid-row: 1;
@@ -76,6 +76,7 @@
   font-weight: bold;
   color: #999;
   margin-bottom: 1em;
+  border-bottom: 1px solid #ddd;
 }
 
 .Dashboard .Library .LibraryWidget {
