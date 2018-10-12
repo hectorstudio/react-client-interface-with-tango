@@ -13,7 +13,7 @@ import { WIDGET_DEFINITIONS, getWidgetDefinition } from "./widgetDefinitions";
 
 import "./Dashboard.css";
 
-const GRID_TILE_SIZE = 20;
+const GRID_TILE_SIZE = 15;
 
 class Dashboard extends Component {
   constructor(props) {
