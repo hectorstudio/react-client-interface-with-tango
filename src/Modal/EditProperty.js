@@ -12,9 +12,8 @@ class EditProperty extends Component{
         super(props);
         this.onEditProperty = this.onEditProperty.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        //a bit ugly. Is there a better way of doing it?
-        const prop = this.props.properties.filter(prop => prop.name === this.props.entity);
-        this.state = { value: prop[0].value };
+        const prop = this.props.properties.find(prop => prop.name === this.props.entity);
+        this.state = { value: prop.value };
     }
     render(){
         const {entity, closeDialog} = this.props; 
