@@ -50,7 +50,8 @@
   grid-column: -1 / 1;
 }
 
-.Dashboard .Widget {
+.Dashboard .Canvas.run  .Widget,
+.Dashboard .Canvas.edit .Widget {
   position: absolute;
 }
 
