@@ -36,7 +36,20 @@ class MiniCanvas extends Component {
       ? {
           position: "relative",
           height: "100px",
-          overflow: "hidden"
+          overflow: "hidden",
+          background: `repeating-linear-gradient(
+            rgb(232, 239, 249),
+            rgb(232, 239, 249) 1px,
+            rgba(0, 0, 0, 0) 1px,
+            rgba(0, 0, 0, 0) 15px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            rgb(232, 239, 249),
+            rgb(232, 239, 249) 1px,
+            rgba(0, 0, 0, 0) 1px,
+            rgba(0, 0, 0, 0) 15px
+          )`
         }
       : { width: "300px", height: "200px" };
 
