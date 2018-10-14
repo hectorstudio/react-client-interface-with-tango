@@ -9,6 +9,8 @@ import {
   Label
 } from "recharts";
 
+import { roundToGrid, expandToGrid } from '../Dashboard';
+
 const plotterSampleValues = Array(100)
   .fill(0)
   .map((_, i) => ({
@@ -47,40 +49,29 @@ export default class AttributePlotter extends React.Component {
     const liveMode = this.props.mode !== "edit" && this.props.mode !== "library";
     const values = liveMode ? this.state.values : plotterSampleValues;
 
-    const { nbrDataPoints, width, height, showGrid } = this.props.params;
+    const {nbrDataPoints, width, height, showGrid, yAxisLabel, strokeWidth} = this.props.params;
     const lastValues = nbrDataPoints === 0 ? [] : values.slice(-nbrDataPoints);
     return (
       <div
         style={{
           border: "1px solid lightgray",
           padding: "0.25em",
-          fontSize: "small"
+          fontSize: "small",
+          width: expandToGrid(width) + "px",
+          height: expandToGrid(height) + "px",
         }}
       >
         <LineChart data={lastValues} width={width} height={height}>
-          {liveMode ? (
-            <XAxis dataKey="time">
-              <Label offset="-3" position="insideBottom" value="Δs" />
-            </XAxis>
-          ) : null}
-          <YAxis />
-          {liveMode ? <Tooltip /> : null}
-          {showGrid ? (
-            <CartesianGrid
-              vertical={false}
-              stroke="#eee"
-              strokeDasharray="5 5"
-            />
-          ) : null}
-          <Line
-            dot={false}
-            isAnimationActive={false}
-            type="linear"
-            dataKey="value"
-            stroke="#ff7300"
-            yAxisId={0}
-          />
-        </LineChart>
+            {liveMode && <XAxis dataKey="time">
+              <Label  offset={-3} position="insideBottom" value="Δs"/>
+            </XAxis>}
+            <YAxis> 
+              {liveMode && <Label angle={-90} position="insideLeft" value={yAxisLabel}/> }
+            </YAxis>
+            {liveMode && <Tooltip/>}
+            {showGrid && <CartesianGrid vertical={false} stroke="#eee" strokeDasharray="5 5" /> }
+            <Line dot={false} isAnimationActive={false} type='linear' dataKey="value" strokeWidth={strokeWidth} stroke="#ff7300" yAxisId={0}/>
+          </LineChart>
       </div>
     );
   }

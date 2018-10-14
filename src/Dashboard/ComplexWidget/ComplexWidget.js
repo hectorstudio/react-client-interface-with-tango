@@ -7,14 +7,14 @@ class MiniCanvas extends Component {
   }
 
   deviceForWidget(widget) {
-    return widget.device === '__parent__'? this.props.device : widget.device;
+    return widget.device === "__parent__" ? this.props.device : widget.device;
   }
 
   valueForWidget(widget) {
     if (this.props.mode !== "run") {
       return null;
     }
-    
+
     const device = this.deviceForWidget(widget);
     const attribute = widget.attribute;
     const key = `${device}/${attribute}`;
@@ -30,30 +30,61 @@ class MiniCanvas extends Component {
     const minX = widgets.map(({ x }) => x).reduce((a, b) => Math.min(a, b));
     const minY = widgets.map(({ y }) => y).reduce((a, b) => Math.min(a, b));
 
-    return (
-      <div className="Canvas" style={{ width: "300px", height: "200px" }}>
-        {widgets.map((widget, i) => {
-          const Widget = this.componentForWidget(widget);
-          const device = this.deviceForWidget(widget);
-          const value = this.valueForWidget(widget);
-          const { x, y, attribute, params } = widget;
+    const isLibrary = this.props.mode === "library";
 
-          return (
-            <div
-              key={i}
-              className={"Widget"}
-              style={{ left: x - minX, top: y - minY }}
-            >
-              <Widget
-                device={device}
-                attribute={attribute}
-                params={params}
-                mode={this.props.mode}
-                value={value}
-              />
-            </div>
-          );
-        })}
+    const style = isLibrary
+      ? {
+          position: "relative",
+          height: "100px",
+          overflow: "hidden"
+        }
+      : { width: "300px", height: "200px" };
+
+    const FadeOut = () => (
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          boxShadow: "inset -10px -10px 20px 0px white",
+          zIndex: 10000
+        }}
+      />
+    );
+
+    return (
+      <div style={style}>
+        {isLibrary && <FadeOut />}
+        <div className="Canvas">
+          {widgets.map((widget, i) => {
+            const Widget = this.componentForWidget(widget);
+            const device = this.deviceForWidget(widget);
+            const value = this.valueForWidget(widget);
+            const { x, y, attribute, params } = widget;
+
+            return (
+              <div
+                key={i}
+                className={"Widget"}
+                style={{
+                  position: "absolute",
+                  left: x - minX,
+                  top: y - minY
+                }}
+              >
+                <Widget
+                  device={device}
+                  attribute={attribute}
+                  params={params}
+                  mode={this.props.mode}
+                  value={value}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }

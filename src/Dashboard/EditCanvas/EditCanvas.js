@@ -30,6 +30,9 @@ const WarningBadge = () => (
 
 class EditWidget extends Component {
   render() {
+    if (this.props.isDragging){
+      return null;
+    }
     const { connectDragSource } = this.props;
     return connectDragSource(
       <div

@@ -93,7 +93,19 @@ export const WIDGET_DEFINITIONS = [
         type: "boolean",
         default: true,
         description: "Show grid"
-      }
+      },
+      {
+        name: "yAxisLabel",
+        type: "string",
+        default: "",
+        description: "Label y-axis"
+      },
+      {
+        name: "strokeWidth",
+        type: "number",
+        default: 1,
+        description: "Stroke width"
+      },
     ]
   },
 

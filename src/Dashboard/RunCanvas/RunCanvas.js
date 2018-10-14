@@ -135,7 +135,7 @@ export default class RunCanvas extends Component {
 
   render() {
     return (
-      <div className="Canvas">
+      <div className="Canvas run">
         {this.props.widgets.map((widget, i) => {
           const Widget = this.componentForWidget(widget);
           const { x, y, device, attribute, params } = widget;
