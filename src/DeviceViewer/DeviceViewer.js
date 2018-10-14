@@ -24,6 +24,7 @@ import {
 
 import { getDeviceIsLoading } from '../selectors/loadingStatus';
 import { getActiveTab, getEnabledDisplevels } from '../selectors/deviceDetail';
+import { hasError } from '../selectors/error';
 
 import { setDataFormat, setTab } from '../actions/deviceList';
 
@@ -109,12 +110,16 @@ class DeviceViewer extends Component {
   }
 
   innerContent() {
+    if (this.props.hasError){
+      return null;
+    }
     if (this.props.loading) {
       return <Spinner size={4}/>;
     }
 
     const {
       loading,
+      hasError,
       onSelectTab,
       selectedTab,
       currentState,
@@ -232,6 +237,7 @@ function mapStateToProps(state) {
     enabledList: getEnabledDisplevels(state),
 
     displevels: getDispLevels(state),
+    hasError: hasError(state),
   };
 }
 
