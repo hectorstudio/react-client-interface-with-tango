@@ -21,7 +21,7 @@ const WarningBadge = () => (
       height: "20px",
       color: "white",
       textAlign: "center",
-      zIndex: 1000,
+      zIndex: 1000
     }}
   >
     <span className="fa fa-exclamation" />
@@ -51,7 +51,7 @@ const editWidgetSource = {
   beginDrag(props) {
     return {
       index: props.index,
-      warning: props.warning,
+      warning: props.warning
     };
   }
 };
@@ -75,10 +75,10 @@ const editCanvasTarget = {
   drop(props, monitor, component) {
     const { x, y } = monitor.getDifferenceFromInitialOffset();
     const { index, warning } = monitor.getItem();
-    
+
     // This is a fairly ugly hack to compensate for the fact that
     // a warning badge offsets the position by -10 px hor/ver
-    
+
     const compensation = warning ? 10 : 0;
     props.onMoveWidget(index, x + compensation, y + compensation);
   }
@@ -138,11 +138,10 @@ class EditCanvas extends Component {
             const Widget = this.componentForWidget(widget);
             const { x, y, device, attribute, params } = widget;
 
-            // Show warning if there is no device AND the widget has a device field
-            // Not very pretty; refactor later
+            const fields = this.definitionForWidget(widget).fields;
             const warning =
-              device == null &&
-              this.definitionForWidget(widget).fields.indexOf("device") !== -1;
+              (device == null && fields.indexOf("device") !== -1) ||
+              (attribute == null && fields.indexOf("attribute") !== -1);
 
             return (
               <EditWidget

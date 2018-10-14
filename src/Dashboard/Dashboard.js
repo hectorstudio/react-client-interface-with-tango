@@ -92,11 +92,13 @@ class Dashboard extends Component {
       }),
       {}
     );
+
+    const device = this.isRootCanvas() ? null : '__parent__';
     const widget = {
       type: definition.type,
+      device,
       x: roundToGrid(x),
       y: roundToGrid(y),
-      device: null,
       attribute: null,
       params
     };
