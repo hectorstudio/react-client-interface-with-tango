@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import classNames from 'classnames';
-import { Helmet } from 'react-helmet';
-import 'font-awesome/css/font-awesome.min.css';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import classNames from "classnames";
+import { Helmet } from "react-helmet";
+import "font-awesome/css/font-awesome.min.css";
 
-import AttributeTable from './AttributeTable/AttributeTable';
-import CommandTable from './CommandTable/CommandTable';
-import PropertyTable from './PropertyTable/PropertyTable';
-import ServerInfo from './ServerInfo/ServerInfo';
+import AttributeTable from "./AttributeTable/AttributeTable";
+import CommandTable from "./CommandTable/CommandTable";
+import PropertyTable from "./PropertyTable/PropertyTable";
+import ServerInfo from "./ServerInfo/ServerInfo";
 
-import Spinner from '../Spinner/Spinner';
+import Spinner from "../Spinner/Spinner";
 
 import {
   getCurrentDeviceName,
@@ -18,23 +18,21 @@ import {
   getCurrentDeviceHasAttributes,
   getCurrentDeviceHasProperties,
   getCurrentDeviceHasCommands,
-  getDispLevels,
-} from '../selectors/currentDevice';
+  getDispLevels
+} from "../selectors/currentDevice";
 
+import { getDeviceIsLoading } from "../selectors/loadingStatus";
+import { getActiveTab, getEnabledDisplevels } from "../selectors/deviceDetail";
 
-import { getDeviceIsLoading } from '../selectors/loadingStatus';
-import { getActiveTab, getEnabledDisplevels } from '../selectors/deviceDetail';
-import { hasError } from '../selectors/error';
-
-import { setDataFormat, setTab } from '../actions/deviceList';
+import { setDataFormat, setTab } from "../actions/deviceList";
 
 import {
   enableDisplevel,
   disableDisplevel,
   selectDevice
-} from '../actions/tango';
+} from "../actions/tango";
 
-import './DeviceViewer.css';
+import "./DeviceViewer.css";
 
 class DeviceMenu extends Component {
   render() {
@@ -43,39 +41,30 @@ class DeviceMenu extends Component {
       hasAttributes,
       hasCommands,
       selectedTab,
-      onSelectTab,
+      onSelectTab
     } = this.props;
 
-    const mask = [
-      true,
-      hasProperties,
-      hasAttributes,
-      hasCommands
-    ];
+    const mask = [true, hasProperties, hasAttributes, hasCommands];
 
-    const tabTitles = ['Server', 'Properties', 'Attributes', 'Commands'];
+    const tabTitles = ["Server", "Properties", "Attributes", "Commands"];
     const tabs = tabTitles.map((title, i) => {
       const name = title.toLowerCase();
-      return !mask[i]
-        ? null
-        : (
-          <li className='nav-item' key={name}>
-            <a
-              href={`#${name}`}
-              className={classNames('nav-link', { active: name === selectedTab })}
-              onClick={onSelectTab.bind(null, name)}
-            >
-              {title}
-            </a>
-          </li>
-        );
+      return !mask[i] ? null : (
+        <li className="nav-item" key={name}>
+          <a
+            href={`#${name}`}
+            className={classNames("nav-link", { active: name === selectedTab })}
+            onClick={onSelectTab.bind(null, name)}
+          >
+            {title}
+          </a>
+        </li>
+      );
     });
 
     return (
       <div className="DeviceMenu">
-        <ul className='nav nav-tabs section-chooser'>
-          {tabs}
-        </ul>
+        <ul className="nav nav-tabs section-chooser">{tabs}</ul>
       </div>
     );
   }
@@ -110,16 +99,12 @@ class DeviceViewer extends Component {
   }
 
   innerContent() {
-    if (this.props.hasError){
-      return null;
-    }
     if (this.props.loading) {
-      return <Spinner size={4}/>;
+      return <Spinner size={4} />;
     }
 
     const {
       loading,
-      hasError,
       onSelectTab,
       selectedTab,
       currentState,
@@ -127,36 +112,39 @@ class DeviceViewer extends Component {
       displevels,
       enabledList,
       enableDisplevel,
-      disableDisplevel,
+      disableDisplevel
     } = this.props;
-    
+
     const QualityIndicator = ({ state }) => {
-      const sub = {
-        'ON': 'on',
-        'OFF': 'off',
-        'CLOSE': 'close',
-        'OPEN': 'open',
-        'INSERT': 'insert',
-        'EXTRACT': 'extract',
-        'MOVING': 'moving',
-        'STANDBY': 'standy',
-        'FAULT': 'fault',
-        'INIT': 'init',
-        'RUNNING': 'running',
-        'ALARM': 'alarm',
-        'DISABLE': 'disable',
-        'UNKNOWN': 'unknown'
-      }[state] || 'invalid';
-      return <span
-        className={`state state-${sub}`}
-        title={state}>● </span>;
+      const sub =
+        {
+          ON: "on",
+          OFF: "off",
+          CLOSE: "close",
+          OPEN: "open",
+          INSERT: "insert",
+          EXTRACT: "extract",
+          MOVING: "moving",
+          STANDBY: "standy",
+          FAULT: "fault",
+          INIT: "init",
+          RUNNING: "running",
+          ALARM: "alarm",
+          DISABLE: "disable",
+          UNKNOWN: "unknown"
+        }[state] || "invalid";
+      return (
+        <span className={`state state-${sub}`} title={state}>
+          ●{" "}
+        </span>
+      );
     };
 
     const views = {
-      'server': ServerInfo,
-      'properties': PropertyTable,
-      'attributes': AttributeTable,
-      'commands': CommandTable,
+      server: ServerInfo,
+      properties: PropertyTable,
+      attributes: AttributeTable,
+      commands: CommandTable
     };
 
     const CurrentView = views[selectedTab];
@@ -168,10 +156,15 @@ class DeviceViewer extends Component {
         </Helmet>
         <div className="device-header">
           <QualityIndicator state={currentState} /> {deviceName}
+          {displevels.length > 1 && (
+            <DisplevelBox
+              displevels={displevels}
+              enabledList={enabledList}
+              enableDisplevel={enableDisplevel}
+              disableDisplevel={disableDisplevel}
+            />
+          )}
         </div>
-        {displevels.length > 1 &&
-          <DisplevelBox displevels={displevels} enabledList={enabledList} enableDisplevel={enableDisplevel} disableDisplevel={disableDisplevel} />
-        }
         <div className="device-body">
           <DeviceMenu
             selectedTab={selectedTab}
@@ -181,7 +174,7 @@ class DeviceViewer extends Component {
             hasCommands={this.props.hasCommands}
           />
           <div className="device-view">
-            <CurrentView/>
+            <CurrentView />
           </div>
         </div>
       </div>
@@ -189,16 +182,11 @@ class DeviceViewer extends Component {
   }
 
   render() {
-    return (
-      <div className="DeviceViewer">
-        {this.innerContent()}
-      </div>
-    );
+    return <div className="DeviceViewer">{this.innerContent()}</div>;
   }
 }
 
 class DisplevelBox extends Component {
-
   handleInputChange(name, e) {
     if (e.target.checked) {
       this.props.enableDisplevel(name);
@@ -208,18 +196,19 @@ class DisplevelBox extends Component {
   }
 
   render() {
-    const inputs = this.props.displevels.map((name, i) =>
-      <span className="checkboxes" key={i}>
-        <label>
-          <input key={i} type="checkbox" checked={this.props.enabledList.indexOf(name) !== -1} onChange={this.handleInputChange.bind(this, name)} />
-          {name}
-        </label>
-      </span>
-    );
+    const inputs = this.props.displevels.map((name, i) => (
+      <label key={i} for={`displevel_${name}`}>
+        {name}
+        <input
+          id={`displevel_${name}`}
+          type="checkbox"
+          checked={this.props.enabledList.indexOf(name) !== -1}
+          onChange={this.handleInputChange.bind(this, name)}
+        />
+      </label>
+    ));
 
-    return <span className="layout">
-      {inputs}
-    </span>;
+    return <div className="DisplevelBox">{inputs}</div>;
   }
 }
 
@@ -236,8 +225,7 @@ function mapStateToProps(state) {
     deviceName: getCurrentDeviceName(state),
     enabledList: getEnabledDisplevels(state),
 
-    displevels: getDispLevels(state),
-    hasError: hasError(state),
+    displevels: getDispLevels(state)
   };
 }
 
@@ -245,8 +233,8 @@ function mapDispatchToProps(dispatch) {
   return {
     onSelectDevice: device => dispatch(selectDevice(device)),
     onSelectTab: tab => dispatch(setTab(tab)),
-    enableDisplevel: (displevel) => dispatch(enableDisplevel(displevel)),
-    disableDisplevel: (displevel) => dispatch(disableDisplevel(displevel)),
+    enableDisplevel: displevel => dispatch(enableDisplevel(displevel)),
+    disableDisplevel: displevel => dispatch(disableDisplevel(displevel))
   };
 }
 
