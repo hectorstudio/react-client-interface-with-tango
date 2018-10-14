@@ -16,6 +16,7 @@ import {
 
 import { complexWidgetDefinition } from "./ComplexWidget/ComplexWidget";
 
+const GRID_TILE_SIZE = 15;
 import "./Dashboard.css";
 
 const DEFAULT_CANVASES = [
@@ -95,9 +96,9 @@ class Dashboard extends Component {
     const device = this.isRootCanvas() ? null : '__parent__';
     const widget = {
       type: definition.type,
-      x,
-      y,
       device,
+      x: roundToGrid(x),
+      y: roundToGrid(y),
       attribute: null,
       params
     };
@@ -139,6 +140,7 @@ class Dashboard extends Component {
     this.updateWidgets(widgets);
   }
 
+
   currentWidgets() {
     const { canvases, selectedCanvasIndex } = this.state;
     const canvas = canvases[selectedCanvasIndex];
@@ -149,13 +151,12 @@ class Dashboard extends Component {
     const widgets = this.currentWidgets();
     return widgets[this.state.selectedWidgetIndex];
   }
-
   handleMoveWidget(index, x, y) {
     const widget = this.currentWidgets()[index];
     const proposedPos = { x: widget.x + x, y: widget.y + y };
     const newPos = {
-      x: Math.max(0, proposedPos.x),
-      y: Math.max(0, proposedPos.y)
+      x: Math.max(0, roundToGrid(proposedPos.x)),
+      y: Math.max(0, roundToGrid(proposedPos.y)) 
     };
     this.updateWidget(index, newPos);
   }
@@ -265,6 +266,14 @@ class Dashboard extends Component {
       </div>
     );
   }
+}
+
+export function roundToGrid(val){
+  return val % GRID_TILE_SIZE >= GRID_TILE_SIZE/2 ? val + (GRID_TILE_SIZE - ((val) % GRID_TILE_SIZE)) : val - (val % GRID_TILE_SIZE);
+}
+
+export function expandToGrid(val){
+  return val + (GRID_TILE_SIZE - ((val) % GRID_TILE_SIZE));
 }
 
 export default DragDropContext(HTML5Backend)(Dashboard);

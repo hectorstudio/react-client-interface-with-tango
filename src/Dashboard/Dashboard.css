@@ -17,14 +17,14 @@
       rgb(232, 239, 249),
       rgb(232, 239, 249) 1px,
       rgba(0, 0, 0, 0) 1px,
-      rgba(0, 0, 0, 0) calc(1em - 1px)
+      rgba(0, 0, 0, 0) 15px
     ),
     repeating-linear-gradient(
       90deg,
       rgb(232, 239, 249),
       rgb(232, 239, 249) 1px,
       rgba(0, 0, 0, 0) 1px,
-      rgba(0, 0, 0, 0) calc(1em - 1px)
+      rgba(0, 0, 0, 0) 15px
     );
   grid-column: 1;
   background-position-x: -1px;
@@ -42,6 +42,7 @@
   margin-left: -2px;
   margin-top: -2px;
   cursor: grab;
+  box-sizing: border-box;
 }
 
 .Dashboard .Canvas.run {
@@ -49,7 +50,8 @@
   grid-column: -1 / 1;
 }
 
-.Dashboard .Widget {
+.Dashboard .Canvas.run  .Widget,
+.Dashboard .Canvas.edit .Widget {
   position: absolute;
 }
 
