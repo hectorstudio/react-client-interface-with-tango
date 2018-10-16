@@ -50,12 +50,12 @@ LibraryWidget = DragSource(
 
 export default class Library extends Component {
   render() {
-    // Ugly:
     const builtIn = this.props.widgetDefinitions.filter(
-      definition => definition.type.indexOf("CANVAS_") === -1
+      definition => definition.__canvas__ == null
     );
+
     const custom = this.props.widgetDefinitions.filter(
-      definition => definition.type.indexOf("CANVAS_") === 0
+      definition => definition.__canvas__ != null
     );
 
     return (
