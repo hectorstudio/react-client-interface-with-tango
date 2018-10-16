@@ -53,7 +53,6 @@ export default class RunCanvas extends Component {
       .map(widget => {
         const canvasIndex = this.definitionForWidget(widget).__canvas__;
         const canvas = this.props.subCanvases[canvasIndex];
-        console.log(canvas);
         return this.modelsForSubcanvas(canvas, widget);
       })
       .reduce((accum, curr) => [...accum, ...curr], []);
