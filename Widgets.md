@@ -20,6 +20,7 @@ A WidgetDefinition[] array is supplied at the top-level of three different compo
 | params | WidgetParam[] | A list of configurable params exposed by the widget**. Each param gets an input element in the param section of the widget inspector.
 
 \* Fields are core attributes of a widget. All widgets expose a subset of a limited number of fields. Currently the only permitted fields are "device" and "attribute".
+
 \** Params are attributes that are particular to each widget and up to the developer to define and use.
 
 ### WidgetParam
