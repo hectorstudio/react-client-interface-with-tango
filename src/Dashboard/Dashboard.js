@@ -93,7 +93,7 @@ class Dashboard extends Component {
       {}
     );
 
-    const device = this.isRootCanvas() ? null : '__parent__';
+    const device = this.isRootCanvas() ? null : "__parent__";
     const widget = {
       type: definition.type,
       device,
@@ -140,7 +140,6 @@ class Dashboard extends Component {
     this.updateWidgets(widgets);
   }
 
-
   currentWidgets() {
     const { canvases, selectedCanvasIndex } = this.state;
     const canvas = canvases[selectedCanvasIndex];
@@ -156,7 +155,7 @@ class Dashboard extends Component {
     const proposedPos = { x: widget.x + x, y: widget.y + y };
     const newPos = {
       x: Math.max(0, roundToGrid(proposedPos.x)),
-      y: Math.max(0, roundToGrid(proposedPos.y)) 
+      y: Math.max(0, roundToGrid(proposedPos.y))
     };
     this.updateWidget(index, newPos);
   }
@@ -183,9 +182,9 @@ class Dashboard extends Component {
     const widgets = this.currentWidgets();
     const selectedWidget = this.selectedWidget();
 
-    const complexWidgetDefinitions = this.state.canvases
-      .slice(1)
-      .map(complexWidgetDefinition);
+    const complexWidgetDefinitions = this.state.canvases.slice(1).map(
+      complexWidgetDefinition
+    );
 
     const widgetDefinitions = [
       ...WIDGET_DEFINITIONS,
@@ -240,7 +239,7 @@ class Dashboard extends Component {
           <RunCanvas
             widgets={widgets}
             widgetDefinitions={widgetDefinitions}
-            subCanvases={this.state.canvases.slice(1)}
+            subCanvases={[null, ...this.state.canvases.slice(1)]}
           />
         )}
         {mode === "edit" && (
@@ -268,12 +267,14 @@ class Dashboard extends Component {
   }
 }
 
-export function roundToGrid(val){
-  return val % GRID_TILE_SIZE >= GRID_TILE_SIZE/2 ? val + (GRID_TILE_SIZE - ((val) % GRID_TILE_SIZE)) : val - (val % GRID_TILE_SIZE);
+export function roundToGrid(val) {
+  return val % GRID_TILE_SIZE >= GRID_TILE_SIZE / 2
+    ? val + (GRID_TILE_SIZE - (val % GRID_TILE_SIZE))
+    : val - (val % GRID_TILE_SIZE);
 }
 
-export function expandToGrid(val){
-  return val + (GRID_TILE_SIZE - ((val) % GRID_TILE_SIZE));
+export function expandToGrid(val) {
+  return val + (GRID_TILE_SIZE - (val % GRID_TILE_SIZE));
 }
 
 export default DragDropContext(HTML5Backend)(Dashboard);
