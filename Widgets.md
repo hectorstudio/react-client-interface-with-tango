@@ -33,6 +33,7 @@ A WidgetDefinition[] array is supplied at the top-level of three different compo
 | description | string | Human-readable description, e.g. "Show Grid"
 
 Tentative, non-implemented keys:
+
 | key | type | description
 |-|-|-
 | validation | ? | Could be used to restrict the set of permitted values on configuration level.
