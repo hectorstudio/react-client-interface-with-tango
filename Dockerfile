@@ -5,7 +5,10 @@ WORKDIR /home/node/app
 COPY package.json package-lock.json ./
 RUN npm install --no-cache
 
-COPY . .
+COPY tsconfig.json tsconfig.prod.json tslint.json ./
+COPY src src
+COPY public public
+
 RUN npm run build
 
 FROM nginx:1.15.0-alpine
