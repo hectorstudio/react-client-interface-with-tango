@@ -32,34 +32,36 @@ export default class RunCanvas extends Component {
     };
   }
 
+  modelsForSubcanvas(canvas, parent) {
+    return canvas.widgets
+      .map(widget => {
+        const deviceSource = widget.device === "__parent__" ? parent : widget;
+        return [deviceSource.device, widget.attribute];
+      })
+      .filter(([device, attribute]) => device != null && attribute != null)
+      .map(([device, attribute]) => `${device}/${attribute}`);
+  }
+
+  isSubcanvasWidget(widget) {
+    return this.definitionForWidget(widget).__canvas__ != null;
+  }
+
   connect() {
     const canvasModels = this.props.widgets
-      .filter(widget => widget.type.indexOf("CANVAS_") === 0) // All canvas widgets. Ugly
       .filter(widget => widget.device != null)
+      .filter(widget => this.isSubcanvasWidget(widget))
       .map(widget => {
-        const canvasIndex = parseInt(widget.type.split("_")[1], 10) - 1; // Ugly, ugly, ugly
+        const canvasIndex = this.definitionForWidget(widget).__canvas__;
         const canvas = this.props.subCanvases[canvasIndex];
-
-        return canvas.widgets
-          .map(subWidget => {
-            const device = (subWidget.device === "__parent__"
-              ? widget
-              : subWidget
-            ).device;
-            return [device, subWidget.attribute];
-          })
-          .filter(([device, attribute]) => device != null && attribute != null)
-          .map(([device, attribute]) => `${device}/${attribute}`);
+        console.log(canvas);
+        return this.modelsForSubcanvas(canvas, widget);
       })
       .reduce((accum, curr) => [...accum, ...curr], []);
 
     const widgetModels = this.props.widgets
-      .filter(({ type }) => type.indexOf("CANVAS_" === -1))
-      .filter(({ device }) => device != null) // Skip widgets without device -- revise this
+      .filter(({ canvas }) => canvas == null)
+      .filter(({ device, attribute }) => device != null && attribute != null) // Skip widgets without device -- revise this
       .map(({ device, attribute }) => `${device}/${attribute}`);
-
-    console.log(canvasModels);
-    console.log(widgetModels);
 
     const models = [...canvasModels, ...widgetModels].filter(
       // Unique
@@ -123,9 +125,8 @@ export default class RunCanvas extends Component {
     this.socket.close();
   }
 
-  componentForWidget(widget) {
-    return getWidgetDefinition(this.props.widgetDefinitions, widget.type)
-      .component;
+  definitionForWidget(widget) {
+    return getWidgetDefinition(this.props.widgetDefinitions, widget.type);
   }
 
   valueForModel(device, attribute) {
@@ -137,12 +138,13 @@ export default class RunCanvas extends Component {
     return (
       <div className="Canvas run">
         {this.props.widgets.map((widget, i) => {
-          const Widget = this.componentForWidget(widget);
+          const definition = this.definitionForWidget(widget);
+          const Widget = definition.component;
           const { x, y, device, attribute, params } = widget;
           const value = this.valueForModel(device, attribute);
 
           const extraProps =
-            widget.type.indexOf("CANVAS_") === 0
+            definition.__canvas__ != null
               ? { attributes: this.state.attributes }
               : {};
 
