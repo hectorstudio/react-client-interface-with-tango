@@ -125,6 +125,7 @@ export function complexWidgetDefinition(canvas) {
     name,
     component: complexWidgetComponent(canvas),
     fields: ["device"],
-    params: []
+    params: [],
+    __canvas__: id,
   };
 }

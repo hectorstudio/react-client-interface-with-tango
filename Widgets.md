@@ -23,6 +23,12 @@ A WidgetDefinition[] array is supplied at the top-level of three different compo
 
 \** Params are attributes that are particular to each widget and up to the developer to define and use.
 
+#### Special keys
+
+| key | type | description
+|-|-|-
+| &#95;&#95;canvas&#95;&#95; | number | Injected in widget definitions dynamically generated from subcanvases. Do not use this in widgets.
+
 ### WidgetParam
 
 | key | type | description
