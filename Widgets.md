@@ -13,11 +13,11 @@ A WidgetDefinition[] array is supplied at the top-level of three different compo
 
 | key | type | description
 |-|-|-
-| type | `string` | Unique identifier for widget, e.g. "ATTRIBUTE_PLOTTER".
-| name | `string` | Human-readable name of widget, e.g. "Attribute Plotter".
-| component | `WidgetComponent` | Reference to React component class, e.g. AttributePlotter.
-| fields | `("device" | "attribute")[]` | A list of fields required by the widget in order to connect*. Each field gets an input element in the field section of the widget inspector.
-| params | `WidgetParam[]` | A list of configurable params exposed by the widget**. Each param gets an input element in the param section of the widget inspector.
+| type | string | Unique identifier for widget, e.g. "ATTRIBUTE_PLOTTER".
+| name | string | Human-readable name of widget, e.g. "Attribute Plotter".
+| component | WidgetComponent | Reference to React component class, e.g. AttributePlotter.
+| fields | ("device" \| "attribute")[] | A list of fields required by the widget in order to connect*. Each field gets an input element in the field section of the widget inspector.
+| params | WidgetParam[] | A list of configurable params exposed by the widget**. Each param gets an input element in the param section of the widget inspector.
 
 \* Fields are core attributes of a widget. All widgets expose a subset of a limited number of fields. Currently the only permitted fields are "device" and "attribute".
 \** Params are attributes that are particular to each widget and up to the developer to define and use.
@@ -26,10 +26,10 @@ A WidgetDefinition[] array is supplied at the top-level of three different compo
 
 | key | type | description
 |-|-|-
-| name | `string` | Name identifying the param, e.g. "showGrid".
-| type | `"boolean" | "string" | "number"` | The type of the param, used among other things to determine the input element of the param in the editor inspector. A boolean gets a checkbox etc.
-| default | `any` | Default value, e.g. `false`
-| description | `string` | Human-readable description, e.g. "Show Grid"
+| name | string | Name identifying the param, e.g. "showGrid".
+| type | "boolean" \| "string" \| "number" | The type of the param, used among other things to determine the input element of the param in the editor inspector. A boolean gets a checkbox etc.
+| default | any | Default value, e.g. false
+| description | string | Human-readable description, e.g. "Show Grid"
 
 Tentative, non-implemented keys:
 | key | type | description
