@@ -11,7 +11,8 @@ export const WIDGET_DEFINITIONS = [
     type: "ATTRIBUTE_READ_ONLY",
     name: "Read-Only Attribute",
     component: AttributeReadOnly,
-    fields: ["device", "attribute"],
+    fields: ["device", { type: "attribute", dataformats: ["SCALAR"] }],
+    dataFormats: ["SCALAR"],
     params: [
       {
         name: "scientific",
@@ -68,7 +69,10 @@ export const WIDGET_DEFINITIONS = [
     type: "ATTRIBUTE_PLOTTER",
     name: "Attribute plotter",
     component: AttributePlotter,
-    fields: ["device", "attribute"],
+    fields: [
+      "device",
+      { type: "attribute", dataformats: ["SCALAR"], onlyNumeric: true }
+    ],
     params: [
       {
         name: "nbrDataPoints",
@@ -105,7 +109,7 @@ export const WIDGET_DEFINITIONS = [
         type: "number",
         default: 1,
         description: "Stroke width"
-      },
+      }
     ]
   },
 
@@ -121,4 +125,26 @@ export const WIDGET_DEFINITIONS = [
 // Remove from here, use utils.js
 export function getWidgetDefinition(type) {
   return WIDGET_DEFINITIONS.find(definition => definition.type === type);
+}
+
+// This function will be applied to the widget definitions before use in the application.
+// So far, it performs the following transformations:
+
+// 1. If an element in definition.fields is a string S, that element is replaced with {type: S}
+//    Example: fields: ["device", {type: "attribute"}] -> [{type: "device"}, {type: "attribute"}]
+
+// The rationale is that it allows for more compact and readable widget definitions while still
+// allowing expressiveness when needed.
+
+export function normalizeWidgetDefinitions(definitions) {
+  function normalizeField(field) {
+    return typeof field === "string" ? { type: field } : field;
+  }
+
+  function normalizeDefinition(definition) {
+    const fields = definition.fields.map(normalizeField);
+    return { ...definition, fields };
+  }
+
+  return definitions.map(normalizeDefinition);
 }
