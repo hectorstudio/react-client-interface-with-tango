@@ -57,6 +57,7 @@ export default class Inspector extends Component {
       { device }
     )
       .then(res => res.data.device.attributes)
+      .catch(() => [])
       .then(attributes =>
         this.setState({ attributes, fetchingAttributes: false })
       );
