@@ -8,8 +8,8 @@ export default class Inspector extends Component {
     this.state = {
       fetchingDeviceNames: true,
       deviceNames: [], // Should be lifted out to higher component in order to reduce data fetching
-      fetchingAttributeNames: false,
-      attributeNames: []
+      fetchingAttributes: false,
+      attributes: []
     };
 
     this.handleSelectDevice = this.handleSelectDevice.bind(this);
@@ -32,14 +32,14 @@ export default class Inspector extends Component {
     const newDevice = newWidget ? newWidget.device : null;
 
     if (newDevice && newDevice !== oldDevice) {
-      this.fetchAttributeNames(newDevice);
+      this.fetchAttributes(newDevice);
     }
   }
 
-  fetchAttributeNames(device) {
+  fetchAttributes(device) {
     this.setState({
-      fetchingAttributeNames: true,
-      attributeNames: []
+      fetchingAttributes: true,
+      attributes: []
     });
 
     this.callServiceGraphQL(
@@ -48,19 +48,18 @@ export default class Inspector extends Component {
         device(name: $device) {
           attributes {
             name
+            dataformat
+            datatype
           }
         }
       }
   `,
       { device }
     )
-      .then(res => {
-        const attributes = res.data.device.attributes;
-        return attributes.map(attribute => attribute.name);
-      })
+      .then(res => res.data.device.attributes)
       .catch(() => [])
-      .then(attributeNames =>
-        this.setState({ attributeNames, fetchingAttributeNames: false })
+      .then(attributes =>
+        this.setState({ attributes, fetchingAttributes: false })
       );
   }
 
@@ -135,8 +134,41 @@ export default class Inspector extends Component {
 
     const widget = this.props.widget;
     if (widget != null && widget.device != null) {
-      this.fetchAttributeNames(widget.device);
+      this.fetchAttributes(widget.device);
     }
+  }
+
+  filteredAttributes(definition) {
+    return this.state.attributes
+      .filter(({ dataformat }) => {
+        const field = definition.fields.find(
+          field => field.type === "attribute"
+        );
+        const dataformats = (field || {}).dataformats;
+        return dataformats == null || dataformats.indexOf(dataformat) !== -1;
+      })
+      .filter(({ datatype }) => {
+        const field = definition.fields.find(
+          field => field.type === "attribute"
+        );
+        const onlyNumeric = field != null && field.onlyNumeric;
+        if (!onlyNumeric) {
+          return true;
+        } else {
+          const numericTypes = [
+            "DevDouble",
+            "DevFloat",
+            "DevLong",
+            "DevLong64",
+            "DevShort",
+            "DevUChar",
+            "DevULong",
+            "DevULong64",
+            "DevUShort"
+          ];
+          return numericTypes.indexOf(datatype) !== -1;
+        }
+      });
   }
 
   render() {
@@ -171,7 +203,7 @@ export default class Inspector extends Component {
               {device ? "None" : "Select Device First"}
             </option>
           )}
-          {this.state.attributeNames.map((name, i) => (
+          {this.filteredAttributes(definition).map(({ name }, i) => (
             <option key={i} value={name}>
               {name}
             </option>
@@ -179,13 +211,15 @@ export default class Inspector extends Component {
         </select>
       );
 
+    const fieldTypes = fields.map(field => field.type);
+
     return (
       <div className="Inspector">
         <h1>Inspector</h1>
         {fields.length > 0 && (
           <table>
             <tbody>
-              {fields.indexOf("device") !== -1 && (
+              {fieldTypes.indexOf("device") !== -1 && (
                 <tr>
                   <td>Device:</td>
                   <td>
@@ -211,7 +245,7 @@ export default class Inspector extends Component {
                   </td>
                 </tr>
               )}
-              {fields.indexOf("attribute") !== -1 && (
+              {fieldTypes.indexOf("attribute") !== -1 && (
                 <tr>
                   <td>Attribute:</td>
                   <td>{attributeChooser}</td>
