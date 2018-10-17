@@ -40,7 +40,7 @@ In the event of a plain string, it is equivalent to {type: &lt;the string&gt;}, 
 | key | type | description
 |-|-|-
 | type | "attribute" | Identifies an attribute field.
-| dataformats | ("SCALAR" | "SPECTRUM" | "IMAGE")[] | Permitted dataformats.
+| dataformats | ("SCALAR" &#124; "SPECTRUM" &#124; "IMAGE")[] | Permitted dataformats.
 | numericOnly | boolean | If true, then permits only numeric datatypes.
 
 #### Special keys
