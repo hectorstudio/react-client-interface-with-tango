@@ -30,11 +30,13 @@ A WidgetField is any of the following types: DeviceField, AttributeField or a pl
 #### DeviceField
 
 | key | type | description
+|-|-|-
 | type | "device" | Identifies a device field
 
 #### AttributeField
 
 | key | type | description
+|-|-|-
 | type | "attribute" | Identifies an attribute field.
 | dataformats | ("SCALAR" | "SPECTRUM" | "IMAGE")[] | Permitted dataformats.
 | numericOnly | boolean | If true, then permits only numeric datatypes.
