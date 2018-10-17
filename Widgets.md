@@ -25,7 +25,9 @@ A WidgetDefinition[] array is supplied at the top-level of three different compo
 
 ### WidgetField
 
-A WidgetField is any of the following types: DeviceField, AttributeField or a plain string. In the event of a plain string, it is equivalent to {type: &lt;the string&gt;}, e.g. "device" == {type: "device"}.
+A WidgetField is any of the following types: DeviceField, AttributeField or a plain string.
+
+In the event of a plain string, it is equivalent to {type: &lt;the string&gt;}, e.g. "device" == {type: "device"}.
 
 #### DeviceField
 
