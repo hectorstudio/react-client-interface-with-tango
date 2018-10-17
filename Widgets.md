@@ -23,19 +23,19 @@ A WidgetDefinition[] array is supplied at the top-level of three different compo
 
 \** Params are attributes that are particular to each widget and up to the developer to define and use.
 
-### WidgetField
+#### WidgetField
 
 A WidgetField is any of the following types: DeviceField, AttributeField or a plain string.
 
 In the event of a plain string, it is equivalent to {type: &lt;the string&gt;}, e.g. "device" == {type: "device"}.
 
-#### DeviceField
+##### DeviceField
 
 | key | type | description
 |-|-|-
 | type | "device" | Identifies a device field
 
-#### AttributeField
+##### AttributeField
 
 | key | type | description
 |-|-|-
@@ -49,7 +49,7 @@ In the event of a plain string, it is equivalent to {type: &lt;the string&gt;}, 
 |-|-|-
 | &#95;&#95;canvas&#95;&#95; | number | Injected in widget definitions dynamically generated from subcanvases. Do not use this in widgets.
 
-### WidgetParam
+#### WidgetParam
 
 | key | type | description
 |-|-|-
