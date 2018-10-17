@@ -30,7 +30,7 @@ const WarningBadge = () => (
 
 class EditWidget extends Component {
   render() {
-    if (this.props.isDragging){
+    if (this.props.isDragging) {
       return null;
     }
     const { connectDragSource } = this.props;
@@ -138,10 +138,11 @@ class EditCanvas extends Component {
             const Widget = this.componentForWidget(widget);
             const { x, y, device, attribute, params } = widget;
 
-            const fields = this.definitionForWidget(widget).fields;
+            const definition = this.definitionForWidget(widget);
+            const fieldTypes = definition.fields.map(field => field.type);
             const warning =
-              (device == null && fields.indexOf("device") !== -1) ||
-              (attribute == null && fields.indexOf("attribute") !== -1);
+              (device == null && fieldTypes.indexOf("device") !== -1) ||
+              (attribute == null && fieldTypes.indexOf("attribute") !== -1);
 
             return (
               <EditWidget

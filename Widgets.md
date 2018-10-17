@@ -16,12 +16,32 @@ A WidgetDefinition[] array is supplied at the top-level of three different compo
 | type | string | Unique identifier for widget, e.g. "ATTRIBUTE_PLOTTER".
 | name | string | Human-readable name of widget, e.g. "Attribute Plotter".
 | component | WidgetComponent | Reference to React component class, e.g. AttributePlotter.
-| fields | ("device" &#124; "attribute")[] | A list of fields required by the widget in order to connect*. Each field gets an input element in the field section of the widget inspector.
+| fields | WidgetField[] | A list of fields required by the widget in order to connect*. Each field gets an input element in the field section of the widget inspector.
 | params | WidgetParam[] | A list of configurable params exposed by the widget**. Each param gets an input element in the param section of the widget inspector.
 
 \* Fields are core attributes of a widget. All widgets expose a subset of a limited number of fields. Currently the only permitted fields are "device" and "attribute".
 
 \** Params are attributes that are particular to each widget and up to the developer to define and use.
+
+#### WidgetField
+
+A WidgetField is any of the following types: DeviceField, AttributeField or a plain string.
+
+In the event of a plain string, it is equivalent to {type: &lt;the string&gt;}, e.g. "device" == {type: "device"}.
+
+##### DeviceField
+
+| key | type | description
+|-|-|-
+| type | "device" | Identifies a device field
+
+##### AttributeField
+
+| key | type | description
+|-|-|-
+| type | "attribute" | Identifies an attribute field.
+| dataformats | ("SCALAR" &#124; "SPECTRUM" &#124; "IMAGE")[] | Permitted dataformats.
+| numericOnly | boolean | If true, then permits only numeric datatypes.
 
 #### Special keys
 
@@ -29,7 +49,7 @@ A WidgetDefinition[] array is supplied at the top-level of three different compo
 |-|-|-
 | &#95;&#95;canvas&#95;&#95; | number | Injected in widget definitions dynamically generated from subcanvases. Do not use this in widgets.
 
-### WidgetParam
+#### WidgetParam
 
 | key | type | description
 |-|-|-
