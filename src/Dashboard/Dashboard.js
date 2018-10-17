@@ -11,7 +11,8 @@ import Inspector from "./Inspector/Inspector";
 
 import {
   WIDGET_DEFINITIONS,
-  getWidgetDefinition
+  getWidgetDefinition,
+  normalizeWidgetDefinitions
 } from "./widgets/widgetDefinitions";
 
 import { complexWidgetDefinition } from "./ComplexWidget/ComplexWidget";
@@ -186,10 +187,10 @@ class Dashboard extends Component {
       complexWidgetDefinition
     );
 
-    const widgetDefinitions = [
+    const widgetDefinitions = normalizeWidgetDefinitions([
       ...WIDGET_DEFINITIONS,
       ...complexWidgetDefinitions
-    ];
+    ]);
 
     return (
       <div className="Dashboard">
