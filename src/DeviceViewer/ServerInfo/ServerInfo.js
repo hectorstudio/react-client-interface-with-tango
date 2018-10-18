@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getCurrentDeviceServer } from '../../selectors/currentDevice';
-
+import PropTypes from 'prop-types'
 import './ServerInfo.css';
 
 const ServerInfo = ({ server }) => (
@@ -22,6 +22,12 @@ const ServerInfo = ({ server }) => (
         </table>
     </div>
 );
+ServerInfo.propTypes = {
+    server: PropTypes.shape({
+        id: PropTypes.string,
+        host: PropTypes.string,
+    })
+}
 
 function mapStateToProps(state) {
     return {

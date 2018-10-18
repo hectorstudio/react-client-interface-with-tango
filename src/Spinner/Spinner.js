@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types'
 import './Spinner.css';
 
 export default class Spinner extends Component {
@@ -12,5 +12,9 @@ export default class Spinner extends Component {
         }
         return <div className="spinner" style={style}/>;
     }
+}
+
+Spinner.propTypes = {
+    size: PropTypes.number,
 }
 

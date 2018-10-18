@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from 'prop-types'
 
 export default class DeviceName extends Component {
   render() {
@@ -14,4 +15,11 @@ export default class DeviceName extends Component {
 
     return <span>{device}</span>;
   }
+}
+
+DeviceName.propTypes = {
+  attribute: PropTypes.string, //always null for this component?
+  device: PropTypes.string,
+  mode: PropTypes.string,
+  params: PropTypes.object, //always empty for this component?
 }

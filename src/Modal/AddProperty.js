@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { setDeviceProperty } from '../actions/tango'
+import PropTypes from 'prop-types'
 
 /**
  * Renders a modal dialog for adding new properties to a device. Rendered in Layout iff state.modal.modalInstance === 'CREATE_PROPERTY'
@@ -66,6 +67,11 @@ class AddProperty extends Component{
 
     }
 }
+
+AddProperty.PropTypes = {
+        closeDialog :  PropTypes.func,
+}
+
 function mapDispatchToProps(dispatch) {
     return {
         addProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value)),

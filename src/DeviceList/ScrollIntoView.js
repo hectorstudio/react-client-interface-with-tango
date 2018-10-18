@@ -1,5 +1,6 @@
 import { createElement, createRef, PureComponent } from 'react';
 import scrollIntoViewIfNeeded from 'scroll-into-view';
+import PropTypes from 'prop-types'
 
 /*
 This code is based on src/index.js from https://www.npmjs.com/package/react-scroll-into-view-if-needed
@@ -26,9 +27,8 @@ export default class ScrollIntoViewIfNeeded extends PureComponent {
     } 
   }
 
-  componentDidUpdate({ active }) {
-    const { active: isNowActive } = this.props;
-    if (!active && isNowActive && this.props.isSelected) {
+  componentDidUpdate({ active, isNowActive, isSelected }) {
+    if (!active && isNowActive && isSelected) {
       this.handleScrollIntoViewIfNeeded();
     }
   }
@@ -47,4 +47,17 @@ export default class ScrollIntoViewIfNeeded extends PureComponent {
     } = this.props;
     return createElement(elementType, { ref: this.node, ...wrapperProps }, children);
   }
+}
+
+ScrollIntoViewIfNeeded.propTypes = {
+  active: PropTypes.bool,
+  children:PropTypes.oneOfType([ PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+  elementType: PropTypes.string,
+  isSelected: PropTypes.bool,
+  options: PropTypes.shape({
+    behavior: PropTypes.string,
+    ease: PropTypes.func,
+    scrollMode: PropTypes.string,
+    time: PropTypes.number,
+  })
 }

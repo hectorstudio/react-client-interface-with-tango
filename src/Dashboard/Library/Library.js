@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { DragSource } from "react-dnd";
 
 import dndTypes from "../dndTypes";
+import PropTypes from 'prop-types'
+import {libraryWidgetDefinition, widgetDefinition} from "../../propTypes/propTypes"
 
 class LibraryWidget extends Component {
   render() {
@@ -25,6 +27,12 @@ class LibraryWidget extends Component {
       </div>
     );
   }
+}
+
+LibraryWidget.propTypes = {
+  connectDragSource: PropTypes.func,
+  definition: libraryWidgetDefinition,
+  isDraggning: PropTypes.bool,
 }
 
 const libraryWidgetSource = {
@@ -75,4 +83,9 @@ export default class Library extends Component {
       </div>
     );
   }
+}
+
+Library.propTypes = {
+  showCustom: PropTypes.bool,
+  widgetDefinitions: PropTypes.arrayOf(widgetDefinition),
 }

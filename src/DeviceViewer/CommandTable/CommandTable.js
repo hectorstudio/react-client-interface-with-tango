@@ -23,6 +23,8 @@ import Spinner from '../../Spinner/Spinner';
 
 import './CommandTable.css';
 import DescriptionDisplay from '../DescriptionDisplay/DescriptionDisplay';
+import PropTypes from 'prop-types';
+import { command } from  "../../propTypes/propTypes"
 
 const OutputDisplay = ({value, isLoading}) => isLoading
   ? <Spinner size={1}/>
@@ -34,6 +36,11 @@ const OutputDisplay = ({value, isLoading}) => isLoading
       </div>
     ) : null
   );
+
+OutputDisplay.propTypes = {
+  value: PropTypes.string,
+  isLoading: PropTypes.bool,
+}
 
 class CommandTable extends Component {
   render() {
@@ -71,7 +78,14 @@ class CommandTable extends Component {
     );
   }
 }
-
+CommandTable.propTypes = {
+  commands: PropTypes.oneOfType([PropTypes.arrayOf(command), command]),
+  onExecute: PropTypes.func,
+  currentDeviceName: PropTypes.string,
+  enabledList: PropTypes.arrayOf(PropTypes.string),
+  outputsLoading: PropTypes.object, //uses dynamic keys, tricky to validate this with shape()
+  commandOutputs: PropTypes.object, //uses dynamic keys, tricky to validate this with shape()
+}
 
 class InputField extends Component {
 
@@ -150,6 +164,14 @@ class InputField extends Component {
       </div>
     );
   }
+}
+
+InputField.propTypes = {
+  onExecute: PropTypes.func,
+  currentDeviceName: PropTypes.string,
+  commands: PropTypes.oneOfType([PropTypes.arrayOf(command), command]),
+  name: PropTypes.string,
+  intype: PropTypes.string,
 }
 
 
