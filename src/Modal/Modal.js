@@ -8,6 +8,7 @@ import { getCurrentDeviceName } from '../selectors/currentDevice';
 import DeleteProperty from './DeleteProperty'
 import AddProperty from './AddProperty'
 import EditProperty from './EditProperty'
+import PropTypes from 'prop-types'
 
 /**
  * Observes the the state of 'modal' and renders the associated modal dialog.
@@ -55,6 +56,12 @@ class ModalDialog extends Component {
               return null;
           }
     }
+}
+ModalDialog.propTypes = {
+    isShowing: PropTypes.bool,
+    entity: PropTypes.string,
+    modalInstance:  PropTypes.string,
+    currentDevice: PropTypes.string,
 }
 function mapStateToProps(state) {
     return {

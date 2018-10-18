@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { setDeviceProperty } from '../actions/tango'
 import { getCurrentDeviceProperties } from '../selectors/currentDevice'
+import PropTypes from 'prop-types'
 
 /**
  * Renders a modal dialog for deleting  properties from a device. Rendered in Layout iff state.modal.modalInstance === 'EDIT_PROPERTY'
@@ -51,6 +52,10 @@ class EditProperty extends Component{
         this.props.editProperty(this.props.currentDevice, this.props.entity, [this.state.value]);
         this.props.closeDialog();
     }
+}
+EditProperty.PropTypes = {
+    entity : PropTypes.string,
+    closeDialog : PropTypes.func,
 }
 
 function mapStateToProps(state) {

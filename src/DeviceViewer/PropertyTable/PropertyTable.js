@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {isMobile} from 'react-device-detect';
+import PropTypes from 'prop-types'
 
 import {
     getCurrentDeviceProperties,
@@ -50,6 +51,17 @@ const PropertyTable = ({ properties, deviceName, showDeletePropertyDialog, showE
         />
     </div>;
 
+PropertyTable.propTypes = {
+    properties: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string, 
+        value: PropTypes.arrayOf(PropTypes.string)
+    })),
+    deviceName: PropTypes.string,
+    showDeletePropertyDialog: PropTypes.func,
+    showEditPropertyDialog: PropTypes.func,
+    showAddPropertyDialog: PropTypes.func,
+}
+
 class EditProperty extends Component {
     constructor(props) {
         super(props);
@@ -75,6 +87,12 @@ class EditProperty extends Component {
     }
 }
 
+EditProperty.propTypes = {
+    name: PropTypes.string,
+    showEditPropertyDialog: PropTypes.func,
+    showDeletePropertyDialog: PropTypes.func,
+}
+
 class SetProperty extends Component {
     constructor(props) {
         super(props);
@@ -92,6 +110,11 @@ class SetProperty extends Component {
             </div>
         );
     }
+}
+
+SetProperty.propTypes = {
+    deviceName: PropTypes.string,
+    showAddPropertyDialog: PropTypes.func,
 }
 
 function mapStateToProps(state) {
