@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 
 import { executeCommand } from '../actions/tango';
 import { getServerSummary } from '../selectors/server';
+import PropTypes from 'prop-types'
 
 import './HomeViewer.css'
 
@@ -26,6 +27,11 @@ function mapStateToProps(state) {
     return {
         summary: getServerSummary(state),
     };
+}
+
+HomeViewer.propTypes = {
+    summary : PropTypes.arrayOf(PropTypes.string),
+    onLoad :  PropTypes.func,
 }
 
 function mapDispatchToProps(dispatch) {

@@ -5,6 +5,8 @@ import { DragSource, DropTarget } from "react-dnd";
 import { DashboardDNDTypes } from "../widgets/widgetDefinitions";
 import dndTypes from "../dndTypes";
 import { getWidgetDefinition } from "../utils";
+import PropTypes from 'prop-types'
+import {widget, widgetDefinition} from "../../propTypes/propTypes"
 
 const BACKSPACE = 8;
 const DELETE = 46;
@@ -45,6 +47,16 @@ class EditWidget extends Component {
       </div>
     );
   }
+}
+EditWidget.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number,
+  isSelected: PropTypes.bool,
+  isDragging: PropTypes.bool,
+  onClick: PropTypes.func,
+  warning: PropTypes.bool,
+  x: PropTypes.number,
+  y: PropTypes.number,
 }
 
 const editWidgetSource = {
@@ -167,6 +179,17 @@ class EditCanvas extends Component {
       )
     );
   }
+}
+EditCanvas.propTypes = {
+  connectLibraryDropTarget: PropTypes.func,
+  connectMoveDropTarget: PropTypes.func,
+  onAddWidget: PropTypes.func,
+  onDeleteWidget: PropTypes.func,
+  onMoveWidget: PropTypes.func,
+  onSelectWidget: PropTypes.func,
+  selectedWidgetIndex: PropTypes.number,
+  widgetDefinitions: PropTypes.arrayOf(widgetDefinition),
+  widgets: PropTypes.arrayOf(widget),
 }
 
 const moveDropTarget = DropTarget(

@@ -2,6 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import { Button } from 'react-bootstrap';
 import './AttributeInput.css';
+import PropTypes from 'prop-types';
 
 const ENTER_KEY = 13;
 const MOVING = 3;
@@ -83,4 +84,15 @@ export default class AttributeInput extends React.Component {
         </div>
       );
   }
+}
+
+AttributeInput.propTypes = {
+  decimalPoints: PropTypes.string,
+  disabled: PropTypes.bool,
+  maxvalue: PropTypes.any,
+  minvalue: PropTypes.any,
+  motorName: PropTypes.string,
+  save: PropTypes.func,
+  state: PropTypes.number,
+  value: PropTypes.number,
 }

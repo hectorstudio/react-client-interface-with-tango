@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types'
 
 const AttributeReadOnly = ({
   device,
@@ -36,5 +37,16 @@ const AttributeReadOnly = ({
     </div>
   );
 };
+
+AttributeReadOnly.propTypes = {
+  attribute: PropTypes.string,
+  device: PropTypes.string,
+  mode: PropTypes.string,
+  params: PropTypes.shape({
+    scientific: PropTypes.bool,
+    showAttribute: PropTypes.bool,
+    showDevice: PropTypes.bool,
+  })
+}
 
 export default AttributeReadOnly;
