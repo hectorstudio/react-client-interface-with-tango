@@ -10,6 +10,7 @@ import {
 } from "recharts";
 
 import { roundToGrid, expandToGrid } from '../Dashboard';
+import PropTypes from 'prop-types'
 
 const plotterSampleValues = Array(100)
   .fill(0)
@@ -75,4 +76,18 @@ export default class AttributePlotter extends React.Component {
       </div>
     );
   }
+}
+
+AttributePlotter.propTypes = {
+  attribute: PropTypes.string,
+  device: PropTypes.string,
+  mode: PropTypes.string,
+  params: PropTypes.shape({
+    height: PropTypes.number,
+    nbrDataPoints: PropTypes.number,
+    showGrid: PropTypes.bool,
+    strokeWidth: PropTypes.number,
+    width: PropTypes.number,
+    yAxisLabel: PropTypes.string,
+  })
 }

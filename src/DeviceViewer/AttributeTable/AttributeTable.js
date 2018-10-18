@@ -11,6 +11,7 @@ import './AttributeTable.css';
 import { getFilteredCurrentDeviceAttributes, getActiveDataFormat, getEnabledDisplevels } from '../../selectors/deviceDetail';
 import { getCurrentDeviceAttributes, getCurrentDeviceName } from '../../selectors/currentDevice';
 import { setDataFormat } from '../../actions/deviceList';
+import PropTypes from 'prop-types'
 
 const DataFormatChooser = ({dataFormats, selected, onSelect}) => {
 	const order = ['SCALAR', 'SPECTRUM', 'IMAGE'];
@@ -34,6 +35,12 @@ const DataFormatChooser = ({dataFormats, selected, onSelect}) => {
 		</ul>
 	);
 };
+
+DataFormatChooser.propTypes = {
+	dataFormats: PropTypes.arrayOf(PropTypes.string),
+	onSelect: PropTypes.func,
+	selected:  PropTypes.string,
+}
 
 const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataFormat, onSetDeviceAttribute, enabledList }) => {
 	const QualityIndicator = ({ quality }) => {
@@ -92,6 +99,26 @@ const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataF
 	  </div>
 	);
 };
+
+AttributeTable.propTypes = {
+	attributes: PropTypes.arrayOf(PropTypes.shape({
+		dataformat: PropTypes.string,
+		datatype: PropTypes.string,
+		description: PropTypes.string,
+		displevel: PropTypes.string,
+		maxvalue: PropTypes.any,
+		minvalue: PropTypes.any,
+		name: PropTypes.string,
+		quality: PropTypes.string,
+		value: PropTypes.any, //possibly PropTypes.oneOfType(...)
+		writable: PropTypes.string,
+	})),
+	deviceName: PropTypes.string,
+	enabledList: PropTypes.arrayOf(PropTypes.string),
+	onSelectDataFormat: PropTypes.func,
+	onSetDeviceAttribute: PropTypes.func,
+	selectedFormat: PropTypes.string,
+}
 
 function mapStateToProps(state) {
 	return {

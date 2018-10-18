@@ -3,6 +3,7 @@ import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 
 import AttributeInput from '../AttributeInput/AttributeInput';
 import './ValueDisplay.css';
+import PropTypes from 'prop-types'
 
 const DevStringValueDisplay = ({value}) => {
   const values = [].concat(value);
@@ -13,6 +14,10 @@ const DevStringValueDisplay = ({value}) => {
   const pre = values.find(val => val.match(indicators));
 
   return values.map((val, i) => <p className={pre ? 'pre' : ''} key={i}>{val}</p>);
+}
+
+DevStringValueDisplay.propTypes = {
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
 }
 
 const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDeviceAttribute, minvalue, maxvalue}) => {
@@ -44,6 +49,17 @@ const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDev
     return value;
   }
 }
+ScalarValueDisplay.propTypes = {
+  datatype: PropTypes.string,
+  deviceName: PropTypes.string,
+  maxvalue: PropTypes.any,
+  minvalue: PropTypes.any,
+  name: PropTypes.string,
+  setDeviceAttribute: PropTypes.func,
+  value: PropTypes.any,
+  writable: PropTypes.string,
+}
+
 
 const SpectrumValueDisplay = ({value, datatype}) => {
   if (datatype === 'DevString') {
@@ -65,6 +81,11 @@ const SpectrumValueDisplay = ({value, datatype}) => {
     </LineChart>
   );
 };
+
+SpectrumValueDisplay.propTypes = {
+  value: PropTypes.any,
+  datatype: PropTypes.string,
+}
 
 class ImageValueDisplay extends React.Component {
   imageWidth() {
@@ -126,6 +147,16 @@ class ImageValueDisplay extends React.Component {
     return <canvas id={this.props.name} />
   }
 }
+ImageValueDisplay.propTypes = {
+  datatype: PropTypes.string,
+  devicenName: PropTypes.string,
+  maxvalue: PropTypes.any,
+  minvalue: PropTypes.any,
+  name: PropTypes.string,
+  setDeviceAttribute: PropTypes.func,
+  value: PropTypes.any,
+  writable: PropTypes.string,
+}
 
 const ValueDisplay = ({value, deviceName, writable, setDeviceAttribute,  datatype, dataformat, name, minvalue, maxvalue}) => {
   if (value === null) {
@@ -155,5 +186,17 @@ const ValueDisplay = ({value, deviceName, writable, setDeviceAttribute,  datatyp
     </div>
   );
 };
+
+ValueDisplay.propTypes = {
+  dataformat: PropTypes.string,
+  datatype: PropTypes.string,
+  deviceName: PropTypes.string,
+  maxvalue: PropTypes.any,
+  minvalue: PropTypes.any,
+  name: PropTypes.string,
+  setDeviceAttribute: PropTypes.func,
+  value: PropTypes.any,
+  writable: PropTypes.string,
+}
 
 export default ValueDisplay;

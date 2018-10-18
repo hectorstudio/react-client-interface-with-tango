@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { deleteDeviceProperty } from '../actions/tango'
+import PropTypes from 'prop-types'
 
 /**
  * Renders a modal dialog for deleting  properties from a device. Rendered in Layout iff state.modal.modalInstance === 'DELETE_PROPERTY'
@@ -39,6 +40,12 @@ class DeleteProperty extends Component{
 
     }
 }
+
+DeleteProperty.PropTypes = {
+    entity : PropTypes.string,
+    closeDialog :  PropTypes.func,
+}
+
 function mapDispatchToProps(dispatch) {
     return {
         deleteProperty: (device, name) => dispatch(deleteDeviceProperty(device, name)),

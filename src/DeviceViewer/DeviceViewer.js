@@ -33,6 +33,7 @@ import {
 } from "../actions/tango";
 
 import "./DeviceViewer.css";
+import PropTypes from 'prop-types'
 
 class DeviceMenu extends Component {
   render() {
@@ -68,6 +69,13 @@ class DeviceMenu extends Component {
       </div>
     );
   }
+}
+DeviceMenu.propTypes = {
+  hasProperties: PropTypes.bool,
+  hasAttributes: PropTypes.bool,
+  hasCommands: PropTypes.bool,
+  selectedTab: PropTypes.string,
+  onSelectTab: PropTypes.func,
 }
 
 class DeviceViewer extends Component {
@@ -186,6 +194,23 @@ class DeviceViewer extends Component {
   }
 }
 
+DeviceViewer.propTypes = {
+  onSelectDevice: PropTypes.func,
+  loading: PropTypes.bool,
+  onSelectTab: PropTypes.func,
+  selectedTab: PropTypes.string,
+  currentState: PropTypes.string,
+  deviceName: PropTypes.string,
+  displevels: PropTypes.arrayOf(PropTypes.string),
+  enabledList: PropTypes.arrayOf(PropTypes.string),
+  enableDisplevel: PropTypes.func,
+  disableDisplevel: PropTypes.func,
+
+  hasAttributes: PropTypes.bool,
+  hasProperties: PropTypes.bool,
+  hasCommands: PropTypes.bool,
+}
+
 class DisplevelBox extends Component {
   handleInputChange(name, e) {
     if (e.target.checked) {
@@ -210,6 +235,13 @@ class DisplevelBox extends Component {
 
     return <div className="DisplevelBox">{inputs}</div>;
   }
+}
+
+DisplevelBox.propTypes = {
+  displevels: PropTypes.arrayOf(PropTypes.string),
+  enabledList: PropTypes.arrayOf(PropTypes.string),
+  enableDisplevel: PropTypes.func,
+  disableDisplevel: PropTypes.func,
 }
 
 function mapStateToProps(state) {
