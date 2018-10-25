@@ -1,6 +1,7 @@
 import React from "react";
 
 import AttributePlotter from "./AttributePlotter";
+import AttributeTrend from "./AttributeTrend";
 import AttributeRecorder from "./AttributeRecorder";
 import AttributeReadOnly from "./AttributeReadOnly";
 import Label from "./Label";
@@ -50,21 +51,6 @@ export const WIDGET_DEFINITIONS = [
     ]
   },
 
-  // {
-  //   type: "ATTRIBUTE_RECORDER",
-  //   name: "Attribute Recorder",
-  //   component: AttributeRecorder,
-  //   fields: ["device", "attribute"],
-  //   params: [
-  //     {
-  //       name: "numShow",
-  //       type: "number",
-  //       default: 5,
-  //       description: "№ Entries"
-  //     }
-  //   ]
-  // },
-
   {
     type: "ATTRIBUTE_PLOTTER",
     name: "Attribute plotter",
@@ -112,7 +98,53 @@ export const WIDGET_DEFINITIONS = [
       }
     ]
   },
-
+{
+    type: "ATTRIBUTE_TREND",
+    name: "Attribute trend",
+    component: AttributeTrend,
+    fields: [
+      "device",
+      { type: "attribute", dataformats: ["SCALAR"], onlyNumeric: true }
+    ],
+    params: [
+      {
+        name: "nbrDataPoints",
+        type: "number",
+        default: 100,
+        description: "№ Entries"
+      },
+      {
+        name: "width",
+        type: "number",
+        default: 300,
+        description: "Width (px)"
+      },
+      {
+        name: "height",
+        type: "number",
+        default: 200,
+        description: "Height (px)"
+      },
+      {
+        name: "showGrid",
+        type: "boolean",
+        default: true,
+        description: "Show grid"
+      },
+      {
+        name: "Title",
+        type: "string",
+        default: "",
+        description: "Title"
+      },
+      {
+        name: "strokeWidth",
+        type: "number",
+        default: 1,
+        description: "Stroke width"
+      }
+    ]
+  },
   {
     type: "DEVICE_NAME",
     name: "Device Name",
