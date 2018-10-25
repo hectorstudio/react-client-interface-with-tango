@@ -16,6 +16,7 @@ export default class Inspector extends Component {
 
     this.handleSelectDevice = this.handleSelectDevice.bind(this);
     this.handleSelectAttribute = this.handleSelectAttribute.bind(this);
+    this.sortDeviceNames = this.sortDeviceNames.bind(this);
     this.gqlClient = createGQLClient({ url: "/db " });
   }
 
@@ -36,6 +37,13 @@ export default class Inspector extends Component {
     if (newDevice && newDevice !== oldDevice) {
       this.fetchAttributes(newDevice);
     }
+  }
+
+  sortDeviceNames(deviceNames){
+    const sortedDeviceNames = deviceNames.sort((a, b) => {
+      return a.toLowerCase().localeCompare(b.toLowerCase());
+    });
+    return sortedDeviceNames;
   }
 
   fetchAttributes(device) {
@@ -131,7 +139,7 @@ export default class Inspector extends Component {
       .then(devices => devices.map(device => device.name))
       .catch(() => [])
       .then(deviceNames =>
-        this.setState({ deviceNames, fetchingDeviceNames: false })
+          this.setState({ deviceNames: this.sortDeviceNames(deviceNames), fetchingDeviceNames: false })
       );
 
     const widget = this.props.widget;
