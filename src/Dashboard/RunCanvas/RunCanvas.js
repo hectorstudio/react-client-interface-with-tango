@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { getWidgetDefinition } from "../utils";
-import PropTypes from 'prop-types'
-import { widget, widgetDefinition, subCanvas } from  "../../propTypes/propTypes"
+import PropTypes from "prop-types";
+import { widget, widgetDefinition, subCanvas } from "../../propTypes/propTypes";
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -85,6 +85,7 @@ export default class RunCanvas extends Component {
               name
               data {
                 value
+                time
               }
             }
           }`;
@@ -100,9 +101,14 @@ export default class RunCanvas extends Component {
         }
 
         const updatedAttributes = changeEvent.reduce((accum, event) => {
+          const { value, time } = event.data;
+          const model = event.device + "/" + event.name;
           return {
             ...accum,
-            [event.device + "/" + event.name]: event.data.value
+            [model]: {
+              value,
+              time
+            }
           };
         }, {});
 
@@ -130,9 +136,17 @@ export default class RunCanvas extends Component {
     return getWidgetDefinition(this.props.widgetDefinitions, widget.type);
   }
 
-  valueForModel(device, attribute) {
+  entryForModel(device, attribute) {
     const model = device + "/" + attribute;
-    return this.state.attributes[model];
+    return this.state.attributes[model] || {};
+  }
+
+  valueForModel(device, attribute) {
+    return this.entryForModel(device, attribute).value;
+  }
+
+  timeForModel(device, attribute) {
+    return this.entryForModel(device, attribute).time;
   }
 
   render() {
@@ -143,6 +157,7 @@ export default class RunCanvas extends Component {
           const Widget = definition.component;
           const { x, y, device, attribute, params } = widget;
           const value = this.valueForModel(device, attribute);
+          const time = this.timeForModel(device, attribute);
 
           const extraProps =
             definition.__canvas__ != null
@@ -157,6 +172,7 @@ export default class RunCanvas extends Component {
                   device={device}
                   attribute={attribute}
                   value={value}
+                  time={time}
                   params={params}
                   {...extraProps}
                 />
@@ -172,5 +188,5 @@ export default class RunCanvas extends Component {
 RunCanvas.propTypes = {
   subCanvases: PropTypes.arrayOf(subCanvas),
   widgetDefinitions: PropTypes.arrayOf(widgetDefinition),
-  widgets: PropTypes.arrayOf(widget),
-}
+  widgets: PropTypes.arrayOf(widget)
+};
