@@ -85,6 +85,7 @@ export default class RunCanvas extends Component {
               name
               data {
                 value
+                time
               }
             }
           }`;
@@ -102,7 +103,8 @@ export default class RunCanvas extends Component {
         const updatedAttributes = changeEvent.reduce((accum, event) => {
           return {
             ...accum,
-            [event.device + "/" + event.name]: event.data.value
+            [event.device + "/" + event.name]: event.data.value,
+            [event.device + "/" + event.name + '__time']: event.data.time
           };
         }, {});
 
@@ -133,6 +135,14 @@ export default class RunCanvas extends Component {
   valueForModel(device, attribute) {
     const model = device + "/" + attribute;
     return this.state.attributes[model];
+  }  
+
+  timeForModel(device, attribute) {
+    const model = device + "/" + attribute + "__time";
+    const unixTimestamp = this.state.attributes[model];
+    var date = new Date(unixTimestamp*1000);
+
+    return date;
   }
 
   render() {
@@ -143,6 +153,7 @@ export default class RunCanvas extends Component {
           const Widget = definition.component;
           const { x, y, device, attribute, params } = widget;
           const value = this.valueForModel(device, attribute);
+          const time = this.timeForModel(device, attribute);
 
           const extraProps =
             definition.__canvas__ != null
@@ -157,6 +168,7 @@ export default class RunCanvas extends Component {
                   device={device}
                   attribute={attribute}
                   value={value}
+                  time={time}
                   params={params}
                   {...extraProps}
                 />
