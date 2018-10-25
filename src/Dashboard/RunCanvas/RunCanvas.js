@@ -146,7 +146,8 @@ export default class RunCanvas extends Component {
   }
 
   timeForModel(device, attribute) {
-    return this.entryForModel(device, attribute).time;
+    const { time } = this.entryForModel(device, attribute);
+    return new Date(time);
   }
 
   render() {
