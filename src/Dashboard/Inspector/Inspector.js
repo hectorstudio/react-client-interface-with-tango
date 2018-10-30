@@ -38,7 +38,7 @@ export default class Inspector extends Component {
     }
   }
 
-  sortDeviceNames(deviceNames) {
+  sortedDeviceNames(deviceNames) {
     return [...deviceNames].sort((a, b) =>
       a.toLowerCase().localeCompare(b.toLowerCase())
     );
@@ -138,7 +138,7 @@ export default class Inspector extends Component {
       .catch(() => [])
       .then(deviceNames =>
         this.setState({
-          deviceNames: this.sortDeviceNames(deviceNames),
+          deviceNames: this.sortedDeviceNames(deviceNames),
           fetchingDeviceNames: false
         })
       );
