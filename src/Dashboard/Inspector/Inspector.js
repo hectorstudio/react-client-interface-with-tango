@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import createGQLClient from "graphql-client";
 import { getWidgetDefinition } from "../utils";
-import PropTypes from 'prop-types'
-import { widget, widgetDefinition } from "../../propTypes/propTypes"
+import PropTypes from "prop-types";
+import { widget, widgetDefinition } from "../../propTypes/propTypes";
 
 export default class Inspector extends Component {
   constructor(props) {
@@ -16,7 +16,6 @@ export default class Inspector extends Component {
 
     this.handleSelectDevice = this.handleSelectDevice.bind(this);
     this.handleSelectAttribute = this.handleSelectAttribute.bind(this);
-    this.sortDeviceNames = this.sortDeviceNames.bind(this);
     this.gqlClient = createGQLClient({ url: "/db " });
   }
 
@@ -39,11 +38,10 @@ export default class Inspector extends Component {
     }
   }
 
-  sortDeviceNames(deviceNames){
-    const sortedDeviceNames = deviceNames.sort((a, b) => {
-      return a.toLowerCase().localeCompare(b.toLowerCase());
-    });
-    return sortedDeviceNames;
+  sortDeviceNames(deviceNames) {
+    return [...deviceNames].sort((a, b) =>
+      a.toLowerCase().localeCompare(b.toLowerCase())
+    );
   }
 
   fetchAttributes(device) {
@@ -139,7 +137,10 @@ export default class Inspector extends Component {
       .then(devices => devices.map(device => device.name))
       .catch(() => [])
       .then(deviceNames =>
-          this.setState({ deviceNames: this.sortDeviceNames(deviceNames), fetchingDeviceNames: false })
+        this.setState({
+          deviceNames: this.sortDeviceNames(deviceNames),
+          fetchingDeviceNames: false
+        })
       );
 
     const widget = this.props.widget;
@@ -287,5 +288,5 @@ Inspector.propTypes = {
   onDeviceChange: PropTypes.func,
   onParamChange: PropTypes.func,
   widget: widget,
-  widgetDefinitions: PropTypes.arrayOf(widgetDefinition),
-}
+  widgetDefinitions: PropTypes.arrayOf(widgetDefinition)
+};
