@@ -1,31 +1,33 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from "redux";
 
-import deviceDetail, { IDeviceDetailState } from './deviceDetail';
-import deviceList, { IDeviceListState } from './deviceList';
-import loadingStatus, { ILoadingStatusState } from './loadingStatus';
-import commandOutput, { ICommandOutputState } from './commandOutput';
+import deviceDetail, { IDeviceDetailState } from "./deviceDetail";
+import deviceList, { IDeviceListState } from "./deviceList";
+import loadingStatus, { ILoadingStatusState } from "./loadingStatus";
+import commandOutput, { ICommandOutputState } from "./commandOutput";
 
-import currentDevice from './currentDevice';
-import devices, { IDevicesState } from './devices';
-import attributes, { IAttributesState } from './attributes';
-import commands, { ICommandsState } from './commands';
-import properties, { IPropertiesState } from './properties';
-import modal, { IModalState } from './modals';
+import currentDevice from "./currentDevice";
+import devices, { IDevicesState } from "./devices";
+import attributes, { IAttributesState } from "./attributes";
+import commands, { ICommandsState } from "./commands";
+import properties, { IPropertiesState } from "./properties";
+import modal, { IModalState } from "./modals";
+import user, { IUserState } from "./user";
 
-import error from './error';
+import error from "./error";
 
 export interface IRootState {
   // View state
   deviceDetail: IDeviceDetailState;
   deviceList: IDeviceListState;
-  
+
   // App State
   loadingStatus: ILoadingStatusState;
   error: string;
   modal: IModalState;
+  user: IUserState;
 
   // Data state
-  devices: IDevicesState,
+  devices: IDevicesState;
   commandOutput: ICommandOutputState;
   currentDevice: string;
   attributes: IAttributesState;
@@ -45,6 +47,7 @@ const rootReducer = combineReducers<IRootState>({
   properties,
   error,
   modal,
+  user
 });
 
 export default rootReducer;

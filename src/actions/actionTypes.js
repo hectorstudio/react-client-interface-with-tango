@@ -54,3 +54,10 @@ export const TOGGLE_EXPAND_FAMILY = 'TOGGLE_EXPAND_FAMILY';
 
 export const SET_MODAL = 'SET_MODAL';
 export const CLEAR_MODAL = 'CLEAR_MODAL';
+
+export const LOGIN = "LOGIN";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAILED = "LOGIN_FAILED";
+
+export const LOGOUT = "LOGOUT";
+export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";

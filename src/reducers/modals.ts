@@ -1,6 +1,7 @@
 import {
     SET_MODAL,
     CLEAR_MODAL,
+    LOGIN_SUCCESS,
 } from '../actions/actionTypes';
 
 /**
@@ -24,6 +25,11 @@ export default function modal(state: IModalState = {
 
     case CLEAR_MODAL:
         return {...state, modalInstance: "", entity: ""};
+
+    // Not sure if this belongs here, but the answer might be restructuring the way modals are displayed
+    case LOGIN_SUCCESS:
+        return {...state, modalInstance: "", entity: ""}
+
     default:
         return state;
     }
