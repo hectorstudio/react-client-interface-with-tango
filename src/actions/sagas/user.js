@@ -6,10 +6,10 @@ import {
   logoutSuccess,
   loginSuccess,
   loginFailed
-} from "./typedActionCreators";
+} from "../typedActionCreators";
 
-import { PRELOAD_USER, LOGIN, LOGOUT } from "./actionTypes";
-import UserAPI from './api/user';
+import { PRELOAD_USER, LOGIN, LOGOUT } from "../actionTypes";
+import UserAPI from '../api/user';
 
 function* preloadUser() {
   while (true) {
@@ -37,7 +37,7 @@ function* logout() {
   }
 }
 
-export default function* root() {
+export default function* user() {
   yield fork(preloadUser);
   yield fork(login);
   yield fork(logout);
