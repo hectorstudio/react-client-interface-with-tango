@@ -2,7 +2,10 @@ import {
   LOGIN,
   LOGIN_SUCCESS,
   LOGIN_FAILED,
-  LOGOUT_SUCCESS
+  LOGOUT_SUCCESS,
+  PRELOAD_USER_SUCCESS,
+  PRELOAD_USER_FAILED,
+  LOGOUT
 } from "../actions/actionTypes";
 
 import {
@@ -10,7 +13,9 @@ import {
   ILoginSuccessAction,
   ILoginFailedAction,
   ILogoutAction,
-  ILogoutSuccessAction
+  ILogoutSuccessAction,
+  IPreloadUserSuccessAction,
+  IPreloadUserFailedAction
 } from "../actions/typedActions";
 
 export interface IUserState {
@@ -24,11 +29,13 @@ type UserAction =
   | ILoginSuccessAction
   | ILoginFailedAction
   | ILogoutAction
-  | ILogoutSuccessAction;
+  | ILogoutSuccessAction
+  | IPreloadUserSuccessAction
+  | IPreloadUserFailedAction;
 
 export default function user(
   state: IUserState = {
-    awaitingResponse: false,
+    awaitingResponse: true,
     loginFailed: false
   },
   action: UserAction
@@ -39,9 +46,14 @@ export default function user(
     case LOGIN_FAILED:
       return { ...state, awaitingResponse: false, loginFailed: true };
     case LOGIN_SUCCESS:
+    case PRELOAD_USER_SUCCESS:
       return { ...state, username: action.username, awaitingResponse: false };
+    case PRELOAD_USER_FAILED:
+      return { ...state, awaitingResponse: false };
+    case LOGOUT:
+      return { ...state, awaitingResponse: true };
     case LOGOUT_SUCCESS:
-      return { ...state, username: undefined };
+      return { ...state, awaitingResponse: false, username: undefined };
     default:
       return state;
   }

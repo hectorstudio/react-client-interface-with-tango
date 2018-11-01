@@ -3,24 +3,46 @@ import {
   LOGIN_SUCCESS,
   LOGOUT,
   LOGIN_FAILED,
-  LOGOUT_SUCCESS
+  LOGOUT_SUCCESS,
+  PRELOAD_USER_SUCCESS,
+  PRELOAD_USER_FAILED,
+  PRELOAD_USER
 } from "./actionTypes";
 
-interface IAction<T> {
-  type: T;
-}
+import { Action } from "redux";
 
-export interface ILoginAction extends IAction<typeof LOGIN> {
+export interface ILoginAction extends Action {
+  type: typeof LOGIN;
   username: string;
   password: string;
 }
 
-export interface ILoginSuccessAction extends IAction<typeof LOGIN_SUCCESS> {
+export interface ILoginSuccessAction extends Action {
+  type: typeof LOGIN_SUCCESS;
   username: string;
 }
 
-export interface ILoginFailedAction extends IAction<typeof LOGIN_FAILED> {}
+export interface ILogoutAction extends Action {
+  type: typeof LOGOUT;
+}
 
-export interface ILogoutAction extends IAction<typeof LOGOUT> {}
+export interface ILogoutSuccessAction extends Action {
+  type: typeof LOGOUT_SUCCESS;
+}
 
-export interface ILogoutSuccessAction extends IAction<typeof LOGOUT_SUCCESS> {}
+export interface ILoginFailedAction extends Action {
+  type: typeof LOGIN_FAILED;
+}
+
+export interface IPreloadUserAction extends Action {
+  type: typeof PRELOAD_USER;
+}
+
+export interface IPreloadUserSuccessAction extends Action {
+  type: typeof PRELOAD_USER_SUCCESS;
+  username: string;
+}
+
+export interface IPreloadUserFailedAction extends Action {
+  type: typeof PRELOAD_USER_FAILED;
+}

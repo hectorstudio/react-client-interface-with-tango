@@ -3,67 +3,80 @@ import { connect } from "react-redux";
 
 import { setModal } from "../actions/modal";
 import { IRootState } from "src/reducers/rootReducer";
+import { logout } from "src/actions/typedActionCreators";
+
+const WhenLoggedIn = ({ username, onLogout }) => (
+  <Fragment>
+    Logged in as <span style={{ fontWeight: "bold" }}>{username}</span>.{" "}
+    <a
+      href="#"
+      onClick={e => {
+        e.preventDefault();
+        onLogout();
+      }}
+    >
+      Log Out
+    </a>
+  </Fragment>
+);
+
+const WhenLoggedOut = ({ onLogin }) => (
+  <Fragment>
+    Not logged in.{" "}
+    <a
+      href="#"
+      onClick={e => {
+        e.preventDefault();
+        onLogin();
+      }}
+    >
+      Log In
+    </a>
+  </Fragment>
+);
 
 const LogInOut = ({
   username,
   isLoggedIn,
-  onLogIn,
-  onLogOut
+  awaitingResponse,
+  onLogin,
+  onLogout
 }: {
   username: string;
   isLoggedIn: boolean;
-  onLogIn: () => void;
-  onLogOut: () => void;
-}) => (
-  <div
-    style={{
-      fontSize: "0.75em",
-      position: "absolute",
-      top: "0.5em",
-      right: "0.5em"
-    }}
-  >
-    {isLoggedIn && username ? (
-      <Fragment>
-        Logged in as <span style={{ fontWeight: "bold" }}>{username}</span>.{" "}
-        <a
-          href="#"
-          onClick={e => {
-            e.preventDefault();
-            onLogOut();
-          }}
-        >
-          Log Out
-        </a>
-      </Fragment>
-    ) : (
-      <Fragment>
-        Not logged in.{" "}
-        <a
-          href="#"
-          onClick={e => {
-            e.preventDefault();
-            onLogIn();
-          }}
-        >
-          Log In
-        </a>
-      </Fragment>
-    )}
-  </div>
-);
+  awaitingResponse: boolean;
+  onLogin: () => any;
+  onLogout: () => any;
+}) =>
+  awaitingResponse ? null : (
+    <div
+      style={{
+        fontSize: "0.75em",
+        position: "absolute",
+        top: "0.5em",
+        right: "0.5em"
+      }}
+    >
+      {isLoggedIn ? (
+        <WhenLoggedIn username={username} onLogout={onLogout} />
+      ) : (
+        <WhenLoggedOut onLogin={onLogin} />
+      )}
+    </div>
+  );
 
 function mapStateToProps(state: IRootState) {
   return {
-    isLoggedIn: state.user.username != null && !state.user.awaitingResponse,
-    username: state.user.username
+    isLoggedIn: state.user.username != null,
+    username: state.user.username,
+    awaitingResponse: state.user.awaitingResponse
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onLogIn: () => dispatch(setModal("LOGIN")),
-    onLogOut: () => alert()
+    onLogin: () => dispatch(setModal("LOGIN")),
+    onLogout: () => dispatch(logout())
   };
 }
 
