@@ -2,7 +2,7 @@ import { Component } from "react";
 import { connect } from "react-redux";
 import { preloadUser } from "./actions/typedActionCreators";
 
-class UserAware extends Component<{ preload }> {
+class UserAware extends Component<{ preload: () => void }> {
   public componentWillMount() {
     this.props.preload();
   }
