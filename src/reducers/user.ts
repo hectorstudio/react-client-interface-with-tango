@@ -33,11 +33,13 @@ type UserAction =
   | IPreloadUserSuccessAction
   | IPreloadUserFailedAction;
 
+const initialState = {
+  awaitingResponse: true,
+  loginFailed: false
+};
+
 export default function user(
-  state: IUserState = {
-    awaitingResponse: true,
-    loginFailed: false
-  },
+  state: IUserState = initialState,
   action: UserAction
 ) {
   switch (action.type) {
@@ -53,7 +55,7 @@ export default function user(
     case LOGOUT:
       return { ...state, awaitingResponse: true };
     case LOGOUT_SUCCESS:
-      return { ...state, awaitingResponse: false, username: undefined };
+      return { ...initialState, awaitingResponse: false };
     default:
       return state;
   }
