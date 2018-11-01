@@ -2,8 +2,13 @@ import React, { Fragment } from "react";
 import { connect } from "react-redux";
 
 import { setModal } from "../actions/modal";
+import { logout } from "../actions/typedActionCreators";
+import {
+  getIsLoggedIn,
+  getUsername,
+  getAwaitingResponse
+} from "../selectors/user";
 import { IRootState } from "src/reducers/rootReducer";
-import { logout } from "src/actions/typedActionCreators";
 
 const WhenLoggedIn = ({ username, onLogout }) => (
   <Fragment>
@@ -67,9 +72,9 @@ const LogInOut = ({
 
 function mapStateToProps(state: IRootState) {
   return {
-    isLoggedIn: state.user.username != null,
-    username: state.user.username,
-    awaitingResponse: state.user.awaitingResponse
+    isLoggedIn: getIsLoggedIn(state),
+    username: getUsername(state),
+    awaitingResponse: getAwaitingResponse(state)
   };
 }
 
