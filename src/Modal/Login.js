@@ -9,6 +9,7 @@ import {
   Alert
 } from "react-bootstrap";
 import { LOGIN } from "../actions/actionTypes";
+import { login } from "../actions/typedActionCreators";
 
 class Login extends React.Component {
   constructor(props) {
@@ -82,27 +83,6 @@ class Login extends React.Component {
   }
 }
 
-function loginAction(username, password) {
-  return dispatch => {
-    dispatch({ type: LOGIN, username, password });
-
-    const body = JSON.stringify({ username, password });
-    const headers = {
-      "Content-Type": "application/json; charset=utf-8"
-    };
-
-    fetch("/login", { method: "POST", headers, body })
-      .then(
-        res =>
-          res.ok
-            ? { type: "LOGIN_SUCCESS", username }
-            : { type: "LOGIN_FAILED" }
-      )
-      .catch(err => alert(err))
-      .then(dispatch);
-  };
-}
-
 export default connect(
   function mapStateToProps(state) {
     return {
@@ -112,7 +92,7 @@ export default connect(
   function mapDispatchToProps(dispatch) {
     return {
       onSubmit: (username, password) =>
-        dispatch(loginAction(username, password))
+        dispatch(login(username, password))
     };
   }
 )(Login);
