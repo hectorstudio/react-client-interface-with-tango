@@ -3,12 +3,14 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import classNames from "classnames";
 import { Helmet } from "react-helmet";
+import PropTypes from 'prop-types'
 import "font-awesome/css/font-awesome.min.css";
 
 import AttributeTable from "./AttributeTable/AttributeTable";
 import CommandTable from "./CommandTable/CommandTable";
 import PropertyTable from "./PropertyTable/PropertyTable";
 import ServerInfo from "./ServerInfo/ServerInfo";
+import DisplevelChooser from "./DisplevelChooser/DisplevelChooser";
 
 import Spinner from "../Spinner/Spinner";
 
@@ -33,7 +35,6 @@ import {
 } from "../actions/tango";
 
 import "./DeviceViewer.css";
-import PropTypes from 'prop-types'
 
 class DeviceMenu extends Component {
   render() {
@@ -165,7 +166,7 @@ class DeviceViewer extends Component {
         <div className="device-header">
           <QualityIndicator state={currentState} /> {deviceName}
           {displevels.length > 1 && (
-            <DisplevelBox
+            <DisplevelChooser
               displevels={displevels}
               enabledList={enabledList}
               enableDisplevel={enableDisplevel}
@@ -209,39 +210,6 @@ DeviceViewer.propTypes = {
   hasAttributes: PropTypes.bool,
   hasProperties: PropTypes.bool,
   hasCommands: PropTypes.bool,
-}
-
-class DisplevelBox extends Component {
-  handleInputChange(name, e) {
-    if (e.target.checked) {
-      this.props.enableDisplevel(name);
-    } else {
-      this.props.disableDisplevel(name);
-    }
-  }
-
-  render() {
-    const inputs = this.props.displevels.map((name, i) => (
-      <label key={i} for={`displevel_${name}`}>
-        {name}
-        <input
-          id={`displevel_${name}`}
-          type="checkbox"
-          checked={this.props.enabledList.indexOf(name) !== -1}
-          onChange={this.handleInputChange.bind(this, name)}
-        />
-      </label>
-    ));
-
-    return <div className="DisplevelBox">{inputs}</div>;
-  }
-}
-
-DisplevelBox.propTypes = {
-  displevels: PropTypes.arrayOf(PropTypes.string),
-  enabledList: PropTypes.arrayOf(PropTypes.string),
-  enableDisplevel: PropTypes.func,
-  disableDisplevel: PropTypes.func,
 }
 
 function mapStateToProps(state) {
