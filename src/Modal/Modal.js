@@ -9,6 +9,7 @@ import DeleteProperty from './DeleteProperty'
 import AddProperty from './AddProperty'
 import EditProperty from './EditProperty'
 import PropTypes from 'prop-types'
+import Login from './Login';
 
 /**
  * Observes the the state of 'modal' and renders the associated modal dialog.
@@ -52,6 +53,8 @@ class ModalDialog extends Component {
                     closeDialog={this.props.closeDialog}
                 />
               );
+              case "LOGIN":
+                return <Login closeDialog={this.props.closeDialog}/>
             default:
               return null;
           }
