@@ -14,7 +14,7 @@ export default class DisplevelChooser extends Component {
 
   render() {
     const inputs = this.props.displevels.map((name, i) => (
-      <label key={i} for={`displevel_${name}`}>
+      <label key={i} htmlFor={`displevel_${name}`}>
         <input
           id={`displevel_${name}`}
           type="checkbox"
