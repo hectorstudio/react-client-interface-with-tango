@@ -1,0 +1,28 @@
+.DisplevelChooser {
+    background-color: #eee;
+    font-size: 0.75em;
+    display: inline-block;
+    padding: 0.25em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    border-radius: 0.125em;
+    margin-left: 1em;
+    border: 0.5px solid #ddd;
+}
+
+.DisplevelChooser label {
+    user-select: none;
+    margin-bottom: 0;
+    margin-right: 0.75em;
+    cursor: pointer;
+    color: #777;
+}
+
+.DisplevelChooser label:last-child {
+    margin-right: 0;
+}
+
+.DisplevelChooser input {
+    margin-right: 0.25em;
+    transform: translateY(-1px); /* ??? */
+}
