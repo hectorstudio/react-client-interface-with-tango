@@ -11,7 +11,7 @@ import {
 
 import { LOGIN } from "../actions/actionTypes";
 import { login } from "../actions/typedActionCreators";
-import { getLoginFailure } from "src/selectors/user";
+import { getLoginFailure, getAwaitingResponse } from "src/selectors/user";
 
 class Login extends React.Component {
   constructor(props) {
@@ -66,16 +66,26 @@ class Login extends React.Component {
                 Wrong username and/or password.
               </div>
             )}
+            {this.props.awaitingResponse && (
+              <div className="alert alert-info" role="alert">
+                Logging in....
+              </div>
+            )}
           </Modal.Body>
 
           <Modal.Footer>
             <Button
               className="btn btn-outline-secondary"
               onClick={this.props.closeDialog}
+              disabled={this.props.awaitingResponse}
             >
               Close
             </Button>
-            <Button type="submit" className="btn btn-outline-primary">
+            <Button
+              type="submit"
+              className="btn btn-outline-primary"
+              disabled={this.props.awaitingResponse}
+            >
               Log In
             </Button>
           </Modal.Footer>
@@ -88,6 +98,7 @@ class Login extends React.Component {
 export default connect(
   function mapStateToProps(state) {
     return {
+      awaitingResponse: getAwaitingResponse(state),
       loginFailure: getLoginFailure(state)
     };
   },
