@@ -15,7 +15,8 @@ export default function configureStore() {
   const thunkMiddleware = thunk.withExtraArgument({ emit });
   const sagaMiddleware = createSagaMiddleware();
   const loggerMiddleware = createLogger({
-    actionTransformer: action => action.type === LOGIN ? {...action, password: '*****'}: action
+    actionTransformer: action =>
+      action.type === LOGIN ? { ...action, password: "*****" } : action
   });
 
   const store = createStore(
