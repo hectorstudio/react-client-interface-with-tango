@@ -61,10 +61,9 @@
       "changeOrigin": true
     },
     "/auth": {
-      "target": "http://0.0.0.0:8080",
-      "pathRewrite": {
-        "^/auth": ""
-      }
+      "target": "https://webjive.maxiv.lu.se",
+      "secure": false,
+      "changeOrigin": true
     }
   }
 }
