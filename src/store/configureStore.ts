@@ -16,7 +16,9 @@ export default function configureStore() {
   const sagaMiddleware = createSagaMiddleware();
   const loggerMiddleware = createLogger({
     actionTransformer: action =>
-      action.type === LOGIN ? { ...action, password: "*****" } : action
+      action.type === LOGIN
+        ? { ...action, password: action.password.replace(/./g, "*") }
+        : action
   });
 
   const store = createStore(
