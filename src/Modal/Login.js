@@ -8,8 +8,10 @@ import {
   FormControl,
   Alert
 } from "react-bootstrap";
+
 import { LOGIN } from "../actions/actionTypes";
 import { login } from "../actions/typedActionCreators";
+import { getLoginFailure } from "src/selectors/user";
 
 class Login extends React.Component {
   constructor(props) {
@@ -86,13 +88,12 @@ class Login extends React.Component {
 export default connect(
   function mapStateToProps(state) {
     return {
-      loginFailure: state.user.loginFailed && !state.user.awaitingResponse
+      loginFailure: getLoginFailure(state)
     };
   },
   function mapDispatchToProps(dispatch) {
     return {
-      onSubmit: (username, password) =>
-        dispatch(login(username, password))
+      onSubmit: (username, password) => dispatch(login(username, password))
     };
   }
 )(Login);
