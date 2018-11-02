@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import {
   getCurrentDeviceCommands,
@@ -15,16 +16,19 @@ import {
   getCommandOutputsLoading
 } from '../../selectors/loadingStatus';
 
+import { getIsLoggedIn } from '../../selectors/user';
+
 import {
   executeCommand,
 } from '../../actions/tango';
 
 import Spinner from '../../Spinner/Spinner';
 
-import './CommandTable.css';
+import NotLoggedIn from '../NotLoggedIn/NotLoggedIn';
 import DescriptionDisplay from '../DescriptionDisplay/DescriptionDisplay';
-import PropTypes from 'prop-types';
+
 import { command } from  "../../propTypes/propTypes"
+import './CommandTable.css';
 
 const OutputDisplay = ({value, isLoading}) => isLoading
   ? <Spinner size={1}/>
@@ -50,11 +54,15 @@ class CommandTable extends Component {
       currentDeviceName,
       enabledList,
       outputsLoading,
-      commandOutputs
+      commandOutputs,
+      isLoggedIn
     } = this.props;
     
     return (
       <div className="CommandTable">
+        <NotLoggedIn>
+          You are currently not logged in and cannot execute any commands.
+        </NotLoggedIn>
         <table className='separated'>
           <tbody>
             {commands && commands.map(({ name, displevel, intype, intypedesc, outtypedesc }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
@@ -65,7 +73,7 @@ class CommandTable extends Component {
                   <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
                 </td>
                 <td className="input">
-                  <InputField onExecute={onExecute} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
+                  <InputField isEnabled={isLoggedIn} onExecute={onExecute} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
                 </td>
                 <td className='description'>
                   <DescriptionDisplay description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
@@ -95,7 +103,7 @@ class InputField extends Component {
     this.handleExecute = this.handleExecute.bind(this);
     this.state = {
       value: '',
-      valid: this.props.intype === 'DevString'
+      valid: this.props.intype === 'DevString' || this.props.intype === 'DevVoid'
     };
   }
 
@@ -130,12 +138,13 @@ class InputField extends Component {
   }
 
   render() {
+    const disabled = !(this.state.valid && this.props.isEnabled);
     const intype = this.props.intype;
     let inner = null;
 
     if (intype === 'DevVoid') {
       return (
-        <button className="btn btn-outline-secondary" type="button" onClick={this.handleExecute}>Execute</button>
+        <button className="btn btn-outline-secondary" type="button" disabled={disabled} onClick={this.handleExecute}>Execute</button>
       );
     }
 
@@ -159,7 +168,7 @@ class InputField extends Component {
       <div className="input-group">
         {inner}
         <div className="input-group-append">
-          <button className="btn btn-outline-secondary" type="button" disabled={!this.state.valid} onClick={this.handleExecute}>Execute</button>
+          <button className="btn btn-outline-secondary" type="button" disabled={disabled} onClick={this.handleExecute}>Execute</button>
         </div>
       </div>
     );
@@ -182,7 +191,9 @@ function mapStateToProps(state) {
     enabledList: getEnabledDisplevels(state),
     
     commandOutputs: getCurrentDeviceCommandOutputs(state),
-    outputsLoading: getCommandOutputsLoading(state)
+    outputsLoading: getCommandOutputsLoading(state),
+
+    isLoggedIn: getIsLoggedIn(state),
   };
 }
 
