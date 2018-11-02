@@ -37,18 +37,6 @@ import {
   DELETE_DEVICE_PROPERTY_FAILED,
 } from './actionTypes';
 
-const client = require('graphql-client')({
-  url: `/db`
-})
-
-function callServiceGraphQL(query, variables) {
-  return client.query(query, variables || {}, function(req, res) {
-    if(res.status === 401) {
-      throw new Error('Not authorized')
-    }
-  });
-}
-
 export function fetchDeviceNames() {
   return async dispatch => {
     dispatch({ type: FETCH_DEVICE_NAMES });
@@ -159,11 +147,11 @@ export function subscribeDevice(device, emit){
 }
 
 export function enableDisplevel(displevel) {
-  return dispatch => dispatch({type: ENABLE_DISPLEVEL, displevel})
+  return { type: ENABLE_DISPLEVEL, displevel };
 }
 
 export function disableDisplevel(displevel) {
-  return dispatch => dispatch({type: DISABLE_DISPLEVEL, displevel})
+  return { type: DISABLE_DISPLEVEL, displevel };
 }
 
 export function fetchDeviceSuccess(device) {
@@ -205,7 +193,7 @@ export function fetchDevice(name) {
       const device = await TangoAPI.fetchDevice(name);
       return dispatch(device ? fetchDeviceSuccess(device) : displayError("The device " + name + " was not found"));
     } catch (err) {
-      dispatch(displayError(err.toString()));
+      return dispatch(displayError(err.toString()));
     }
   }
 }
