@@ -9,6 +9,7 @@
     "classnames": "^2.2.5",
     "font-awesome": "^4.7.0",
     "graphql-client": "^2.0.1",
+    "graphql-request": "^1.8.2",
     "minimatch": "^3.0.4",
     "plotly.js": "^1.41.3",
     "query-string": "5.0.0",
