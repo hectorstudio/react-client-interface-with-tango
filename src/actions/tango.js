@@ -147,11 +147,11 @@ export function subscribeDevice(device, emit){
 }
 
 export function enableDisplevel(displevel) {
-  return dispatch => dispatch({type: ENABLE_DISPLEVEL, displevel})
+  return { type: ENABLE_DISPLEVEL, displevel };
 }
 
 export function disableDisplevel(displevel) {
-  return dispatch => dispatch({type: DISABLE_DISPLEVEL, displevel})
+  return { type: DISABLE_DISPLEVEL, displevel };
 }
 
 export function fetchDeviceSuccess(device) {
