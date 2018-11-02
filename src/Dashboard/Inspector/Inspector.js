@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from "react";
 import createGQLClient from "graphql-client";
 import { getWidgetDefinition } from "../utils";
-import PropTypes from 'prop-types'
-import { widget, widgetDefinition } from "../../propTypes/propTypes"
+import PropTypes from "prop-types";
+import { widget, widgetDefinition } from "../../propTypes/propTypes";
 
 export default class Inspector extends Component {
   constructor(props) {
@@ -51,6 +51,12 @@ export default class Inspector extends Component {
         this.fetchAttributes(device);
       });
     }
+  }
+
+  sortedDeviceNames(deviceNames) {
+    return [...deviceNames].sort((a, b) =>
+      a.toLowerCase().localeCompare(b.toLowerCase())
+    );
   }
 
   fetchAttributes(device) {
@@ -145,7 +151,10 @@ export default class Inspector extends Component {
       .then(devices => devices.map(device => device.name))
       .catch(() => [])
       .then(deviceNames =>
-        this.setState({ deviceNames, fetchingDeviceNames: false })
+        this.setState({
+          deviceNames: this.sortedDeviceNames(deviceNames),
+          fetchingDeviceNames: false
+        })
       );
 
     const widget = this.props.widget;
@@ -310,5 +319,5 @@ Inspector.propTypes = {
   onDeviceChange: PropTypes.func,
   onParamChange: PropTypes.func,
   widget: widget,
-  widgetDefinitions: PropTypes.arrayOf(widgetDefinition),
-}
+  widgetDefinitions: PropTypes.arrayOf(widgetDefinition)
+};
