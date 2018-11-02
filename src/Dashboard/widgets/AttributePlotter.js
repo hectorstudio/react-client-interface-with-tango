@@ -36,7 +36,7 @@ export default class AttributePlotter extends React.Component {
 
     const oldValues = this.state.values;
     const startTime = this.state.startTime;
-    const newValue = newProps.value;
+    const newValue = newProps.value[0];
     //Difference in seconds between "now" and when the plot was created, rounded to one decimal place.
     const newTime =
       Math.round((10 * (new Date().getTime() - startTime)) / 1000) / 10;
@@ -79,8 +79,8 @@ export default class AttributePlotter extends React.Component {
 }
 
 AttributePlotter.propTypes = {
-  attribute: PropTypes.string,
-  device: PropTypes.string,
+  attribute: PropTypes.array,
+  device: PropTypes.array,
   mode: PropTypes.string,
   params: PropTypes.shape({
     height: PropTypes.number,

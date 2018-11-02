@@ -29,9 +29,9 @@ export default class AttributeTrend extends React.Component {
     const oldValues = this.state.data.y;
     const oldTimes = this.state.data.x;
     const startTime = this.state.startTime;
-    const newValue = newProps.value;
+    const newValue = newProps.value[0];
     //Difference in seconds between "now" and when the plot was created, rounded to one decimal place.
-    const newTime = newProps.time;
+    const newTime = newProps.time[0];
     const data = {
       y: [...oldValues, newValue],
       x: [...oldTimes, newTime]
@@ -88,8 +88,8 @@ export default class AttributeTrend extends React.Component {
 }
 
 AttributeTrend.propTypes = {
-  attribute: PropTypes.string,
-  device: PropTypes.string,
+  attribute: PropTypes.array,
+  device: PropTypes.array,
   mode: PropTypes.string,
   params: PropTypes.shape({
     height: PropTypes.number,

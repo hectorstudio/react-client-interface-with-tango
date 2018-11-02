@@ -28,7 +28,7 @@ export default class AttributeRecorder extends React.Component {
     }
 
     const oldValues = this.state.values;
-    const newValue = newProps.value;
+    const newValue = newProps.value[0];
     if (oldValues.length === 0 || newValue !== oldValues.slice(-1)[0].value) {
       const now = new Date();
       const values = [

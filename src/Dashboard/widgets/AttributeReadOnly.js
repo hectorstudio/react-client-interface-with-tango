@@ -10,11 +10,10 @@ const AttributeReadOnly = ({
   params: { scientific, showDevice, showAttribute }
 }) => {
   const displayValue =
-    value == null ? "-" : scientific ? Number(value).toExponential(2) : value;
+    value == null ? "-" : scientific ? Number(value[0]).toExponential(2) : value[0];
 
   // Ugly logic to deal with all combinations of options and device/attribute presence
   // This might be simply an unnecessary feature, so don't spend time on improving it yet
-
   const deviceLabel = device || <i>device</i>;
   const attributeLabel = attribute || <i>attribute</i>;
   const labels = (showDevice ? [deviceLabel] : []).concat(
@@ -39,8 +38,8 @@ const AttributeReadOnly = ({
 };
 
 AttributeReadOnly.propTypes = {
-  attribute: PropTypes.string,
-  device: PropTypes.string,
+  attribute: PropTypes.array,
+  device: PropTypes.array,
   mode: PropTypes.string,
   params: PropTypes.shape({
     scientific: PropTypes.bool,
