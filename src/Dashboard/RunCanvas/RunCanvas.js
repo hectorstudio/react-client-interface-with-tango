@@ -59,16 +59,22 @@ export default class RunCanvas extends Component {
       })
       .reduce((accum, curr) => [...accum, ...curr], []);
 
-    const widgetModels = this.props.widgets
-      .filter(({ canvas }) => canvas == null)
-      .filter(({ device, attribute }) => device != null && attribute != null) // Skip widgets without device -- revise this
-      .map(({ device, attribute }) => `${device}/${attribute}`);
-
+    let widgetModels = this.props.widgets.filter(({ canvas }) => canvas == null);
+    let tmp = [];
+    widgetModels.map(({ device, attribute }) => {
+      device.map((name, i) => {
+        if(device != null && attribute[i] != null){
+          tmp.push(`${name}/${attribute[i]}`)
+        }
+      })
+    });
+    
+    widgetModels = tmp;
+    
     const models = [...canvasModels, ...widgetModels].filter(
       // Unique
       (val, idx, arr) => arr.indexOf(val) === idx
     );
-
     function socketUrl() {
       const loc = window.location;
       const protocol = loc.protocol.replace("http", "ws");
@@ -137,16 +143,19 @@ export default class RunCanvas extends Component {
   }
 
   entryForModel(device, attribute) {
-    const model = device + "/" + attribute;
-    return this.state.attributes[model] || {};
+    const values = device.map((deviceName,i) => {
+      const model = deviceName + "/" + attribute[i];
+      return this.state.attributes[model] || {};
+    })
+    return values;
   }
 
   valueForModel(device, attribute) {
-    return this.entryForModel(device, attribute).value;
+    return this.entryForModel(device, attribute).map(({value}) => value);
   }
 
   timeForModel(device, attribute) {
-    return this.entryForModel(device, attribute).time;
+    return this.entryForModel(device, attribute).map(({time}) => time);
   }
 
   render() {
@@ -158,7 +167,6 @@ export default class RunCanvas extends Component {
           const { x, y, device, attribute, params } = widget;
           const value = this.valueForModel(device, attribute);
           const time = this.timeForModel(device, attribute);
-
           const extraProps =
             definition.__canvas__ != null
               ? { attributes: this.state.attributes }
