@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { setDeviceProperty } from '../actions/tango'
 import { getCurrentDeviceProperties } from '../selectors/currentDevice'
 import PropTypes from 'prop-types'
+import './modal.css';
 
 /**
  * Renders a modal dialog for deleting  properties from a device. Rendered in Layout iff state.modal.modalInstance === 'EDIT_PROPERTY'
