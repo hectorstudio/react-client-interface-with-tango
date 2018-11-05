@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { getWidgetDefinition } from "../widgets/widgetDefinitions";
-import PropTypes from 'prop-types'
-import {widget} from "../../propTypes/propTypes"
+import PropTypes from "prop-types";
+import { widget } from "../../propTypes/propTypes";
 
 class MiniCanvas extends Component {
   componentForWidget(widget) {
@@ -12,15 +12,15 @@ class MiniCanvas extends Component {
     return widget.device === "__parent__" ? this.props.device : widget.device;
   }
 
-  valueForWidget(widget) {
+  valueAndTimeForWidget(widget) {
     if (this.props.mode !== "run") {
-      return null;
+      return {};
     }
 
     const device = this.deviceForWidget(widget);
     const attribute = widget.attribute;
     const key = `${device}/${attribute}`;
-    return this.props.attributes[key];
+    return this.props.attributes[key] || {};
   }
 
   render() {
@@ -76,7 +76,7 @@ class MiniCanvas extends Component {
           {widgets.map((widget, i) => {
             const Widget = this.componentForWidget(widget);
             const device = this.deviceForWidget(widget);
-            const value = this.valueForWidget(widget);
+            const { time, value } = this.valueAndTimeForWidget(widget);
             const { x, y, attribute, params } = widget;
 
             return (
@@ -94,6 +94,7 @@ class MiniCanvas extends Component {
                   attribute={attribute}
                   params={params}
                   mode={this.props.mode}
+                  time={time}
                   value={value}
                 />
               </div>
@@ -106,8 +107,8 @@ class MiniCanvas extends Component {
 }
 MiniCanvas.propTypes = {
   mode: PropTypes.string,
-  widgets: PropTypes.arrayOf(widget),
-}
+  widgets: PropTypes.arrayOf(widget)
+};
 
 function complexWidgetComponent(canvas) {
   return class ComplexWidget extends Component {
@@ -132,6 +133,6 @@ export function complexWidgetDefinition(canvas) {
     component: complexWidgetComponent(canvas),
     fields: ["device"],
     params: [],
-    __canvas__: id,
+    __canvas__: id
   };
 }
