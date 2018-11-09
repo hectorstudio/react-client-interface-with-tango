@@ -23,7 +23,7 @@ const Spectrum = ({
 
     const realData = [
         {
-        y: value, 
+        y: value && value[0], 
         mode: "lines",
         line: {
           color: 'rgb(219, 64, 82)'
@@ -37,7 +37,6 @@ const Spectrum = ({
       xaxis: { showgrid: showGrid },
       yaxis: { showgrid: showGrid }
     };
-
     return (
       <div
         style={{
