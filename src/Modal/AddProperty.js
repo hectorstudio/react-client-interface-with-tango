@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { setDeviceProperty } from '../actions/tango'
 import PropTypes from 'prop-types'
+import './modal.css';
 
 /**
  * Renders a modal dialog for adding new properties to a device. Rendered in Layout iff state.modal.modalInstance === 'CREATE_PROPERTY'
