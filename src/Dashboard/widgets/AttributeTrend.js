@@ -15,34 +15,31 @@ const plotterSampleValues = trace1;
 export default class AttributeTrend extends React.Component {
   constructor(props) {
     super(props);
-    const time = new Date().getTime();
+    
     this.state = {
-      data: { x: [], y: [] },
-      startTime: time
+      data: []
     };
   }
-
+  
   componentWillReceiveProps(newProps) {
     if (this.props.mode === "edit" || this.props.mode === "library") {
       return;
     }
-    const oldValues = this.state.data.y;
-    const oldTimes = this.state.data.x;
-    const startTime = this.state.startTime;
-    const newValue = newProps.value;
-    //Difference in seconds between "now" and when the plot was created, rounded to one decimal place.
-    const newTime = newProps.time;
-    const data = {
-      y: [...oldValues, newValue],
-      x: [...oldTimes, newTime]
-    };
+      const time = new Date().toLocaleTimeString();
+      const data = newProps.value.map((val, i) => {
+      return {
+        y: this.state.data[i] ? [...this.state.data[i].y.slice(-newProps.params.nbrDataPoints), val] : [val],
+        x: this.state.data[i] ? [...this.state.data[i].x.slice(-newProps.params.nbrDataPoints), time] : [time],
+        mode: "lines",
+        name: newProps.device[i] + "/"+ newProps.attribute[i]
+      }
+    })
     this.setState(...this.state, { data });
   }
 
   render() {
     const liveMode =
       this.props.mode !== "edit" && this.props.mode !== "library";
-    const data = liveMode ? this.state.data : plotterSampleValues;
 
     const {
       nbrDataPoints,
@@ -52,17 +49,9 @@ export default class AttributeTrend extends React.Component {
       Title,
       strokeWidth
     } = this.props.params;
-    const lastValues = nbrDataPoints === 0 ? [] : data.y.slice(-nbrDataPoints);
-    const lastTimes = nbrDataPoints === 0 ? [] : data.x.slice(-nbrDataPoints);
 
     const data0 = [trace1];
-    const trace = [
-      {
-        x: lastTimes,
-        y: lastValues,
-        mode: "lines"
-      }
-    ];
+
     const layout = {
       width: width,
       height: height - 10,
@@ -81,15 +70,15 @@ export default class AttributeTrend extends React.Component {
           height: expandToGrid(height) + "px"
         }}
       >
-        <Plot data={liveMode ? trace : data0} layout={layout} />
+        <Plot data={liveMode ? this.state.data : data0} layout={layout} />
       </div>
     );
   }
 }
 
 AttributeTrend.propTypes = {
-  attribute: PropTypes.string,
-  device: PropTypes.string,
+  attribute: PropTypes.array,
+  device: PropTypes.array,
   mode: PropTypes.string,
   params: PropTypes.shape({
     height: PropTypes.number,

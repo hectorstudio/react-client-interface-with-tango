@@ -36,12 +36,15 @@ export default class RunCanvas extends Component {
 
   modelsForSubcanvas(canvas, parent) {
     return canvas.widgets
-      .map(widget => {
-        const deviceSource = widget.device === "__parent__" ? parent : widget;
+      .map((widget, i) => {
+        const deviceSource = widget.device[0] === "__parent__" ? parent : widget;
         return [deviceSource.device, widget.attribute];
       })
       .filter(([device, attribute]) => device != null && attribute != null)
-      .map(([device, attribute]) => `${device}/${attribute}`);
+      .reduce((r, [device, attribute]) => {
+        attribute.map((attrib) => r.push(`${device}/${attrib}`)); 
+        return r;
+      }, []);
   }
 
   isSubcanvasWidget(widget) {
@@ -59,16 +62,22 @@ export default class RunCanvas extends Component {
       })
       .reduce((accum, curr) => [...accum, ...curr], []);
 
-    const widgetModels = this.props.widgets
-      .filter(({ canvas }) => canvas == null)
-      .filter(({ device, attribute }) => device != null && attribute != null) // Skip widgets without device -- revise this
-      .map(({ device, attribute }) => `${device}/${attribute}`);
-
+    let widgetModels = this.props.widgets.filter(({ canvas }) => canvas == null);
+    let tmp = [];
+    widgetModels.map(({ device, attribute }) => {
+      device.map((name, i) => {
+        if(device != null && attribute[i] != null){
+          tmp.push(`${name}/${attribute[i]}`)
+        }
+      })
+    });
+    
+    widgetModels = tmp;
     const models = [...canvasModels, ...widgetModels].filter(
       // Unique
       (val, idx, arr) => arr.indexOf(val) === idx
     );
-
+    console.log(models);
     function socketUrl() {
       const loc = window.location;
       const protocol = loc.protocol.replace("http", "ws");
@@ -76,7 +85,6 @@ export default class RunCanvas extends Component {
     }
 
     this.socket = new WebSocket(socketUrl() + "?dashboard", "graphql-ws");
-
     const query = `
           subscription newChangeEvent($models: [String]!) {
             changeEvent(models: $models) {
@@ -137,17 +145,19 @@ export default class RunCanvas extends Component {
   }
 
   entryForModel(device, attribute) {
-    const model = device + "/" + attribute;
-    return this.state.attributes[model] || {};
+    const values = device.map((deviceName,i) => {
+      const model = deviceName + "/" + attribute[i];
+      return this.state.attributes[model] || {};
+    })
+    return values;
   }
 
   valueForModel(device, attribute) {
-    return this.entryForModel(device, attribute).value;
+    return this.entryForModel(device, attribute).map(({value}) => value);
   }
 
   timeForModel(device, attribute) {
-    const { time } = this.entryForModel(device, attribute);
-    return new Date(time);
+    return this.entryForModel(device, attribute).map(({time}) => new Date(time));
   }
 
   render() {
@@ -159,7 +169,6 @@ export default class RunCanvas extends Component {
           const { x, y, device, attribute, params } = widget;
           const value = this.valueForModel(device, attribute);
           const time = this.timeForModel(device, attribute);
-
           const extraProps =
             definition.__canvas__ != null
               ? { attributes: this.state.attributes }

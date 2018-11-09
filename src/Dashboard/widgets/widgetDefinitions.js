@@ -104,7 +104,8 @@ export const WIDGET_DEFINITIONS = [
     component: AttributeTrend,
     fields: [
       "device",
-      { type: "attribute", dataformats: ["SCALAR"], onlyNumeric: true }
+      { type: "attribute", dataformats: ["SCALAR"], onlyNumeric: true },
+      "multi"
     ],
     params: [
       {
