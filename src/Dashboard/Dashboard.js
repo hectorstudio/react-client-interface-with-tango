@@ -66,6 +66,7 @@ class Dashboard extends Component {
     this.handleDeleteWidget = this.handleDeleteWidget.bind(this);
     this.handleParamChange = this.handleParamChange.bind(this);
     this.handleDeviceChange = this.handleDeviceChange.bind(this);
+    this.handleDeviceRemove = this.handleDeviceRemove.bind(this);
     this.handleAttributeChange = this.handleAttributeChange.bind(this);
     this.handleChangeCanvas = this.handleChangeCanvas.bind(this);
   }
@@ -94,13 +95,13 @@ class Dashboard extends Component {
       {}
     );
 
-    const device = this.isRootCanvas() ? null : "__parent__";
+    const device = this.isRootCanvas() ? [null] : ["__parent__"];
     const widget = {
       type: definition.type,
       device,
       x: roundToGrid(x),
       y: roundToGrid(y),
-      attribute: null,
+      attribute: [null],
       params
     };
     const widgets = [...this.currentWidgets(), widget];
@@ -161,12 +162,26 @@ class Dashboard extends Component {
     this.updateWidget(index, newPos);
   }
 
-  handleDeviceChange(device) {
-    this.updateWidget(this.state.selectedWidgetIndex, { device });
+  handleDeviceChange(deviceName, index) {
+    let device = [...this.selectedWidget().device];
+    let attribute = [...this.selectedWidget().attribute];
+    attribute[index] = null;
+    device[index] = deviceName;
+    this.updateWidget(this.state.selectedWidgetIndex, { attribute, device });
   }
 
-  handleAttributeChange(attribute) {
+  handleAttributeChange(attributeName, index) {
+    let attribute = [...this.selectedWidget().attribute];
+    attribute[index] = attributeName
     this.updateWidget(this.state.selectedWidgetIndex, { attribute });
+  }
+
+  handleDeviceRemove(index) {
+    let device = [...this.selectedWidget().device];
+    let attribute = [...this.selectedWidget().attribute];
+    attribute.splice(index, 1)
+    device.splice(index, 1)
+    this.updateWidget(this.state.selectedWidgetIndex, { attribute, device});
   }
 
   handleChangeCanvas(event) {
@@ -257,6 +272,7 @@ class Dashboard extends Component {
                 deviceNames={this.state.deviceNames}
                 onParamChange={this.handleParamChange}
                 onDeviceChange={this.handleDeviceChange}
+                onDeviceRemove={this.handleDeviceRemove}
                 onAttributeChange={this.handleAttributeChange}
                 isRootCanvas={this.isRootCanvas()}
               />

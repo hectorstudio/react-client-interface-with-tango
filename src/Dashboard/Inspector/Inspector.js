@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import createGQLClient from "graphql-client";
 import { getWidgetDefinition } from "../utils";
 import PropTypes from "prop-types";
@@ -11,20 +11,33 @@ export default class Inspector extends Component {
       fetchingDeviceNames: true,
       deviceNames: [], // Should be lifted out to higher component in order to reduce data fetching
       fetchingAttributes: false,
-      attributes: []
+      attributes: {},
     };
 
     this.handleSelectDevice = this.handleSelectDevice.bind(this);
     this.handleSelectAttribute = this.handleSelectAttribute.bind(this);
+    this.handleAddDevice = this.handleAddDevice.bind(this);
+    this.handleRemoveDevice = this.handleRemoveDevice.bind(this);
+    this.deviceChooser = this.deviceChooser.bind(this);
+    this.attributeChooser = this.attributeChooser.bind(this);
     this.gqlClient = createGQLClient({ url: "/db " });
   }
 
-  handleSelectDevice(event) {
-    this.props.onDeviceChange(event.target.value);
+  handleSelectDevice(event, index) {
+    this.props.onDeviceChange(event.target.value, index);
+    this.fetchAttributes(event.target.value);
   }
 
-  handleSelectAttribute(event) {
-    this.props.onAttributeChange(event.target.value);
+  handleSelectAttribute(event, index) {
+    this.props.onAttributeChange(event.target.value, index);
+  }
+
+  handleAddDevice(index){
+    this.props.onDeviceChange(null, index);
+  }
+
+  handleRemoveDevice(index){
+    this.props.onDeviceRemove(index);
   }
 
   componentDidUpdate(prevProps) {
@@ -34,7 +47,9 @@ export default class Inspector extends Component {
     const newDevice = newWidget ? newWidget.device : null;
 
     if (newDevice && newDevice !== oldDevice) {
-      this.fetchAttributes(newDevice);
+      newDevice.forEach((device) => {
+        this.fetchAttributes(device);
+      });
     }
   }
 
@@ -46,8 +61,7 @@ export default class Inspector extends Component {
 
   fetchAttributes(device) {
     this.setState({
-      fetchingAttributes: true,
-      attributes: []
+      fetchingAttributes: true
     });
 
     this.callServiceGraphQL(
@@ -67,7 +81,7 @@ export default class Inspector extends Component {
       .then(res => res.data.device.attributes)
       .catch(() => [])
       .then(attributes =>
-        this.setState({ attributes, fetchingAttributes: false })
+        this.setState({ fetchingAttributes: false, attributes : {...this.state.attributes, [device]: attributes} })
       );
   }
 
@@ -145,12 +159,16 @@ export default class Inspector extends Component {
 
     const widget = this.props.widget;
     if (widget != null && widget.device != null) {
-      this.fetchAttributes(widget.device);
+      widget.device.forEach((device) => {
+        if(device !== "__parent__"){
+          this.fetchAttributes(device);
+        }
+      });
     }
   }
 
-  filteredAttributes(definition) {
-    return this.state.attributes
+  filteredAttributes(definition, device) {
+    return this.state.attributes[device]
       .filter(({ dataformat }) => {
         const field = definition.fields.find(
           field => field.type === "attribute"
@@ -182,6 +200,62 @@ export default class Inspector extends Component {
       });
   }
 
+  deviceChooser(deviceName, index){
+    return (
+      <td>
+        <select
+          className="form-control"
+          value={deviceName || ""}
+          onChange={(e) => this.handleSelectDevice(e, index)}
+        >
+          {deviceName == null && (
+            <option value="" disabled>
+              None
+            </option>
+          )}
+          {this.props.isRootCanvas === false && (
+            <option value="__parent__">Parent Device</option>
+          )}
+          {this.state.deviceNames.map((name, i) => (
+            <option key={i} value={name}>
+              {name}
+            </option>
+          ))}
+        </select>
+      </td>);
+  }
+
+  attributeChooser(device, attribute, definition, index){
+    return(
+    device === "__parent__" ? (
+      <input
+        className="form-control"
+        type="text"
+        value={attribute || ""}
+        onChange={(e) => this.handleSelectAttribute(e, index)}
+      />
+    ) : (
+      <select
+        className="form-control"
+        value={attribute || ""}
+        onChange={(e) => this.handleSelectAttribute(e, index)}
+        disabled={device == null}
+      >
+        {attribute == null && (
+          <option value="" disabled>
+            {device ? "None" : "Select Device First"}
+          </option>
+        )}
+        {this.state.attributes[device] && this.filteredAttributes(definition, device).map(({ name }, i) => (
+          <option key={i} value={name}>
+            {name}
+          </option>
+        ))}
+      </select>
+    )
+    );
+  }
+
   render() {
     const { widget, widgetDefinitions } = this.props;
 
@@ -194,76 +268,35 @@ export default class Inspector extends Component {
     const fields = definition.fields;
     const paramDefinitions = definition.params;
 
-    const attributeChooser =
-      device === "__parent__" ? (
-        <input
-          className="form-control"
-          type="text"
-          value={attribute || ""}
-          onChange={this.handleSelectAttribute}
-        />
-      ) : (
-        <select
-          className="form-control"
-          value={attribute || ""}
-          onChange={this.handleSelectAttribute}
-          disabled={device == null}
-        >
-          {attribute == null && (
-            <option value="" disabled>
-              {device ? "None" : "Select Device First"}
-            </option>
-          )}
-          {this.filteredAttributes(definition).map(({ name }, i) => (
-            <option key={i} value={name}>
-              {name}
-            </option>
-          ))}
-        </select>
-      );
-
     const fieldTypes = fields.map(field => field.type);
 
     return (
       <div className="Inspector">
         <h1>Inspector</h1>
-        {fields.length > 0 && (
+        {fields.length > 0 && [...Array(device.length || 1)].map((e, i) =>
+          <Fragment key={i}>
+          {i !== 0 && fieldTypes.indexOf("multi") !== -1 && <i className="fa fa-times" onClick={() => this.handleRemoveDevice(i)}/>}
           <table>
             <tbody>
-              {fieldTypes.indexOf("device") !== -1 && (
-                <tr>
-                  <td>Device:</td>
-                  <td>
-                    <select
-                      className="form-control"
-                      value={device || ""}
-                      onChange={this.handleSelectDevice}
-                    >
-                      {device == null && (
-                        <option value="" disabled>
-                          None
-                        </option>
-                      )}
-                      {this.props.isRootCanvas === false && (
-                        <option value="__parent__">Parent Device</option>
-                      )}
-                      {this.state.deviceNames.map((name, i) => (
-                        <option key={i} value={name}>
-                          {name}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
-              )}
-              {fieldTypes.indexOf("attribute") !== -1 && (
-                <tr>
-                  <td>Attribute:</td>
-                  <td>{attributeChooser}</td>
-                </tr>
-              )}
+                {fieldTypes.indexOf("device") !== -1 && (
+                  <tr>
+                    <td>Device: </td>
+                    {this.deviceChooser(device[i], i)}
+                  </tr>
+                )}
+                {fieldTypes.indexOf("attribute") !== -1 && (
+                  <tr>
+                    <td>Attribute:</td>
+                    <td>{this.attributeChooser(device[i], attribute[i], definition, i)}</td>
+                  </tr>
+                )}
             </tbody>
           </table>
+          <hr />
+          </Fragment>
+        )}
+        {fieldTypes.indexOf("multi") !== -1 && (
+          <button onClick={() => this.handleAddDevice(device.length)}>Add device</button>
         )}
         {paramDefinitions.length * fields.length > 0 && <hr />}
         <table>
