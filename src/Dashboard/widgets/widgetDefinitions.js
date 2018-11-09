@@ -4,6 +4,7 @@ import AttributePlotter from "./AttributePlotter";
 import AttributeTrend from "./AttributeTrend";
 import AttributeRecorder from "./AttributeRecorder";
 import AttributeReadOnly from "./AttributeReadOnly";
+import Spectrum from "./Spectrum";
 import Label from "./Label";
 import DeviceName from "./DeviceName";
 
@@ -104,8 +105,7 @@ export const WIDGET_DEFINITIONS = [
     component: AttributeTrend,
     fields: [
       "device",
-      { type: "attribute", dataformats: ["SCALAR"], onlyNumeric: true },
-      "multi"
+      { type: "attribute", dataformats: ["SCALAR"], onlyNumeric: true }
     ],
     params: [
       {
@@ -143,6 +143,35 @@ export const WIDGET_DEFINITIONS = [
         type: "number",
         default: 1,
         description: "Stroke width"
+      }
+    ]
+  },
+  {
+    type: "ATTRIBUTE_SPECTRUM",
+    name: "Attribute spectrum",
+    component: Spectrum,
+    fields: [
+      "device",
+      { type: "attribute", dataformats: ["SPECTRUM"], onlyNumeric: true }
+    ],
+    params: [
+      {
+        name: "Title",
+        type: "string",
+        default: "",
+        description: "Title"
+      },
+      {
+        name: "width",
+        type: "number",
+        default: 300,
+        description: "Width (px)"
+      },
+      {
+        name: "height",
+        type: "number",
+        default: 200,
+        description: "Height (px)"
       }
     ]
   },
