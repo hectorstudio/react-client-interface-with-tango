@@ -160,7 +160,9 @@ export default class Inspector extends Component {
     const widget = this.props.widget;
     if (widget != null && widget.device != null) {
       widget.device.forEach((device) => {
-        this.fetchAttributes(device);
+        if(device !== "__parent__"){
+          this.fetchAttributes(device);
+        }
       });
     }
   }

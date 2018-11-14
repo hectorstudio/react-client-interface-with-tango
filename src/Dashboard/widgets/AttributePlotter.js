@@ -33,7 +33,6 @@ export default class AttributePlotter extends React.Component {
     if (this.props.mode === "edit" || this.props.mode === "library") {
       return;
     }
-
     const oldValues = this.state.values;
     const startTime = this.state.startTime;
     const newValue = newProps.value[0];
