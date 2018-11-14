@@ -9,7 +9,7 @@ class MiniCanvas extends Component {
   }
 
   deviceForWidget(widget) {
-    return widget.device === "__parent__" ? this.props.device : widget.device;
+    return widget.device[0] === "__parent__" ? this.props.device : widget.device[0];
   }
 
   valueAndTimeForWidget(widget) {
@@ -18,9 +18,17 @@ class MiniCanvas extends Component {
     }
 
     const device = this.deviceForWidget(widget);
-    const attribute = widget.attribute;
-    const key = `${device}/${attribute}`;
-    return this.props.attributes[key] || {};
+    let value = []
+    let time = []
+    widget.attribute.forEach((attrib) => {
+      const key = `${device}/${attrib}`;
+      if(this.props.attributes[key]){
+        value.push(this.props.attributes[key].value)
+        time.push(this.props.attributes[key].time)
+      }
+    })
+
+    return {value, time};
   }
 
   render() {
@@ -78,7 +86,6 @@ class MiniCanvas extends Component {
             const device = this.deviceForWidget(widget);
             const { time, value } = this.valueAndTimeForWidget(widget);
             const { x, y, attribute, params } = widget;
-
             return (
               <div
                 key={i}

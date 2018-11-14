@@ -95,7 +95,7 @@ class Dashboard extends Component {
       {}
     );
 
-    const device = this.isRootCanvas() ? [null] : "__parent__";
+    const device = this.isRootCanvas() ? [null] : ["__parent__"];
     const widget = {
       type: definition.type,
       device,

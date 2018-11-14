@@ -36,12 +36,15 @@ export default class RunCanvas extends Component {
 
   modelsForSubcanvas(canvas, parent) {
     return canvas.widgets
-      .map(widget => {
-        const deviceSource = widget.device === "__parent__" ? parent : widget;
+      .map((widget, i) => {
+        const deviceSource = widget.device[0] === "__parent__" ? parent : widget;
         return [deviceSource.device, widget.attribute];
       })
       .filter(([device, attribute]) => device != null && attribute != null)
-      .map(([device, attribute]) => `${device}/${attribute}`);
+      .reduce((r, [device, attribute]) => {
+        attribute.map((attrib) => r.push(`${device}/${attrib}`)); 
+        return r;
+      }, []);
   }
 
   isSubcanvasWidget(widget) {
@@ -70,11 +73,11 @@ export default class RunCanvas extends Component {
     });
     
     widgetModels = tmp;
-    
     const models = [...canvasModels, ...widgetModels].filter(
       // Unique
       (val, idx, arr) => arr.indexOf(val) === idx
     );
+    console.log(models);
     function socketUrl() {
       const loc = window.location;
       const protocol = loc.protocol.replace("http", "ws");
@@ -82,7 +85,6 @@ export default class RunCanvas extends Component {
     }
 
     this.socket = new WebSocket(socketUrl() + "?dashboard", "graphql-ws");
-
     const query = `
           subscription newChangeEvent($models: [String]!) {
             changeEvent(models: $models) {
