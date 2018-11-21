@@ -8,7 +8,8 @@ import EditCanvas from "./EditCanvas/EditCanvas";
 import Library from "./Library/Library";
 import RunCanvas from "./RunCanvas/RunCanvas";
 import Inspector from "./Inspector/Inspector";
-import save from "./dashboardRepo";
+import { save as saveToRepo} from "./dashboardRepo";
+import { load as loadFromRepo} from "./dashboardRepo";
 
 import {
   WIDGET_DEFINITIONS,
@@ -57,9 +58,17 @@ class Dashboard extends Component {
       selectedWidgetIndex: -1, // Belongs in edit component
       selectedCanvasIndex: 0,
       canvases,
-      repoID: '', //dashboard id in the dashboard repo database
+      dashboardID: '', //dashboard id in the dashboard repo database
       deviceNames: [] // Not used?
     };
+    loadFromRepo(res => {
+      console.log("Response from GET /dashboard");
+      console.log(res);
+      if (res){
+        this.setState({canvases: res.canvases, dashboardID: res.dashboardID});
+      }
+      
+    });
 
     this.toggleMode = this.toggleMode.bind(this);
     this.handleMoveWidget = this.handleMoveWidget.bind(this);
@@ -134,18 +143,8 @@ class Dashboard extends Component {
 
     const c = encodeURI(JSON.stringify(this.state.canvases));
     this.props.history.replace("?c=" + c);
-       //dashboardRepo.save((result) => his.setState({repoID: res.repoID}));
-       fetch('/dashboards/', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json; charset=utf-8"
-        },
-        body: JSON.stringify(this.state)
-        
-      }).then((res) => res.json())
-      .then((res) => this.setState({repoID: res.repoID}))
+    saveToRepo(this.state, (result) => this.setState({dashboardID: result.dashboardID}));
     }
-  }
 
   // Convenience method used by handler methods
   updateWidget(index, changes) {
