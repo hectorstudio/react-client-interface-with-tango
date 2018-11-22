@@ -83,7 +83,12 @@ class Dashboard extends Component {
   }
 
   componentDidUpdate() {
-    saveToRepo(this.state, (result) => !this.state._id || this.state.id === '' ? this.setState({_id: result._id}) : null);
+    try{
+      saveToRepo(this.state, (result) => !this.state._id || this.state.id === '' ? this.setState({_id: result._id}) : null);
+    }catch(erro){
+      console.log("Unable to save dashboard to db")
+    }
+    
   }
   
   toggleMode() {
