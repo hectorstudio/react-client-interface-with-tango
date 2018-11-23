@@ -8,6 +8,9 @@ export const save = (state, callback) => {
     
   }).then((res) => res.json())
   .then((res) => callback(res))
+  .catch(function(){
+    console.log("Couldn't reach dashboard repo");
+  });
 }
 
 export const load = (callback) => {
