@@ -69,7 +69,7 @@
       "changeOrigin": true
     },
     "/dashboards": {
-      "target": "http://localhost:3012",
+      "target": "https://webjive.maxiv.lu.se",
       "secure": false,
       "changeOrigin": true
     }
