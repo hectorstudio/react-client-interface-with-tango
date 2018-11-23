@@ -49,16 +49,19 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    const c = queryString.parse(props.location.search).c;
-    const canvases = c ? JSON.parse(decodeURI(c)) : DEFAULT_CANVASES;
+    //This doesn't really work without UI support. we get a messy conflict when a user on the one hand has a
+    //another users dashboard id in the url, and their own webjive_token as a cookie. What do we fetch?
+    //const urlID = queryString.parse(props.location.search).id;
+    //const id = urlID ? urlID : '';
+    const id = "";
 
     this.state = {
       mode: "edit",
       sidebar: "library", // Belongs in edit component
       selectedWidgetIndex: -1, // Belongs in edit component
       selectedCanvasIndex: 0,
-      canvases,
-      _id: '', //dashboard id in the dashboard repo database
+      canvases: DEFAULT_CANVASES,
+      _id: id, //dashboard id in the dashboard repo database
       deviceNames: [] // Not used?
     };
     loadFromRepo(res => {
@@ -150,8 +153,7 @@ class Dashboard extends Component {
     canvases[this.state.selectedCanvasIndex] = canvas;
     this.setState({ canvases, selectedWidgetIndex });
 
-    //const c = encodeURI(JSON.stringify(this.state.canvases));
-    //this.props.history.replace("?c=" + c);
+    this.props.history.replace("?id=" + this.state._id);
     }
 
   // Convenience method used by handler methods
