@@ -56,11 +56,10 @@ class Dashboard extends Component {
       selectedWidgetIndex: -1, // Belongs in edit component
       selectedCanvasIndex: 0,
       canvases: DEFAULT_CANVASES,
-      id: queryString.parse(props.location.search).id || "", //dashboard id in the dashboard repo database
       deviceNames: [] // Not used?
     };
-    if (this.state.id !== ""){
-      loadFromRepo(this.state.id, res => {
+    if (queryString.parse(props.location.search).id){
+      loadFromRepo(queryString.parse(props.location.search).id, res => {
         console.log("Response from GET /dashboard");
         console.log(res);
         if (res){
@@ -84,8 +83,8 @@ class Dashboard extends Component {
   }
 
   componentDidUpdate() {
-      console.log("EHM: " + this.state.id);
-      saveToRepo(this.state.id, this.state.canvases, (result) => this.state.id === '' ? this.setState({id: result.id}) : null);
+      var id = queryString.parse(this.props.location.search).id || "";
+      saveToRepo(id, this.state.canvases, (result) => result.created ? this.props.history.replace("?id=" + result.id)  : null);
     
   }
   
@@ -148,7 +147,7 @@ class Dashboard extends Component {
     canvases[this.state.selectedCanvasIndex] = canvas;
     this.setState({ canvases, selectedWidgetIndex });
 
-    this.props.history.replace("?id=" + this.state.id);
+
     }
 
   // Convenience method used by handler methods
