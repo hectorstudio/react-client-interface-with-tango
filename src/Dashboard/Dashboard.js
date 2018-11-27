@@ -49,11 +49,6 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    //This doesn't really work without UI support. we get a messy conflict when a user on the one hand has a
-    //another users dashboard id in the url, and their own webjive_token as a cookie. What do we fetch?
-    //const urlID = queryString.parse(props.location.search).id;
-    //const id = urlID ? urlID : '';
-    const id = "";
 
     this.state = {
       mode: "edit",
@@ -61,17 +56,20 @@ class Dashboard extends Component {
       selectedWidgetIndex: -1, // Belongs in edit component
       selectedCanvasIndex: 0,
       canvases: DEFAULT_CANVASES,
-      _id: id, //dashboard id in the dashboard repo database
+      id: queryString.parse(props.location.search).id || "", //dashboard id in the dashboard repo database
       deviceNames: [] // Not used?
     };
-    loadFromRepo(res => {
-      console.log("Response from GET /dashboard");
-      console.log(res);
-      if (res){
-        this.setState({canvases: res.canvases, _id: res._id});
-      }
-      
-    });
+    if (this.state.id !== ""){
+      loadFromRepo(this.state.id, res => {
+        console.log("Response from GET /dashboard");
+        console.log(res);
+        if (res){
+          this.setState({canvases: res.canvases});
+        }
+        
+      });
+    }
+
 
     this.toggleMode = this.toggleMode.bind(this);
     this.handleMoveWidget = this.handleMoveWidget.bind(this);
@@ -86,11 +84,8 @@ class Dashboard extends Component {
   }
 
   componentDidUpdate() {
-    try{
-      saveToRepo(this.state, (result) => !this.state._id || this.state.id === '' ? this.setState({_id: result._id}) : null);
-    }catch(erro){
-      console.log("Unable to save dashboard to db")
-    }
+      console.log("EHM: " + this.state.id);
+      saveToRepo(this.state.id, this.state.canvases, (result) => this.state.id === '' ? this.setState({id: result.id}) : null);
     
   }
   
@@ -153,7 +148,7 @@ class Dashboard extends Component {
     canvases[this.state.selectedCanvasIndex] = canvas;
     this.setState({ canvases, selectedWidgetIndex });
 
-    this.props.history.replace("?id=" + this.state._id);
+    this.props.history.replace("?id=" + this.state.id);
     }
 
   // Convenience method used by handler methods
