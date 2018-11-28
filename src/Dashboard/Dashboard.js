@@ -8,8 +8,8 @@ import EditCanvas from "./EditCanvas/EditCanvas";
 import Library from "./Library/Library";
 import RunCanvas from "./RunCanvas/RunCanvas";
 import Inspector from "./Inspector/Inspector";
-import { save as saveToRepo} from "./dashboardRepo";
-import { load as loadFromRepo} from "./dashboardRepo";
+import { save as saveToRepo } from "./dashboardRepo";
+import { load as loadFromRepo } from "./dashboardRepo";
 
 import {
   WIDGET_DEFINITIONS,
@@ -49,7 +49,6 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-
     this.state = {
       mode: "edit",
       sidebar: "library", // Belongs in edit component
@@ -58,16 +57,15 @@ class Dashboard extends Component {
       canvases: DEFAULT_CANVASES,
       deviceNames: [] // Not used?
     };
-    if (queryString.parse(props.location.search).id){
+    if (queryString.parse(props.location.search).id) {
       loadFromRepo(queryString.parse(props.location.search).id)
-        .then((res) => res.ok ? res.json() : null)
-        .then((res) => {
-          if (res){
-            this.setState({canvases: res.canvases});
+        .then(res => (res.ok ? res.json() : null))
+        .then(res => {
+          if (res) {
+            this.setState({ canvases: res.canvases });
           }
         });
     }
-
 
     this.toggleMode = this.toggleMode.bind(this);
     this.handleMoveWidget = this.handleMoveWidget.bind(this);
@@ -84,17 +82,17 @@ class Dashboard extends Component {
   componentDidUpdate() {
     var id = queryString.parse(this.props.location.search).id || "";
     saveToRepo(id, this.state.canvases)
-    .then((res) => res.json())
-    .then((res) => {
-      if (res.created){
-        this.props.history.replace("?id=" + res.id)
-      }
-    }).catch(function(){
-      console.log("Couldn't reach dashboard repo");
-    });
-      
+      .then(res => res.json())
+      .then(res => {
+        if (res.created) {
+          this.props.history.replace("?id=" + res.id);
+        }
+      })
+      .catch(function() {
+        console.log("Couldn't reach dashboard repo");
+      });
   }
-  
+
   toggleMode() {
     const mode = { edit: "run", run: "edit" }[this.state.mode];
     this.setState({ mode });
@@ -153,9 +151,7 @@ class Dashboard extends Component {
     const canvas = { ...canvases[this.state.selectedCanvasIndex], widgets };
     canvases[this.state.selectedCanvasIndex] = canvas;
     this.setState({ canvases, selectedWidgetIndex });
-
-
-    }
+  }
 
   // Convenience method used by handler methods
   updateWidget(index, changes) {
@@ -195,16 +191,16 @@ class Dashboard extends Component {
 
   handleAttributeChange(attributeName, index) {
     let attribute = [...this.selectedWidget().attribute];
-    attribute[index] = attributeName
+    attribute[index] = attributeName;
     this.updateWidget(this.state.selectedWidgetIndex, { attribute });
   }
 
   handleDeviceRemove(index) {
     let device = [...this.selectedWidget().device];
     let attribute = [...this.selectedWidget().attribute];
-    attribute.splice(index, 1)
-    device.splice(index, 1)
-    this.updateWidget(this.state.selectedWidgetIndex, { attribute, device});
+    attribute.splice(index, 1);
+    device.splice(index, 1);
+    this.updateWidget(this.state.selectedWidgetIndex, { attribute, device });
   }
 
   handleChangeCanvas(event) {
@@ -221,9 +217,9 @@ class Dashboard extends Component {
     const widgets = this.currentWidgets();
     const selectedWidget = this.selectedWidget();
 
-    const complexWidgetDefinitions = this.state.canvases.slice(1).map(
-      complexWidgetDefinition
-    );
+    const complexWidgetDefinitions = this.state.canvases
+      .slice(1)
+      .map(complexWidgetDefinition);
 
     const widgetDefinitions = normalizeWidgetDefinitions([
       ...WIDGET_DEFINITIONS,
