@@ -15,4 +15,4 @@ export const load = id => {
       "Content-Type": "application/json; charset=utf-8"
     }
   }).then(res => res.json());
-};
+}; 
