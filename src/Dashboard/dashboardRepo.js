@@ -5,7 +5,7 @@ export const save = (id, canvases) => {
       "Content-Type": "application/json; charset=utf-8"
     },
     body: JSON.stringify({ id: id, canvases: canvases })
-  });
+  }).then(res => (res.ok ? res.json() : null));
 };
 
 export const load = id => {
@@ -14,5 +14,5 @@ export const load = id => {
     headers: {
       "Content-Type": "application/json; charset=utf-8"
     }
-  });
+  }).then(res => res.json());
 };

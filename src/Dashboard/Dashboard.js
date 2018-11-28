@@ -59,7 +59,6 @@ class Dashboard extends Component {
     };
     if (queryString.parse(props.location.search).id) {
       loadFromRepo(queryString.parse(props.location.search).id)
-        .then(res => (res.ok ? res.json() : null))
         .then(res => {
           if (res) {
             this.setState({ canvases: res.canvases });
@@ -82,7 +81,6 @@ class Dashboard extends Component {
   componentDidUpdate() {
     var id = queryString.parse(this.props.location.search).id || "";
     saveToRepo(id, this.state.canvases)
-      .then(res => res.json())
       .then(res => {
         if (res.created) {
           this.props.history.replace("?id=" + res.id);
