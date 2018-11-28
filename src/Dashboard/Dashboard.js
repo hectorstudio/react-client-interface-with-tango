@@ -59,14 +59,13 @@ class Dashboard extends Component {
       deviceNames: [] // Not used?
     };
     if (queryString.parse(props.location.search).id){
-      loadFromRepo(queryString.parse(props.location.search).id, res => {
-        console.log("Response from GET /dashboard");
-        console.log(res);
-        if (res){
-          this.setState({canvases: res.canvases});
-        }
-        
-      });
+      loadFromRepo(queryString.parse(props.location.search).id)
+        .then((res) => res.ok ? res.json() : null)
+        .then((res) => {
+          if (res){
+            this.setState({canvases: res.canvases});
+          }
+        });
     }
 
 
@@ -83,9 +82,17 @@ class Dashboard extends Component {
   }
 
   componentDidUpdate() {
-      var id = queryString.parse(this.props.location.search).id || "";
-      saveToRepo(id, this.state.canvases, (result) => result.created ? this.props.history.replace("?id=" + result.id)  : null);
-    
+    var id = queryString.parse(this.props.location.search).id || "";
+    saveToRepo(id, this.state.canvases)
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.created){
+        this.props.history.replace("?id=" + res.id)
+      }
+    }).catch(function(){
+      console.log("Couldn't reach dashboard repo");
+    });
+      
   }
   
   toggleMode() {
