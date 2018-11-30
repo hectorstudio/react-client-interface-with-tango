@@ -20,7 +20,7 @@ export default class Inspector extends Component {
     this.handleRemoveDevice = this.handleRemoveDevice.bind(this);
     this.deviceChooser = this.deviceChooser.bind(this);
     this.attributeChooser = this.attributeChooser.bind(this);
-    this.gqlClient = createGQLClient({ url: "/db " });
+    this.gqlClient = createGQLClient({ url: "/" + this.props.tangoDB + "/db " });
   }
 
   handleSelectDevice(event, index) {
