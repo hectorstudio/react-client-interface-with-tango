@@ -37,11 +37,11 @@ import {
   DELETE_DEVICE_PROPERTY_FAILED,
 } from './actionTypes';
 
-export function fetchDeviceNames() {
+export function fetchDeviceNames(tangoDB) {
   return async dispatch => {
     dispatch({ type: FETCH_DEVICE_NAMES });
     try {
-      const names = await TangoAPI.fetchDeviceNames();
+      const names = await TangoAPI.fetchDeviceNames(tangoDB);
       dispatch({ type: FETCH_DEVICE_NAMES_SUCCESS, names });
     } catch (err) {
       dispatch(displayError(err.toString()));
@@ -161,16 +161,16 @@ export function fetchDeviceSuccess(device) {
   }
 }
 
-export function selectDevice(name) {
+export function selectDevice(tangoDB, name) {
   return (dispatch, getState) => {
-    dispatch({type: SELECT_DEVICE, name});
+    dispatch({type: SELECT_DEVICE, tangoDB, name});
     
     const device = queryDeviceWithName(getState(), name);
     if (device) {
       return dispatch(selectDeviceSuccess(device));
     }
 
-    dispatch(fetchDevice(name)).then(action => {
+    dispatch(fetchDevice(tangoDB, name)).then(action => {
       if (action.type === FETCH_DEVICE_SUCCESS) {
         const newDevice = action.device;
         return dispatch(selectDeviceSuccess(newDevice));
@@ -183,14 +183,14 @@ function selectDeviceSuccess(device) {
   return {type: SELECT_DEVICE_SUCCESS, device};
 }
 
-export function fetchDevice(name) {
+export function fetchDevice(tangoDB, name) {
   return async (dispatch, getState, { emit }) => {
     const name = getCurrentDeviceName(getState());
     unSubscribeDevice(name, emit);
     dispatch({type: FETCH_DEVICE, name});
     
     try {
-      const device = await TangoAPI.fetchDevice(name);
+      const device = await TangoAPI.fetchDevice(tangoDB, name);
       return dispatch(device ? fetchDeviceSuccess(device) : displayError("The device " + name + " was not found"));
     } catch (err) {
       return dispatch(displayError(err.toString()));
