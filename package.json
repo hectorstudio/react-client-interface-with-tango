@@ -53,13 +53,13 @@
   },
   "proxy": {
     "/socket": {
-      "target": "wss://webjive.maxiv.lu.se",
+      "target": "wss://control.maxiv.lu.se/webjive",
       "secure": false,
       "changeOrigin": true,
       "ws": true
     },
     "/db": {
-      "target": "https://webjive.maxiv.lu.se",
+      "target": "https://control.maxiv.lu.se/webjive",
       "secure": false,
       "changeOrigin": true
     },

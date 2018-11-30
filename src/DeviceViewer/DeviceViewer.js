@@ -84,6 +84,10 @@ class DeviceViewer extends Component {
     return (props || this.props).match.params.device;
   }
 
+  parseTangoDB(props) {
+    return (props || this.props).match.params.tangoDB;
+  }
+
   parseTab() {
     const { hash } = this.props.history.location;
     const tab = hash.substr(1);
@@ -92,13 +96,15 @@ class DeviceViewer extends Component {
 
   componentDidMount() {
     const device = this.parseDevice();
-    this.props.onSelectDevice(device);
+    const tangoDB = this.parseTangoDB();
+    this.props.onSelectDevice(tangoDB, device);
   }
 
   componentDidUpdate(prevProps) {
     const device = this.parseDevice();
+    const tangoDB = this.parseTangoDB();
     if (device !== this.parseDevice(prevProps)) {
-      this.props.onSelectDevice(device);
+      this.props.onSelectDevice(tangoDB, device);
     }
 
     const tab = this.parseTab();
@@ -231,7 +237,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSelectDevice: device => dispatch(selectDevice(device)),
+    onSelectDevice: (tangoDB, device) => dispatch(selectDevice(tangoDB, device)),
     onSelectTab: tab => dispatch(setTab(tab)),
     enableDisplevel: displevel => dispatch(enableDisplevel(displevel)),
     disableDisplevel: displevel => dispatch(disableDisplevel(displevel))

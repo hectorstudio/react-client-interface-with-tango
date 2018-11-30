@@ -12,7 +12,8 @@ import {
 const client = new GraphQLClient("/db");
 
 export default {
-  async fetchDeviceNames() {
+  async fetchDeviceNames(tangoDB) {
+    const client = new GraphQLClient("/" + tangoDB + "/db");
     const data = await client.request(FETCH_DEVICE_NAMES);
     return data.devices.map(device => device.name);
   },
@@ -41,7 +42,8 @@ export default {
     return data.deleteDeviceProperty.ok;
   },
 
-  async fetchDevice(name) {
+  async fetchDevice(tangoDB, name) {
+    const client = new GraphQLClient("/" + tangoDB + "/db");
     const params = { name };
     const data = await client.request(FETCH_DEVICE, params);
     return data.device;
