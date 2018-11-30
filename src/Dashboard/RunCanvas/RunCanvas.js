@@ -81,7 +81,7 @@ export default class RunCanvas extends Component {
     function socketUrl() {
       const loc = window.location;
       const protocol = loc.protocol.replace("http", "ws");
-      return protocol + "//" + loc.host + "/socket";
+      return protocol + "//" + loc.host + "/" + loc.pathname.split('/')[1] + "/socket";
     }
 
     this.socket = new WebSocket(socketUrl() + "?dashboard", "graphql-ws");

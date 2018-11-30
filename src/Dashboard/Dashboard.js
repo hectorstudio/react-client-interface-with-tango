@@ -275,6 +275,7 @@ class Dashboard extends Component {
                 onDeviceRemove={this.handleDeviceRemove}
                 onAttributeChange={this.handleAttributeChange}
                 isRootCanvas={this.isRootCanvas()}
+                tangoDB={this.props.match.params.tangoDB}
               />
             )}
           </div>
