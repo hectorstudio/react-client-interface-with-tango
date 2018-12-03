@@ -36,7 +36,7 @@ class DeleteProperty extends Component{
 
     onDeleteProperty(event){
         event.preventDefault();
-        this.props.deleteProperty(this.props.currentDevice, this.props.entity);
+        this.props.deleteProperty(this.props.tangoDB, this.props.currentDevice, this.props.entity);
         this.props.closeDialog();
 
     }
@@ -49,7 +49,7 @@ DeleteProperty.PropTypes = {
 
 function mapDispatchToProps(dispatch) {
     return {
-        deleteProperty: (device, name) => dispatch(deleteDeviceProperty(device, name)),
+        deleteProperty: (tangoDB, device, name) => dispatch(deleteDeviceProperty(tangoDB, device, name)),
     };
 }
 

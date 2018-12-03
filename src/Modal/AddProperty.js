@@ -63,7 +63,7 @@ class AddProperty extends Component{
 
     onAddProperty(event){
         event.preventDefault();
-        this.props.addProperty(this.props.currentDevice, this.state.formValues.name, [this.state.formValues.value]);
+        this.props.addProperty(this.props.tangoDB, this.props.currentDevice, this.state.formValues.name, [this.state.formValues.value]);
         this.props.closeDialog();
 
     }
@@ -75,7 +75,7 @@ AddProperty.PropTypes = {
 
 function mapDispatchToProps(dispatch) {
     return {
-        addProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value)),
+        addProperty: (tangoDB, device, name, value) => dispatch(setDeviceProperty(tangoDB, device, name, value)),
     };
 }
 

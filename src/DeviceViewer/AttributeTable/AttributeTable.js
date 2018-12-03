@@ -42,7 +42,7 @@ DataFormatChooser.propTypes = {
 	selected:  PropTypes.string,
 }
 
-const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataFormat, onSetDeviceAttribute, enabledList }) => {
+const AttributeTable = ({ tangoDB, attributes, selectedFormat, deviceName , onSelectDataFormat, onSetDeviceAttribute, enabledList }) => {
 	const QualityIndicator = ({ quality }) => {
 	  const sub = {
 		'ATTR_VALID': 'valid',
@@ -86,7 +86,7 @@ const AttributeTable = ({ attributes, selectedFormat, deviceName , onSelectDataF
 						writable={writable}
 						maxvalue={maxvalue}
 						minvalue={minvalue} 
-						setDeviceAttribute={onSetDeviceAttribute} 
+						setDeviceAttribute={onSetDeviceAttribute.bind(tangoDB)} 
 					/>
 				</td>
 				<td className='description'>
@@ -132,7 +132,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
 	return {
 		onSelectDataFormat: format => dispatch(setDataFormat(format)),
-		onSetDeviceAttribute: (device, name, value) => dispatch(setDeviceAttribute(device, name, value))
+		onSetDeviceAttribute: (tangoDB, device, name, value) => dispatch(setDeviceAttribute(tangoDB, device, name, value))
 	};
 }
 

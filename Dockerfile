@@ -8,7 +8,7 @@ RUN npm install --no-cache
 COPY tsconfig.json tsconfig.prod.json tslint.json ./
 COPY src src
 COPY public public
-
+ENV REACT_APP_BASE_URL  "/webjive/"
 RUN npm run build
 
 FROM nginx:1.15.0-alpine

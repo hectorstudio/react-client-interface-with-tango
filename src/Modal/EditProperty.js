@@ -50,7 +50,7 @@ class EditProperty extends Component{
 
     onEditProperty(event){
         event.preventDefault();
-        this.props.editProperty(this.props.currentDevice, this.props.entity, [this.state.value]);
+        this.props.editProperty(this.props.tangoDB, this.props.currentDevice, this.props.entity, [this.state.value]);
         this.props.closeDialog();
     }
 }
@@ -66,7 +66,7 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
     return {
-        editProperty: (device, name, value) => dispatch(setDeviceProperty(device, name, value)),
+        editProperty: (tangoDB, device, name, value) => dispatch(setDeviceProperty(tangoDB, device, name, value)),
     };
 }
 

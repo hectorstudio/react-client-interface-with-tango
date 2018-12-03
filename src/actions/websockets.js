@@ -4,7 +4,7 @@ import * as types from './actionTypes';
 function socketUrl() {
 	const loc = window.location;
 	const protocol = loc.protocol.replace('http', 'ws');
-	return protocol + '//' + loc.host + "/" + loc.pathname.split('/')[1] + '/socket';
+	return protocol + '//' + loc.host + process.env.REACT_APP_BASE_URL + loc.pathname.split('/')[2] + '/socket';
 }
 
 const ws = new WebSocket(socketUrl(), "graphql-ws");
