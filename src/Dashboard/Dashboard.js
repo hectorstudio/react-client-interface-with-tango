@@ -255,6 +255,7 @@ class Dashboard extends Component {
           <RunCanvas
             widgets={widgets}
             widgetDefinitions={widgetDefinitions}
+            tangoDB={this.props.match.params.tangoDB}
             subCanvases={[null, ...this.state.canvases.slice(1)]}
           />
         )}

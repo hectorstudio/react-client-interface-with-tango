@@ -39,7 +39,7 @@ interface IDeviceEntryProps {
 }
 
 const DeviceEntry: StatelessComponent<IDeviceEntryProps> = ({tangoDB, domain, family, member, isSelected, filter}) => {
-  const pathname = `/${tangoDB}/devices/${domain}/${family}/${member}`;
+  const pathname = `${process.env.REACT_APP_BASE_URL}${tangoDB}/devices/${domain}/${family}/${member}`;
   const to = filter == null ? pathname : {
     pathname,
     search: `?filter=${filter}`

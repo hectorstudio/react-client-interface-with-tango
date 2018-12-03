@@ -49,11 +49,11 @@ export function fetchDeviceNames(tangoDB) {
   };
 }
 
-export function executeCommand(command, argin, device) {
+export function executeCommand(tangoDB, command, argin, device) {
   return async dispatch => {
     dispatch({ type: EXECUTE_COMMAND, command, argin, device });
     try {
-      const result = await TangoAPI.executeCommand(command, argin, device);
+      const result = await TangoAPI.executeCommand(tangoDB, command, argin, device);
       dispatch({ type: EXECUTE_COMMAND_COMPLETE, command, result, device });
     } catch (err) {
       dispatch(displayError(err.toString()));
@@ -61,11 +61,11 @@ export function executeCommand(command, argin, device) {
   };
 }
 
-export function setDeviceAttribute(device, name, value) {
+export function setDeviceAttribute(tangoDB, device, name, value) {
   return async dispatch => {
     dispatch({ type: SET_DEVICE_ATTRIBUTE, device, name, value });
     try {
-      const ok = await TangoAPI.setDeviceAttribute(device, name, value);
+      const ok = await TangoAPI.setDeviceAttribute(tangoDB, device, name, value);
       dispatch(
         ok
           ? { type: SET_DEVICE_ATTRIBUTE_SUCCESS, device, name, value }
@@ -77,11 +77,11 @@ export function setDeviceAttribute(device, name, value) {
   };
 }
 
-export function setDeviceProperty(device, name, value) {
+export function setDeviceProperty(tangoDB, device, name, value) {
   return async dispatch => {
     try {
       dispatch({ type: SET_DEVICE_PROPERTY, device, name, value });
-      const ok = await TangoAPI.setDeviceProperty(device, name, value);
+      const ok = await TangoAPI.setDeviceProperty(tangoDB, device, name, value);
       dispatch(
         ok
           ? { type: SET_DEVICE_PROPERTY_SUCCESS, device, name, value }
@@ -93,11 +93,11 @@ export function setDeviceProperty(device, name, value) {
   };
 }
 
-export function deleteDeviceProperty(device, name) {
+export function deleteDeviceProperty(tangoDB, device, name) {
   return async dispatch => {
     try {
       dispatch({ type: DELETE_DEVICE_PROPERTY, device, name });
-      const ok = await TangoAPI.deleteDeviceProperty(device, name);
+      const ok = await TangoAPI.deleteDeviceProperty(tangoDB, device, name);
       dispatch(
         ok
           ? { type: DELETE_DEVICE_PROPERTY_SUCCESS, device, name }

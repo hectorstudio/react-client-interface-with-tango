@@ -35,6 +35,7 @@ class ModalDialog extends Component {
                     entity={entity}
                     currentDevice={currentDevice}
                     closeDialog={this.props.closeDialog}
+                    tangoDB={this.props.tangoDB}
                 />
               );
               case EDIT_PROPERTY:
@@ -43,6 +44,7 @@ class ModalDialog extends Component {
                     entity={entity}
                     currentDevice={currentDevice}
                     closeDialog={this.props.closeDialog}
+                    tangoDB={this.props.tangoDB}
                 />
               );
               case DELETE_PROPERTY:
@@ -51,6 +53,7 @@ class ModalDialog extends Component {
                     entity={entity}
                     currentDevice={currentDevice}
                     closeDialog={this.props.closeDialog}
+                    tangoDB={this.props.tangoDB}
                 />
               );
               case "LOGIN":

@@ -107,6 +107,10 @@ class InputField extends Component {
     };
   }
 
+  parseTangoDB(props) {
+    return (props || this.props).match.params.tangoDB;
+  }
+
   handleChange(event) {
     if(this.props.intype === 'DevBoolean' && event.target.value.length > 0){
       this.setState({ value: event.target.value, valid: true });
@@ -130,9 +134,9 @@ class InputField extends Component {
   handleExecute(event) {
     event.preventDefault()
     if(this.props.intype === 'DevString'){
-      this.props.onExecute(this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
+      this.props.onExecute(this.parseTangoDB(), this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
     }else{
-     this.props.onExecute(this.props.name, this.state.value, this.props.currentDeviceName)
+     this.props.onExecute(this.parseTangoDB(), this.props.name, this.state.value, this.props.currentDeviceName)
     }
     this.setState({value: '', valid: false });
   }
@@ -199,7 +203,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onExecute: (command, value, device) => dispatch(executeCommand(command, value, device)),
+    onExecute: (tangoDB, command, value, device) => dispatch(tangoDB, executeCommand(command, value, device)),
   };
 }
 
