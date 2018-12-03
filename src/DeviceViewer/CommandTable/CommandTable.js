@@ -55,7 +55,8 @@ class CommandTable extends Component {
       enabledList,
       outputsLoading,
       commandOutputs,
-      isLoggedIn
+      isLoggedIn,
+      tangoDB
     } = this.props;
     
     return (
@@ -73,7 +74,7 @@ class CommandTable extends Component {
                   <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
                 </td>
                 <td className="input">
-                  <InputField isEnabled={isLoggedIn} onExecute={onExecute} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
+                  <InputField tangoDB={tangoDB} isEnabled={isLoggedIn} onExecute={onExecute} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
                 </td>
                 <td className='description'>
                   <DescriptionDisplay description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
@@ -107,10 +108,6 @@ class InputField extends Component {
     };
   }
 
-  parseTangoDB(props) {
-    return (props || this.props).match.params.tangoDB;
-  }
-
   handleChange(event) {
     if(this.props.intype === 'DevBoolean' && event.target.value.length > 0){
       this.setState({ value: event.target.value, valid: true });
@@ -134,9 +131,9 @@ class InputField extends Component {
   handleExecute(event) {
     event.preventDefault()
     if(this.props.intype === 'DevString'){
-      this.props.onExecute(this.parseTangoDB(), this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
+      this.props.onExecute(this.props.tangoDB, this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
     }else{
-     this.props.onExecute(this.parseTangoDB(), this.props.name, this.state.value, this.props.currentDeviceName)
+     this.props.onExecute(this.props.tangoDB, this.props.name, this.state.value, this.props.currentDeviceName)
     }
     this.setState({value: '', valid: false });
   }
@@ -203,7 +200,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onExecute: (tangoDB, command, value, device) => dispatch(tangoDB, executeCommand(command, value, device)),
+    onExecute: (tangoDB, command, value, device) => dispatch(executeCommand(tangoDB, command, value, device)),
   };
 }
 
