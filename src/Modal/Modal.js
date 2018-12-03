@@ -20,6 +20,10 @@ class ModalDialog extends Component {
         super(props);
     }
 
+    parseTangoDB(props) {
+        return (props || this.props).match.params.tangoDB;
+      }
+
     render() {
         const {
             isShowing,
@@ -35,7 +39,7 @@ class ModalDialog extends Component {
                     entity={entity}
                     currentDevice={currentDevice}
                     closeDialog={this.props.closeDialog}
-                    tangoDB={this.props.tangoDB}
+                    tangoDB={this.parseTangoDB()}
                 />
               );
               case EDIT_PROPERTY:
@@ -44,7 +48,7 @@ class ModalDialog extends Component {
                     entity={entity}
                     currentDevice={currentDevice}
                     closeDialog={this.props.closeDialog}
-                    tangoDB={this.props.tangoDB}
+                    tangoDB={this.parseTangoDB()}
                 />
               );
               case DELETE_PROPERTY:
@@ -53,7 +57,7 @@ class ModalDialog extends Component {
                     entity={entity}
                     currentDevice={currentDevice}
                     closeDialog={this.props.closeDialog}
-                    tangoDB={this.props.tangoDB}
+                    tangoDB={this.parseTangoDB()}
                 />
               );
               case "LOGIN":

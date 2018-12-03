@@ -86,7 +86,7 @@ const AttributeTable = ({ tangoDB, attributes, selectedFormat, deviceName , onSe
 						writable={writable}
 						maxvalue={maxvalue}
 						minvalue={minvalue} 
-						setDeviceAttribute={onSetDeviceAttribute.bind(tangoDB)} 
+						setDeviceAttribute={onSetDeviceAttribute.bind(this, tangoDB)} 
 					/>
 				</td>
 				<td className='description'>

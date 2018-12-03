@@ -5,7 +5,6 @@ import classNames from "classnames";
 import { Helmet } from "react-helmet";
 import PropTypes from 'prop-types'
 import "font-awesome/css/font-awesome.min.css";
-import ModalDialog from "../Modal/Modal";
 
 import AttributeTable from "./AttributeTable/AttributeTable";
 import CommandTable from "./CommandTable/CommandTable";
@@ -167,7 +166,6 @@ class DeviceViewer extends Component {
 
     return (
       <div>
-        <ModalDialog tangoDB={this.parseTangoDB()}/>
         <Helmet>
           <title>{deviceName}</title>
         </Helmet>
