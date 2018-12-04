@@ -1,19 +1,21 @@
 import * as types from './actionTypes';
 // import { ATTRIBUTE_CHANGE } from './actionTypes';
 
-function socketUrl() {
+function socketUrl(tangoDB) {
 	const loc = window.location;
 	const protocol = loc.protocol.replace('http', 'ws');
-	return protocol + '//' + loc.host + process.env.REACT_APP_BASE_URL + loc.pathname.split('/')[2] + '/socket';
+	return protocol + '//' + loc.host + process.env.REACT_APP_BASE_URL + tangoDB + '/socket';
 }
 
-const ws = new WebSocket(socketUrl(), "graphql-ws");
+export const socket = (tangoDB) => {		
+	return new WebSocket(socketUrl(tangoDB), "graphql-ws");
+}
 
 export function receiveChange(data) {
     return { type: types.ATTRIBUTE_CHANGE, data }
 }
 
-export const init = ( store ) => {
+export const init = ( ws, store ) => {
 
 	ws.addEventListener("open", () => {
 	    console.log("Websocket open!")
@@ -45,4 +47,4 @@ export const init = ( store ) => {
 	});
 };
 
-export const emit = (type, payload) => ws.send(JSON.stringify({type, payload}));
+export const emit = (ws, type, payload) => ws.send(JSON.stringify({type, payload}));
