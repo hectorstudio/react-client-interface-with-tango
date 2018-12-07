@@ -4,7 +4,7 @@ before_script:
 build_image_develop:
   stage: build
   script:
-    - docker build . -t docker.maxiv.lu.se/webjive-frontend --build-arg REACT_APP_BASE_URL="/"
+    - docker build . -t docker.maxiv.lu.se/webjive-frontend-test --build-arg REACT_APP_BASE_URL="/"
     - docker push docker.maxiv.lu.se/webjive-frontend-test
   only:
     - develop
