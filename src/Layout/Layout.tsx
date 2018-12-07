@@ -17,7 +17,7 @@ const MainView = ({ className }) => (
   <div className={className}>
     <LogInOut />
     <ErrorDisplay />
-    <Route path={process.env.REACT_APP_BASE_URL + ":tangoDB/"} exact={true} component={ModalDialog} />
+    <Route path={process.env.REACT_APP_BASE_URL + ":tangoDB/*"} exact={true} component={ModalDialog} />
     <Route path={process.env.REACT_APP_BASE_URL + ":tangoDB/dashboard"} exact={true} component={Dashboard} />
     <Route path={process.env.REACT_APP_BASE_URL + ":tangoDB/devices/:device*"} component={DeviceViewer} />
     <Route path="/" exact={true} component={HomeViewer} />
