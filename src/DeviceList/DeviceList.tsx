@@ -129,7 +129,7 @@ class DeviceList extends Component<IDeviceListProps> {
         const subSubEntries = members.map(member => {
           const name = `${domain}/${family}/${member}`;
           const parsedFilter = this.parseFilter();
-          const tangoDB = this.parseTangoDB(this.props);
+          const tangoDB = this.parseTangoDB();
           return (
             <ScrollIntoViewIfNeeded key={name} isSelected={name === this.props.currentDeviceName}>
             <li key={name}>
