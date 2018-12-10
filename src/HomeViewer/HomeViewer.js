@@ -36,7 +36,7 @@ HomeViewer.propTypes = {
 
 function mapDispatchToProps(dispatch) {
     return {
-        onLoad: () => dispatch(executeCommand('DbInfo', '', 'sys/database/2')),
+        onLoad: () => dispatch(executeCommand("kitslab",'DbInfo', '', 'sys/database/2')),
     };
 }
 
