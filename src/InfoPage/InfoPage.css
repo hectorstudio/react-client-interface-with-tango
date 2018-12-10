@@ -1,0 +1,22 @@
+.HomeViewer {
+  white-space: pre-wrap;
+  margin: 1em;
+}
+
+.HomeViewer p {
+  margin-bottom: 0.25em;
+}
+
+.HomeViewer p:first-child {
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+.HomeViewer p {
+  margin: 0;
+}
+
+.HomeViewer p:empty {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
