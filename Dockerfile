@@ -19,4 +19,4 @@ COPY --from=build /home/node/app/build /usr/share/nginx/html
 COPY assets/nginx.conf /etc/nginx/
 
 ARG REACT_APP_BASE_URL
-ENV env_var_name=$REACT_APP_BASE_URL
+ENV REACT_APP_BASE_URL=$REACT_APP_BASE_URL
