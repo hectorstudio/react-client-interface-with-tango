@@ -30,6 +30,7 @@ import './DeviceList.css';
 import { unique } from '../utils';
 
 interface IDeviceEntryProps {
+  tangoDB: string;
   domain: string;
   family: string;
   member: string;
@@ -37,8 +38,8 @@ interface IDeviceEntryProps {
   filter?: string;
 }
 
-const DeviceEntry: StatelessComponent<IDeviceEntryProps> = ({domain, family, member, isSelected, filter}) => {
-  const pathname = `/devices/${domain}/${family}/${member}`;
+const DeviceEntry: StatelessComponent<IDeviceEntryProps> = ({tangoDB, domain, family, member, isSelected, filter}) => {
+  const pathname = `${process.env.REACT_APP_BASE_URL}${tangoDB}/devices/${domain}/${family}/${member}`;
   const to = filter == null ? pathname : {
     pathname,
     search: `?filter=${filter}`
@@ -71,7 +72,7 @@ interface IValueProps {
 }
 
 interface IHandlerProps {
-  onInit: () => void;
+  onInit: (tangoDB: string) => void;
   onSetFilter: (filter: string) => void;
   onToggleDomain: (domain: string) => void;
   onToggleFamily: (domain: string, family: string) => void;
@@ -85,10 +86,12 @@ class DeviceList extends Component<IDeviceListProps> {
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleToggleDomain = this.handleToggleDomain.bind(this);
     this.handleToggleFamily = this.handleToggleFamily.bind(this);
+    this.parseTangoDB = this.parseTangoDB.bind(this);
   }
 
   public componentWillMount() {
-    this.props.onInit();
+    const tangoDB = this.parseTangoDB(this.props);
+    this.props.onInit(tangoDB);
   }
 
   public componentDidMount() {
@@ -126,12 +129,14 @@ class DeviceList extends Component<IDeviceListProps> {
         const subSubEntries = members.map(member => {
           const name = `${domain}/${family}/${member}`;
           const parsedFilter = this.parseFilter();
+          const tangoDB = this.parseTangoDB(this.props);
           return (
             <ScrollIntoViewIfNeeded key={name} isSelected={name === this.props.currentDeviceName}>
             <li key={name}>
             
               <DeviceEntry
                 isSelected={name === this.props.currentDeviceName}
+                tangoDB={tangoDB}
                 domain={domain}
                 family={family}
                 member={member}
@@ -205,6 +210,10 @@ class DeviceList extends Component<IDeviceListProps> {
     );
   }
 
+  private parseTangoDB(props) {
+    return (props || this.props).match.params.tangoDB;
+  }
+
   private handleTextChange(e) {
     this.props.onSetFilter(e.target.value);
   }
@@ -241,7 +250,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onInit: () => dispatch(fetchDeviceNames()),
+    onInit: (tangoDB) => dispatch(fetchDeviceNames(tangoDB)),
     onSetFilter: filter => dispatch(setDeviceFilter(filter)),
 
     onToggleDomain: domain => dispatch(toggleExpandDomain(domain)),

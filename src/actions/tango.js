@@ -37,11 +37,11 @@ import {
   DELETE_DEVICE_PROPERTY_FAILED,
 } from './actionTypes';
 
-export function fetchDeviceNames() {
+export function fetchDeviceNames(tangoDB) {
   return async dispatch => {
     dispatch({ type: FETCH_DEVICE_NAMES });
     try {
-      const names = await TangoAPI.fetchDeviceNames();
+      const names = await TangoAPI.fetchDeviceNames(tangoDB);
       dispatch({ type: FETCH_DEVICE_NAMES_SUCCESS, names });
     } catch (err) {
       dispatch(displayError(err.toString()));
@@ -49,11 +49,11 @@ export function fetchDeviceNames() {
   };
 }
 
-export function executeCommand(command, argin, device) {
+export function executeCommand(tangoDB, command, argin, device) {
   return async dispatch => {
     dispatch({ type: EXECUTE_COMMAND, command, argin, device });
     try {
-      const result = await TangoAPI.executeCommand(command, argin, device);
+      const result = await TangoAPI.executeCommand(tangoDB, command, argin, device);
       dispatch({ type: EXECUTE_COMMAND_COMPLETE, command, result, device });
     } catch (err) {
       dispatch(displayError(err.toString()));
@@ -61,11 +61,11 @@ export function executeCommand(command, argin, device) {
   };
 }
 
-export function setDeviceAttribute(device, name, value) {
+export function setDeviceAttribute(tangoDB, device, name, value) {
   return async dispatch => {
     dispatch({ type: SET_DEVICE_ATTRIBUTE, device, name, value });
     try {
-      const ok = await TangoAPI.setDeviceAttribute(device, name, value);
+      const ok = await TangoAPI.setDeviceAttribute(tangoDB, device, name, value);
       dispatch(
         ok
           ? { type: SET_DEVICE_ATTRIBUTE_SUCCESS, device, name, value }
@@ -77,11 +77,11 @@ export function setDeviceAttribute(device, name, value) {
   };
 }
 
-export function setDeviceProperty(device, name, value) {
+export function setDeviceProperty(tangoDB, device, name, value) {
   return async dispatch => {
     try {
       dispatch({ type: SET_DEVICE_PROPERTY, device, name, value });
-      const ok = await TangoAPI.setDeviceProperty(device, name, value);
+      const ok = await TangoAPI.setDeviceProperty(tangoDB, device, name, value);
       dispatch(
         ok
           ? { type: SET_DEVICE_PROPERTY_SUCCESS, device, name, value }
@@ -93,11 +93,11 @@ export function setDeviceProperty(device, name, value) {
   };
 }
 
-export function deleteDeviceProperty(device, name) {
+export function deleteDeviceProperty(tangoDB, device, name) {
   return async dispatch => {
     try {
       dispatch({ type: DELETE_DEVICE_PROPERTY, device, name });
-      const ok = await TangoAPI.deleteDeviceProperty(device, name);
+      const ok = await TangoAPI.deleteDeviceProperty(tangoDB, device, name);
       dispatch(
         ok
           ? { type: DELETE_DEVICE_PROPERTY_SUCCESS, device, name }
@@ -161,16 +161,16 @@ export function fetchDeviceSuccess(device) {
   }
 }
 
-export function selectDevice(name) {
+export function selectDevice(tangoDB, name) {
   return (dispatch, getState) => {
-    dispatch({type: SELECT_DEVICE, name});
+    dispatch({type: SELECT_DEVICE, tangoDB, name});
     
     const device = queryDeviceWithName(getState(), name);
     if (device) {
       return dispatch(selectDeviceSuccess(device));
     }
 
-    dispatch(fetchDevice(name)).then(action => {
+    dispatch(fetchDevice(tangoDB, name)).then(action => {
       if (action.type === FETCH_DEVICE_SUCCESS) {
         const newDevice = action.device;
         return dispatch(selectDeviceSuccess(newDevice));
@@ -183,14 +183,14 @@ function selectDeviceSuccess(device) {
   return {type: SELECT_DEVICE_SUCCESS, device};
 }
 
-export function fetchDevice(name) {
+export function fetchDevice(tangoDB, name) {
   return async (dispatch, getState, { emit }) => {
     const name = getCurrentDeviceName(getState());
     unSubscribeDevice(name, emit);
     dispatch({type: FETCH_DEVICE, name});
     
     try {
-      const device = await TangoAPI.fetchDevice(name);
+      const device = await TangoAPI.fetchDevice(tangoDB, name);
       return dispatch(device ? fetchDeviceSuccess(device) : displayError("The device " + name + " was not found"));
     } catch (err) {
       return dispatch(displayError(err.toString()));
