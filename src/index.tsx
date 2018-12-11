@@ -2,16 +2,19 @@ import * as React from 'react';
 
 import { render } from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import configureStore from './store/configureStore';
-import {Provider} from 'react-redux';
 import App from './App';
-import './index.css';
+import InfoPage from "./InfoPage/InfoPage";
 
-const store = configureStore();
+import './index.css';
+import { Route, BrowserRouter } from "react-router-dom";
+
 
 render(
-  <Provider store={store}>
-      <App />
-  </Provider>,
+  <BrowserRouter>
+    <div>
+      <Route path={process.env.REACT_APP_BASE_URL + ":tangoDB/"} component={App} />
+      <Route path="/" exact={true} component={InfoPage}  />
+    </div>
+  </BrowserRouter>,
   document.getElementById('root')
 );

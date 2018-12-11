@@ -272,6 +272,7 @@ class Dashboard extends Component {
           <RunCanvas
             widgets={widgets}
             widgetDefinitions={widgetDefinitions}
+            tangoDB={this.props.match.params.tangoDB}
             subCanvases={[null, ...this.state.canvases.slice(1)]}
           />
         )}
@@ -292,6 +293,7 @@ class Dashboard extends Component {
                 onDeviceRemove={this.handleDeviceRemove}
                 onAttributeChange={this.handleAttributeChange}
                 isRootCanvas={this.isRootCanvas()}
+                tangoDB={this.props.match.params.tangoDB}
               />
             )}
           </div>

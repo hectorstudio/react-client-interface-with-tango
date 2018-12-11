@@ -3,16 +3,17 @@ import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
 import createSagaMiddleware from "redux-saga";
 
-import { emit, init as websocketInit } from "../actions/websockets";
+import { emit, socket, init as websocketInit } from "../actions/websockets";
 
 import rootReducer from "../reducers/rootReducer";
 import rootSaga from "../actions/sagas";
 import { LOGIN } from "../actions/actionTypes";
 
-export default function configureStore() {
+export default function configureStore(tangoDB) {
+  const ws = socket(tangoDB)
   const { __REDUX_DEVTOOLS_EXTENSION__ } = window as any;
 
-  const thunkMiddleware = thunk.withExtraArgument({ emit });
+  const thunkMiddleware = thunk.withExtraArgument({ emit: emit.bind(null, ws) });
   const sagaMiddleware = createSagaMiddleware();
   const loggerMiddleware = createLogger({
     actionTransformer: action =>
@@ -28,7 +29,7 @@ export default function configureStore() {
   );
 
   sagaMiddleware.run(rootSaga);
-  websocketInit(store);
+  websocketInit(ws, store);
 
   return store;
 }

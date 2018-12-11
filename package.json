@@ -53,7 +53,7 @@
   },
   "proxy": {
     "/socket": {
-      "target": "wss://webjive.maxiv.lu.se",
+      "target": "https://webjive.maxiv.lu.se",
       "secure": false,
       "changeOrigin": true,
       "ws": true
