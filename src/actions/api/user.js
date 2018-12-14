@@ -34,5 +34,15 @@ export default {
     } catch (err) {
       return false;
     }
+  },
+
+  async extend() {
+    try {
+      const init = { method: "POST" };
+      const res = await fetch(process.env.REACT_APP_BASE_URL + "auth/extend", init);
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 };

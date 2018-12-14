@@ -5,11 +5,21 @@ import {
   preloadUserFailed,
   logoutSuccess,
   loginSuccess,
-  loginFailed
+  loginFailed,
+  extendLoginSuccess,
+  extendLoginFailed
 } from "../typedActionCreators";
 
-import { PRELOAD_USER, LOGIN, LOGOUT } from "../actionTypes";
-import UserAPI from '../api/user';
+import {
+  PRELOAD_USER,
+  LOGIN,
+  LOGOUT,
+  EXTEND_LOGIN,
+  PRELOAD_USER_SUCCESS,
+  LOGIN_SUCCESS,
+  LOGOUT_SUCCESS
+} from "../actionTypes";
+import UserAPI from "../api/user";
 
 function* preloadUser() {
   while (true) {
@@ -22,7 +32,7 @@ function* preloadUser() {
 
 function* login() {
   while (true) {
-    const {username, password} = yield take(LOGIN);
+    const { username, password } = yield take(LOGIN);
     const result = yield call(UserAPI.login, username, password);
     const action = result ? loginSuccess({ username }) : loginFailed();
     yield put(action);
@@ -37,8 +47,38 @@ function* logout() {
   }
 }
 
+function* extendLogin() {
+  while (true) {
+    yield take(EXTEND_LOGIN);
+    const result = yield call(UserAPI.extend);
+    const action = result ? extendLoginSuccess() : extendLoginFailed();
+    yield put(action);
+  }
+}
+
+function* periodicallyExtendLogin() {
+  while (true) {
+    yield take([PRELOAD_USER_SUCCESS, LOGIN_SUCCESS]);
+
+    while (true) {
+      const { wait, logout } = yield race({
+        wait: delay(60 * 1000),
+        logout: take(LOGOUT_SUCCESS)
+      });
+
+      if (logout) {
+        break;
+      }
+
+      yield put(extendLogin());
+    }
+  }
+}
+
 export default function* user() {
   yield fork(preloadUser);
   yield fork(login);
   yield fork(logout);
+  yield fork(extendLogin);
+  yield fork(periodicallyExtendLogin);
 }
