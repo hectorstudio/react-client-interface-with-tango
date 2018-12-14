@@ -1,4 +1,5 @@
 import { take, fork, call, put } from "redux-saga/effects";
+import { delay } from "redux-saga";
 
 import {
   preloadUserSuccess,
@@ -62,7 +63,7 @@ function* periodicallyExtendLogin() {
 
     while (true) {
       const { wait, logout } = yield race({
-        wait: delay(60 * 1000),
+        wait: call(delay, 60 * 1000),
         logout: take(LOGOUT_SUCCESS)
       });
 
