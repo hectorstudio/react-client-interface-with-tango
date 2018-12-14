@@ -36,7 +36,7 @@ export default {
     }
   },
 
-  async extend() {
+  async extendLogin() {
     try {
       const init = { method: "POST" };
       const res = await fetch(process.env.REACT_APP_BASE_URL + "auth/extend", init);

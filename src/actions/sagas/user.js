@@ -50,7 +50,7 @@ function* logout() {
 function* extendLogin() {
   while (true) {
     yield take(EXTEND_LOGIN);
-    const result = yield call(UserAPI.extend);
+    const result = yield call(UserAPI.extendLogin);
     const action = result ? extendLoginSuccess() : extendLoginFailed();
     yield put(action);
   }
