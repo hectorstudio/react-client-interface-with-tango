@@ -5,7 +5,10 @@ import {
   ILogoutAction,
   ILogoutSuccessAction,
   ILoginSuccessAction,
-  ILoginFailedAction
+  ILoginFailedAction,
+  IExtendLoginAction,
+  IExtendLoginSuccessAction,
+  IExtendLoginFailedAction
 } from "./typedActions";
 
 import {
@@ -16,7 +19,10 @@ import {
   LOGOUT_SUCCESS,
   LOGIN,
   LOGIN_SUCCESS,
-  LOGIN_FAILED
+  LOGIN_FAILED,
+  EXTEND_LOGIN,
+  EXTEND_LOGIN_SUCCESS,
+  EXTEND_LOGIN_FAILED
 } from "./actionTypes";
 
 interface IUser {
@@ -55,4 +61,16 @@ export function logout(): ILogoutAction {
 
 export function logoutSuccess(): ILogoutSuccessAction {
   return { type: LOGOUT_SUCCESS };
+}
+
+export function extendLogin(): IExtendLoginAction {
+  return { type: EXTEND_LOGIN };
+}
+
+export function extendLoginSuccess(): IExtendLoginSuccessAction {
+  return { type: EXTEND_LOGIN_SUCCESS };
+}
+
+export function extendLoginFailed(): IExtendLoginFailedAction {
+  return { type: EXTEND_LOGIN_FAILED };
 }
