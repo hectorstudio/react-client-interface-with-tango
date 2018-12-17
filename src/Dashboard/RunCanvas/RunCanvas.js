@@ -81,7 +81,7 @@ export default class RunCanvas extends Component {
     function socketUrl(tangoDB) {
       const loc = window.location;
       const protocol = loc.protocol.replace("http", "ws");
-      return protocol + "//" + loc.host + process.env.REACT_APP_BASE_URL + tangoDB + "/socket";
+      return protocol + "//" + loc.host + "/" + tangoDB + "/socket";
     }
 
     this.socket = new WebSocket(socketUrl(this.props.tangoDB) + "?dashboard", "graphql-ws");
