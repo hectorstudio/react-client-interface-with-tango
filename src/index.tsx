@@ -12,7 +12,7 @@ import { Route, BrowserRouter } from "react-router-dom";
 render(
   <BrowserRouter>
     <div>
-      <Route path={process.env.REACT_APP_BASE_URL + ":tangoDB/"} component={App} />
+      <Route path={"/:tangoDB/"} component={App} />
       <Route path="/" exact={true} component={InfoPage}  />
     </div>
   </BrowserRouter>,
