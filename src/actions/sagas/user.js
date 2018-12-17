@@ -21,6 +21,7 @@ import {
   LOGIN_SUCCESS,
   LOGOUT_SUCCESS
 } from "../actionTypes";
+
 import UserAPI from "../api/user";
 
 function* preloadUser() {
