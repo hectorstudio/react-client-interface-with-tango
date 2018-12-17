@@ -4,7 +4,7 @@ import * as types from './actionTypes';
 function socketUrl(tangoDB) {
 	const loc = window.location;
 	const protocol = loc.protocol.replace('http', 'ws');
-	return protocol + '//' + loc.host + process.env.REACT_APP_BASE_URL + tangoDB + '/socket';
+	return protocol + '//' + loc.host + '/' + tangoDB + '/socket';
 }
 
 export const socket = (tangoDB) => {		
