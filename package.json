@@ -33,7 +33,7 @@
     "scroll-into-view": "^1.9.3"
   },
   "scripts": {
-    "start": "react-scripts-ts start",
+    "start": "REACT_APP_BASE_URL=/ react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
@@ -52,23 +52,23 @@
     "typescript": "^2.9.2"
   },
   "proxy": {
-    "/socket": {
+    "/kitslab/socket": {
       "target": "https://webjive.maxiv.lu.se",
       "secure": false,
       "changeOrigin": true,
       "ws": true
     },
-    "/db": {
+    "/kitslab/db": {
       "target": "https://webjive.maxiv.lu.se",
       "secure": false,
       "changeOrigin": true
     },
-    "/auth": {
+    "/kitslab/auth": {
       "target": "https://webjive.maxiv.lu.se",
       "secure": false,
       "changeOrigin": true
     },
-    "/dashboards": {
+    "/kitslab/dashboards": {
       "target": "https://webjive.maxiv.lu.se",
       "secure": false,
       "changeOrigin": true
