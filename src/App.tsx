@@ -17,7 +17,7 @@ const App = ({ match }) => {
         <BrowserRouter>
           <Switch>
             <Route
-              path={process.env.REACT_APP_BASE_URL + ":tangoDB/dashboard"}
+              path={"/:tangoDB/dashboard"}
               exact={true}
               component={Dashboard}
             />
