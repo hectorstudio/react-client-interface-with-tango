@@ -22,6 +22,9 @@ import { complexWidgetDefinition } from "./ComplexWidget/ComplexWidget";
 const GRID_TILE_SIZE = 15;
 import "./Dashboard.css";
 
+import LogInOut from "../LogInOut/LogInOut";
+import ModalDialog from "../Modal/Modal";
+
 const DEFAULT_CANVASES = [
   {
     id: 0,
@@ -225,6 +228,8 @@ class Dashboard extends Component {
 
     return (
       <div className="Dashboard">
+        <LogInOut />
+        <ModalDialog />
         <div className="TopBar">
           <button
             onClick={this.toggleMode}
