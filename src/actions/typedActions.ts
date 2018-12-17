@@ -6,7 +6,10 @@ import {
   LOGOUT_SUCCESS,
   PRELOAD_USER_SUCCESS,
   PRELOAD_USER_FAILED,
-  PRELOAD_USER
+  PRELOAD_USER,
+  EXTEND_LOGIN,
+  EXTEND_LOGIN_SUCCESS,
+  EXTEND_LOGIN_FAILED
 } from "./actionTypes";
 
 import { Action } from "redux";
@@ -45,4 +48,16 @@ export interface IPreloadUserSuccessAction extends Action {
 
 export interface IPreloadUserFailedAction extends Action {
   type: typeof PRELOAD_USER_FAILED;
+}
+
+export interface IExtendLoginAction extends Action {
+  type: typeof EXTEND_LOGIN;
+}
+
+export interface IExtendLoginSuccessAction extends Action {
+  type: typeof EXTEND_LOGIN_SUCCESS;
+}
+
+export interface IExtendLoginFailedAction extends Action {
+  type: typeof EXTEND_LOGIN_FAILED;
 }

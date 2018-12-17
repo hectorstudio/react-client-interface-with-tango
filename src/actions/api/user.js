@@ -34,5 +34,15 @@ export default {
     } catch (err) {
       return false;
     }
+  },
+
+  async extendLogin() {
+    try {
+      const init = { method: "POST" };
+      const res = await fetch("/auth/extend", init);
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 };
