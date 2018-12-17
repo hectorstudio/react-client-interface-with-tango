@@ -6,7 +6,6 @@ import DeviceList from "../DeviceList/DeviceList";
 import DeviceViewer from "../DeviceViewer/DeviceViewer";
 // import HomeViewer from "../HomeViewer/HomeViewer";
 import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";
-import Dashboard from "../Dashboard/Dashboard";
 import LogInOut from "../LogInOut/LogInOut";
 import ModalDialog from "../Modal/Modal";
 import "./Layout.css";
@@ -18,7 +17,6 @@ const MainView = ({ className }) => (
     <LogInOut />
     <ErrorDisplay />
     <Route path={process.env.REACT_APP_BASE_URL + ":tangoDB/*"} exact={true} component={ModalDialog} />
-    <Route path={process.env.REACT_APP_BASE_URL + ":tangoDB/dashboard"} exact={true} component={Dashboard} />
     <Route path={process.env.REACT_APP_BASE_URL + ":tangoDB/devices/:device*"} component={DeviceViewer} />
     {/* <Route path="/:tangoDB/" exact={true} component={HomeViewer} /> */}
   </div>
