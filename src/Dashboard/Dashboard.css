@@ -1,18 +1,32 @@
 .Dashboard {
   width: 100%;
   height: 100%;
-
+  position: absolute;
   display: grid;
   grid-template-rows: min-content auto;
   grid-template-columns: auto 22em;
 }
 
+.Dashboard .CanvasArea {
+  grid-row: 2;
+  overflow: hidden;
+}
+
+.Dashboard .CanvasArea.edit {
+  grid-column: 1;
+}
+
+.Dashboard .CanvasArea.run {
+  grid-column: -1 / 1;
+}
+
 .Dashboard .Canvas {
   position: relative;
-  grid-row: 2;
 }
 
 .Dashboard .Canvas.edit {
+  width: 100%;
+  height: 100%;
   background: repeating-linear-gradient(
       rgb(232, 239, 249),
       rgb(232, 239, 249) 1px,
@@ -26,7 +40,6 @@
       rgba(0, 0, 0, 0) 1px,
       rgba(0, 0, 0, 0) 15px
     );
-  grid-column: 1;
   background-position-x: -1px;
   background-position-y: -1px;
   box-shadow: inset -1em 0 1em -1em rgba(0, 0, 0, 0.25);
@@ -45,19 +58,9 @@
   box-sizing: border-box;
 }
 
-.Dashboard .Canvas.run {
-  grid-row: 2;
-  grid-column: -1 / 1;
-}
-
 .Dashboard .Canvas.run  .Widget,
 .Dashboard .Canvas.edit .Widget {
   position: absolute;
-}
-
-.Dashboard .Sidebar {
-  grid-row: 2;
-  grid-column: 2;
 }
 
 .Dashboard .TopBar {
@@ -70,6 +73,9 @@
 .Dashboard .Sidebar {
   padding: 1em;
   user-select: none;
+  grid-row: 2;
+  grid-column: 2;
+  overflow-y: scroll;
 }
 
 .Dashboard .Sidebar h1 {
