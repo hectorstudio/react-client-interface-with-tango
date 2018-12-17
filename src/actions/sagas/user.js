@@ -1,4 +1,4 @@
-import { take, fork, call, put } from "redux-saga/effects";
+import { take, fork, call, put, race } from "redux-saga/effects";
 import { delay } from "redux-saga";
 
 import {
@@ -7,6 +7,7 @@ import {
   logoutSuccess,
   loginSuccess,
   loginFailed,
+  extendLogin as extendLoginAction,
   extendLoginSuccess,
   extendLoginFailed
 } from "../typedActionCreators";
@@ -73,7 +74,7 @@ function* periodicallyExtendLogin() {
         break;
       }
 
-      yield put(extendLogin());
+      yield put(extendLoginAction());
     }
   }
 }
