@@ -10,7 +10,7 @@ import {
 } from "./operations";
 
 function client(tangoDB) {
-  return new GraphQLClient(process.env.REACT_APP_BASE_URL + tangoDB + "/db");
+  return new GraphQLClient(`/${tangoDB}/db`);
 }
 
 export default {
