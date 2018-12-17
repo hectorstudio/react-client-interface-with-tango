@@ -22,6 +22,9 @@ import { complexWidgetDefinition } from "./ComplexWidget/ComplexWidget";
 const GRID_TILE_SIZE = 15;
 import "./Dashboard.css";
 
+import LogInOut from "../LogInOut/LogInOut";
+import ModalDialog from "../Modal/Modal";
+
 const DEFAULT_CANVASES = [
   {
     id: 0,
@@ -58,12 +61,11 @@ class Dashboard extends Component {
       deviceNames: [] // Not used?
     };
     if (queryString.parse(props.location.search).id) {
-      loadFromRepo(queryString.parse(props.location.search).id)
-        .then(res => {
-          if (res) {
-            this.setState({ canvases: res.canvases });
-          }
-        });
+      loadFromRepo(queryString.parse(props.location.search).id).then(res => {
+        if (res) {
+          this.setState({ canvases: res.canvases });
+        }
+      });
     }
 
     this.toggleMode = this.toggleMode.bind(this);
@@ -226,6 +228,8 @@ class Dashboard extends Component {
 
     return (
       <div className="Dashboard">
+        <LogInOut />
+        <ModalDialog />
         <div className="TopBar">
           <button
             onClick={this.toggleMode}
@@ -258,24 +262,26 @@ class Dashboard extends Component {
             </button>
           )}
         </div>
-        {mode === "edit" ? (
-          <EditCanvas
-            widgets={widgets}
-            widgetDefinitions={widgetDefinitions}
-            onMoveWidget={this.handleMoveWidget}
-            onSelectWidget={this.handleSelectWidget}
-            onDeleteWidget={this.handleDeleteWidget}
-            selectedWidgetIndex={this.state.selectedWidgetIndex}
-            onAddWidget={this.handleAddWidget}
-          />
-        ) : (
-          <RunCanvas
-            widgets={widgets}
-            widgetDefinitions={widgetDefinitions}
-            tangoDB={this.props.match.params.tangoDB}
-            subCanvases={[null, ...this.state.canvases.slice(1)]}
-          />
-        )}
+        <div className={classNames("CanvasArea", mode)}>
+          {mode === "edit" ? (
+            <EditCanvas
+              widgets={widgets}
+              widgetDefinitions={widgetDefinitions}
+              onMoveWidget={this.handleMoveWidget}
+              onSelectWidget={this.handleSelectWidget}
+              onDeleteWidget={this.handleDeleteWidget}
+              selectedWidgetIndex={this.state.selectedWidgetIndex}
+              onAddWidget={this.handleAddWidget}
+            />
+          ) : (
+            <RunCanvas
+              widgets={widgets}
+              widgetDefinitions={widgetDefinitions}
+              tangoDB={this.props.match.params.tangoDB}
+              subCanvases={[null, ...this.state.canvases.slice(1)]}
+            />
+          )}
+        </div>
         {mode === "edit" && (
           <div className="Sidebar">
             {this.state.selectedWidgetIndex === -1 ? (
