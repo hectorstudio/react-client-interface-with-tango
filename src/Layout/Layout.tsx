@@ -16,8 +16,8 @@ const MainView = ({ className }) => (
   <div className={className}>
     <LogInOut />
     <ErrorDisplay />
-    <Route path={process.env.REACT_APP_BASE_URL + ":tangoDB/*"} exact={true} component={ModalDialog} />
-    <Route path={process.env.REACT_APP_BASE_URL + ":tangoDB/devices/:device*"} component={DeviceViewer} />
+    <Route path={"/:tangoDB/*"} exact={true} component={ModalDialog} />
+    <Route path={"/:tangoDB/devices/:device*"} component={DeviceViewer} />
     {/* <Route path="/:tangoDB/" exact={true} component={HomeViewer} /> */}
   </div>
 );
@@ -25,7 +25,7 @@ const MainView = ({ className }) => (
 const DefaultLayout = () => (
   <BaseLayout>
     <div className="left-column">
-      <Route path={process.env.REACT_APP_BASE_URL + ":tangoDB"} component={DeviceList} />
+      <Route path={"/:tangoDB"} component={DeviceList} />
     </div>
     <MainView className="right-column" />
   </BaseLayout>
