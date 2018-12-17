@@ -121,6 +121,7 @@ class EditCanvas extends Component {
 
   handleKeyDown(event) {
     if ([BACKSPACE, DELETE].indexOf(event.keyCode) !== -1) {
+      event.preventDefault();
       this.props.onDeleteWidget(this.props.selectedWidgetIndex);
     }
   }
