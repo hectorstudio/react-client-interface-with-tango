@@ -1,7 +1,7 @@
 export default {
   async preloadUser() {
     try {
-      const res = await fetch(process.env.REACT_APP_BASE_URL + "auth/user");
+      const res = await fetch("/auth/user");
       const user = await res.json();
       return user;
     } catch (err) {
@@ -19,7 +19,7 @@ export default {
     };
 
     try {
-      const res = await fetch(process.env.REACT_APP_BASE_URL + "auth/login", init);
+      const res = await fetch("/auth/login", init);
       return res.ok ? username : null;
     } catch (err) {
       return null;
@@ -29,7 +29,7 @@ export default {
   async logout() {
     try {
       const init = { method: "POST" };
-      const res = await fetch(process.env.REACT_APP_BASE_URL + "auth/logout", init);
+      const res = await fetch("/auth/logout", init);
       return true;
     } catch (err) {
       return false;
