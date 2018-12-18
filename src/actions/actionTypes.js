@@ -13,6 +13,7 @@ Avoid GET_XXX in order not to confuse selectors and action creators.
 
 export const FETCH_DEVICE_NAMES = 'FETCH_DEVICE_NAMES';
 export const FETCH_DEVICE_NAMES_SUCCESS = 'FETCH_DEVICE_NAMES_SUCCESS';
+export const FETCH_DEVICE_NAMES_FAILED = 'FETCH_DEVICE_NAMES_FAILED';
 
 export const FETCH_DEVICE = 'FETCH_DEVICE';
 export const FETCH_DEVICE_SUCCESS = 'FETCH_DEVICE_SUCCESS';

@@ -35,18 +35,19 @@ import {
   DELETE_DEVICE_PROPERTY,
   DELETE_DEVICE_PROPERTY_SUCCESS,
   DELETE_DEVICE_PROPERTY_FAILED,
+  FETCH_DEVICE_NAMES_FAILED,
 } from './actionTypes';
 
 export function fetchDeviceNames(tangoDB) {
-  return async dispatch => {
-    dispatch({ type: FETCH_DEVICE_NAMES });
-    try {
-      const names = await TangoAPI.fetchDeviceNames(tangoDB);
-      dispatch({ type: FETCH_DEVICE_NAMES_SUCCESS, names });
-    } catch (err) {
-      dispatch(displayError(err.toString()));
-    }
-  };
+  return { type: FETCH_DEVICE_NAMES, tangoDB };
+}
+
+export function fetchDeviceNamesSuccess(names) {
+  return { type: FETCH_DEVICE_NAMES_SUCCESS, names };
+}
+
+export function fetchDeviceNamesFailed(reason) {
+  return { type: FETCH_DEVICE_NAMES_FAILED, reason };
 }
 
 export function executeCommand(tangoDB, command, argin, device) {
