@@ -20,7 +20,8 @@ import {
   getCurrentDeviceHasAttributes,
   getCurrentDeviceHasProperties,
   getCurrentDeviceHasCommands,
-  getDispLevels
+  getDispLevels,
+  getHasCurrentDevice
 } from "../selectors/currentDevice";
 
 import { getDeviceIsLoading } from "../selectors/loadingStatus";
@@ -116,6 +117,12 @@ class DeviceViewer extends Component {
   innerContent() {
     if (this.props.loading) {
       return <Spinner size={4} />;
+    }
+
+    if (!this.props.hasDevice) {
+      return <p style={{ margin: "1em" }}>
+        Couldn't load {this.props.deviceName}.
+      </p>
     }
 
     const {
@@ -227,6 +234,7 @@ function mapStateToProps(state) {
     loading: getDeviceIsLoading(state),
     selectedTab: getActiveTab(state),
 
+    hasDevice: getHasCurrentDevice(state),
     currentState: getCurrentDeviceStateValue(state),
     deviceName: getCurrentDeviceName(state),
     enabledList: getEnabledDisplevels(state),

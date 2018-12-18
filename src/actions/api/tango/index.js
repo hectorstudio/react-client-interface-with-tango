@@ -45,7 +45,11 @@ export default {
 
   async fetchDevice(tangoDB, name) {
     const params = { name };
-    const data = await client(tangoDB).request(FETCH_DEVICE, params);
-    return data.device;
+    try {
+      const data = await client(tangoDB).request(FETCH_DEVICE, params);
+      return data.device;
+    } catch (err) {
+      return null;
+    }
   }
 };
