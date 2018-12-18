@@ -21,6 +21,11 @@ const getCurrentDevice = createSelector(
     (devices, name) => devices[name]
 );
 
+export const getHasCurrentDevice = createSelector(
+    getCurrentDevice,
+    device => device != null
+);
+
 export const getCurrentDeviceServer = createSelector(
     getCurrentDevice,
     device => device.server
