@@ -120,9 +120,9 @@ class DeviceViewer extends Component {
     }
 
     if (!this.props.hasDevice) {
-      return <p style={{ margin: "1em" }}>
-        Couldn't load {this.props.deviceName}.
-      </p>
+      return <p style={{ margin: "1em", color: "red" }}>
+          Couldn't load {this.props.deviceName}.
+        </p>;
     }
 
     const {
