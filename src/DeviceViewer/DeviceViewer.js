@@ -132,7 +132,7 @@ class DeviceViewer extends Component {
       currentState,
       deviceName,
       displevels,
-      enabledList,
+      enabledDisplevels,
       onEnableDisplevel,
       onDisableDisplevel
     } = this.props;
@@ -181,7 +181,7 @@ class DeviceViewer extends Component {
           {displevels.length > 1 && (
             <DisplevelChooser
               displevels={displevels}
-              enabled={enabledList}
+              enabled={enabledDisplevels}
               onEnableDisplevel={onEnableDisplevel}
               onDisableDisplevel={onDisableDisplevel}
             />
@@ -216,7 +216,7 @@ DeviceViewer.propTypes = {
   currentState: PropTypes.string,
   deviceName: PropTypes.string,
   displevels: PropTypes.arrayOf(PropTypes.string),
-  enabledList: PropTypes.arrayOf(PropTypes.string),
+  enabledDisplevels: PropTypes.arrayOf(PropTypes.string),
   onEnableDisplevel: PropTypes.func,
   onDisableDisplevel: PropTypes.func,
 
@@ -237,7 +237,7 @@ function mapStateToProps(state) {
     hasDevice: getHasCurrentDevice(state),
     currentState: getCurrentDeviceStateValue(state),
     deviceName: getCurrentDeviceName(state),
-    enabledList: getEnabledDisplevels(state),
+    enabledDisplevels: getEnabledDisplevels(state),
 
     displevels: getDispLevels(state)
   };
