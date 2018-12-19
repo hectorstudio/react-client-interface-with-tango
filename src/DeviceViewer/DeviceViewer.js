@@ -132,9 +132,9 @@ class DeviceViewer extends Component {
       currentState,
       deviceName,
       displevels,
-      enabledList,
-      enableDisplevel,
-      disableDisplevel
+      enabledDisplevels,
+      onEnableDisplevel,
+      onDisableDisplevel
     } = this.props;
 
     const QualityIndicator = ({ state }) => {
@@ -181,9 +181,9 @@ class DeviceViewer extends Component {
           {displevels.length > 1 && (
             <DisplevelChooser
               displevels={displevels}
-              enabledList={enabledList}
-              enableDisplevel={enableDisplevel}
-              disableDisplevel={disableDisplevel}
+              enabled={enabledDisplevels}
+              onEnableDisplevel={onEnableDisplevel}
+              onDisableDisplevel={onDisableDisplevel}
             />
           )}
         </div>
@@ -216,9 +216,9 @@ DeviceViewer.propTypes = {
   currentState: PropTypes.string,
   deviceName: PropTypes.string,
   displevels: PropTypes.arrayOf(PropTypes.string),
-  enabledList: PropTypes.arrayOf(PropTypes.string),
-  enableDisplevel: PropTypes.func,
-  disableDisplevel: PropTypes.func,
+  enabledDisplevels: PropTypes.arrayOf(PropTypes.string),
+  onEnableDisplevel: PropTypes.func,
+  onDisableDisplevel: PropTypes.func,
 
   hasAttributes: PropTypes.bool,
   hasProperties: PropTypes.bool,
@@ -237,7 +237,7 @@ function mapStateToProps(state) {
     hasDevice: getHasCurrentDevice(state),
     currentState: getCurrentDeviceStateValue(state),
     deviceName: getCurrentDeviceName(state),
-    enabledList: getEnabledDisplevels(state),
+    enabledDisplevels: getEnabledDisplevels(state),
 
     displevels: getDispLevels(state)
   };
@@ -247,8 +247,8 @@ function mapDispatchToProps(dispatch) {
   return {
     onSelectDevice: (tangoDB, device) => dispatch(selectDevice(tangoDB, device)),
     onSelectTab: tab => dispatch(setTab(tab)),
-    enableDisplevel: displevel => dispatch(enableDisplevel(displevel)),
-    disableDisplevel: displevel => dispatch(disableDisplevel(displevel))
+    onEnableDisplevel: displevel => dispatch(enableDisplevel(displevel)),
+    onDisableDisplevel: displevel => dispatch(disableDisplevel(displevel))
   };
 }
 
