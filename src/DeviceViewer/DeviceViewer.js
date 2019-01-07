@@ -25,7 +25,7 @@ import {
 } from "../selectors/currentDevice";
 
 import { getDeviceIsLoading } from "../selectors/loadingStatus";
-import { getActiveTab, getEnabledDisplevels } from "../selectors/deviceDetail";
+import { getActiveTab, getDisabledDisplevels } from "../selectors/deviceDetail";
 
 import { setDataFormat, setTab } from "../actions/deviceList";
 
@@ -92,7 +92,6 @@ class DeviceViewer extends Component {
   parseTab() {
     const { hash } = this.props.history.location;
     const tab = hash.substr(1);
-    return tab || undefined;
   }
 
   componentDidMount() {
@@ -109,7 +108,7 @@ class DeviceViewer extends Component {
     }
 
     const tab = this.parseTab();
-    if (tab && tab !== this.props.activeTab) {
+    if (tab && tab !== this.props.selectedTab) {
       this.props.onSelectTab(tab);
     }
   }
@@ -237,7 +236,7 @@ function mapStateToProps(state) {
     hasDevice: getHasCurrentDevice(state),
     currentState: getCurrentDeviceStateValue(state),
     deviceName: getCurrentDeviceName(state),
-    enabledDisplevels: getEnabledDisplevels(state),
+    enabledDisplevels: getDisabledDisplevels(state),
 
     displevels: getDispLevels(state)
   };
