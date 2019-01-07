@@ -16,7 +16,8 @@ import {
   executeCommandSuccess,
   setDevicePropertySuccess,
   setDeviceAttributeFailed,
-  setDevicePropertyFailed
+  setDevicePropertyFailed,
+  setDeviceAttributeSuccess
 } from "../tango";
 
 import { displayError } from "../error";
@@ -45,7 +46,7 @@ function* executeCommand() {
         device
       );
       const action = ok
-        ? executeCommandSuccess(command, output, device)
+        ? executeCommandSuccess(tangoDB, command, output, device)
         : executeCommandFailed(tangoDB, command, argin, device);
       yield put(action);
     } catch (err) {
@@ -66,8 +67,8 @@ function* setDeviceAttribute() {
         value
       );
       const action = ok
-        ? { type: "SET_DEVICE_ATTRIBUTE_SUCCESS", tangoDB, device, name, value }
-        : { type: "SET_DEVICE_ATTRIBUTE_FAILED", tangoDB, device, name, value };
+        ? setDeviceAttributeSuccess(tangoDB, device, name, value)
+        : setDeviceAttributeFailed(tangoDB, device, name, value);
       yield put(action);
     } catch (err) {
       yield put(displayError(err.toString()));
