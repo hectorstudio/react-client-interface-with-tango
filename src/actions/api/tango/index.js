@@ -22,7 +22,7 @@ export default {
   async executeCommand(tangoDB, command, argin, device) {
     const params = argin ? { command, argin, device } : { command, device };
     const data = await client(tangoDB).request(EXECUTE_COMMAND, params);
-    return data.executeCommand.output;
+    return data.executeCommand;
   },
 
   async setDeviceAttribute(tangoDB, device, name, value) {

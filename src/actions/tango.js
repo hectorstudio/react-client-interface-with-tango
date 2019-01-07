@@ -16,7 +16,8 @@ import {
   FETCH_DEVICE_NAMES_SUCCESS,
   
   EXECUTE_COMMAND,
-  EXECUTE_COMMAND_COMPLETE,
+  EXECUTE_COMMAND_SUCCESS,
+  EXECUTE_COMMAND_FAILED,
 
   SELECT_DEVICE,
   SELECT_DEVICE_SUCCESS,
@@ -50,16 +51,17 @@ export function fetchDeviceNamesFailed(reason) {
   return { type: FETCH_DEVICE_NAMES_FAILED, reason };
 }
 
+
 export function executeCommand(tangoDB, command, argin, device) {
-  return async dispatch => {
-    dispatch({ type: EXECUTE_COMMAND, command, argin, device });
-    try {
-      const result = await TangoAPI.executeCommand(tangoDB, command, argin, device);
-      dispatch({ type: EXECUTE_COMMAND_COMPLETE, command, result, device });
-    } catch (err) {
-      dispatch(displayError(err.toString()));
-    }
-  };
+  return { type: EXECUTE_COMMAND, tangoDB, command, argin, device };
+}
+
+export function executeCommandFailed(tangoDB, command, argin, device) {
+  return { type: EXECUTE_COMMAND_FAILED, tangoDB, command, argin, device };
+}
+
+export function executeCommandSuccess(command, result, device) {
+  return { type: EXECUTE_COMMAND_SUCCESS, command, result, device };
 }
 
 export function setDeviceAttribute(tangoDB, device, name, value) {

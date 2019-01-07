@@ -3,11 +3,19 @@ import { fork, take, put, call } from "redux-saga/effects";
 import {
   FETCH_DEVICE_NAMES,
   FETCH_DEVICE_NAMES_SUCCESS,
-  FETCH_DEVICE_NAMES_FAILED
+  FETCH_DEVICE_NAMES_FAILED,
+  EXECUTE_COMMAND
 } from "../actionTypes";
 
 import TangoAPI from "../api/tango";
-import { fetchDeviceNamesSuccess, fetchDeviceNamesFailed } from "../tango";
+import {
+  fetchDeviceNamesSuccess,
+  fetchDeviceNamesFailed,
+  executeCommandFailed,
+  executeCommandSuccess
+} from "../tango";
+
+import { displayError } from "../error";
 
 function* fetchDeviceNames() {
   while (true) {
@@ -21,6 +29,28 @@ function* fetchDeviceNames() {
   }
 }
 
+function* executeCommand() {
+  while (true) {
+    const { tangoDB, command, argin, device } = yield take(EXECUTE_COMMAND);
+    try {
+      const { ok, output } = yield call(
+        TangoAPI.executeCommand,
+        tangoDB,
+        command,
+        argin,
+        device
+      );
+      const action = ok
+        ? executeCommandSuccess(command, output, device)
+        : executeCommandFailed(tangoDB, command, argin, device);
+      yield put(action);
+    } catch (err) {
+      yield put(displayError(err.toString()));
+    }
+  }
+}
+
 export default function* tango() {
   yield fork(fetchDeviceNames);
+  yield fork(executeCommand);
 }
