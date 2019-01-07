@@ -5,6 +5,7 @@ import {
     FETCH_DEVICE_SUCCESS,
     EXECUTE_COMMAND,
     EXECUTE_COMMAND_COMPLETE,
+    FETCH_DEVICE_FAILED,
 } from '../actions/actionTypes';
 
 export interface ILoadingStatusState {
@@ -33,6 +34,7 @@ export default function loadingStatus(state: ILoadingStatusState = {
         return {...state, loadingDevice: true};
     
     case FETCH_DEVICE_SUCCESS:
+    case FETCH_DEVICE_FAILED:
         return {...state, loadingDevice: false};
 
     case EXECUTE_COMMAND: {
