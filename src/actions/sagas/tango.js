@@ -4,7 +4,8 @@ import {
   FETCH_DEVICE_NAMES,
   FETCH_DEVICE_NAMES_SUCCESS,
   FETCH_DEVICE_NAMES_FAILED,
-  EXECUTE_COMMAND
+  EXECUTE_COMMAND,
+  SET_DEVICE_PROPERTY
 } from "../actionTypes";
 
 import TangoAPI from "../api/tango";
@@ -12,7 +13,10 @@ import {
   fetchDeviceNamesSuccess,
   fetchDeviceNamesFailed,
   executeCommandFailed,
-  executeCommandSuccess
+  executeCommandSuccess,
+  setDevicePropertySuccess,
+  setDeviceAttributeFailed,
+  setDevicePropertyFailed
 } from "../tango";
 
 import { displayError } from "../error";
@@ -68,6 +72,18 @@ function* setDeviceAttribute() {
     } catch (err) {
       yield put(displayError(err.toString()));
     }
+  }
+}
+
+
+function* setDeviceProperty() {
+  while (true) {
+    const { tangoDB, device, name, value } = yield take(SET_DEVICE_PROPERTY);
+    const ok = yield call(TangoAPI.setDeviceProperty, tangoDB, device, name, value);
+    const action = ok
+      ? setDevicePropertySuccess(tangoDB, device, name, value)
+      : setDevicePropertyFailed(tangoDB, device, name, value);
+    yield put(action);
   }
 }
 
