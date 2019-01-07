@@ -91,4 +91,5 @@ export default function* tango() {
   yield fork(fetchDeviceNames);
   yield fork(executeCommand);
   yield fork(setDeviceAttribute);
+  yield fork(setDeviceProperty);
 }
