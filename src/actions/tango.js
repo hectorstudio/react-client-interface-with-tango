@@ -59,8 +59,8 @@ export function executeCommandFailed(tangoDB, command, argin, device) {
   return { type: EXECUTE_COMMAND_FAILED, tangoDB, command, argin, device };
 }
 
-export function executeCommandSuccess(command, result, device) {
-  return { type: EXECUTE_COMMAND_SUCCESS, command, result, device };
+export function executeCommandSuccess(tangoDB, command, result, device) {
+  return { type: EXECUTE_COMMAND_SUCCESS, tangoDB, command, result, device };
 }
 
 export function setDeviceAttribute(tangoDB, device, name, value) {
