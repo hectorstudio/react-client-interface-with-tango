@@ -162,6 +162,10 @@ export function fetchDeviceSuccess(device) {
   }
 }
 
+export function fetchDeviceFailed(name) {
+  return { type: FETCH_DEVICE_FAILED, name };
+}
+
 export function selectDevice(tangoDB, name) {
   return (dispatch, getState) => {
     dispatch({type: SELECT_DEVICE, tangoDB, name});
@@ -190,11 +194,8 @@ export function fetchDevice(tangoDB, name) {
     unSubscribeDevice(name, emit);
     dispatch({type: FETCH_DEVICE, name});
     
-    try {
-      const device = await TangoAPI.fetchDevice(tangoDB, name);
-      return dispatch(device ? fetchDeviceSuccess(device) : displayError("The device " + name + " was not found"));
-    } catch (err) {
-      return dispatch(displayError(err.toString()));
-    }
+    const device = await TangoAPI.fetchDevice(tangoDB, name);
+    const action = device ? fetchDeviceSuccess(device) : fetchDeviceFailed(name);
+    return dispatch(action);
   }
 }
