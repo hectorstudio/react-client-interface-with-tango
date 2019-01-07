@@ -5,7 +5,8 @@ import {
   FETCH_DEVICE_NAMES_SUCCESS,
   FETCH_DEVICE_NAMES_FAILED,
   EXECUTE_COMMAND,
-  SET_DEVICE_PROPERTY
+  SET_DEVICE_PROPERTY,
+  DELETE_DEVICE_PROPERTY
 } from "../actionTypes";
 
 import TangoAPI from "../api/tango";
