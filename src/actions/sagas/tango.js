@@ -17,7 +17,9 @@ import {
   setDevicePropertySuccess,
   setDeviceAttributeFailed,
   setDevicePropertyFailed,
-  setDeviceAttributeSuccess
+  setDeviceAttributeSuccess,
+  deleteDevicePropertySuccess,
+  deleteDevicePropertyFailed
 } from "../tango";
 
 import { displayError } from "../error";
@@ -76,14 +78,30 @@ function* setDeviceAttribute() {
   }
 }
 
-
 function* setDeviceProperty() {
   while (true) {
     const { tangoDB, device, name, value } = yield take(SET_DEVICE_PROPERTY);
-    const ok = yield call(TangoAPI.setDeviceProperty, tangoDB, device, name, value);
+    const ok = yield call(
+      TangoAPI.setDeviceProperty,
+      tangoDB,
+      device,
+      name,
+      value
+    );
     const action = ok
       ? setDevicePropertySuccess(tangoDB, device, name, value)
       : setDevicePropertyFailed(tangoDB, device, name, value);
+    yield put(action);
+  }
+}
+
+function* deleteDeviceProperty() {
+  while (true) {
+    const { tangoDB, device, name } = yield take(DELETE_DEVICE_PROPERTY);
+    const ok = yield call(TangoAPI.deleteDeviceProperty, tangoDB, device, name);
+    const action = ok
+      ? deleteDevicePropertySuccess(tangoDB, device, name)
+      : deleteDevicePropertyFailed(tangoDB, device, name);
     yield put(action);
   }
 }

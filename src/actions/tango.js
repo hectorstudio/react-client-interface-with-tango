@@ -88,23 +88,15 @@ export function setDevicePropertyFailed(tangoDB, device, name, value) {
 }
 
 export function deleteDeviceProperty(tangoDB, device, name) {
-  return async dispatch => {
-    try {
-      dispatch({ type: DELETE_DEVICE_PROPERTY, device, name });
-      const ok = await TangoAPI.deleteDeviceProperty(tangoDB, device, name);
-      dispatch(
-        ok
-          ? { type: DELETE_DEVICE_PROPERTY_SUCCESS, device, name }
-          : {
-              type: DELETE_DEVICE_PROPERTY_FAILED,
-              device,
-              name
-            }
-      );
-    } catch (err) {
-      dispatch(displayError(err.toString()));
-    }
-  };
+  return { type: DELETE_DEVICE_PROPERTY, tangoDB, device, name };
+}
+
+export function deleteDevicePropertySuccess(tangoDB, device, name) {
+  return { type: DELETE_DEVICE_PROPERTY_SUCCESS, tangoDB, device, name };
+}
+
+export function deleteDevicePropertyFailed(tangoDB, device, name) {
+  return { type: DELETE_DEVICE_PROPERTY_FAILED, tangoDB, device, name };
 }
 
 export function unSubscribeDevice(device, emit){
