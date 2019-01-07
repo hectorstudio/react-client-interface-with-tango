@@ -39,6 +39,10 @@ import {
   FETCH_DEVICE_NAMES_FAILED,
 } from './actionTypes';
 
+export function preloadDevice(tangoDB, device) {
+  return { type: "PRELOAD_DEVICE", tangoDB, device };
+}
+
 export function fetchDeviceNames(tangoDB) {
   return { type: FETCH_DEVICE_NAMES, tangoDB };
 }
@@ -152,26 +156,27 @@ export function fetchDeviceFailed(name) {
 }
 
 export function selectDevice(tangoDB, name) {
-  return (dispatch, getState) => {
-    dispatch({type: SELECT_DEVICE, tangoDB, name});
+  return { type: SELECT_DEVICE, tangoDB, name };
+  // return (dispatch, getState) => {
+  //   dispatch({type: SELECT_DEVICE, tangoDB, name});
     
-    const device = queryDeviceWithName(getState(), name);
-    if (device) {
-      return dispatch(selectDeviceSuccess(device));
-    }
+  //   const device = queryDeviceWithName(getState(), name);
+  //   if (device) {
+  //     return dispatch(selectDeviceSuccess(device));
+  //   }
 
-    dispatch(fetchDevice(tangoDB, name)).then(action => {
-      if (action.type === FETCH_DEVICE_SUCCESS) {
-        const newDevice = action.device;
-        return dispatch(selectDeviceSuccess(newDevice));
-      }
-    })
-  }
+  //   dispatch(fetchDevice(tangoDB, name)).then(action => {
+  //     if (action.type === FETCH_DEVICE_SUCCESS) {
+  //       const newDevice = action.device;
+  //       return dispatch(selectDeviceSuccess(newDevice));
+  //     }
+  //   })
+  // }
 }
 
-function selectDeviceSuccess(device) {
-  return {type: SELECT_DEVICE_SUCCESS, device};
-}
+// function selectDeviceSuccess(device) {
+//   return {type: SELECT_DEVICE_SUCCESS, device};
+// }
 
 export function fetchDevice(tangoDB, name) {
   return async (dispatch, getState, { emit }) => {

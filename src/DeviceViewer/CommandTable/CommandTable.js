@@ -9,7 +9,7 @@ import {
 } from '../../selectors/currentDevice';
 
 import {
-  getEnabledDisplevels
+  getDisabledDisplevels
 } from '../../selectors/deviceDetail';
 
 import {
@@ -189,7 +189,7 @@ function mapStateToProps(state) {
   return {
     commands: getCurrentDeviceCommands(state),
     currentDeviceName: getCurrentDeviceName(state),
-    enabledList: getEnabledDisplevels(state),
+    enabledList: getDisabledDisplevels(state),
     
     commandOutputs: getCurrentDeviceCommandOutputs(state),
     outputsLoading: getCommandOutputsLoading(state),

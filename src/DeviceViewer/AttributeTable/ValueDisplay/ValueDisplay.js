@@ -20,7 +20,7 @@ DevStringValueDisplay.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
 }
 
-const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDeviceAttribute, minvalue, maxvalue}) => {
+const ScalarValueDisplay = ({value, datatype, name, writable, setDeviceAttribute, minvalue, maxvalue}) => {
   if (datatype === 'DevString') {
     return <DevStringValueDisplay value={value}/>;
   } else if (datatype === 'DevEncoded') {
@@ -36,7 +36,7 @@ const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDev
   }else if(writable === "WRITE" || writable === "READ_WITH_WRITE" && datatype === 'DevDouble' || datatype === 'DevShort'
   || datatype === 'DevFloat' || datatype === 'DevLong' || datatype === 'DevULong' || datatype === 'DevULong64' || datatype === 'DevUShort' || datatype === 'DevLong64' || datatype === 'DevUChar'){
     return<AttributeInput
-      save={setDeviceAttribute.bind(this, deviceName, name)}
+      save={setDeviceAttribute.bind(this, name)}
       value={Number(value)}
       motorName={name}
       decimalPoints="2"
@@ -51,7 +51,6 @@ const ScalarValueDisplay = ({value, datatype, name, deviceName, writable, setDev
 }
 ScalarValueDisplay.propTypes = {
   datatype: PropTypes.string,
-  deviceName: PropTypes.string,
   maxvalue: PropTypes.any,
   minvalue: PropTypes.any,
   name: PropTypes.string,
@@ -158,7 +157,7 @@ ImageValueDisplay.propTypes = {
   writable: PropTypes.string,
 }
 
-const ValueDisplay = ({value, deviceName, writable, setDeviceAttribute,  datatype, dataformat, name, minvalue, maxvalue}) => {
+const ValueDisplay = ({value, writable, setDeviceAttribute,  datatype, dataformat, name, minvalue, maxvalue}) => {
   if (value === null) {
     return <span className="ValueDisplay no-value">No value</span>;
   }
@@ -177,7 +176,6 @@ const ValueDisplay = ({value, deviceName, writable, setDeviceAttribute,  datatyp
         value={value}
         datatype={datatype}
         name={name}
-        deviceName={deviceName}
         writable={writable}
         maxvalue={maxvalue}
         minvalue={minvalue} 
@@ -190,7 +188,6 @@ const ValueDisplay = ({value, deviceName, writable, setDeviceAttribute,  datatyp
 ValueDisplay.propTypes = {
   dataformat: PropTypes.string,
   datatype: PropTypes.string,
-  deviceName: PropTypes.string,
   maxvalue: PropTypes.any,
   minvalue: PropTypes.any,
   name: PropTypes.string,
