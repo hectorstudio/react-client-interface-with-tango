@@ -50,7 +50,29 @@ function* executeCommand() {
   }
 }
 
+function* setDeviceAttribute() {
+  while (true) {
+    const { tangoDB, device, name, value } = yield take("SET_DEVICE_ATTRIBUTE");
+    try {
+      const ok = yield call(
+        TangoAPI.setDeviceAttribute,
+        tangoDB,
+        device,
+        name,
+        value
+      );
+      const action = ok
+        ? { type: "SET_DEVICE_ATTRIBUTE_SUCCESS", device, name, value }
+        : { type: "SET_DEVICE_ATTRIBUTE_FAILED", device, name, value };
+      yield put(action);
+    } catch (err) {
+      yield put(displayError(err.toString()));
+    }
+  }
+}
+
 export default function* tango() {
   yield fork(fetchDeviceNames);
   yield fork(executeCommand);
+  yield fork(setDeviceAttribute);
 }
