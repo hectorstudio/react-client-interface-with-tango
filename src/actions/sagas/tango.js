@@ -111,4 +111,5 @@ export default function* tango() {
   yield fork(executeCommand);
   yield fork(setDeviceAttribute);
   yield fork(setDeviceProperty);
+  yield fork(deleteDeviceProperty);
 }
