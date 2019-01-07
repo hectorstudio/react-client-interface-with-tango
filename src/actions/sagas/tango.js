@@ -62,8 +62,8 @@ function* setDeviceAttribute() {
         value
       );
       const action = ok
-        ? { type: "SET_DEVICE_ATTRIBUTE_SUCCESS", device, name, value }
-        : { type: "SET_DEVICE_ATTRIBUTE_FAILED", device, name, value };
+        ? { type: "SET_DEVICE_ATTRIBUTE_SUCCESS", tangoDB, device, name, value }
+        : { type: "SET_DEVICE_ATTRIBUTE_FAILED", tangoDB, device, name, value };
       yield put(action);
     } catch (err) {
       yield put(displayError(err.toString()));
