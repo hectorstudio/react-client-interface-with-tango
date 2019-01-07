@@ -51,7 +51,6 @@ export function fetchDeviceNamesFailed(reason) {
   return { type: FETCH_DEVICE_NAMES_FAILED, reason };
 }
 
-
 export function executeCommand(tangoDB, command, argin, device) {
   return { type: EXECUTE_COMMAND, tangoDB, command, argin, device };
 }
@@ -65,19 +64,15 @@ export function executeCommandSuccess(command, result, device) {
 }
 
 export function setDeviceAttribute(tangoDB, device, name, value) {
-  return async dispatch => {
-    dispatch({ type: SET_DEVICE_ATTRIBUTE, device, name, value });
-    try {
-      const ok = await TangoAPI.setDeviceAttribute(tangoDB, device, name, value);
-      dispatch(
-        ok
-          ? { type: SET_DEVICE_ATTRIBUTE_SUCCESS, device, name, value }
-          : { type: SET_DEVICE_ATTRIBUTE_FAILED, device, name, value }
-      );
-    } catch (err) {
-      dispatch(displayError(err.toString()));
-    }
-  };
+  return { type: SET_DEVICE_ATTRIBUTE, tangoDB, device, name, value };
+}
+
+export function setDeviceAttributeSuccess(tangoDB, device, name, value) {
+  return { type: SET_DEVICE_ATTRIBUTE_SUCCESS, tangoDB, device, name, value };
+}
+
+export function setDeviceAttributeFailed(tangoDB, device, name, value) {
+  return { type: SET_DEVICE_ATTRIBUTE_FAILED, tangoDB, device, name, value };
 }
 
 export function setDeviceProperty(tangoDB, device, name, value) {
