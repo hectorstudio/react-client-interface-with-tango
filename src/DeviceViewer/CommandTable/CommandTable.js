@@ -50,12 +50,10 @@ class CommandTable extends Component {
     const {
       commands,
       onExecute,
-      deviceName,
-      enabledList,
+      disabledDisplevels,
       outputsLoading,
       commandOutputs,
       isLoggedIn,
-      tangoDB
     } = this.props;
     
     return (
@@ -65,21 +63,25 @@ class CommandTable extends Component {
         </NotLoggedIn>
         <table className='separated'>
           <tbody>
-            {commands && commands.map(({ name, displevel, intype, intypedesc, outtypedesc }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
-              <tr key={i}>
-                <td>
-                  {name}
-                  <br/>
-                  <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
-                </td>
-                <td className="input">
-                  <InputField tangoDB={tangoDB} isEnabled={isLoggedIn} onExecute={onExecute} deviceName={deviceName} commands={commands} name={name} intype={intype}/>
-                </td>
-                <td className='description'>
-                  <DescriptionDisplay description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
-                </td>
-              </tr>
-            )}
+            {commands && commands.map((command, i) => {
+              const { name, displevel, intype, intypedesc, outtypedesc } = command;
+              const enabled = Object.values(disabledDisplevels).indexOf(displevel) === -1;
+              return enabled && (
+                <tr key={i}>
+                  <td>
+                    {name}
+                    <br/>
+                    <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
+                  </td>
+                  <td className="input">
+                    <InputField isEnabled={isLoggedIn} onExecute={onExecute} commands={commands} name={name} intype={intype}/>
+                  </td>
+                  <td className='description'>
+                    <DescriptionDisplay description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -131,9 +133,9 @@ class InputField extends Component {
   handleExecute(event) {
     event.preventDefault()
     if(this.props.intype === 'DevString'){
-      this.props.onExecute(this.props.tangoDB, this.props.name, JSON.stringify(this.state.value), this.props.deviceName)
+      this.props.onExecute(this.props.name, JSON.stringify(this.state.value))
     }else{
-     this.props.onExecute(this.props.tangoDB, this.props.name, this.state.value, this.props.deviceName)
+     this.props.onExecute(this.props.name, this.state.value)
     }
     this.setState({value: '', valid: false });
   }
@@ -178,17 +180,15 @@ class InputField extends Component {
 
 InputField.propTypes = {
   onExecute: PropTypes.func,
-  deviceName: PropTypes.string,
   commands: PropTypes.oneOfType([PropTypes.arrayOf(command), command]),
   name: PropTypes.string,
   intype: PropTypes.string,
 }
 
-
 function mapStateToProps(state) {
   return {
     commands: getCurrentDeviceCommands(state),
-    enabledList: getDisabledDisplevels(state),
+    disabledDisplevels: getDisabledDisplevels(state),
     
     commandOutputs: getCurrentDeviceCommandOutputs(state),
     outputsLoading: getCommandOutputsLoading(state),
@@ -197,9 +197,10 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
+  const { tangoDB, deviceName } = ownProps;
   return {
-    onExecute: (tangoDB, command, value, device) => dispatch(executeCommand(tangoDB, command, value, device)),
+    onExecute: (command, value) => dispatch(executeCommand(tangoDB, command, value, deviceName)),
   };
 }
 
