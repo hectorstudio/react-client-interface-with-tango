@@ -31,6 +31,11 @@ export const getCurrentDeviceServer = createSelector(
     device => device.server
 );
 
+export const getCurrentDeviceErrors = createSelector(
+    getCurrentDevice,
+    device => device ? device.errors : []
+);
+
 export const getCurrentDeviceAttributes = createSelector(
     getAttributesState,
     getCurrentDeviceName,

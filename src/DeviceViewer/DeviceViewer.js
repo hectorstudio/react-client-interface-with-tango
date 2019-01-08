@@ -22,7 +22,8 @@ import {
   getCurrentDeviceHasProperties,
   getCurrentDeviceHasCommands,
   getDispLevels,
-  getHasCurrentDevice
+  getHasCurrentDevice,
+  getCurrentDeviceErrors
 } from "../selectors/currentDevice";
 
 import { getDeviceIsLoading } from "../selectors/loadingStatus";
@@ -37,6 +38,7 @@ import {
 } from "../actions/tango";
 
 import "./DeviceViewer.css";
+import ErrorTable from "./ErrorTable/ErrorTable";
 
 class DeviceMenu extends Component {
   render() {
@@ -44,11 +46,12 @@ class DeviceMenu extends Component {
       hasProperties,
       hasAttributes,
       hasCommands,
-      selectedTab
+      selectedTab,
+      hasErrors
     } = this.props;
 
-    const mask = [true, hasProperties, hasAttributes, hasCommands];
-    const tabTitles = ["Server", "Properties", "Attributes", "Commands"];
+    const mask = [true, hasProperties, hasAttributes, hasCommands, hasErrors];
+    const tabTitles = ["Server", "Properties", "Attributes", "Commands", "Errors"];
 
     const tabs = tabTitles.map((title, i) => {
       const name = title.toLowerCase();
@@ -159,13 +162,15 @@ class DeviceViewer extends Component {
       server: ServerInfo,
       properties: PropertyTable,
       attributes: AttributeTable,
-      commands: CommandTable
+      commands: CommandTable,
+      errors: ErrorTable
     };
 
     const CurrentView = views[selectedTab];
 
     // Disable the displevel chooser until its role in the user interface has been worked out properly. Currently it doesn't add much except distraction
     const enableDisplevelChooser = false;
+
 
     return (
       <div>
@@ -189,6 +194,7 @@ class DeviceViewer extends Component {
             hasProperties={this.props.hasProperties}
             hasAttributes={this.props.hasAttributes}
             hasCommands={this.props.hasCommands}
+            hasErrors={this.props.hasErrors}
           />
           <div className="device-view">
             <CurrentView
@@ -217,14 +223,19 @@ DeviceViewer.propTypes = {
 
   hasAttributes: PropTypes.bool,
   hasProperties: PropTypes.bool,
-  hasCommands: PropTypes.bool
+  hasCommands: PropTypes.bool,
+  hasErrors: PropTypes.bool
 };
 
 function mapStateToProps(state) {
+  const errors = getCurrentDeviceErrors(state);
+  const hasErrors = errors.length > 0;
+
   return {
     hasAttributes: getCurrentDeviceHasAttributes(state),
     hasProperties: getCurrentDeviceHasProperties(state),
     hasCommands: getCurrentDeviceHasCommands(state),
+    hasErrors,
 
     loading: getDeviceIsLoading(state),
     hasDevice: getHasCurrentDevice(state),
