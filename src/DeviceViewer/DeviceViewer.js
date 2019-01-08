@@ -195,7 +195,10 @@ class DeviceViewer extends Component {
             hasCommands={this.props.hasCommands}
           />
           <div className="device-view">
-            <CurrentView tangoDB={this.parseTangoDB()}/>
+            <CurrentView
+              tangoDB={this.parseTangoDB()}
+              deviceName={this.props.deviceName}  
+            />
           </div>
         </div>
       </div>

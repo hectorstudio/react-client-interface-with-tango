@@ -109,7 +109,7 @@ function* deleteDeviceProperty() {
   }
 }
 
-function* selectDevice() {
+function* fetchOnSelectDevice() {
   while (true) {
     const { tangoDB, name } = yield take(SELECT_DEVICE);
     yield put(fetchDevice(tangoDB, name));
@@ -122,5 +122,5 @@ export default function* tango() {
   yield fork(setDeviceAttribute);
   yield fork(setDeviceProperty);
   yield fork(deleteDeviceProperty);
-  yield fork(selectDevice);
+  yield fork(fetchOnSelectDevice);
 }

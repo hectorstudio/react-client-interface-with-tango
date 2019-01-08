@@ -146,9 +146,9 @@ class ImageValueDisplay extends React.Component {
     return <canvas id={this.props.name} />
   }
 }
+
 ImageValueDisplay.propTypes = {
   datatype: PropTypes.string,
-  devicenName: PropTypes.string,
   maxvalue: PropTypes.any,
   minvalue: PropTypes.any,
   name: PropTypes.string,
