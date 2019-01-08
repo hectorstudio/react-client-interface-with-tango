@@ -1,5 +1,4 @@
 import { displayError } from './error';
-import {uri} from '../constants/websocket';
 
 import { setTab } from './deviceList';
 import { queryExistsDevice, queryDeviceWithName } from '../selectors/queries';
@@ -101,39 +100,6 @@ export function deleteDevicePropertySuccess(tangoDB, device, name) {
 
 export function deleteDevicePropertyFailed(tangoDB, device, name) {
   return { type: DELETE_DEVICE_PROPERTY_FAILED, tangoDB, device, name };
-}
-
-export function unSubscribeDevice(device, emit){
-  if (device && device.attributes) {
-    const models = device.attributes
-      .map(({name}) => `${device.name}/${name}`);
-    const query =`
-    subscription newChangeEvent($models:[String]){
-      unsubChangeEvent(models:$models)
-    }`
-    const variables = {"models":models}   
-    emit("start", {query,variables});
-  }
-}
-
-export function subscribeDevice(device, emit){
-  if (device && device.attributes) {
-    const models = device.attributes
-      .map(({name}) => `${device.name}/${name}`);
-    const query = `
-    subscription newChangeEvent($models:[String]){
-      changeEvent(models:$models){
-        eventType,
-        device,
-        name,
-        data {
-          value
-        }
-      }
-    }`;
-    const variables = {"models":models};
-    emit("start", {query,variables});
-  }
 }
 
 export function enableDisplevel(displevel) {

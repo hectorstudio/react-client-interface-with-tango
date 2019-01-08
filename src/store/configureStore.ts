@@ -1,5 +1,4 @@
 import { createStore, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
 import createSagaMiddleware from "redux-saga";
 
@@ -7,12 +6,9 @@ import rootReducer from "../reducers/rootReducer";
 import rootSaga from "../actions/sagas";
 import { LOGIN } from "../actions/actionTypes";
 
-const emit = () => null;
-
 export default function configureStore() {
   const { __REDUX_DEVTOOLS_EXTENSION__ } = window as any;
 
-  const thunkMiddleware = thunk.withExtraArgument({ emit });
   const sagaMiddleware = createSagaMiddleware();
   const loggerMiddleware = createLogger({
     actionTransformer: action =>
@@ -24,7 +20,7 @@ export default function configureStore() {
   const store = createStore(
     rootReducer,
     __REDUX_DEVTOOLS_EXTENSION__ && __REDUX_DEVTOOLS_EXTENSION__(),
-    applyMiddleware(thunkMiddleware, loggerMiddleware, sagaMiddleware)
+    applyMiddleware(loggerMiddleware, sagaMiddleware)
   );
 
   sagaMiddleware.run(rootSaga);
