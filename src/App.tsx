@@ -9,8 +9,8 @@ import "./App.css";
 
 import Dashboard from "./Dashboard/Dashboard";
 
-const App = ({ match }) => {
-  const store = configureStore(match.params.tangoDB);
+const App = () => {
+  const store = configureStore();
   return (
     <Provider store={store}>
       <UserAware>

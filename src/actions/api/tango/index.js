@@ -6,11 +6,22 @@ import {
   SET_DEVICE_ATTRIBUTE,
   SET_DEVICE_PROPERTY,
   DELETE_DEVICE_PROPERTY,
-  FETCH_DEVICE
+  FETCH_DEVICE,
+  CHANGE_EVENT
 } from "./operations";
 
 function client(tangoDB) {
   return new GraphQLClient(`/${tangoDB}/db`);
+}
+
+function socketUrl(tangoDB) {
+  const loc = window.location;
+  const protocol = loc.protocol.replace('http', 'ws');
+  return protocol + '//' + loc.host + '/' + tangoDB + '/socket';
+}
+
+function createSocket(tangoDB) {
+  return new WebSocket(socketUrl(tangoDB), "graphql-ws");
 }
 
 export default {
@@ -51,5 +62,40 @@ export default {
     } catch (err) {
       return null;
     }
+  },
+
+  changeEventEmitter(tangoDB, models) {
+    const socket = createSocket(tangoDB);
+    return emit => {
+      socket.addEventListener("open", () => {
+        const variables = { models };
+        const startMessage = JSON.stringify({
+          type: "start",
+          payload: {
+            query: CHANGE_EVENT,
+            variables
+          }
+        });
+        socket.send(startMessage);
+      });
+  
+      socket.addEventListener("error", err => {
+        emit(new Error(err.reason));
+      });
+  
+      socket.addEventListener("message", msg => {
+        const frame = JSON.parse(msg.data);
+        if (frame.type === "data" && frame.payload.error == null) {
+          const events = frame.payload.data.changeEvent;
+          for (const event of events) {
+            emit(event);
+          }
+        }
+      });
+  
+      return () => {
+        socket.off("message");
+      };
+    };
   }
 };

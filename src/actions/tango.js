@@ -144,15 +144,12 @@ export function disableDisplevel(displevel) {
   return { type: DISABLE_DISPLEVEL, displevel };
 }
 
-export function fetchDeviceSuccess(device) {
-  return (dispatch, getState, {emit}) => {
-    subscribeDevice(device, emit);
-    return dispatch({type: FETCH_DEVICE_SUCCESS, device});
-  }
+export function fetchDeviceSuccess(tangoDB, device) {
+  return { type: FETCH_DEVICE_SUCCESS, tangoDB, device };
 }
 
-export function fetchDeviceFailed(name) {
-  return { type: FETCH_DEVICE_FAILED, name };
+export function fetchDeviceFailed(tangoDB, name) {
+  return { type: FETCH_DEVICE_FAILED, tangoDB, name };
 }
 
 export function selectDevice(tangoDB, name) {
@@ -160,13 +157,5 @@ export function selectDevice(tangoDB, name) {
 }
 
 export function fetchDevice(tangoDB, name) {
-  return async (dispatch, getState, { emit }) => {
-    const name = getCurrentDeviceName(getState());
-    unSubscribeDevice(name, emit);
-    dispatch({type: FETCH_DEVICE, name});
-    
-    const device = await TangoAPI.fetchDevice(tangoDB, name);
-    const action = device ? fetchDeviceSuccess(device) : fetchDeviceFailed(name);
-    return dispatch(action);
-  }
+  return { type: FETCH_DEVICE, tangoDB, name };
 }
