@@ -32,7 +32,6 @@ import {
 
 import { displayError } from "../error";
 import { eventChannel } from "redux-saga";
-import { receiveChange } from "../websockets";
 
 export default function* tango() {
   yield fork(fetchDeviceNames);
