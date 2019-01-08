@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
+import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { Helmet } from "react-helmet";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 import "font-awesome/css/font-awesome.min.css";
 
 import AttributeTable from "./AttributeTable/AttributeTable";
@@ -25,9 +26,9 @@ import {
 } from "../selectors/currentDevice";
 
 import { getDeviceIsLoading } from "../selectors/loadingStatus";
-import { getActiveTab, getDisabledDisplevels } from "../selectors/deviceDetail";
+import { getDisabledDisplevels } from "../selectors/deviceDetail";
 
-import { setDataFormat, setTab } from "../actions/deviceList";
+import { setDataFormat } from "../actions/deviceList";
 
 import {
   enableDisplevel,
@@ -43,24 +44,22 @@ class DeviceMenu extends Component {
       hasProperties,
       hasAttributes,
       hasCommands,
-      selectedTab,
-      onSelectTab
+      selectedTab
     } = this.props;
 
     const mask = [true, hasProperties, hasAttributes, hasCommands];
-
     const tabTitles = ["Server", "Properties", "Attributes", "Commands"];
+
     const tabs = tabTitles.map((title, i) => {
       const name = title.toLowerCase();
       return !mask[i] ? null : (
         <li className="nav-item" key={name}>
-          <a
-            href={`#${name}`}
+          <Link
+            to={`#${name}`}
             className={classNames("nav-link", { active: name === selectedTab })}
-            onClick={onSelectTab.bind(null, name)}
           >
             {title}
-          </a>
+          </Link>
         </li>
       );
     });
@@ -72,13 +71,39 @@ class DeviceMenu extends Component {
     );
   }
 }
+
 DeviceMenu.propTypes = {
   hasProperties: PropTypes.bool,
   hasAttributes: PropTypes.bool,
   hasCommands: PropTypes.bool,
   selectedTab: PropTypes.string,
-  onSelectTab: PropTypes.func,
-}
+  onSelectTab: PropTypes.func
+};
+
+const QualityIndicator = ({ state }) => {
+  const sub =
+    {
+      ON: "on",
+      OFF: "off",
+      CLOSE: "close",
+      OPEN: "open",
+      INSERT: "insert",
+      EXTRACT: "extract",
+      MOVING: "moving",
+      STANDBY: "standy",
+      FAULT: "fault",
+      INIT: "init",
+      RUNNING: "running",
+      ALARM: "alarm",
+      DISABLE: "disable",
+      UNKNOWN: "unknown"
+    }[state] || "invalid";
+  return (
+    <span className={`state state-${sub}`} title={state}>
+      ●{" "}
+    </span>
+  );
+};
 
 class DeviceViewer extends Component {
   parseDevice(props) {
@@ -92,6 +117,7 @@ class DeviceViewer extends Component {
   parseTab() {
     const { hash } = this.props.history.location;
     const tab = hash.substr(1);
+    return tab || "server";
   }
 
   componentDidMount() {
@@ -103,13 +129,9 @@ class DeviceViewer extends Component {
   componentDidUpdate(prevProps) {
     const device = this.parseDevice();
     const tangoDB = this.parseTangoDB();
+    
     if (device !== this.parseDevice(prevProps)) {
       this.props.onSelectDevice(tangoDB, device);
-    }
-
-    const tab = this.parseTab();
-    if (tab && tab !== this.props.selectedTab) {
-      this.props.onSelectTab(tab);
     }
   }
 
@@ -119,46 +141,23 @@ class DeviceViewer extends Component {
     }
 
     if (!this.props.hasDevice) {
-      return <p style={{ margin: "1em", color: "red" }}>
+      return (
+        <p style={{ margin: "1em", color: "red" }}>
           Couldn't load {this.props.deviceName}.
-        </p>;
+        </p>
+      );
     }
 
+    const selectedTab = this.parseTab();
     const {
       loading,
       onSelectTab,
-      selectedTab,
       currentState,
       deviceName,
       displevels,
       disabledDisplevels,
-      onDisplevelChange,
+      onDisplevelChange
     } = this.props;
-
-    const QualityIndicator = ({ state }) => {
-      const sub =
-        {
-          ON: "on",
-          OFF: "off",
-          CLOSE: "close",
-          OPEN: "open",
-          INSERT: "insert",
-          EXTRACT: "extract",
-          MOVING: "moving",
-          STANDBY: "standy",
-          FAULT: "fault",
-          INIT: "init",
-          RUNNING: "running",
-          ALARM: "alarm",
-          DISABLE: "disable",
-          UNKNOWN: "unknown"
-        }[state] || "invalid";
-      return (
-        <span className={`state state-${sub}`} title={state}>
-          ●{" "}
-        </span>
-      );
-    };
 
     const views = {
       server: ServerInfo,
@@ -195,7 +194,7 @@ class DeviceViewer extends Component {
           <div className="device-view">
             <CurrentView
               tangoDB={this.parseTangoDB()}
-              deviceName={this.props.deviceName}  
+              deviceName={this.props.deviceName}
             />
           </div>
         </div>
@@ -211,8 +210,6 @@ class DeviceViewer extends Component {
 DeviceViewer.propTypes = {
   onSelectDevice: PropTypes.func,
   loading: PropTypes.bool,
-  onSelectTab: PropTypes.func,
-  selectedTab: PropTypes.string,
   currentState: PropTypes.string,
   deviceName: PropTypes.string,
   displevels: PropTypes.arrayOf(PropTypes.string),
@@ -221,8 +218,8 @@ DeviceViewer.propTypes = {
 
   hasAttributes: PropTypes.bool,
   hasProperties: PropTypes.bool,
-  hasCommands: PropTypes.bool,
-}
+  hasCommands: PropTypes.bool
+};
 
 function mapStateToProps(state) {
   return {
@@ -231,12 +228,10 @@ function mapStateToProps(state) {
     hasCommands: getCurrentDeviceHasCommands(state),
 
     loading: getDeviceIsLoading(state),
-    selectedTab: getActiveTab(state),
-
     hasDevice: getHasCurrentDevice(state),
     currentState: getCurrentDeviceStateValue(state),
     deviceName: getCurrentDeviceName(state),
-    
+
     disabledDisplevels: getDisabledDisplevels(state),
     displevels: getDispLevels(state)
   };

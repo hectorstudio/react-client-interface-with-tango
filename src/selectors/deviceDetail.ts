@@ -11,11 +11,6 @@ export const getActiveDataFormat = createSelector(
     state => state.activeDataFormat
 );
 
-export const getActiveTab = createSelector(
-    getDeviceViewState,
-    state => state.activeTab
-);
-
 export const getFilteredCurrentDeviceAttributes = createSelector(
     getCurrentDeviceAttributes,
     getActiveDataFormat,
