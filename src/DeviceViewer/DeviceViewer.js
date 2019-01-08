@@ -131,9 +131,8 @@ class DeviceViewer extends Component {
       currentState,
       deviceName,
       displevels,
-      enabledDisplevels,
-      onEnableDisplevel,
-      onDisableDisplevel
+      disabledDisplevels,
+      onDisplevelChange,
     } = this.props;
 
     const QualityIndicator = ({ state }) => {
@@ -180,9 +179,8 @@ class DeviceViewer extends Component {
           {displevels.length > 1 && (
             <DisplevelChooser
               displevels={displevels}
-              enabled={enabledDisplevels}
-              onEnableDisplevel={onEnableDisplevel}
-              onDisableDisplevel={onDisableDisplevel}
+              disabledDisplevels={disabledDisplevels}
+              onChange={onDisplevelChange}
             />
           )}
         </div>
@@ -218,9 +216,8 @@ DeviceViewer.propTypes = {
   currentState: PropTypes.string,
   deviceName: PropTypes.string,
   displevels: PropTypes.arrayOf(PropTypes.string),
-  enabledDisplevels: PropTypes.arrayOf(PropTypes.string),
-  onEnableDisplevel: PropTypes.func,
-  onDisableDisplevel: PropTypes.func,
+  disabledDisplevels: PropTypes.arrayOf(PropTypes.string),
+  onDisplevelChange: PropTypes.func,
 
   hasAttributes: PropTypes.bool,
   hasProperties: PropTypes.bool,
@@ -239,18 +236,21 @@ function mapStateToProps(state) {
     hasDevice: getHasCurrentDevice(state),
     currentState: getCurrentDeviceStateValue(state),
     deviceName: getCurrentDeviceName(state),
-    enabledDisplevels: getDisabledDisplevels(state),
-
+    
+    disabledDisplevels: getDisabledDisplevels(state),
     displevels: getDispLevels(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSelectDevice: (tangoDB, device) => dispatch(selectDevice(tangoDB, device)),
+    onSelectDevice: (tangoDB, device) =>
+      dispatch(selectDevice(tangoDB, device)),
     onSelectTab: tab => dispatch(setTab(tab)),
-    onEnableDisplevel: displevel => dispatch(enableDisplevel(displevel)),
-    onDisableDisplevel: displevel => dispatch(disableDisplevel(displevel))
+    onDisplevelChange: (displevel, value) => {
+      const actionCreator = value ? enableDisplevel : disableDisplevel;
+      dispatch(actionCreator(displevel));
+    }
   };
 }
 
