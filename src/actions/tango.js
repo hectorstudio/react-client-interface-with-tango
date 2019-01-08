@@ -157,26 +157,7 @@ export function fetchDeviceFailed(name) {
 
 export function selectDevice(tangoDB, name) {
   return { type: SELECT_DEVICE, tangoDB, name };
-  // return (dispatch, getState) => {
-  //   dispatch({type: SELECT_DEVICE, tangoDB, name});
-    
-  //   const device = queryDeviceWithName(getState(), name);
-  //   if (device) {
-  //     return dispatch(selectDeviceSuccess(device));
-  //   }
-
-  //   dispatch(fetchDevice(tangoDB, name)).then(action => {
-  //     if (action.type === FETCH_DEVICE_SUCCESS) {
-  //       const newDevice = action.device;
-  //       return dispatch(selectDeviceSuccess(newDevice));
-  //     }
-  //   })
-  // }
 }
-
-// function selectDeviceSuccess(device) {
-//   return {type: SELECT_DEVICE_SUCCESS, device};
-// }
 
 export function fetchDevice(tangoDB, name) {
   return async (dispatch, getState, { emit }) => {
