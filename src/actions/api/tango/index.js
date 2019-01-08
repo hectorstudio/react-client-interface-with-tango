@@ -94,7 +94,7 @@ export default {
       });
   
       return () => {
-        socket.off("message");
+        socket.close();
       };
     };
   }

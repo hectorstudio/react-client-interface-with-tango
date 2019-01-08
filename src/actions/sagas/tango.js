@@ -1,4 +1,4 @@
-import { fork, take, put, call } from "redux-saga/effects";
+import { fork, take, put, call, cancel } from "redux-saga/effects";
 
 import {
   FETCH_DEVICE_NAMES,
@@ -140,7 +140,9 @@ function* fetchDevice() {
   while (true) {
     const { tangoDB, name } = yield take(FETCH_DEVICE);
     const device = yield TangoAPI.fetchDevice(tangoDB, name);
-    const action = device ? fetchDeviceSuccess(tangoDB, device) : fetchDeviceFailed(tangoDB, name);
+    const action = device
+      ? fetchDeviceSuccess(tangoDB, device)
+      : fetchDeviceFailed(tangoDB, name);
     yield put(action);
   }
 }
@@ -152,17 +154,29 @@ function createChangeEventChannel(tangoDB, models) {
   return eventChannel(emitter);
 }
 
-function* subscribeOnFetchDevice() {
-  while (true) {
-    const { device, tangoDB } = yield take(FETCH_DEVICE_SUCCESS);
-    const { name: deviceName, attributes } = device;
-    const models = attributes.map(({ name }) => `${deviceName}/${name}`);
-    const channel = yield call(createChangeEventChannel, tangoDB, models);
-
+function* handleChangeEvents(channel) {
+  try {
     while (true) {
       const data = yield take(channel);
       const action = { type: ATTRIBUTE_CHANGE, data };
       yield put(action);
     }
+  } finally {
+    channel.close();
+  }
+}
+
+function* subscribeOnFetchDevice() {
+  let handler = null;
+
+  while (true) {
+    const { device, tangoDB } = yield take(FETCH_DEVICE_SUCCESS);
+    const { name: deviceName, attributes } = device;
+    const models = attributes.map(({ name }) => `${deviceName}/${name}`);
+    const channel = yield call(createChangeEventChannel, tangoDB, models);
+    if (handler != null) {
+      yield cancel(handler);
+    }
+    handler = yield fork(handleChangeEvents, channel);
   }
 }
