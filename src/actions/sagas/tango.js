@@ -27,7 +27,8 @@ import {
   deleteDevicePropertyFailed,
   fetchDevice as fetchDeviceAction,
   fetchDeviceSuccess,
-  fetchDeviceFailed
+  fetchDeviceFailed,
+  attributeChange
 } from "../tango";
 
 import { displayError } from "../error";
@@ -157,7 +158,7 @@ function* handleChangeEvents(channel) {
   try {
     while (true) {
       const data = yield take(channel);
-      const action = { type: ATTRIBUTE_CHANGE, data };
+      const action = attributeChange(data);
       yield put(action);
     }
   } finally {

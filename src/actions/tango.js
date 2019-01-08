@@ -1,45 +1,39 @@
-import { displayError } from './error';
+import { displayError } from "./error";
 
-import { setTab } from './deviceList';
-import { queryExistsDevice, queryDeviceWithName } from '../selectors/queries';
-import { getCurrentDeviceName } from '../selectors/currentDevice';
+import { setTab } from "./deviceList";
+import { queryExistsDevice, queryDeviceWithName } from "../selectors/queries";
+import { getCurrentDeviceName } from "../selectors/currentDevice";
 
-import TangoAPI from './api/tango';
+import TangoAPI from "./api/tango";
 
 import {
   FETCH_DEVICE,
   FETCH_DEVICE_SUCCESS,
   FETCH_DEVICE_FAILED,
-
   FETCH_DEVICE_NAMES,
   FETCH_DEVICE_NAMES_SUCCESS,
-  
   EXECUTE_COMMAND,
   EXECUTE_COMMAND_SUCCESS,
   EXECUTE_COMMAND_FAILED,
-
   SELECT_DEVICE,
   SELECT_DEVICE_SUCCESS,
-
   DISABLE_DISPLEVEL,
   ENABLE_DISPLEVEL,
-  
   SET_DEVICE_PROPERTY,
   SET_DEVICE_PROPERTY_SUCCESS,
   SET_DEVICE_PROPERTY_FAILED,
-
   SET_DEVICE_ATTRIBUTE,
   SET_DEVICE_ATTRIBUTE_SUCCESS,
   SET_DEVICE_ATTRIBUTE_FAILED,
-
   DELETE_DEVICE_PROPERTY,
   DELETE_DEVICE_PROPERTY_SUCCESS,
   DELETE_DEVICE_PROPERTY_FAILED,
   FETCH_DEVICE_NAMES_FAILED,
-} from './actionTypes';
+  ATTRIBUTE_CHANGE
+} from "./actionTypes";
 
 export function preloadDevice(tangoDB, device) {
-  return { type: "PRELOAD_DEVICE", tangoDB, device };
+  return { type: "PRELOAD_DEVICE", tangoDB, device };
 }
 
 export function fetchDeviceNames(tangoDB) {
@@ -115,7 +109,7 @@ export function fetchDeviceSuccess(tangoDB, device) {
 }
 
 export function fetchDeviceFailed(tangoDB, name) {
-  return { type: FETCH_DEVICE_FAILED, tangoDB, name };
+  return { type: FETCH_DEVICE_FAILED, tangoDB, name };
 }
 
 export function selectDevice(tangoDB, name) {
@@ -123,5 +117,9 @@ export function selectDevice(tangoDB, name) {
 }
 
 export function fetchDevice(tangoDB, name) {
-  return { type: FETCH_DEVICE, tangoDB, name };
+  return { type: FETCH_DEVICE, tangoDB, name };
+}
+
+export function attributeChange(data) {
+  return { type: ATTRIBUTE_CHANGE, data };
 }
