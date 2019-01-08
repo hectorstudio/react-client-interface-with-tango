@@ -158,7 +158,27 @@ class DeviceViewer extends Component {
       disabledDisplevels,
       onDisplevelChange
     } = this.props;
-
+    
+    const QualityIndicator = ({ state }) => {
+      const sub = {
+        'ON': 'on',
+        'OFF': 'off',
+        'CLOSE': 'close',
+        'OPEN': 'open',
+        'INSERT': 'insert',
+        'EXTRACT': 'extract',
+        'MOVING': 'moving',
+        'STANDBY': 'standy',
+        'FAULT': 'fault',
+        'INIT': 'init',
+        'RUNNING': 'running',
+        'ALARM': 'alarm',
+        'DISABLE': 'disable',
+        'UNKNOWN': 'unknown'
+      }[state] || 'invalid';
+      return <span className={`state state-${sub}`}>{state}</span>;
+    };
+    
     const views = {
       server: ServerInfo,
       properties: PropertyTable,
