@@ -7,7 +7,10 @@ import {
   EXECUTE_COMMAND,
   SET_DEVICE_PROPERTY,
   DELETE_DEVICE_PROPERTY,
-  SELECT_DEVICE
+  SELECT_DEVICE,
+  FETCH_DEVICE_SUCCESS,
+  FETCH_DEVICE,
+  ATTRIBUTE_CHANGE
 } from "../actionTypes";
 
 import TangoAPI from "../api/tango";
@@ -17,15 +20,32 @@ import {
   executeCommandFailed,
   executeCommandSuccess,
   setDevicePropertySuccess,
-  setDeviceAttributeFailed,
   setDevicePropertyFailed,
   setDeviceAttributeSuccess,
+  setDeviceAttributeFailed,
   deleteDevicePropertySuccess,
   deleteDevicePropertyFailed,
-  fetchDevice
+  fetchDevice as fetchDeviceAction,
+  fetchDeviceSuccess,
+  fetchDeviceFailed
 } from "../tango";
 
 import { displayError } from "../error";
+import { eventChannel } from "redux-saga";
+import { receiveChange } from "../websockets";
+
+export default function* tango() {
+  yield fork(fetchDeviceNames);
+  yield fork(executeCommand);
+  yield fork(setDeviceAttribute);
+  yield fork(setDeviceProperty);
+  yield fork(deleteDeviceProperty);
+  yield fork(fetchDevice);
+  yield fork(fetchOnSelectDevice);
+  yield fork(subscribeOnFetchDevice);
+}
+
+/* Asynchronous actions */
 
 function* fetchDeviceNames() {
   while (true) {
@@ -112,15 +132,37 @@ function* deleteDeviceProperty() {
 function* fetchOnSelectDevice() {
   while (true) {
     const { tangoDB, name } = yield take(SELECT_DEVICE);
-    yield put(fetchDevice(tangoDB, name));
+    yield put(fetchDeviceAction(tangoDB, name));
   }
 }
 
-export default function* tango() {
-  yield fork(fetchDeviceNames);
-  yield fork(executeCommand);
-  yield fork(setDeviceAttribute);
-  yield fork(setDeviceProperty);
-  yield fork(deleteDeviceProperty);
-  yield fork(fetchOnSelectDevice);
+function* fetchDevice() {
+  while (true) {
+    const { tangoDB, name } = yield take(FETCH_DEVICE);
+    const device = yield TangoAPI.fetchDevice(tangoDB, name);
+    const action = device ? fetchDeviceSuccess(tangoDB, device) : fetchDeviceFailed(tangoDB, name);
+    yield put(action);
+  }
+}
+
+/* Subscriptions */
+
+function createChangeEventChannel(tangoDB, models) {
+  const emitter = TangoAPI.changeEventEmitter(tangoDB, models);
+  return eventChannel(emitter);
+}
+
+function* subscribeOnFetchDevice() {
+  while (true) {
+    const { device, tangoDB } = yield take(FETCH_DEVICE_SUCCESS);
+    const { name: deviceName, attributes } = device;
+    const models = attributes.map(({ name }) => `${deviceName}/${name}`);
+    const channel = yield call(createChangeEventChannel, tangoDB, models);
+
+    while (true) {
+      const data = yield take(channel);
+      const action = { type: ATTRIBUTE_CHANGE, data };
+      yield put(action);
+    }
+  }
 }
