@@ -11,24 +11,24 @@ import { unique } from '../utils';
 export interface IDeviceDetailState {
   activeDataFormat?: string,
   activeTab: string,
-  enabledDisplevels: string[],
+  disabledDisplevels: string[],
 }
 
 export default function deviceViewer(state: IDeviceDetailState = {
   activeTab: 'properties',
-  enabledDisplevels: []
+  disabledDisplevels: []
 }, action) {
   switch (action.type) {
     case ENABLE_DISPLEVEL: {
-      const {displevel} = action;
-      const enabledDisplevels = [...state.enabledDisplevels, displevel];
-      return {...state, enabledDisplevels};
+      const { displevel } = action;
+      const disabledDisplevels = state.disabledDisplevels.filter(displevel2 => displevel2 !== displevel);
+      return { ...state, disabledDisplevels };
     }
 
     case DISABLE_DISPLEVEL: {
-      const {displevel} = action;
-      const enabledDisplevels = state.enabledDisplevels.filter(level => level !== displevel);
-      return {...state, enabledDisplevels};
+      const { displevel } = action;
+      const disabledDisplevels = [...state.disabledDisplevels, displevel];
+      return { ...state, disabledDisplevels };
     }
 
     case SELECT_DEVICE_SUCCESS: {

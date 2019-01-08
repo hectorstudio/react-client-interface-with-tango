@@ -22,7 +22,7 @@ export const getFilteredCurrentDeviceAttributes = createSelector(
     (attrs, format) => attrs.filter(attr => attr.dataformat === format)
 );
 
-export const getEnabledDisplevels = createSelector(
+export const getDisabledDisplevels = createSelector(
     getDeviceViewState,
-    state => state.enabledDisplevels
+    state => state.disabledDisplevels
 );

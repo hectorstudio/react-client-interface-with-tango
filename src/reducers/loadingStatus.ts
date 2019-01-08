@@ -4,7 +4,7 @@ import {
     FETCH_DEVICE,
     FETCH_DEVICE_SUCCESS,
     EXECUTE_COMMAND,
-    EXECUTE_COMMAND_COMPLETE,
+    EXECUTE_COMMAND_SUCCESS,
     FETCH_DEVICE_FAILED,
 } from '../actions/actionTypes';
 
@@ -45,7 +45,7 @@ export default function loadingStatus(state: ILoadingStatusState = {
         return {...state, loadingOutput};
     }
 
-    case EXECUTE_COMMAND_COMPLETE: {
+    case EXECUTE_COMMAND_SUCCESS: {
         const {command, device} = action;
         const oldLoadingOutput = state.loadingOutput
         const deviceLoading = {...oldLoadingOutput[device], [command]: false};

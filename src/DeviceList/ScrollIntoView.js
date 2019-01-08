@@ -43,6 +43,7 @@ export default class ScrollIntoViewIfNeeded extends PureComponent {
       elementType,
       children,
       options,
+      isSelected, // This line was added to remove a warning
       ...wrapperProps
     } = this.props;
     return createElement(elementType, { ref: this.node, ...wrapperProps }, children);
