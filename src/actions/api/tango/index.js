@@ -56,11 +56,16 @@ export default {
 
   async fetchDevice(tangoDB, name) {
     const params = { name };
+    
     let device = null;
+    let errors = [];
+
     try {
       const data = await client(tangoDB).request(FETCH_DEVICE, params);
       device = data.device;
     } catch (err) {
+      // The structure of errors is currently not ideal and will probably undergo change. Update this logic accordingly.
+      errors = err.response.errors.map(({ message }) => message[0]);
       device = err.response.data.device;
       if (device == null) {
         return null;
@@ -69,7 +74,7 @@ export default {
 
     const attributes = device.attributes || [];
     const commands = device.commands || [];
-    return { ...device, attributes, commands };
+    return { ...device, attributes, commands, errors };
   },
 
   changeEventEmitter(tangoDB, models) {
