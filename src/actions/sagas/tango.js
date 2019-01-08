@@ -17,8 +17,8 @@ import TangoAPI from "../api/tango";
 import {
   fetchDeviceNamesSuccess,
   fetchDeviceNamesFailed,
-  executeCommandFailed,
   executeCommandSuccess,
+  executeCommandFailed,
   setDevicePropertySuccess,
   setDevicePropertyFailed,
   setDeviceAttributeSuccess,
