@@ -56,12 +56,20 @@ export default {
 
   async fetchDevice(tangoDB, name) {
     const params = { name };
+    let device = null;
     try {
       const data = await client(tangoDB).request(FETCH_DEVICE, params);
-      return data.device;
+      device = data.device;
     } catch (err) {
-      return null;
+      device = err.response.data.device;
+      if (device == null) {
+        return null;
+      }
     }
+
+    const attributes = device.attributes || [];
+    const commands = device.commands || [];
+    return { ...device, attributes, commands };
   },
 
   changeEventEmitter(tangoDB, models) {
