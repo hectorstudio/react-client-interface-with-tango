@@ -1,11 +1,3 @@
-import { displayError } from "./error";
-
-import { setTab } from "./deviceList";
-import { queryExistsDevice, queryDeviceWithName } from "../selectors/queries";
-import { getCurrentDeviceName } from "../selectors/currentDevice";
-
-import TangoAPI from "./api/tango";
-
 import {
   FETCH_DEVICE,
   FETCH_DEVICE_SUCCESS,
