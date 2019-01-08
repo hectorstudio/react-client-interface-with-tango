@@ -81,28 +81,24 @@ DeviceMenu.propTypes = {
 };
 
 const QualityIndicator = ({ state }) => {
-  const sub =
-    {
-      ON: "on",
-      OFF: "off",
-      CLOSE: "close",
-      OPEN: "open",
-      INSERT: "insert",
-      EXTRACT: "extract",
-      MOVING: "moving",
-      STANDBY: "standy",
-      FAULT: "fault",
-      INIT: "init",
-      RUNNING: "running",
-      ALARM: "alarm",
-      DISABLE: "disable",
-      UNKNOWN: "unknown"
-    }[state] || "invalid";
-  return (
-    <span className={`state state-${sub}`} title={state}>
-      ●{" "}
-    </span>
-  );
+  const classSuffixes = {
+    ON: "on",
+    OFF: "off",
+    CLOSE: "close",
+    OPEN: "open",
+    INSERT: "insert",
+    EXTRACT: "extract",
+    MOVING: "moving",
+    STANDBY: "standy",
+    FAULT: "fault",
+    INIT: "init",
+    RUNNING: "running",
+    ALARM: "alarm",
+    DISABLE: "disable",
+    UNKNOWN: "unknown"
+  };
+  const classSuffix = classSuffixes[state] || "invalid";
+  return <span className={`state state-${classSuffix}`}>{state}</span>;
 };
 
 class DeviceViewer extends Component {
@@ -129,7 +125,7 @@ class DeviceViewer extends Component {
   componentDidUpdate(prevProps) {
     const device = this.parseDevice();
     const tangoDB = this.parseTangoDB();
-    
+
     if (device !== this.parseDevice(prevProps)) {
       this.props.onSelectDevice(tangoDB, device);
     }
