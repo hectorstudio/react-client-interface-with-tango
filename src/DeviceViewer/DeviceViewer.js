@@ -50,8 +50,8 @@ class DeviceMenu extends Component {
       hasErrors
     } = this.props;
 
-    const mask = [true, hasProperties, hasAttributes, hasCommands, hasErrors];
-    const tabTitles = ["Server", "Properties", "Attributes", "Commands", "Errors"];
+    const mask = [true, hasErrors, hasProperties, hasAttributes, hasCommands];
+    const tabTitles = ["Server", "Errors", "Properties", "Attributes", "Commands"];
 
     const tabs = tabTitles.map((title, i) => {
       const name = title.toLowerCase();
