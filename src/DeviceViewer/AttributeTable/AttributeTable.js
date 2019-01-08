@@ -72,7 +72,11 @@ const QualityIndicator = ({ quality }) => {
   );
 };
 
-const AttributeTableRow = ({ attribute, deviceName, onSetDeviceAttribute }) => {
+const AttributeTableRow = ({
+  attribute,
+  deviceName, // Make obsolete
+  onSetDeviceAttribute
+}) => {
   const {
     name,
     value,
@@ -80,11 +84,13 @@ const AttributeTableRow = ({ attribute, deviceName, onSetDeviceAttribute }) => {
     dataformat,
     writable,
     maxvalue,
-    minvalue
+    minvalue,
+    description,
+    quality
   } = attribute;
 
   return (
-    <tr key={i}>
+    <tr>
       <td className="quality">
         <QualityIndicator quality={quality} />
       </td>
@@ -92,7 +98,6 @@ const AttributeTableRow = ({ attribute, deviceName, onSetDeviceAttribute }) => {
       <td className="value">
         <ValueDisplay
           name={name}
-          deviceName={deviceName}
           value={value}
           datatype={datatype}
           dataformat={dataformat}
@@ -103,7 +108,7 @@ const AttributeTableRow = ({ attribute, deviceName, onSetDeviceAttribute }) => {
         />
       </td>
       <td className="description">
-        <DescriptionDisplay description={attribute.description} />
+        <DescriptionDisplay description={description} />
       </td>
     </tr>
   );
@@ -114,13 +119,11 @@ class AttributeTable extends Component {
     const {
       attributes,
       selectedFormat,
+      disabledDisplevels,
       onSelectDataFormat,
-      onSetDeviceAttribute,
-      disabledDisplevels
+      onSetDeviceAttribute
     } = this.props;
 
-    // Can ths be done in a set of selectors instead?
-    
     const dataFormats = Array.from(
       new Set(attributes.map(attr => attr.dataformat))
     );
@@ -186,7 +189,6 @@ function mapStateToProps(state) {
   return {
     selectedFormat: getActiveDataFormat(state),
     attributes: getCurrentDeviceAttributes(state),
-    deviceName: getCurrentDeviceName(state),
     disabledDisplevels: getDisabledDisplevels(state)
   };
 }
@@ -195,11 +197,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   const { tangoDB, deviceName } = ownProps;
   return {
     onSelectDataFormat: format => dispatch(setDataFormat(format)),
-    onSetDeviceAttribute: (name, value) =>
-      //dispatch(setDeviceAttribute(tangoDB, deviceName, name, value)) // Double check this one
-      {
-        console.log([tangoDB, deviceName, name, value]); // TODO
-      }
+    onSetDeviceAttribute: (name, value) => dispatch(setDeviceAttribute(tangoDB, deviceName, name, value))
   };
 }
 

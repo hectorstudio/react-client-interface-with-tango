@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 
 import {
   getCurrentDeviceCommands,
-  getCurrentDeviceName,
   getCurrentDeviceCommandOutputs,
 } from '../../selectors/currentDevice';
 
@@ -51,7 +50,7 @@ class CommandTable extends Component {
     const {
       commands,
       onExecute,
-      currentDeviceName,
+      deviceName,
       enabledList,
       outputsLoading,
       commandOutputs,
@@ -74,7 +73,7 @@ class CommandTable extends Component {
                   <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
                 </td>
                 <td className="input">
-                  <InputField tangoDB={tangoDB} isEnabled={isLoggedIn} onExecute={onExecute} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
+                  <InputField tangoDB={tangoDB} isEnabled={isLoggedIn} onExecute={onExecute} deviceName={deviceName} commands={commands} name={name} intype={intype}/>
                 </td>
                 <td className='description'>
                   <DescriptionDisplay description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
@@ -87,10 +86,11 @@ class CommandTable extends Component {
     );
   }
 }
+
 CommandTable.propTypes = {
   commands: PropTypes.oneOfType([PropTypes.arrayOf(command), command]),
   onExecute: PropTypes.func,
-  currentDeviceName: PropTypes.string,
+  deviceName: PropTypes.string,
   enabledList: PropTypes.arrayOf(PropTypes.string),
   outputsLoading: PropTypes.object, //uses dynamic keys, tricky to validate this with shape()
   commandOutputs: PropTypes.object, //uses dynamic keys, tricky to validate this with shape()
@@ -131,9 +131,9 @@ class InputField extends Component {
   handleExecute(event) {
     event.preventDefault()
     if(this.props.intype === 'DevString'){
-      this.props.onExecute(this.props.tangoDB, this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
+      this.props.onExecute(this.props.tangoDB, this.props.name, JSON.stringify(this.state.value), this.props.deviceName)
     }else{
-     this.props.onExecute(this.props.tangoDB, this.props.name, this.state.value, this.props.currentDeviceName)
+     this.props.onExecute(this.props.tangoDB, this.props.name, this.state.value, this.props.deviceName)
     }
     this.setState({value: '', valid: false });
   }
@@ -178,7 +178,7 @@ class InputField extends Component {
 
 InputField.propTypes = {
   onExecute: PropTypes.func,
-  currentDeviceName: PropTypes.string,
+  deviceName: PropTypes.string,
   commands: PropTypes.oneOfType([PropTypes.arrayOf(command), command]),
   name: PropTypes.string,
   intype: PropTypes.string,
@@ -188,7 +188,6 @@ InputField.propTypes = {
 function mapStateToProps(state) {
   return {
     commands: getCurrentDeviceCommands(state),
-    currentDeviceName: getCurrentDeviceName(state),
     enabledList: getDisabledDisplevels(state),
     
     commandOutputs: getCurrentDeviceCommandOutputs(state),
