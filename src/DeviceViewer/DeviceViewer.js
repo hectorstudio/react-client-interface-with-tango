@@ -164,6 +164,9 @@ class DeviceViewer extends Component {
 
     const CurrentView = views[selectedTab];
 
+    // Disable the displevel chooser until its role in the user interface has been worked out properly. Currently it doesn't add much except distraction
+    const enableDisplevelChooser = false;
+
     return (
       <div>
         <Helmet>
@@ -171,7 +174,7 @@ class DeviceViewer extends Component {
         </Helmet>
         <div className="device-header">
           <QualityIndicator state={currentState} /> {deviceName}
-          {displevels.length > 1 && (
+          {enableDisplevelChooser && displevels.length > 1 && (
             <DisplevelChooser
               displevels={displevels}
               disabledDisplevels={disabledDisplevels}
