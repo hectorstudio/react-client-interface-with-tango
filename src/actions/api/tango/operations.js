@@ -80,3 +80,15 @@ query FetchDevice($name: String!) {
   }
 }
 `;
+
+export const CHANGE_EVENT = `
+subscription ChangeEvent($models: [String]) {
+  changeEvent(models: $models){
+    eventType
+    device
+    name
+    data {
+      value
+    }
+  }
+}`;

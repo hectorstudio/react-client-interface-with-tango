@@ -4,12 +4,11 @@ import PropTypes from 'prop-types';
 
 import {
   getCurrentDeviceCommands,
-  getCurrentDeviceName,
   getCurrentDeviceCommandOutputs,
 } from '../../selectors/currentDevice';
 
 import {
-  getEnabledDisplevels
+  getDisabledDisplevels
 } from '../../selectors/deviceDetail';
 
 import {
@@ -51,12 +50,10 @@ class CommandTable extends Component {
     const {
       commands,
       onExecute,
-      currentDeviceName,
-      enabledList,
+      disabledDisplevels,
       outputsLoading,
       commandOutputs,
       isLoggedIn,
-      tangoDB
     } = this.props;
     
     return (
@@ -66,31 +63,36 @@ class CommandTable extends Component {
         </NotLoggedIn>
         <table className='separated'>
           <tbody>
-            {commands && commands.map(({ name, displevel, intype, intypedesc, outtypedesc }, i) => (Object.values(enabledList).indexOf(displevel) > -1) &&
-              <tr key={i}>
-                <td>
-                  {name}
-                  <br/>
-                  <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
-                </td>
-                <td className="input">
-                  <InputField tangoDB={tangoDB} isEnabled={isLoggedIn} onExecute={onExecute} currentDeviceName={currentDeviceName} commands={commands} name={name} intype={intype}/>
-                </td>
-                <td className='description'>
-                  <DescriptionDisplay description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
-                </td>
-              </tr>
-            )}
+            {commands && commands.map((command, i) => {
+              const { name, displevel, intype, intypedesc, outtypedesc } = command;
+              const enabled = Object.values(disabledDisplevels).indexOf(displevel) === -1;
+              return enabled && (
+                <tr key={i}>
+                  <td>
+                    {name}
+                    <br/>
+                    <OutputDisplay value={commandOutputs[name]} isLoading={outputsLoading[name]}/>
+                  </td>
+                  <td className="input">
+                    <InputField isEnabled={isLoggedIn} onExecute={onExecute} commands={commands} name={name} intype={intype}/>
+                  </td>
+                  <td className='description'>
+                    <DescriptionDisplay description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
     );
   }
 }
+
 CommandTable.propTypes = {
   commands: PropTypes.oneOfType([PropTypes.arrayOf(command), command]),
   onExecute: PropTypes.func,
-  currentDeviceName: PropTypes.string,
+  deviceName: PropTypes.string,
   enabledList: PropTypes.arrayOf(PropTypes.string),
   outputsLoading: PropTypes.object, //uses dynamic keys, tricky to validate this with shape()
   commandOutputs: PropTypes.object, //uses dynamic keys, tricky to validate this with shape()
@@ -131,9 +133,9 @@ class InputField extends Component {
   handleExecute(event) {
     event.preventDefault()
     if(this.props.intype === 'DevString'){
-      this.props.onExecute(this.props.tangoDB, this.props.name, JSON.stringify(this.state.value), this.props.currentDeviceName)
+      this.props.onExecute(this.props.name, JSON.stringify(this.state.value))
     }else{
-     this.props.onExecute(this.props.tangoDB, this.props.name, this.state.value, this.props.currentDeviceName)
+     this.props.onExecute(this.props.name, this.state.value)
     }
     this.setState({value: '', valid: false });
   }
@@ -178,18 +180,15 @@ class InputField extends Component {
 
 InputField.propTypes = {
   onExecute: PropTypes.func,
-  currentDeviceName: PropTypes.string,
   commands: PropTypes.oneOfType([PropTypes.arrayOf(command), command]),
   name: PropTypes.string,
   intype: PropTypes.string,
 }
 
-
 function mapStateToProps(state) {
   return {
     commands: getCurrentDeviceCommands(state),
-    currentDeviceName: getCurrentDeviceName(state),
-    enabledList: getEnabledDisplevels(state),
+    disabledDisplevels: getDisabledDisplevels(state),
     
     commandOutputs: getCurrentDeviceCommandOutputs(state),
     outputsLoading: getCommandOutputsLoading(state),
@@ -198,9 +197,10 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
+  const { tangoDB, deviceName } = ownProps;
   return {
-    onExecute: (tangoDB, command, value, device) => dispatch(executeCommand(tangoDB, command, value, device)),
+    onExecute: (command, value) => dispatch(executeCommand(tangoDB, command, value, deviceName)),
   };
 }
 

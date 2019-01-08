@@ -25,7 +25,7 @@ import {
 } from "../selectors/currentDevice";
 
 import { getDeviceIsLoading } from "../selectors/loadingStatus";
-import { getActiveTab, getEnabledDisplevels } from "../selectors/deviceDetail";
+import { getActiveTab, getDisabledDisplevels } from "../selectors/deviceDetail";
 
 import { setDataFormat, setTab } from "../actions/deviceList";
 
@@ -92,7 +92,6 @@ class DeviceViewer extends Component {
   parseTab() {
     const { hash } = this.props.history.location;
     const tab = hash.substr(1);
-    return tab || undefined;
   }
 
   componentDidMount() {
@@ -109,7 +108,7 @@ class DeviceViewer extends Component {
     }
 
     const tab = this.parseTab();
-    if (tab && tab !== this.props.activeTab) {
+    if (tab && tab !== this.props.selectedTab) {
       this.props.onSelectTab(tab);
     }
   }
@@ -132,9 +131,8 @@ class DeviceViewer extends Component {
       currentState,
       deviceName,
       displevels,
-      enabledDisplevels,
-      onEnableDisplevel,
-      onDisableDisplevel
+      disabledDisplevels,
+      onDisplevelChange,
     } = this.props;
 
     const QualityIndicator = ({ state }) => {
@@ -181,9 +179,8 @@ class DeviceViewer extends Component {
           {displevels.length > 1 && (
             <DisplevelChooser
               displevels={displevels}
-              enabled={enabledDisplevels}
-              onEnableDisplevel={onEnableDisplevel}
-              onDisableDisplevel={onDisableDisplevel}
+              disabledDisplevels={disabledDisplevels}
+              onChange={onDisplevelChange}
             />
           )}
         </div>
@@ -196,7 +193,10 @@ class DeviceViewer extends Component {
             hasCommands={this.props.hasCommands}
           />
           <div className="device-view">
-            <CurrentView tangoDB={this.parseTangoDB()}/>
+            <CurrentView
+              tangoDB={this.parseTangoDB()}
+              deviceName={this.props.deviceName}  
+            />
           </div>
         </div>
       </div>
@@ -216,9 +216,8 @@ DeviceViewer.propTypes = {
   currentState: PropTypes.string,
   deviceName: PropTypes.string,
   displevels: PropTypes.arrayOf(PropTypes.string),
-  enabledDisplevels: PropTypes.arrayOf(PropTypes.string),
-  onEnableDisplevel: PropTypes.func,
-  onDisableDisplevel: PropTypes.func,
+  disabledDisplevels: PropTypes.arrayOf(PropTypes.string),
+  onDisplevelChange: PropTypes.func,
 
   hasAttributes: PropTypes.bool,
   hasProperties: PropTypes.bool,
@@ -237,18 +236,21 @@ function mapStateToProps(state) {
     hasDevice: getHasCurrentDevice(state),
     currentState: getCurrentDeviceStateValue(state),
     deviceName: getCurrentDeviceName(state),
-    enabledDisplevels: getEnabledDisplevels(state),
-
+    
+    disabledDisplevels: getDisabledDisplevels(state),
     displevels: getDispLevels(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSelectDevice: (tangoDB, device) => dispatch(selectDevice(tangoDB, device)),
+    onSelectDevice: (tangoDB, device) =>
+      dispatch(selectDevice(tangoDB, device)),
     onSelectTab: tab => dispatch(setTab(tab)),
-    onEnableDisplevel: displevel => dispatch(enableDisplevel(displevel)),
-    onDisableDisplevel: displevel => dispatch(disableDisplevel(displevel))
+    onDisplevelChange: (displevel, value) => {
+      const actionCreator = value ? enableDisplevel : disableDisplevel;
+      dispatch(actionCreator(displevel));
+    }
   };
 }
 

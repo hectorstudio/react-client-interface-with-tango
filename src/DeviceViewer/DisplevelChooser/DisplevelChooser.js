@@ -5,11 +5,7 @@ import "./DisplevelChooser.css";
 
 export default class DisplevelChooser extends Component {
   handleInputChange(name, e) {
-    if (e.target.checked) {
-      this.props.onEnableDisplevel(name);
-    } else {
-      this.props.onDisableDisplevel(name);
-    }
+    this.props.onChange(name, e.target.checked);
   }
 
   render() {
@@ -18,7 +14,7 @@ export default class DisplevelChooser extends Component {
         <input
           id={`displevel_${name}`}
           type="checkbox"
-          checked={this.props.enabled.indexOf(name) !== -1}
+          checked={this.props.disabledDisplevels.indexOf(name) === -1}
           onChange={this.handleInputChange.bind(this, name)}
         />
         {name}
@@ -31,7 +27,6 @@ export default class DisplevelChooser extends Component {
 
 DisplevelChooser.propTypes = {
   displevels: PropTypes.arrayOf(PropTypes.string),
-  enabled: PropTypes.arrayOf(PropTypes.string),
-  onEnableDisplevel: PropTypes.func,
-  onDisableDisplevel: PropTypes.func
+  disabledDisplevels: PropTypes.arrayOf(PropTypes.string),
+  onChange: PropTypes.func,
 };

@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 
 import {
     getCurrentDeviceProperties,
-    getCurrentDeviceName
 } from '../../selectors/currentDevice';
 
 import {
@@ -120,7 +119,6 @@ SetProperty.propTypes = {
 function mapStateToProps(state) {
     return {
         properties: getCurrentDeviceProperties(state),
-        deviceName: getCurrentDeviceName(state),
     };
 }
 
