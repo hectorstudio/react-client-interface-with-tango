@@ -1,4 +1,4 @@
-import { fork, take, put, call, cancel } from "redux-saga/effects";
+import { fork, take, put, call, cancel, cancelled } from "redux-saga/effects";
 
 import {
   FETCH_DEVICE_NAMES,
@@ -162,7 +162,9 @@ function* handleChangeEvents(channel) {
       yield put(action);
     }
   } finally {
-    channel.close();
+    if (yield cancelled()) {
+      channel.close();
+    }
   }
 }
 
