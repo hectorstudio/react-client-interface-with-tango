@@ -8,7 +8,8 @@ interface IDevice {
     server: {
         id: string;
         host: string;
-    }
+    },
+    errors: object[]
 }
 
 export interface IDevicesState {

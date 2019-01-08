@@ -15,6 +15,7 @@
 .AttributeTable td.name,
 .AttributeTable td.description {
     width: 1%;
+    height: 3em; /* Unpretty way of making all rows equally high. Are there better methods? */
 }
 
 
