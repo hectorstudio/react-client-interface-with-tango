@@ -15,43 +15,51 @@ function getDevices(state: IRootState) {
   return state.devices;
 }
 
-export const getCurrentDeviceAttributes = createSelector(
-  getAttributesState,
-  getCurrentDeviceName,
-  (attributes, current) => objectValues(attributes[current])
-);
+// export const getCurrentDeviceAttributes = createSelector(
+//   getAttributesState,
+//   getCurrentDeviceName,
+//   (attributes, current) => objectValues(attributes[current])
+// );
 
-export const getCurrentDeviceCommands = createSelector(
-  getCommandsState,
-  getCurrentDeviceName,
-  (commands, current) => objectValues(commands[current])
-);
+// export const getCurrentDeviceCommands = createSelector(
+//   getCommandsState,
+//   getCurrentDeviceName,
+//   (commands, current) => objectValues(commands[current])
+// );
 
-export const getCurrentDeviceProperties = createSelector(
-  getPropertiesState,
-  getCurrentDeviceName,
-  (properties, current) => objectValues(properties[current])
-);
+// export const getCurrentDeviceProperties = createSelector(
+//   getPropertiesState,
+//   getCurrentDeviceName,
+//   (properties, current) => objectValues(properties[current])
+// );
 
-export const getCurrentDevice = createSelector(
+// export const getCurrentDevice = createSelector(
+//   getDevices,
+//   getCurrentDeviceName,
+//   getCurrentDeviceProperties,
+//   getCurrentDeviceAttributes,
+//   getCurrentDeviceCommands,
+//   (devices, name, properties, attributes, commands) => {
+//     const device = devices[name];
+//     return device == null ? null : { ...device, properties, attributes, commands };
+//   }
+// );
+
+export const getDevice = (name: string) => createSelector(
   getDevices,
-  getCurrentDeviceName,
-  getCurrentDeviceProperties,
-  getCurrentDeviceAttributes,
-  getCurrentDeviceCommands,
-  (devices, name, properties, attributes, commands) => {
+  getPropertiesState,
+  getAttributesState,
+  getCommandsState,
+  (devices, propertiesState, attributesState, commandsState) => {
     const device = devices[name];
-    return device == null ? null : { ...device, properties, attributes, commands };
+    const properties = objectValues(propertiesState[name]);
+    const attributes = objectValues(attributesState[name]);
+    const commands = objectValues(commandsState[name]);
+    return { ...device, properties, attributes, commands };
   }
 );
 
-// Doesn't get the attributes, properties etc.
-// const getDevice = (name: string) => createSelector(
-//   getDevices,
-//   devices => devices[name]
-// );
-
-export const getDispLevels = createSelector(
+export const getAvailableDispLevels = createSelector(
   getCurrentDeviceCommands,
   getCurrentDeviceAttributes,
   (commands, attributes) =>

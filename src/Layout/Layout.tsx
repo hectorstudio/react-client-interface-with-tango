@@ -17,7 +17,13 @@ const MainView = ({ className }) => (
     <LogInOut />
     <ErrorDisplay />
     <Route path={"/:tangoDB/*"} exact={true} component={ModalDialog} />
-    <Route path={"/:tangoDB/devices/:device*"} component={DeviceViewer} />
+    <Route
+      path={"/:tangoDB/devices/:device*"}
+      render={props => {
+        const { tangoDB, device } = props.match.params;
+        return <DeviceViewer tangoDB={tangoDB} deviceName={device} />;
+      }}
+    />
     {/* <Route path="/:tangoDB/" exact={true} component={HomeViewer} /> */}
   </div>
 );
