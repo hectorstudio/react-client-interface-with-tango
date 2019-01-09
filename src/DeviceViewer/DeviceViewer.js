@@ -23,7 +23,8 @@ import {
   getCurrentDeviceHasCommands,
   getDispLevels,
   getHasCurrentDevice,
-  getCurrentDeviceErrors
+  getCurrentDeviceErrors,
+  getCurrentDevice
 } from "../selectors/currentDevice";
 
 import { getDeviceIsLoading } from "../selectors/loadingStatus";
@@ -42,16 +43,22 @@ import ErrorTable from "./ErrorTable/ErrorTable";
 
 class DeviceMenu extends Component {
   render() {
-    const {
-      hasProperties,
-      hasAttributes,
-      hasCommands,
-      selectedTab,
-      hasErrors
-    } = this.props;
+    const { selectedTab, device } = this.props;
+    const { properties, attributes, commands, errors } = device;
+
+    const hasProperties = properties.length > 0;
+    const hasAttributes = attributes.length > 0;
+    const hasCommands = commands.length > 0;
+    const hasErrors = errors.length > 0;
 
     const mask = [true, hasErrors, hasProperties, hasAttributes, hasCommands];
-    const tabTitles = ["Server", "Errors", "Properties", "Attributes", "Commands"];
+    const tabTitles = [
+      "Server",
+      "Errors",
+      "Properties",
+      "Attributes",
+      "Commands"
+    ];
 
     const tabs = tabTitles.map((title, i) => {
       const name = title.toLowerCase();
@@ -120,9 +127,9 @@ class DeviceViewer extends Component {
   }
 
   componentDidMount() {
-    const device = this.parseDevice();
+    const deviceName = this.parseDevice();
     const tangoDB = this.parseTangoDB();
-    this.props.onSelectDevice(tangoDB, device);
+    this.props.onSelectDevice(tangoDB, deviceName);
   }
 
   componentDidUpdate(prevProps) {
@@ -139,10 +146,10 @@ class DeviceViewer extends Component {
       return <Spinner size={4} />;
     }
 
-    if (!this.props.hasDevice) {
+    if (this.props.device == null) {
       return (
         <p style={{ margin: "1em", color: "red" }}>
-          Couldn't load {this.props.deviceName}.
+          Couldn't load {this.parseDevice()}.
         </p>
       );
     }
@@ -152,7 +159,7 @@ class DeviceViewer extends Component {
       loading,
       onSelectTab,
       currentState,
-      deviceName,
+      device,
       displevels,
       disabledDisplevels,
       onDisplevelChange
@@ -171,14 +178,13 @@ class DeviceViewer extends Component {
     // Disable the displevel chooser until its role in the user interface has been worked out properly. Currently it doesn't add much except distraction
     const enableDisplevelChooser = false;
 
-
     return (
       <div>
         <Helmet>
-          <title>{deviceName}</title>
+          <title>{device.name}</title>
         </Helmet>
         <div className="device-header">
-          <QualityIndicator state={currentState} /> {deviceName}
+          <QualityIndicator state={device.state} /> {device.name}
           {enableDisplevelChooser && displevels.length > 1 && (
             <DisplevelChooser
               displevels={displevels}
@@ -191,15 +197,12 @@ class DeviceViewer extends Component {
           <DeviceMenu
             selectedTab={selectedTab}
             onSelectTab={onSelectTab}
-            hasProperties={this.props.hasProperties}
-            hasAttributes={this.props.hasAttributes}
-            hasCommands={this.props.hasCommands}
-            hasErrors={this.props.hasErrors}
+            device={device}
           />
           <div className="device-view">
             <CurrentView
               tangoDB={this.parseTangoDB()}
-              deviceName={this.props.deviceName}
+              deviceName={this.props.device.name}
             />
           </div>
         </div>
@@ -228,20 +231,9 @@ DeviceViewer.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const errors = getCurrentDeviceErrors(state);
-  const hasErrors = errors.length > 0;
-
   return {
-    hasAttributes: getCurrentDeviceHasAttributes(state),
-    hasProperties: getCurrentDeviceHasProperties(state),
-    hasCommands: getCurrentDeviceHasCommands(state),
-    hasErrors,
-
     loading: getDeviceIsLoading(state),
-    hasDevice: getHasCurrentDevice(state),
-    currentState: getCurrentDeviceStateValue(state),
-    deviceName: getCurrentDeviceName(state),
-
+    device: getCurrentDevice(state),
     disabledDisplevels: getDisabledDisplevels(state),
     displevels: getDispLevels(state)
   };
