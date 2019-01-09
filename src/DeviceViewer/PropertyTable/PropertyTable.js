@@ -105,7 +105,7 @@ class SetProperty extends Component {
     render() {
         return (
             <div className="static-modal">
-                <button className="btn btn-outline-secondary" type="button" onClick={this.handleShow}>Add new property</button>
+                <button className="btn btn-outline-secondary fa fa-plus" type="button" onClick={this.handleShow}/>
             </div>
         );
     }
