@@ -18,7 +18,7 @@ import Spinner from "../Spinner/Spinner";
 
 import {
   getDispLevels,
-  getCurrentDevice
+  getDevice
 } from "../selectors/currentDevice";
 
 import { getDeviceIsLoading } from "../selectors/loadingStatus";
@@ -103,38 +103,14 @@ const QualityIndicator = ({ state }) => {
 };
 
 class DeviceViewer extends Component {
-  parseDevice(props) {
-    return (props || this.props).match.params.device;
-  }
-
-  parseTangoDB(props) {
-    return (props || this.props).match.params.tangoDB;
-  }
-
   parseTab() {
     const { hash } = this.props.history.location;
     const tab = hash.substr(1);
     return tab || "server";
   }
 
-  componentDidMount() {
-    const deviceName = this.parseDevice();
-    const tangoDB = this.parseTangoDB();
-    this.props.onSelectDevice(tangoDB, deviceName);
-  }
-
-  componentDidUpdate(prevProps) {
-    const device = this.parseDevice();
-    const tangoDB = this.parseTangoDB();
-
-    if (device !== this.parseDevice(prevProps)) {
-      this.props.onSelectDevice(tangoDB, device);
-    }
-  }
-
   innerView(tab) {
-    const tangoDB = this.parseTangoDB();
-    const device = this.props.device;
+    const { device, tangoDB } = this.props;
 
     if (tab === "properties") {
       return (
@@ -181,7 +157,7 @@ class DeviceViewer extends Component {
     if (this.props.device == null) {
       return (
         <p style={{ margin: "1em", color: "red" }}>
-          Couldn't load {this.parseDevice()}.
+          Couldn't load {this.props.deviceName}.
         </p>
       );
     }
@@ -206,7 +182,7 @@ class DeviceViewer extends Component {
           <QualityIndicator state={device.state} /> {device.name}
           {enableDisplevelChooser && displevels.length > 1 && (
             <DisplevelChooser
-              displevels={displevels}
+              displevels={[] /*displevels*/}
               disabledDisplevels={disabledDisplevels}
               onChange={onDisplevelChange}
             />
@@ -233,12 +209,15 @@ DeviceViewer.propTypes = {
   onDisplevelChange: PropTypes.func
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
+  const deviceName = ownProps.deviceName;
+  const getCurrentDevice = getDevice(deviceName);
+
   return {
     loading: getDeviceIsLoading(state),
     device: getCurrentDevice(state),
     disabledDisplevels: getDisabledDisplevels(state),
-    displevels: getDispLevels(state)
+    //displevels: getDispLevels(state)
   };
 }
 
@@ -247,8 +226,8 @@ function mapDispatchToProps(dispatch) {
     onSelectDevice: (tangoDB, device) =>
       dispatch(selectDevice(tangoDB, device)),
     onDisplevelChange: (displevel, value) => {
-      const actionCreator = value ? enableDisplevel : disableDisplevel;
-      dispatch(actionCreator(displevel));
+      const action = value ? enableDisplevel(displevel) : disableDisplevel(displevel);
+      dispatch(action);
     }
   };
 }
