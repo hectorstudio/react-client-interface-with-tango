@@ -45,6 +45,11 @@ export const getCurrentDevice = createSelector(
   }
 );
 
+export const getDevice = (name: string) => createSelector(
+  getDevices,
+  devices => devices[name]
+);
+
 export const getHasCurrentDevice = createSelector(
   getCurrentDevice,
   device => device != null

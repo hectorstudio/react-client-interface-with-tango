@@ -22,6 +22,7 @@ const ServerInfo = ({ server }) => (
         </table>
     </div>
 );
+
 ServerInfo.propTypes = {
     server: PropTypes.shape({
         id: PropTypes.string,
@@ -29,10 +30,4 @@ ServerInfo.propTypes = {
     })
 }
 
-function mapStateToProps(state) {
-    return {
-        server: getCurrentDeviceServer(state),
-    };
-}
-
-export default connect(mapStateToProps)(ServerInfo);
+export default ServerInfo;

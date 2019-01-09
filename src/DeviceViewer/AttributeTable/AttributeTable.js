@@ -188,7 +188,6 @@ AttributeTable.propTypes = {
 function mapStateToProps(state) {
   return {
     selectedFormat: getActiveDataFormat(state),
-    attributes: getCurrentDeviceAttributes(state),
     disabledDisplevels: getDisabledDisplevels(state)
   };
 }

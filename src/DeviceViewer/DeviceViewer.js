@@ -12,25 +12,17 @@ import CommandTable from "./CommandTable/CommandTable";
 import PropertyTable from "./PropertyTable/PropertyTable";
 import ServerInfo from "./ServerInfo/ServerInfo";
 import DisplevelChooser from "./DisplevelChooser/DisplevelChooser";
+import ErrorTable from "./ErrorTable/ErrorTable";
 
 import Spinner from "../Spinner/Spinner";
 
 import {
-  getCurrentDeviceName,
-  getCurrentDeviceStateValue,
-  getCurrentDeviceHasAttributes,
-  getCurrentDeviceHasProperties,
-  getCurrentDeviceHasCommands,
   getDispLevels,
-  getHasCurrentDevice,
-  getCurrentDeviceErrors,
   getCurrentDevice
 } from "../selectors/currentDevice";
 
 import { getDeviceIsLoading } from "../selectors/loadingStatus";
 import { getDisabledDisplevels } from "../selectors/deviceDetail";
-
-import { setDataFormat } from "../actions/deviceList";
 
 import {
   enableDisplevel,
@@ -39,7 +31,6 @@ import {
 } from "../actions/tango";
 
 import "./DeviceViewer.css";
-import ErrorTable from "./ErrorTable/ErrorTable";
 
 class DeviceMenu extends Component {
   render() {
@@ -63,7 +54,7 @@ class DeviceMenu extends Component {
     const tabs = tabTitles.map((title, i) => {
       const name = title.toLowerCase();
       return !mask[i] ? null : (
-        <li className="nav-item" key={name}>
+        <li className={"nav-item"} key={name}>
           <Link
             to={`#${name}`}
             className={classNames("nav-link", { active: name === selectedTab })}
@@ -141,6 +132,47 @@ class DeviceViewer extends Component {
     }
   }
 
+  innerView(tab) {
+    const tangoDB = this.parseTangoDB();
+    const device = this.props.device;
+
+    if (tab === "properties") {
+      return (
+        <PropertyTable
+          tangoDB={tangoDB}
+          deviceName={device.name}
+          properties={device.properties}
+        />
+      );
+    } else if (tab === "commands") {
+      return (
+        <CommandTable
+          tangoDB={tangoDB}
+          deviceName={device.name}
+          commands={device.commands}
+        />
+      );
+    } else if (tab === "errors") {
+      return (
+        <ErrorTable
+          tangoDB={tangoDB}
+          deviceName={device.name}
+          errors={device.errors}
+        />
+      );
+    } else if (tab === "attributes") {
+      return (
+        <AttributeTable
+          tangoDB={tangoDB}
+          deviceName={device.name}
+          attributes={device.attributes}
+        />
+      );
+    } else {
+      return <ServerInfo tangoDB={tangoDB} server={device.server} />;
+    }
+  }
+
   innerContent() {
     if (this.props.loading) {
       return <Spinner size={4} />;
@@ -156,24 +188,11 @@ class DeviceViewer extends Component {
 
     const selectedTab = this.parseTab();
     const {
-      loading,
-      onSelectTab,
-      currentState,
       device,
       displevels,
       disabledDisplevels,
       onDisplevelChange
     } = this.props;
-
-    const views = {
-      server: ServerInfo,
-      properties: PropertyTable,
-      attributes: AttributeTable,
-      commands: CommandTable,
-      errors: ErrorTable
-    };
-
-    const CurrentView = views[selectedTab];
 
     // Disable the displevel chooser until its role in the user interface has been worked out properly. Currently it doesn't add much except distraction
     const enableDisplevelChooser = false;
@@ -194,17 +213,8 @@ class DeviceViewer extends Component {
           )}
         </div>
         <div className="device-body">
-          <DeviceMenu
-            selectedTab={selectedTab}
-            onSelectTab={onSelectTab}
-            device={device}
-          />
-          <div className="device-view">
-            <CurrentView
-              tangoDB={this.parseTangoDB()}
-              deviceName={this.props.device.name}
-            />
-          </div>
+          <DeviceMenu device={device} />
+          <div className="device-view">{this.innerView(selectedTab)}</div>
         </div>
       </div>
     );
@@ -216,18 +226,11 @@ class DeviceViewer extends Component {
 }
 
 DeviceViewer.propTypes = {
-  onSelectDevice: PropTypes.func,
   loading: PropTypes.bool,
-  currentState: PropTypes.string,
-  deviceName: PropTypes.string,
   displevels: PropTypes.arrayOf(PropTypes.string),
   disabledDisplevels: PropTypes.arrayOf(PropTypes.string),
-  onDisplevelChange: PropTypes.func,
-
-  hasAttributes: PropTypes.bool,
-  hasProperties: PropTypes.bool,
-  hasCommands: PropTypes.bool,
-  hasErrors: PropTypes.bool
+  onSelectDevice: PropTypes.func,
+  onDisplevelChange: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -243,7 +246,6 @@ function mapDispatchToProps(dispatch) {
   return {
     onSelectDevice: (tangoDB, device) =>
       dispatch(selectDevice(tangoDB, device)),
-    onSelectTab: tab => dispatch(setTab(tab)),
     onDisplevelChange: (displevel, value) => {
       const actionCreator = value ? enableDisplevel : disableDisplevel;
       dispatch(actionCreator(displevel));
