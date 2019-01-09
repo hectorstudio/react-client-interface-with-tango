@@ -213,7 +213,7 @@ class DeviceViewer extends Component {
           )}
         </div>
         <div className="device-body">
-          <DeviceMenu device={device} />
+          <DeviceMenu device={device} selectedTab={selectedTab} />
           <div className="device-view">{this.innerView(selectedTab)}</div>
         </div>
       </div>
