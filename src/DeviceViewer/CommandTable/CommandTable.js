@@ -187,7 +187,6 @@ InputField.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    commands: getCurrentDeviceCommands(state),
     disabledDisplevels: getDisabledDisplevels(state),
     
     commandOutputs: getCurrentDeviceCommandOutputs(state),

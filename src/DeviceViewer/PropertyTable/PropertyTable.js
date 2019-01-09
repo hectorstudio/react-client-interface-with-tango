@@ -116,12 +116,6 @@ SetProperty.propTypes = {
     showAddPropertyDialog: PropTypes.func,
 }
 
-function mapStateToProps(state) {
-    return {
-        properties: getCurrentDeviceProperties(state),
-    };
-}
-
 function mapDispatchToProps(dispatch) {
     return {
         showDeletePropertyDialog: (name) => dispatch(setModal(DELETE_PROPERTY, name)),
@@ -131,6 +125,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(PropertyTable);
