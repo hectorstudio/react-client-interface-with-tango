@@ -59,7 +59,9 @@ const LogInOut = ({
         fontSize: "0.75em",
         position: "absolute",
         top: "0.5em",
-        right: "0.5em"
+        right: "0.5em",
+        backgroundColor: "white",
+        boxShadow: "0 0 1em 0.5em white"
       }}
     >
       {isLoggedIn ? (
