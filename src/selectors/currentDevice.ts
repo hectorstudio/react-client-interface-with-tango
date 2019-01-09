@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import { IRootState } from "../reducers/rootReducer";
-import { objectValues, unique } from "../utils";
+import { objectValues } from "../utils";
 import { getCommandOutputState } from "./commandOutput";
 
 const getAttributesState = (state: IRootState) => state.attributes;
@@ -45,35 +45,11 @@ export const getCurrentDevice = createSelector(
   }
 );
 
-export const getDevice = (name: string) => createSelector(
-  getDevices,
-  devices => devices[name]
-);
-
-export const getHasCurrentDevice = createSelector(
-  getCurrentDevice,
-  device => device != null
-);
-
-export const getCurrentDeviceServer = createSelector(
-  getCurrentDevice,
-  device => device ? device.server : null
-);
-
-export const getCurrentDeviceErrors = createSelector(
-  getCurrentDevice,
-  device => (device ? device.errors : [])
-);
-
-export const getCurrentDeviceStateValue = createSelector(
-  getCurrentDevice,
-  device => device ? device.state : null
-);
-
-export const getAvailableDataFormats = createSelector(
-  getCurrentDeviceAttributes,
-  attrs => unique(attrs.map(attr => attr.dataformat))
-);
+// Doesn't get the attributes, properties etc.
+// const getDevice = (name: string) => createSelector(
+//   getDevices,
+//   devices => devices[name]
+// );
 
 export const getDispLevels = createSelector(
   getCurrentDeviceCommands,
@@ -91,19 +67,4 @@ export const getCurrentDeviceCommandOutputs = createSelector(
   getCurrentDeviceName,
   getCommandOutputState,
   (name, output) => output[name!] || {}
-);
-
-export const getCurrentDeviceHasProperties = createSelector(
-  getCurrentDeviceProperties,
-  props => props.length > 0
-);
-
-export const getCurrentDeviceHasAttributes = createSelector(
-  getCurrentDeviceAttributes,
-  attrs => attrs.length > 0
-);
-
-export const getCurrentDeviceHasCommands = createSelector(
-  getCurrentDeviceCommands,
-  cmds => cmds.length > 0
 );
