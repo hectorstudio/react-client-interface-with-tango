@@ -5,7 +5,9 @@ import {
   LOGOUT_SUCCESS,
   PRELOAD_USER_SUCCESS,
   PRELOAD_USER_FAILED,
-  LOGOUT
+  LOGOUT,
+  OPEN_LOGIN_DIALOG,
+  CLOSE_LOGIN_DIALOG
 } from "../actions/actionTypes";
 
 import {
@@ -15,13 +17,16 @@ import {
   ILogoutAction,
   ILogoutSuccessAction,
   IPreloadUserSuccessAction,
-  IPreloadUserFailedAction
+  IPreloadUserFailedAction,
+  IOpenLoginDialogAction,
+  ICloseLoginDialogAction
 } from "../actions/typedActions";
 
 export interface IUserState {
   username?: string;
   awaitingResponse: boolean;
   loginFailed: boolean;
+  loginDialogVisible: boolean;
 }
 
 type UserAction =
@@ -31,11 +36,14 @@ type UserAction =
   | ILogoutAction
   | ILogoutSuccessAction
   | IPreloadUserSuccessAction
-  | IPreloadUserFailedAction;
+  | IPreloadUserFailedAction
+  | IOpenLoginDialogAction
+  | ICloseLoginDialogAction;
 
 const initialState = {
   awaitingResponse: true,
-  loginFailed: false
+  loginFailed: false,
+  loginDialogVisible: false
 };
 
 export default function user(
@@ -56,6 +64,10 @@ export default function user(
       return { ...state, awaitingResponse: true };
     case LOGOUT_SUCCESS:
       return { ...initialState, awaitingResponse: false };
+    case OPEN_LOGIN_DIALOG:
+      return { ...initialState, loginDialogVisible: true };
+    case CLOSE_LOGIN_DIALOG:
+      return { ...initialState, loginDialogVisible: false };
     default:
       return state;
   }

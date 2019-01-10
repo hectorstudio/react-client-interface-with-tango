@@ -25,3 +25,8 @@ export const getLoginFailure = createSelector(
   getUserState,
   state => state.loginFailed && !state.awaitingResponse
 );
+
+export const getLoginDialogVisible = createSelector(
+  getUserState,
+  state => state.loginDialogVisible
+);
