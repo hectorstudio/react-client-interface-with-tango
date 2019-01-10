@@ -23,7 +23,6 @@ const GRID_TILE_SIZE = 15;
 import "./Dashboard.css";
 
 import LogInOut from "../LogInOut/LogInOut";
-// import ModalDialog from "../Modal/Modal";
 
 const DEFAULT_CANVASES = [
   {
