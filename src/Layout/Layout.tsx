@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route } from "react-router-dom";
 import * as qs from "query-string";
 
 import DeviceList from "../DeviceList/DeviceList";
@@ -44,28 +44,19 @@ const MainView = ({ className }) => (
 const DefaultLayout = () => (
   <BaseLayout>
     <div className="left-column">
-      <Switch>
-        <Route
-          path={"/:tangoDB/devices/:device*"}
-          render={props => {
-            const { tangoDB, device } = props.match.params;
-            return (
-              <DeviceList
-                location={props.location}
-                tangoDB={tangoDB}
-                currentDeviceName={device}
-              />
-            );
-          }}
-        />
-        <Route
-          path={"/:tangoDB"}
-          render={props => {
-            const { tangoDB } = props.match.params;
-            return <DeviceList location={props.location} tangoDB={tangoDB} />;
-          }}
-        />
-      </Switch>
+      <Route
+        path={"/:tangoDB/devices/:device*"}
+        children={({ match, location }) => {
+          const { tangoDB, device } = match.params;
+          return (
+            <DeviceList
+              location={location}
+              tangoDB={tangoDB}
+              currentDeviceName={device}
+            />
+          );
+        }}
+      />
     </div>
     <MainView className="right-column" />
   </BaseLayout>
