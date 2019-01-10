@@ -9,7 +9,9 @@ import {
   PRELOAD_USER,
   EXTEND_LOGIN,
   EXTEND_LOGIN_SUCCESS,
-  EXTEND_LOGIN_FAILED
+  EXTEND_LOGIN_FAILED,
+  OPEN_LOGIN_DIALOG,
+  CLOSE_LOGIN_DIALOG
 } from "./actionTypes";
 
 import { Action } from "redux";
@@ -60,4 +62,12 @@ export interface IExtendLoginSuccessAction extends Action {
 
 export interface IExtendLoginFailedAction extends Action {
   type: typeof EXTEND_LOGIN_FAILED;
+}
+
+export interface IOpenLoginDialogAction extends Action {
+  type: typeof OPEN_LOGIN_DIALOG;
+}
+
+export interface ICloseLoginDialogAction extends Action {
+  type: typeof CLOSE_LOGIN_DIALOG;
 }
