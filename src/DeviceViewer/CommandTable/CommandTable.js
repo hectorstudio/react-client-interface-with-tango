@@ -62,7 +62,7 @@ class CommandTable extends Component {
         </NotLoggedIn>
         <table className='separated'>
           <tbody>
-            {commands && commands.map((command, i) => {
+            {commands.map((command, i) => {
               const { name, displevel, intype, intypedesc, outtypedesc } = command;
               const enabled = Object.values(disabledDisplevels).indexOf(displevel) === -1;
               return enabled && (
@@ -87,6 +87,10 @@ class CommandTable extends Component {
     );
   }
 }
+
+CommandTable.defaultProps = {
+  commands: []
+};
 
 CommandTable.propTypes = {
   commands: PropTypes.oneOfType([PropTypes.arrayOf(command), command]),
@@ -186,14 +190,10 @@ InputField.propTypes = {
 
 function mapStateToProps(state, ownProps) {
   const deviceName = ownProps.deviceName;
-  const getCurrentDeviceCommandOutputs = getCommandOutputs(deviceName);
-
   return {
     disabledDisplevels: getDisabledDisplevels(state),
-    
-    commandOutputs: getCurrentDeviceCommandOutputs(state),
+    commandOutputs: getCommandOutputs(deviceName)(state),
     outputsLoading: getCommandOutputsLoading(state),
-
     isLoggedIn: getIsLoggedIn(state),
   };
 }

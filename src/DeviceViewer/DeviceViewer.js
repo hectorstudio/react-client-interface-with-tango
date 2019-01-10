@@ -109,7 +109,7 @@ class DeviceViewer extends Component {
     if (tab === "properties") {
       return <PropertyTable tangoDB={tangoDB} properties={device.properties} />;
     } else if (tab === "commands") {
-      return <CommandTable tangoDB={tangoDB} commands={device.commands} />;
+      return <CommandTable tangoDB={tangoDB} deviceName={device.name} commands={device.commands} />;
     } else if (tab === "errors") {
       return <ErrorTable tangoDB={tangoDB} errors={device.errors} />;
     } else if (tab === "attributes") {
