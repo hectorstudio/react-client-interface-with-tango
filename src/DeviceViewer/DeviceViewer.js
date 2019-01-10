@@ -4,7 +4,6 @@ import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { Helmet } from "react-helmet";
-import PropTypes from "prop-types";
 import "font-awesome/css/font-awesome.min.css";
 
 import AttributeTable from "./AttributeTable/AttributeTable";
@@ -16,10 +15,7 @@ import ErrorTable from "./ErrorTable/ErrorTable";
 
 import Spinner from "../Spinner/Spinner";
 
-import {
-  getDispLevels,
-  getDevice
-} from "../selectors/currentDevice";
+import { getDevice } from "../selectors/devices";
 
 import { getDeviceIsLoading } from "../selectors/loadingStatus";
 import { getDisabledDisplevels } from "../selectors/deviceDetail";
@@ -27,7 +23,8 @@ import { getDisabledDisplevels } from "../selectors/deviceDetail";
 import {
   enableDisplevel,
   disableDisplevel,
-  selectDevice
+  requireDevice,
+  fetchDevice
 } from "../actions/tango";
 
 import "./DeviceViewer.css";
@@ -35,8 +32,7 @@ import "./DeviceViewer.css";
 class DeviceMenu extends Component {
   render() {
     const { selectedTab, device } = this.props;
-    const { properties, attributes, commands } = device;
-    const errors = [];
+    const { properties, attributes, commands, errors } = device;
 
     const hasProperties = properties.length > 0;
     const hasAttributes = attributes.length > 0;
@@ -74,14 +70,6 @@ class DeviceMenu extends Component {
   }
 }
 
-DeviceMenu.propTypes = {
-  hasProperties: PropTypes.bool,
-  hasAttributes: PropTypes.bool,
-  hasCommands: PropTypes.bool,
-  selectedTab: PropTypes.string,
-  onSelectTab: PropTypes.func
-};
-
 const QualityIndicator = ({ state }) => {
   const classSuffixes = {
     ON: "on",
@@ -104,46 +92,29 @@ const QualityIndicator = ({ state }) => {
 };
 
 class DeviceViewer extends Component {
-  parseTab() {
-    const { hash } = this.props.history.location;
-    const tab = hash.substr(1);
-    return tab || "server";
+  componentDidMount() {
+    this.props.onRequireDevice(this.props.deviceName);
+  }
+
+  componentDidUpdate(prevProps) {
+    const deviceName = this.props.deviceName;
+    if (prevProps.deviceName !== deviceName) {
+      this.props.onRequireDevice(deviceName);
+    }
   }
 
   innerView(tab) {
     const { device, tangoDB } = this.props;
 
     if (tab === "properties") {
-      return (
-        <PropertyTable
-          tangoDB={tangoDB}
-          deviceName={device.name}
-          properties={device.properties}
-        />
-      );
+      return <PropertyTable tangoDB={tangoDB} properties={device.properties} />;
     } else if (tab === "commands") {
-      return (
-        <CommandTable
-          tangoDB={tangoDB}
-          deviceName={device.name}
-          commands={device.commands}
-        />
-      );
+      return <CommandTable tangoDB={tangoDB} commands={device.commands} />;
     } else if (tab === "errors") {
-      return (
-        <ErrorTable
-          tangoDB={tangoDB}
-          deviceName={device.name}
-          errors={device.errors}
-        />
-      );
+      return <ErrorTable tangoDB={tangoDB} errors={device.errors} />;
     } else if (tab === "attributes") {
       return (
-        <AttributeTable
-          tangoDB={tangoDB}
-          deviceName={device.name}
-          attributes={device.attributes}
-        />
+        <AttributeTable tangoDB={tangoDB} attributes={device.attributes} />
       );
     } else {
       return <ServerInfo tangoDB={tangoDB} server={device.server} />;
@@ -163,7 +134,7 @@ class DeviceViewer extends Component {
       );
     }
 
-    const selectedTab = this.parseTab();
+    const selectedTab = this.props.selectedTab || "server";
     const {
       device,
       displevels,
@@ -202,40 +173,29 @@ class DeviceViewer extends Component {
   }
 }
 
-DeviceViewer.propTypes = {
-  loading: PropTypes.bool,
-  displevels: PropTypes.arrayOf(PropTypes.string),
-  disabledDisplevels: PropTypes.arrayOf(PropTypes.string),
-  onSelectDevice: PropTypes.func,
-  onDisplevelChange: PropTypes.func
-};
-
 function mapStateToProps(state, ownProps) {
-  const deviceName = ownProps.deviceName;
-  const getCurrentDevice = getDevice(deviceName);
-
+  const getCurrentDevice = getDevice(ownProps.deviceName);
   return {
     loading: getDeviceIsLoading(state),
     device: getCurrentDevice(state),
-    disabledDisplevels: getDisabledDisplevels(state),
-    //displevels: getDispLevels(state)
+    disabledDisplevels: getDisabledDisplevels(state)
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
+  const { tangoDB } = ownProps;
   return {
-    onSelectDevice: (tangoDB, device) =>
-      dispatch(selectDevice(tangoDB, device)),
+    onRequireDevice: device => dispatch(fetchDevice(tangoDB, device)),
     onDisplevelChange: (displevel, value) => {
-      const action = value ? enableDisplevel(displevel) : disableDisplevel(displevel);
+      const action = value
+        ? enableDisplevel(displevel)
+        : disableDisplevel(displevel);
       dispatch(action);
     }
   };
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(DeviceViewer)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DeviceViewer);

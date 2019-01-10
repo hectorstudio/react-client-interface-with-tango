@@ -3,7 +3,6 @@ import {
     SET_SEARCH_FILTER,
     TOGGLE_EXPAND_DOMAIN,
     TOGGLE_EXPAND_FAMILY,
-    SELECT_DEVICE,
 } from '../actions/actionTypes';
 
 export interface IDeviceListState {
@@ -22,9 +21,9 @@ function toggleElement(array, element) {
     }
 }
 
-function enableElement(array, element) {
-    return array.indexOf(element) === -1 ? array.concat(element) : array;
-}
+// function enableElement(array, element) {
+//     return array.indexOf(element) === -1 ? array.concat(element) : array;
+// }
 
 export default function deviceList(state: IDeviceListState = {
     filter: '',
@@ -53,7 +52,7 @@ export default function deviceList(state: IDeviceListState = {
         return {...state, expandedFamilies: toggleElement(state.expandedFamilies, domainFamily)};
     }
 
-    case SELECT_DEVICE: {
+    /*case SELECT_DEVICE: {
         const [domain, family,] = action.name.split('/');
         const domainFamily = `${domain}/${family}`;
         return {
@@ -61,7 +60,7 @@ export default function deviceList(state: IDeviceListState = {
             expandedDomains: enableElement(state.expandedDomains, domain),
             expandedFamilies: enableElement(state.expandedFamilies, domainFamily),
         };
-    }
+    }*/
 
     default:
         return state;
