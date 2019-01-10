@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {
-  getCurrentDeviceCommands,
-  getCurrentDeviceCommandOutputs,
-} from '../../selectors/currentDevice';
+  getCommandOutputs
+} from '../../selectors/commandOutput';
 
 import {
   getDisabledDisplevels
@@ -185,7 +184,10 @@ InputField.propTypes = {
   intype: PropTypes.string,
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
+  const deviceName = ownProps.deviceName;
+  const getCurrentDeviceCommandOutputs = getCommandOutputs(deviceName);
+
   return {
     disabledDisplevels: getDisabledDisplevels(state),
     

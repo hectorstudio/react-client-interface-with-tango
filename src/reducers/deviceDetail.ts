@@ -1,11 +1,8 @@
 import {
   ENABLE_DISPLEVEL,
   DISABLE_DISPLEVEL,
-  SET_DATA_FORMAT,
-  SELECT_DEVICE_SUCCESS
+  SET_DATA_FORMAT
 } from "../actions/actionTypes";
-
-import { unique } from '../utils';
 
 export interface IDeviceDetailState {
   activeDataFormat?: string,
@@ -26,17 +23,6 @@ export default function deviceViewer(state: IDeviceDetailState = {
       const { displevel } = action;
       const disabledDisplevels = [...state.disabledDisplevels, displevel];
       return { ...state, disabledDisplevels };
-    }
-
-    case SELECT_DEVICE_SUCCESS: {
-      const device = action.device;
-      const commands = device.commands || [];
-      const attributes = device.attributes || [];
-
-      const enabledDisplevels = unique(commands.map(cmd => cmd.displevel));
-      const activeDataFormat = attributes.length ? attributes[0].dataformat : null;
-
-      return {...state, enabledDisplevels, activeDataFormat};
     }
 
     case SET_DATA_FORMAT:
