@@ -67,6 +67,7 @@ export default class LoginModal extends Component<IProps, IState> {
           </Modal.Body>
           <Modal.Footer>
             <button
+              type="button"
               onClick={this.handleClose}
               className="btn btn-outline-secondary"
               disabled={awaitingResponse}
