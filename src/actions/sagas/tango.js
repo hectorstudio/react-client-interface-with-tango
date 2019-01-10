@@ -7,14 +7,14 @@ import {
   EXECUTE_COMMAND,
   SET_DEVICE_PROPERTY,
   DELETE_DEVICE_PROPERTY,
-  SELECT_DEVICE,
   FETCH_DEVICE_SUCCESS,
   FETCH_DEVICE,
-  ATTRIBUTE_CHANGE
+  ATTRIBUTE_CHANGE,
 } from "../actionTypes";
 
 import TangoAPI from "../api/tango";
 import {
+  fetchDeviceNames as fetchDeviceNamesAction,
   fetchDeviceNamesSuccess,
   fetchDeviceNamesFailed,
   executeCommandSuccess,
@@ -41,7 +41,6 @@ export default function* tango() {
   yield fork(setDeviceProperty);
   yield fork(deleteDeviceProperty);
   yield fork(fetchDevice);
-  yield fork(fetchOnSelectDevice);
   yield fork(subscribeOnFetchDevice);
 }
 
@@ -126,13 +125,6 @@ function* deleteDeviceProperty() {
       ? deleteDevicePropertySuccess(tangoDB, device, name)
       : deleteDevicePropertyFailed(tangoDB, device, name);
     yield put(action);
-  }
-}
-
-function* fetchOnSelectDevice() {
-  while (true) {
-    const { tangoDB, name } = yield take(SELECT_DEVICE);
-    yield put(fetchDeviceAction(tangoDB, name));
   }
 }
 

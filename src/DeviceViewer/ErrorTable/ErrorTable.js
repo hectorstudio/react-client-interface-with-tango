@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 
-import { getCurrentDeviceErrors } from "../../selectors/currentDevice";
-
-class ErrorTable extends Component {
+export default class ErrorTable extends Component {
   render() {
     const errors = this.props.errors || [];
     return (
@@ -13,9 +10,3 @@ class ErrorTable extends Component {
     );
   }
 }
-
-function mapStateToProps(state) {
-  return { errors: getCurrentDeviceErrors(state) };
-}
-
-export default connect(mapStateToProps)(ErrorTable);

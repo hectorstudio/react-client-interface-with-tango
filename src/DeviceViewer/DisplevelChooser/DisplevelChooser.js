@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import "./DisplevelChooser.css";
+import { unique } from "src/utils";
 
 export default class DisplevelChooser extends Component {
   handleInputChange(name, e) {
@@ -9,7 +10,14 @@ export default class DisplevelChooser extends Component {
   }
 
   render() {
-    const inputs = this.props.displevels.map((name, i) => (
+    const device = this.props.device;
+    const { attributes, commands } = device;
+    
+    const displevels = unique(
+      [...attributes, ...commands].map(({ displevel }) => displevel)
+    );
+
+    const inputs = displevels.map((name, i) => (
       <label key={i} htmlFor={`displevel_${name}`}>
         <input
           id={`displevel_${name}`}
@@ -28,5 +36,5 @@ export default class DisplevelChooser extends Component {
 DisplevelChooser.propTypes = {
   displevels: PropTypes.arrayOf(PropTypes.string),
   disabledDisplevels: PropTypes.arrayOf(PropTypes.string),
-  onChange: PropTypes.func,
+  onChange: PropTypes.func
 };

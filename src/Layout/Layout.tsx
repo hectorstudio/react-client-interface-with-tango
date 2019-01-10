@@ -1,5 +1,5 @@
 import React from "react";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import * as qs from "query-string";
 
 import DeviceList from "../DeviceList/DeviceList";
@@ -9,13 +9,34 @@ import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";
 import LogInOut from "../LogInOut/LogInOut";
 import "./Layout.css";
 
+function extractRouteParams(match, history) {
+  const { tangoDB, device: deviceName } = match.params;
+  const { hash } = history.location;
+  const selectedTab = hash.substr(1) || null;
+  return { tangoDB, deviceName, selectedTab };
+}
+
 const BaseLayout = ({ children }) => <div className="Layout">{children}</div>;
 
 const MainView = ({ className }) => (
   <div className={className}>
     <LogInOut />
     <ErrorDisplay />
-    <Route path={"/:tangoDB/devices/:device*"} component={DeviceViewer} />
+    <Route
+      path={"/:tangoDB/devices/:device*"}
+      render={props => {
+        const { match, history } = props;
+        const params = extractRouteParams(match, history);
+        const { tangoDB, deviceName, selectedTab } = params;
+        return (
+          <DeviceViewer
+            tangoDB={tangoDB}
+            deviceName={deviceName}
+            selectedTab={selectedTab}
+          />
+        );
+      }}
+    />
     {/* <Route path="/:tangoDB/" exact={true} component={HomeViewer} /> */}
   </div>
 );
@@ -23,7 +44,28 @@ const MainView = ({ className }) => (
 const DefaultLayout = () => (
   <BaseLayout>
     <div className="left-column">
-      <Route path={"/:tangoDB"} component={DeviceList} />
+      <Switch>
+        <Route
+          path={"/:tangoDB/devices/:device*"}
+          render={({ match, location }) => {
+            const { tangoDB, device } = match.params;
+            return (
+              <DeviceList
+                location={location}
+                tangoDB={tangoDB}
+                currentDeviceName={device}
+              />
+            );
+          }}
+        />
+        <Route
+          path={"/:tangoDB"}
+          render={({ match, location }) => {
+            const { tangoDB } = match.params;
+            return <DeviceList location={location} tangoDB={tangoDB} />;
+          }}
+        />
+      </Switch>
     </div>
     <MainView className="right-column" />
   </BaseLayout>

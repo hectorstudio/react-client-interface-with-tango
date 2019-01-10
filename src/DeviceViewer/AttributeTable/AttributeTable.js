@@ -16,11 +16,6 @@ import {
   getDisabledDisplevels
 } from "../../selectors/deviceDetail";
 
-import {
-  getCurrentDeviceAttributes,
-  getCurrentDeviceName
-} from "../../selectors/currentDevice";
-
 import { setDataFormat } from "../../actions/deviceList";
 
 const DataFormatChooser = ({ dataFormats, selected, onSelect }) => {
@@ -188,7 +183,6 @@ AttributeTable.propTypes = {
 function mapStateToProps(state) {
   return {
     selectedFormat: getActiveDataFormat(state),
-    attributes: getCurrentDeviceAttributes(state),
     disabledDisplevels: getDisabledDisplevels(state)
   };
 }
