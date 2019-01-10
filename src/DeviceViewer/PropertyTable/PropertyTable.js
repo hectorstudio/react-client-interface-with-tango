@@ -1,136 +1,143 @@
-import React, { Component, Fragment } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import {isMobile} from 'react-device-detect';
-import PropTypes from 'prop-types'
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { isMobile } from "react-device-detect";
 
 import {
-    getCurrentDeviceProperties,
-} from '../../selectors/currentDevice';
+  getCurrentDeviceProperties,
+  getCurrentDeviceName
+} from "../../selectors/currentDevice";
 
-import {
-    DELETE_PROPERTY,
-    CREATE_PROPERTY,
-    EDIT_PROPERTY,
-    setModal,
-} from '../../actions/modal'
+import { setDeviceProperty, deleteDeviceProperty } from "../../actions/tango";
 
-import './PropertyTable.css';
+import "./PropertyTable.css";
 
-const PropertyTable = ({ properties, deviceName, showDeletePropertyDialog, showEditPropertyDialog, showAddPropertyDialog}) =>
-    <div className='PropertyTable'>
-        <table className='separated'>
-            <tbody>
-            {properties && properties.map(({ name, value }, i) =>
-                <tr key={i}>
-                    <td className="name">
-                        {name}
-                    </td>
+import AddPropertyModal from "./AddPropertyModal";
+import DeletePropertyModal from "./DeletePropertyModal";
+import EditPropertyModal from "./EditPropertyModal";
+
+const EditButton = ({ onClick }) => (
+  <i
+    className={"fa fa-pencil " + (isMobile ? "visible" : "")}
+    onClick={onClick}
+  />
+);
+
+const DeleteButton = ({ onClick }) => (
+  <i
+    className={"fa fa-trash " + (isMobile ? "visible" : "")}
+    onClick={onClick}
+  />
+);
+
+class PropertyTable extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      addProperty: false,
+      deleteProperty: null,
+      editProperty: null
+    };
+
+    this.handleAddProperty = this.handleAddProperty.bind(this);
+    this.handleEditProperty = this.handleEditProperty.bind(this);
+    this.handleDeleteProperty = this.handleDeleteProperty.bind(this);
+  }
+
+  render() {
+    const { properties } = this.props;
+    const { addProperty, deleteProperty, editProperty } = this.state;
+
+    return (
+      <div className="PropertyTable">
+        {addProperty && (
+          <AddPropertyModal
+            onClose={() => this.setState({ addProperty: false })}
+            onAdd={this.handleAddProperty}
+          />
+        )}
+        <table className="separated">
+          <tbody>
+            {properties &&
+              properties.map(({ name, value }, i) => (
+                <Fragment>
+                  {editProperty === name && (
+                    <EditPropertyModal
+                      name={name}
+                      initialValue={value}
+                      onClose={() => this.setState({ editProperty: null })}
+                      onEdit={this.handleEditProperty}
+                    />
+                  )}
+                  {deleteProperty === name && (
+                    <DeletePropertyModal
+                      name={name}
+                      onClose={() => this.setState({ deleteProperty: null })}
+                      onDelete={this.handleDeleteProperty}
+                    />
+                  )}
+                  <tr key={i}>
+                    <td className="name">{name}</td>
                     <td className="actions">
-                        <EditProperty
-                            deviceName={deviceName}
-                            name={name}
-                            value={value}
-                            showDeletePropertyDialog={showDeletePropertyDialog}
-                            showEditPropertyDialog={showEditPropertyDialog}
-                            
-                        />
+                      <DeleteButton
+                        onClick={() => this.setState({ deleteProperty: name })}
+                      />
+                      &nbsp;
+                      <EditButton
+                        onClick={() => this.setState({ editProperty: name })}
+                      />
                     </td>
-                    <td>
-                        {value.join('\n')}
-                    </td>
-                </tr>
-            )}
-            </tbody>
+                    <td>{value.join("\n")}</td>
+                  </tr>
+                </Fragment>
+              ))}
+          </tbody>
         </table>
-        <br></br>
-        <SetProperty
-            deviceName={deviceName}
-            showAddPropertyDialog={showAddPropertyDialog}
+        <button
+          className="btn btn-outline-secondary fa fa-plus"
+          type="button"
+          onClick={() => this.setState({ addProperty: true })}
         />
-    </div>;
+      </div>
+    );
+  }
 
-PropertyTable.propTypes = {
-    properties: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string, 
-        value: PropTypes.arrayOf(PropTypes.string)
-    })),
-    deviceName: PropTypes.string,
-    showDeletePropertyDialog: PropTypes.func,
-    showEditPropertyDialog: PropTypes.func,
-    showAddPropertyDialog: PropTypes.func,
-}
+  handleAddProperty(name, value) {
+    this.props.onAddProperty(name, value);
+    this.setState({ addProperty: false });
+  }
 
-class EditProperty extends Component {
-    constructor(props) {
-        super(props);
-        this.handleShow = this.handleShow.bind(this);
-        this.removeShow = this.removeShow.bind(this);
-    }
+  handleEditProperty(name, value) {
+    this.props.onEditProperty(name, value);
+    this.setState({ editProperty: null });
+  }
 
-    handleShow() {
-        this.props.showEditPropertyDialog(this.props.name);
-    }
-
-    removeShow() {
-        this.props.showDeletePropertyDialog(this.props.name);
-    }
-
-    render() {
-        return (
-            <Fragment>
-                <i className={"fa fa-trash " + (isMobile ? "visible" : "")} onClick={this.removeShow}></i> &nbsp;
-                <i className={"fa fa-pencil " + (isMobile ? "visible" : "")} onClick={this.handleShow}></i>
-            </Fragment>
-        );
-    }
-}
-
-EditProperty.propTypes = {
-    name: PropTypes.string,
-    showEditPropertyDialog: PropTypes.func,
-    showDeletePropertyDialog: PropTypes.func,
-}
-
-class SetProperty extends Component {
-    constructor(props) {
-        super(props);
-        this.handleShow = this.handleShow.bind(this);
-    }
-
-    handleShow() {
-        this.props.showAddPropertyDialog(this.props.deviceName);
-    }
-
-    render() {
-        return (
-            <div className="static-modal">
-                <button className="btn btn-outline-secondary fa fa-plus" type="button" onClick={this.handleShow}/>
-            </div>
-        );
-    }
-}
-
-SetProperty.propTypes = {
-    deviceName: PropTypes.string,
-    showAddPropertyDialog: PropTypes.func,
+  handleDeleteProperty(name) {
+    this.props.onDeleteProperty(name);
+    this.setState({ deleteProperty: null });
+  }
 }
 
 function mapStateToProps(state) {
-    return {
-        properties: getCurrentDeviceProperties(state),
-    };
+  return {
+    deviceName: getCurrentDeviceName(state),
+    properties: getCurrentDeviceProperties(state)
+  };
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        showDeletePropertyDialog: (name) => dispatch(setModal(DELETE_PROPERTY, name)),
-        showAddPropertyDialog: () => dispatch(setModal(CREATE_PROPERTY)),
-        showEditPropertyDialog: (name) => dispatch(setModal(EDIT_PROPERTY, name)),
-    };
+function mapDispatchToProps(dispatch, ownProps) {
+  const { tangoDB, deviceName } = ownProps;
+
+  return {
+    onAddProperty: (name, value) =>
+      dispatch(setDeviceProperty(tangoDB, deviceName, name, [value])),
+    onEditProperty: (name, value) =>
+      dispatch(setDeviceProperty(tangoDB, deviceName, name, [value])),
+    onDeleteProperty: name =>
+      dispatch(deleteDeviceProperty(tangoDB, deviceName, name))
+  };
 }
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(PropertyTable);
