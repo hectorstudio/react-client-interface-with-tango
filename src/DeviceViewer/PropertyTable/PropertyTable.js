@@ -126,7 +126,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, ownProps) {
   const { tangoDB, deviceName } = ownProps;
-
   return {
     onAddProperty: (name, value) =>
       dispatch(setDeviceProperty(tangoDB, deviceName, name, [value])),
