@@ -2,11 +2,6 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { isMobile } from "react-device-detect";
 
-import {
-  getCurrentDeviceProperties,
-  getCurrentDeviceName
-} from "../../selectors/currentDevice";
-
 import { setDeviceProperty, deleteDeviceProperty } from "../../actions/tango";
 
 import "./PropertyTable.css";
@@ -59,7 +54,7 @@ class PropertyTable extends Component {
           <tbody>
             {properties &&
               properties.map(({ name, value }, i) => (
-                <Fragment>
+                <Fragment key={i}>
                   {editProperty === name && (
                     <EditPropertyModal
                       name={name}
@@ -132,4 +127,4 @@ function mapDispatchToProps(dispatch, ownProps) {
 export default connect(
   null,
   mapDispatchToProps
-);
+)(PropertyTable);
