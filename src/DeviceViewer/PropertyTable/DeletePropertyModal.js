@@ -13,7 +13,7 @@ const DeletePropertyModal = ({ name, onDelete, onClose }) => (
     </Modal.Body>
 
     <Modal.Footer>
-      <Button className="btn btn-outline-secondary" onClick={onDelete}>
+      <Button className="btn btn-outline-secondary" onClick={() => onDelete(name)}>
         Yes
       </Button>
       <Button className="btn btn-outline-secondary" onClick={onClose}>
