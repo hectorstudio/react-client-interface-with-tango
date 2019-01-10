@@ -1,23 +1,25 @@
-import React, { Fragment } from "react";
+import React, { Fragment, CSSProperties } from "react";
 import { connect } from "react-redux";
 
-import { setModal } from "../actions/modal";
-import { logout } from "../actions/typedActionCreators";
+import LoginModal from "./LoginModal/LoginModal";
+
+import { logout, login } from "../actions/typedActionCreators";
+import { IRootState } from "../reducers/rootReducer";
 import {
   getIsLoggedIn,
   getUsername,
-  getAwaitingResponse
+  getAwaitingResponse,
+  getLoginFailure
 } from "../selectors/user";
-import { IRootState } from "src/reducers/rootReducer";
 
-const WhenLoggedIn = ({ username, onLogout }) => (
+const WhenLoggedIn = ({ username, onPressLogout }) => (
   <Fragment>
     Logged in as <span style={{ fontWeight: "bold" }}>{username}</span>.{" "}
     <a
       href="#"
       onClick={e => {
         e.preventDefault();
-        onLogout();
+        onPressLogout();
       }}
     >
       Log Out
@@ -25,14 +27,14 @@ const WhenLoggedIn = ({ username, onLogout }) => (
   </Fragment>
 );
 
-const WhenLoggedOut = ({ onLogin }) => (
+const WhenLoggedOut = ({ onPressLogin }) => (
   <Fragment>
     Not logged in.{" "}
     <a
       href="#"
       onClick={e => {
         e.preventDefault();
-        onLogin();
+        onPressLogin();
       }}
     >
       Log In
@@ -40,50 +42,89 @@ const WhenLoggedOut = ({ onLogin }) => (
   </Fragment>
 );
 
-const LogInOut = ({
-  username,
-  isLoggedIn,
-  awaitingResponse,
-  onLogin,
-  onLogout
-}: {
-  username: string;
+interface IProps {
+  username?: string;
+  loginFailure: boolean;
   isLoggedIn: boolean;
   awaitingResponse: boolean;
-  onLogin: () => any;
-  onLogout: () => any;
-}) =>
-  awaitingResponse ? null : (
-    <div
-      style={{
-        fontSize: "0.75em",
-        position: "absolute",
-        top: "0.5em",
-        right: "0.5em",
-        backgroundColor: "white",
-        boxShadow: "0 0 1em 0.5em white"
-      }}
-    >
-      {isLoggedIn ? (
-        <WhenLoggedIn username={username} onLogout={onLogout} />
-      ) : (
-        <WhenLoggedOut onLogin={onLogin} />
-      )}
-    </div>
-  );
+  onLogin: (username: string, password: string) => void;
+  onLogout: () => void;
+}
+
+interface IState {
+  showingModal: boolean;
+  username: string;
+  password: string;
+}
+
+const style: CSSProperties = {
+  fontSize: "0.75em",
+  position: "absolute",
+  top: "0.5em",
+  right: "0.5em",
+  backgroundColor: "white",
+  boxShadow: "0 0 1em 0.5em white"
+};
+
+class LogInOut extends React.Component<IProps, IState> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showingModal: false,
+      username: "",
+      password: ""
+    };
+  }
+
+  public render() {
+    const {
+      username,
+      isLoggedIn,
+      awaitingResponse,
+      loginFailure,
+      onLogin,
+      onLogout
+    } = this.props;
+
+    const onClose = () => this.setState({ showingModal: false });
+    const onPressLogin = () => this.setState({ showingModal: true });
+
+    if (this.state.showingModal && username == null) {
+      return (
+        <LoginModal
+          awaitingResponse={awaitingResponse}
+          loginFailure={loginFailure}
+          onLogin={onLogin}
+          onClose={onClose}
+        />
+      );
+    }
+
+    return awaitingResponse ? null : (
+      <div style={style}>
+        {isLoggedIn ? (
+          <WhenLoggedIn username={username} onPressLogout={onLogout} />
+        ) : (
+          <WhenLoggedOut onPressLogin={onPressLogin} />
+        )}
+      </div>
+    );
+  }
+}
 
 function mapStateToProps(state: IRootState) {
   return {
     isLoggedIn: getIsLoggedIn(state),
     username: getUsername(state),
-    awaitingResponse: getAwaitingResponse(state)
+    awaitingResponse: getAwaitingResponse(state),
+    loginFailure: getLoginFailure(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onLogin: () => dispatch(setModal("LOGIN")),
-    onLogout: () => dispatch(logout())
+    onLogout: () => dispatch(logout()),
+    onLogin: (username, password) => dispatch(login(username, password))
   };
 }
 
