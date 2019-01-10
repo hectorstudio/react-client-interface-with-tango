@@ -35,7 +35,8 @@ import "./DeviceViewer.css";
 class DeviceMenu extends Component {
   render() {
     const { selectedTab, device } = this.props;
-    const { properties, attributes, commands, errors } = device;
+    const { properties, attributes, commands } = device;
+    const errors = [];
 
     const hasProperties = properties.length > 0;
     const hasAttributes = attributes.length > 0;

@@ -1,0 +1,9 @@
+.modal {
+    background: rgba(0,0,0,0.5);
+    animation: fadein 0.25s;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
