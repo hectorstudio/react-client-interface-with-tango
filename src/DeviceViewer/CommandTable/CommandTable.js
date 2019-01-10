@@ -89,7 +89,8 @@ class CommandTable extends Component {
 }
 
 CommandTable.defaultProps = {
-  commands: []
+  commands: [],
+  commandOutputs: {}
 };
 
 CommandTable.propTypes = {
