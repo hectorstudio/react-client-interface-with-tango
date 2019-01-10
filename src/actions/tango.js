@@ -24,10 +24,6 @@ import {
   ATTRIBUTE_CHANGE
 } from "./actionTypes";
 
-export function preloadDevice(tangoDB, device) {
-  return { type: "PRELOAD_DEVICE", tangoDB, device };
-}
-
 export function fetchDeviceNames(tangoDB) {
   return { type: FETCH_DEVICE_NAMES, tangoDB };
 }
@@ -102,10 +98,6 @@ export function fetchDeviceSuccess(tangoDB, device) {
 
 export function fetchDeviceFailed(tangoDB, name) {
   return { type: FETCH_DEVICE_FAILED, tangoDB, name };
-}
-
-export function selectDevice(tangoDB, name) {
-  return { type: SELECT_DEVICE, tangoDB, name };
 }
 
 export function fetchDevice(tangoDB, name) {
