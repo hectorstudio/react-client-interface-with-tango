@@ -23,7 +23,7 @@ const GRID_TILE_SIZE = 15;
 import "./Dashboard.css";
 
 import LogInOut from "../LogInOut/LogInOut";
-import ModalDialog from "../Modal/Modal";
+// import ModalDialog from "../Modal/Modal";
 
 const DEFAULT_CANVASES = [
   {
@@ -229,7 +229,6 @@ class Dashboard extends Component {
     return (
       <div className="Dashboard">
         <LogInOut />
-        <ModalDialog />
         <div className="TopBar">
           <button
             onClick={this.toggleMode}
