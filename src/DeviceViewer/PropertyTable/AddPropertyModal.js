@@ -10,6 +10,10 @@ export default class AddPropertyModal extends Component {
     this.handleChangeValue = this.handleChangeValue.bind(this);
   }
 
+  componentDidMount() {
+    this.nameInput.focus();
+  }
+
   render() {
     return (
       <Modal title={"Add Property"}>
@@ -26,6 +30,7 @@ export default class AddPropertyModal extends Component {
                 autoComplete="off"
                 value={this.state.name}
                 onChange={this.handleChangeName}
+                ref={ref => this.nameInput = ref}
               />
             </div>
 

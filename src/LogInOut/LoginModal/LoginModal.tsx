@@ -16,6 +16,8 @@ interface IState {
 }
 
 export default class LoginModal extends Component<IProps, IState> {
+  public usernameInput: HTMLInputElement;
+
   constructor(props) {
     super(props);
 
@@ -30,9 +32,14 @@ export default class LoginModal extends Component<IProps, IState> {
     this.handleClose = this.handleClose.bind(this);
   }
 
+  public componentDidMount() {
+    this.usernameInput.focus();
+  }
+
   public render() {
     const { awaitingResponse } = this.props;
     const { username, password } = this.state;
+    const hasEntered = username.length > 0 && password.length > 0;
 
     return (
       <Modal title={"Log In"}>
@@ -41,9 +48,13 @@ export default class LoginModal extends Component<IProps, IState> {
             <FormGroup>
               <ControlLabel>Username</ControlLabel>
               <FormControl
+                inputRef={ref => {
+                  this.usernameInput = ref;
+                }}
                 type="text"
                 value={username}
                 onChange={this.handleChangeUsername}
+                autoFocus={true}
               />
             </FormGroup>
             <FormGroup>
@@ -76,8 +87,8 @@ export default class LoginModal extends Component<IProps, IState> {
             </button>
             <button
               type="submit"
-              className="btn btn-outline-primary"
-              disabled={awaitingResponse}
+              className="btn btn-primary"
+              disabled={hasEntered === false || awaitingResponse}
             >
               Log In
             </button>
