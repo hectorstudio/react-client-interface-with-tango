@@ -4,7 +4,7 @@ import createSagaMiddleware from "redux-saga";
 
 import rootReducer from "../reducers/rootReducer";
 import rootSaga from "../actions/sagas";
-import { LOGIN } from "../actions/actionTypes";
+import { LOGIN, ATTRIBUTE_CHANGE } from "../actions/actionTypes";
 
 function createLoggerMiddleware(supressAttributeChanges?) {
   return createLogger({
@@ -13,7 +13,7 @@ function createLoggerMiddleware(supressAttributeChanges?) {
         ? { ...action, password: action.password.replace(/./g, "*") }
         : action,
     predicate: (_, action) =>
-      supressAttributeChanges !== true || action.type !== "ATTRIBUTE_CHANGE"
+      supressAttributeChanges !== true || action.type !== ATTRIBUTE_CHANGE
   });
 }
 
