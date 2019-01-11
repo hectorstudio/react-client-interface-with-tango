@@ -3,12 +3,14 @@ import { connect } from "react-redux";
 import { isMobile } from "react-device-detect";
 
 import { setDeviceProperty, deleteDeviceProperty } from "../../actions/tango";
-
-import "./PropertyTable.css";
+import { getIsLoggedIn } from "../../selectors/user";
 
 import AddPropertyModal from "./AddPropertyModal";
 import DeletePropertyModal from "./DeletePropertyModal";
 import EditPropertyModal from "./EditPropertyModal";
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
+
+import "./PropertyTable.css";
 
 const EditButton = ({ onClick }) => (
   <i
@@ -22,6 +24,14 @@ const DeleteButton = ({ onClick }) => (
     className={"fa fa-trash " + (isMobile ? "visible" : "")}
     onClick={onClick}
   />
+);
+
+const ActionButtons = ({ onPressEdit, onPressDelete }) => (
+  <Fragment>
+    <EditButton onClick={onPressEdit} />
+    &nbsp;
+    <DeleteButton onClick={onPressDelete} />
+  </Fragment>
 );
 
 class PropertyTable extends Component {
@@ -39,11 +49,14 @@ class PropertyTable extends Component {
   }
 
   render() {
-    const { properties } = this.props;
+    const { properties, isLoggedIn } = this.props;
     const { addProperty, deleteProperty, editProperty } = this.state;
 
     return (
       <div className="PropertyTable">
+        <NotLoggedIn>
+          You are currently not logged in and cannot create, edit or delete properties.
+        </NotLoggedIn>
         {addProperty && (
           <AddPropertyModal
             onClose={() => this.setState({ addProperty: false })}
@@ -73,13 +86,16 @@ class PropertyTable extends Component {
                   <tr key={i}>
                     <td className="name">{name}</td>
                     <td className="actions">
-                      <DeleteButton
-                        onClick={() => this.setState({ deleteProperty: name })}
-                      />
-                      &nbsp;
-                      <EditButton
-                        onClick={() => this.setState({ editProperty: name })}
-                      />
+                      {isLoggedIn && (
+                        <ActionButtons
+                          onPressDelete={() =>
+                            this.setState({ deleteProperty: name })
+                          }
+                          onPressEdit={() =>
+                            this.setState({ editProperty: name })
+                          }
+                        />
+                      )}
                     </td>
                     <td>{value.join("\n")}</td>
                   </tr>
@@ -87,11 +103,11 @@ class PropertyTable extends Component {
               ))}
           </tbody>
         </table>
-        <button
+        {isLoggedIn && <button
           className="btn btn-outline-secondary fa fa-plus"
           type="button"
           onClick={() => this.setState({ addProperty: true })}
-        />
+        />}
       </div>
     );
   }
@@ -112,6 +128,10 @@ class PropertyTable extends Component {
   }
 }
 
+function mapStateToProps(state) {
+  return { isLoggedIn: getIsLoggedIn(state) };
+}
+
 function mapDispatchToProps(dispatch, ownProps) {
   const { tangoDB, deviceName } = ownProps;
   return {
@@ -125,6 +145,6 @@ function mapDispatchToProps(dispatch, ownProps) {
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(PropertyTable);
