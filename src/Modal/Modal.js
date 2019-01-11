@@ -31,9 +31,11 @@ export default class Modal extends Component {
     return (
       <ModalPortal>
         <BootstrapModal.Dialog>
-          <BootstrapModal.Header>
-            <BootstrapModal.Title>{title}</BootstrapModal.Title>
-          </BootstrapModal.Header>
+          {title && (
+            <BootstrapModal.Header>
+              <BootstrapModal.Title>{title}</BootstrapModal.Title>
+            </BootstrapModal.Header>
+          )}
           {children}
         </BootstrapModal.Dialog>
       </ModalPortal>
