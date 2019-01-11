@@ -9,6 +9,10 @@ export default class EditPropertyModal extends Component {
     this.state = { value: this.props.initialValue };
   }
 
+  componentDidMount() {
+    this.valueInput.focus();
+  }
+
   render() {
     const { name, onClose } = this.props;
     return (
@@ -24,6 +28,7 @@ export default class EditPropertyModal extends Component {
                 className="form-control"
                 value={this.state.value}
                 onChange={this.handleChange}
+                ref={ref => this.valueInput = ref}
               />
             </div>
             <div
