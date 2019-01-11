@@ -41,7 +41,7 @@ type UserAction =
   | ICloseLoginDialogAction;
 
 const initialState = {
-  awaitingResponse: true,
+  awaitingResponse: false,
   loginFailed: false,
   loginDialogVisible: false
 };
@@ -56,6 +56,7 @@ export default function user(
     case LOGIN_FAILED:
       return { ...state, awaitingResponse: false, loginFailed: true };
     case LOGIN_SUCCESS:
+      return { ...state, loginDialogVisible: false, awaitingResponse: false };
     case PRELOAD_USER_SUCCESS:
       return { ...state, username: action.username, awaitingResponse: false };
     case PRELOAD_USER_FAILED:
