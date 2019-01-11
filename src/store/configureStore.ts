@@ -6,12 +6,14 @@ import rootReducer from "../reducers/rootReducer";
 import rootSaga from "../actions/sagas";
 import { LOGIN } from "../actions/actionTypes";
 
-function createLoggerMiddleware() {
+function createLoggerMiddleware(supressAttributeChanges?) {
   return createLogger({
     actionTransformer: action =>
       action.type === LOGIN
         ? { ...action, password: action.password.replace(/./g, "*") }
-        : action
+        : action,
+    predicate: (_, action) =>
+      supressAttributeChanges !== true || action.type !== "ATTRIBUTE_CHANGE"
   });
 }
 
