@@ -7,6 +7,8 @@ import DeviceViewer from "../DeviceViewer/DeviceViewer";
 // import HomeViewer from "../HomeViewer/HomeViewer";
 import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";
 import LogInOut from "../LogInOut/LogInOut";
+import LoginDialog from "../LoginDialog/LoginDialog";
+
 import "./Layout.css";
 
 function extractRouteParams(match, history) {
@@ -21,6 +23,7 @@ const BaseLayout = ({ children }) => <div className="Layout">{children}</div>;
 const MainView = ({ className }) => (
   <div className={className}>
     <LogInOut />
+    <LoginDialog />
     <ErrorDisplay />
     <Route
       path={"/:tangoDB/devices/:device*"}

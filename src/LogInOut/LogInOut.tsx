@@ -1,9 +1,7 @@
 import React, { Fragment, CSSProperties } from "react";
 import { connect } from "react-redux";
 
-import LoginModal from "./LoginModal/LoginModal";
-
-import { logout, login } from "../actions/typedActionCreators";
+import { logout, openLoginDialog } from "../actions/typedActionCreators";
 import { IRootState } from "../reducers/rootReducer";
 import {
   getIsLoggedIn,
@@ -47,8 +45,8 @@ interface IProps {
   loginFailure: boolean;
   isLoggedIn: boolean;
   awaitingResponse: boolean;
-  onLogin: (username: string, password: string) => void;
-  onLogout: () => void;
+  onPressLogin: () => void;
+  onPressLogout: () => void;
 }
 
 interface IState {
@@ -82,29 +80,14 @@ class LogInOut extends React.Component<IProps, IState> {
       username,
       isLoggedIn,
       awaitingResponse,
-      loginFailure,
-      onLogin,
-      onLogout
+      onPressLogout,
+      onPressLogin
     } = this.props;
-
-    const onClose = () => this.setState({ showingModal: false });
-    const onPressLogin = () => this.setState({ showingModal: true });
-
-    if (this.state.showingModal && username == null) {
-      return (
-        <LoginModal
-          awaitingResponse={awaitingResponse}
-          loginFailure={loginFailure}
-          onLogin={onLogin}
-          onClose={onClose}
-        />
-      );
-    }
 
     return awaitingResponse ? null : (
       <div style={style}>
         {isLoggedIn ? (
-          <WhenLoggedIn username={username} onPressLogout={onLogout} />
+          <WhenLoggedIn username={username} onPressLogout={onPressLogout} />
         ) : (
           <WhenLoggedOut onPressLogin={onPressLogin} />
         )}
@@ -124,8 +107,8 @@ function mapStateToProps(state: IRootState) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onLogout: () => dispatch(logout()),
-    onLogin: (username, password) => dispatch(login(username, password))
+    onPressLogin: () => dispatch(openLoginDialog()),
+    onPressLogout: () => dispatch(logout())
   };
 }
 

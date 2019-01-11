@@ -8,7 +8,9 @@ import {
   ILoginFailedAction,
   IExtendLoginAction,
   IExtendLoginSuccessAction,
-  IExtendLoginFailedAction
+  IExtendLoginFailedAction,
+  IOpenLoginDialogAction,
+  ICloseLoginDialogAction
 } from "./typedActions";
 
 import {
@@ -22,7 +24,9 @@ import {
   LOGIN_FAILED,
   EXTEND_LOGIN,
   EXTEND_LOGIN_SUCCESS,
-  EXTEND_LOGIN_FAILED
+  EXTEND_LOGIN_FAILED,
+  OPEN_LOGIN_DIALOG,
+  CLOSE_LOGIN_DIALOG
 } from "./actionTypes";
 
 interface IUser {
@@ -73,4 +77,12 @@ export function extendLoginSuccess(): IExtendLoginSuccessAction {
 
 export function extendLoginFailed(): IExtendLoginFailedAction {
   return { type: EXTEND_LOGIN_FAILED };
+}
+
+export function openLoginDialog(): IOpenLoginDialogAction {
+  return { type: OPEN_LOGIN_DIALOG };
+}
+
+export function closeLoginDialog(): ICloseLoginDialogAction {
+  return { type: CLOSE_LOGIN_DIALOG };
 }
