@@ -79,7 +79,7 @@ const QualityIndicator = ({ state }) => {
     INSERT: "insert",
     EXTRACT: "extract",
     MOVING: "moving",
-    STANDBY: "standy",
+    STANDBY: "standby",
     FAULT: "fault",
     INIT: "init",
     RUNNING: "running",
