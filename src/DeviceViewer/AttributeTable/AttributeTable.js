@@ -17,6 +17,7 @@ import {
 } from "../../selectors/deviceDetail";
 
 import { setDataFormat } from "../../actions/deviceList";
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
 
 const DataFormatChooser = ({ dataFormats, selected, onSelect }) => {
   const order = ["SCALAR", "SPECTRUM", "IMAGE"];
@@ -136,6 +137,9 @@ class AttributeTable extends Component {
 
     return (
       <div className="AttributeTable">
+        <NotLoggedIn>
+          You are currently not logged in and cannot change attribute values.
+        </NotLoggedIn>
         <DataFormatChooser
           dataFormats={dataFormats}
           selected={selectedOrFirstFormat}
@@ -191,7 +195,8 @@ function mapDispatchToProps(dispatch, ownProps) {
   const { tangoDB, deviceName } = ownProps;
   return {
     onSelectDataFormat: format => dispatch(setDataFormat(format)),
-    onSetDeviceAttribute: (name, value) => dispatch(setDeviceAttribute(tangoDB, deviceName, name, value))
+    onSetDeviceAttribute: (name, value) =>
+      dispatch(setDeviceAttribute(tangoDB, deviceName, name, value))
   };
 }
 
