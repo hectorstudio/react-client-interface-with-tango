@@ -60,7 +60,7 @@ function* extendLogin() {
 }
 
 function* periodicallyExtendLogin() {
-  const interval = 60 * 1000; // One minute
+  const interval = 5 * 60 * 1000; // Five minutes
 
   while (true) {
     yield take([PRELOAD_USER_SUCCESS, LOGIN_SUCCESS]);
