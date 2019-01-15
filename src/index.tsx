@@ -8,8 +8,6 @@ import { Route, BrowserRouter, Switch } from "react-router-dom";
 import Jive from "./jive/App";
 import Dashboard from "./dashboard/Dashboard";
 
-import "./jive/index.css";
-
 render(
   <BrowserRouter>
     <Switch>
