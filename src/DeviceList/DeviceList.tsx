@@ -113,12 +113,19 @@ class DeviceList extends Component<IProps> {
   }
 
   public render() {
-    const { filter, tangoDB, deviceNames, currentDeviceName } = this.props;
+    const {
+      filter,
+      tangoDB,
+      deviceNames,
+      currentDeviceName,
+      expandedDomains,
+      expandedFamilies
+    } = this.props;
     const [currentDomain, currentFamily] = this.extractNameComponents(
       currentDeviceName
     );
 
-    const triplets = deviceNames.map(this.extractNameComponents.bind(this))
+    const triplets = deviceNames.map(this.extractNameComponents.bind(this));
     const domains = unique(triplets.map(([domain, ,]) => domain));
 
     const entries = domains.map(domain => {
@@ -161,11 +168,10 @@ class DeviceList extends Component<IProps> {
         });
 
         const key = `${domain}/${family}`;
-        const containsCurrentFamily = currentFamily === family;
         const innerIsExpanded =
           filter.length > 0 ||
-          this.props.expandedFamilies.indexOf(key) !== -1 ||
-          containsCurrentFamily;
+          expandedFamilies.indexOf(key) !== -1 ||
+          currentFamily === family;
 
         return (
           <li
@@ -179,11 +185,10 @@ class DeviceList extends Component<IProps> {
         );
       });
 
-      const containsCurrentDomain = currentDomain === domain;
       const isExpanded =
         filter.length > 0 ||
-        this.props.expandedDomains.indexOf(domain) !== -1 ||
-        containsCurrentDomain;
+        expandedDomains.indexOf(domain) !== -1 ||
+        currentDomain === domain;
 
       return (
         <li key={domain} onClick={this.handleToggleDomain.bind(null, domain)}>
