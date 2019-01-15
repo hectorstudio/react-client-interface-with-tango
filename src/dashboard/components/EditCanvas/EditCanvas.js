@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import { DragSource, DropTarget } from "react-dnd";
-
-import { DashboardDNDTypes } from "../widgets/widgetDefinitions";
-import dndTypes from "../dndTypes";
-import { getWidgetDefinition } from "../utils";
 import PropTypes from 'prop-types'
-import {widget, widgetDefinition} from "../propTypes"
+
+import dndTypes from "../../dndTypes";
+import { getWidgetDefinition } from "../../utils";
+import {widget, widgetDefinition} from "../../propTypes"
 
 const BACKSPACE = 8;
 const DELETE = 46;

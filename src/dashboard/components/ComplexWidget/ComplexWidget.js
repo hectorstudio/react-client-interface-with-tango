@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { getWidgetDefinition } from "../widgets/widgetDefinitions";
-import { widget } from "../propTypes";
+import { getWidgetDefinition } from "../../widgets/widgetDefinitions";
+import { widget } from "../../propTypes";
 
 class MiniCanvas extends Component {
   componentForWidget(widget) {

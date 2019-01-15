@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from 'prop-types'
 import {
   LineChart,
   Line,
@@ -8,9 +9,6 @@ import {
   XAxis,
   Label
 } from "recharts";
-
-import { roundToGrid, expandToGrid } from '../Dashboard';
-import PropTypes from 'prop-types'
 
 const plotterSampleValues = Array(100)
   .fill(0)
@@ -57,8 +55,8 @@ export default class AttributePlotter extends React.Component {
           border: "1px solid lightgray",
           padding: "0.25em",
           fontSize: "small",
-          width: expandToGrid(width) + "px",
-          height: expandToGrid(height) + "px",
+          width: width + "px",
+          height: height + "px",
         }}
       >
         <LineChart data={lastValues} width={width} height={height}>

@@ -1,9 +1,6 @@
-import Plot from "react-plotly.js";
-
 import React, { Component } from "react";
-
-import { roundToGrid, expandToGrid } from "../Dashboard";
 import PropTypes from "prop-types";
+import Plot from "react-plotly.js";
 
 const trace1 = {
   x: [1, 2, 3, 4, 5],
@@ -66,8 +63,8 @@ export default class AttributeTrend extends React.Component {
           border: "1px solid lightgray",
           padding: "0.25em",
           fontSize: "small",
-          width: expandToGrid(width) + "px",
-          height: expandToGrid(height) + "px"
+          width: width + "px",
+          height: height + "px"
         }}
       >
         <Plot data={liveMode ? this.state.data : data0} layout={layout} />

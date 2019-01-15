@@ -5,6 +5,7 @@
   display: grid;
   grid-template-rows: min-content auto;
   grid-template-columns: auto 22em;
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 .Dashboard .CanvasArea {

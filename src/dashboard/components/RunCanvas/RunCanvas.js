@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { getWidgetDefinition } from "../utils";
 import PropTypes from "prop-types";
-import { widget, widgetDefinition, subCanvas } from "../propTypes";
+
+import { getWidgetDefinition } from "../../utils";
+import { widget, widgetDefinition, subCanvas } from "../../propTypes";
 
 class ErrorBoundary extends Component {
   constructor(props) {

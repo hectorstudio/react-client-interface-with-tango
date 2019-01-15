@@ -8,14 +8,15 @@ import EditCanvas from "./EditCanvas/EditCanvas";
 import Library from "./Library/Library";
 import RunCanvas from "./RunCanvas/RunCanvas";
 import Inspector from "./Inspector/Inspector";
-import { save as saveToRepo } from "./dashboardRepo";
-import { load as loadFromRepo } from "./dashboardRepo";
+
+import { save as saveToRepo } from "../dashboardRepo";
+import { load as loadFromRepo } from "../dashboardRepo";
 
 import {
   WIDGET_DEFINITIONS,
   getWidgetDefinition,
   normalizeWidgetDefinitions
-} from "./widgets/widgetDefinitions";
+} from "../widgets/widgetDefinitions";
 
 import { complexWidgetDefinition } from "./ComplexWidget/ComplexWidget";
 
@@ -59,8 +60,10 @@ class Dashboard extends Component {
       canvases: DEFAULT_CANVASES,
       deviceNames: [] // Not used?
     };
-    if (queryString.parse(props.location.search).id) {
-      loadFromRepo(queryString.parse(props.location.search).id).then(res => {
+
+    const id = this.parseId();
+    if (id) {
+      loadFromRepo(id).then(res => {
         if (res) {
           this.setState({ canvases: res.canvases });
         }
@@ -79,8 +82,14 @@ class Dashboard extends Component {
     this.handleChangeCanvas = this.handleChangeCanvas.bind(this);
   }
 
+  parseId() {
+    const search = this.props.location.search;
+    const parsed = queryString.parse(search);
+    return parsed.id || "";
+  }
+
   componentDidUpdate() {
-    var id = queryString.parse(this.props.location.search).id || "";
+    var id = this.parseId();
     saveToRepo(id, this.state.canvases)
       .then(res => {
         if (res.created) {
@@ -229,36 +238,41 @@ class Dashboard extends Component {
       <div className="Dashboard">
         <LogInOut />
         <div className="TopBar">
-          <button
-            onClick={this.toggleMode}
-            style={{ fontSize: "small", padding: "0.5em", width: "2em" }}
-            className={classNames("form-control fa", {
-              "fa-play": mode === "edit",
-              "fa-pause": mode === "run"
-            })}
-            disabled={!this.isRootCanvas()}
-          />
-          <select
-            className="form-control"
-            style={{
-              marginLeft: "0.5em",
-              width: "auto",
-              height: "auto",
-              display: "inline"
-            }}
-            onChange={this.handleChangeCanvas}
-          >
-            {this.state.canvases.map((canvas, i) => (
-              <option key={i} value={i}>
-                {i === 0 ? "Root" : canvas.name}
-              </option>
-            ))}
-          </select>
-          {false && (
-            <button onClick={() => alert(JSON.stringify(this.state.canvases))}>
-              Dump
-            </button>
-          )}
+          <form className="form-inline">
+            <button
+              type="button"
+              onClick={this.toggleMode}
+              style={{ fontSize: "small", padding: "0.5em", width: "2em" }}
+              className={classNames("form-control fa", {
+                "fa-play": mode === "edit",
+                "fa-pause": mode === "run"
+              })}
+              disabled={!this.isRootCanvas()}
+            />
+            <select
+              className="form-control"
+              style={{
+                marginLeft: "0.5em",
+                width: "auto",
+                height: "auto",
+                display: "inline"
+              }}
+              onChange={this.handleChangeCanvas}
+            >
+              {this.state.canvases.map((canvas, i) => (
+                <option key={i} value={i}>
+                  {i === 0 ? "Root" : canvas.name}
+                </option>
+              ))}
+            </select>
+            {false && (
+              <button
+                onClick={() => alert(JSON.stringify(this.state.canvases))}
+              >
+                Dump
+              </button>
+            )}
+          </form>
         </div>
         <div className={classNames("CanvasArea", mode)}>
           {mode === "edit" ? (

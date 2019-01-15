@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { DragSource } from "react-dnd";
-
-import dndTypes from "../dndTypes";
 import PropTypes from 'prop-types'
-import {libraryWidgetDefinition, widgetDefinition} from "../propTypes"
+
+import dndTypes from "../../dndTypes";
+import {libraryWidgetDefinition, widgetDefinition} from "../../propTypes"
 
 class LibraryWidget extends Component {
   render() {
