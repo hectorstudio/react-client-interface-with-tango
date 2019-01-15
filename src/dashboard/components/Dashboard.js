@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import queryString from "query-string";
+import { connect } from "react-redux";
 
 import EditCanvas from "./EditCanvas/EditCanvas";
 import Library from "./Library/Library";
@@ -23,7 +24,8 @@ import { complexWidgetDefinition } from "./ComplexWidget/ComplexWidget";
 const GRID_TILE_SIZE = 15;
 import "./Dashboard.css";
 
-import LogInOut from "src/shared/user/components/LogInOut/LogInOut";
+import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
+import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
 
 const DEFAULT_CANVASES = [
   {
@@ -237,12 +239,13 @@ class Dashboard extends Component {
     return (
       <div className="Dashboard">
         <LogInOut />
+        <LoginDialog />
         <div className="TopBar">
           <form className="form-inline">
             <button
               type="button"
               onClick={this.toggleMode}
-              style={{ fontSize: "small", padding: "0.5em", width: "2em" }}
+              style={{ fontSize: "small", width: "2.5em", textAlign: "center" }}
               className={classNames("form-control fa", {
                 "fa-play": mode === "edit",
                 "fa-pause": mode === "run"
@@ -253,9 +256,7 @@ class Dashboard extends Component {
               className="form-control"
               style={{
                 marginLeft: "0.5em",
-                width: "auto",
-                height: "auto",
-                display: "inline"
+                height: "2em"
               }}
               onChange={this.handleChangeCanvas}
             >
