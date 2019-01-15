@@ -80,10 +80,12 @@ function* periodicallyExtendLogin() {
   }
 }
 
-export default function* user() {
-  yield fork(preloadUser);
-  yield fork(login);
-  yield fork(logout);
-  yield fork(extendLogin);
-  yield fork(periodicallyExtendLogin);
+export default function createUserSaga() {
+  return function* user() {
+    yield fork(preloadUser);
+    yield fork(login);
+    yield fork(logout);
+    yield fork(extendLogin);
+    yield fork(periodicallyExtendLogin);
+  }
 }
