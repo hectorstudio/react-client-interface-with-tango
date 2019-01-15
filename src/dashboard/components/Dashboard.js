@@ -27,6 +27,8 @@ import "./Dashboard.css";
 import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
 
+import { SELECT_WIDGET } from "../state/actionTypes";
+
 const DEFAULT_CANVASES = [
   {
     id: 0,
@@ -109,16 +111,21 @@ class Dashboard extends Component {
   }
 
   handleSelectWidget(index) {
+    this.props.dispatch({ type: SELECT_WIDGET, index });
     this.setState({ selectedWidgetIndex: index });
   }
 
   handleDeleteWidget(index) {
+    this.props.dispatch({ type: DELETE_WIDGET, index });
+
     const widgets = [...this.currentWidgets()];
     widgets.splice(index, 1);
     this.updateWidgets(widgets, -1);
   }
 
   handleAddWidget(definition, x, y) {
+    this.props.dispatch({ type: ADD_WIDGET, x, y, definition });
+
     const params = definition.params.reduce(
       (accum, param) => ({
         ...accum,
@@ -332,4 +339,4 @@ export function expandToGrid(val) {
   return val + (GRID_TILE_SIZE - (val % GRID_TILE_SIZE));
 }
 
-export default DragDropContext(HTML5Backend)(Dashboard);
+export default connect()(DragDropContext(HTML5Backend)(Dashboard));
