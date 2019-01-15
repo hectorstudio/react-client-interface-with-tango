@@ -4,9 +4,7 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import sort from "alphanum-sort";
 import queryString from "query-string";
-import ScrollIntoViewIfNeeded from "./ScrollIntoView.js";
 
-import { fetchDeviceNames } from "../actions/tango";
 import {
   setDeviceFilter,
   toggleExpandDomain,
@@ -21,11 +19,12 @@ import {
   getExpandedFamilies
 } from "../selectors/deviceList";
 
+import ScrollIntoViewIfNeeded from "./ScrollIntoView.js";
+import { fetchDeviceNames } from "../actions/tango";
 import { getDeviceNamesAreLoading } from "../selectors/loadingStatus";
+import { unique } from "../utils";
 
 import "./DeviceList.css";
-
-import { unique } from "../utils";
 
 interface IDeviceEntryProps {
   tangoDB: string;
@@ -67,6 +66,19 @@ const ExpanderArrow: StatelessComponent<{ isExpanded: boolean }> = ({
 }) => (
   <span className={classNames("expander-arrow", { expanded: isExpanded })} />
 );
+
+function extractNameComponents(name?: string) {
+  if (name == null) {
+    return ["", "", ""];
+  } else {
+    const [domain, family, member] = name.split("/");
+    if (domain == null || family == null || member == null) {
+      throw new Error(`Invalid device name "${name}"`);
+    }
+    
+    return [domain, family, member];
+  }
+}
 
 interface IProps {
   location: any;
@@ -122,11 +134,11 @@ class DeviceList extends Component<IProps> {
       expandedFamilies
     } = this.props;
 
-    const [currentDomain, currentFamily] = this.extractNameComponents(
+    const [currentDomain, currentFamily] = extractNameComponents(
       currentDeviceName
     );
 
-    const triplets = deviceNames.map(this.extractNameComponents.bind(this));
+    const triplets = deviceNames.map(extractNameComponents);
     const domains = unique(triplets.map(([domain, ,]) => domain));
 
     const entries = domains.map(domain => {
@@ -188,7 +200,7 @@ class DeviceList extends Component<IProps> {
 
       const isExpanded =
         filter.length > 0 ||
-        expandedDomains.indexOf(domain) !== -1 ||
+        expandedDomains.indexOf(domain!) !== -1 ||
         currentDomain === domain;
 
       return (
@@ -250,14 +262,6 @@ class DeviceList extends Component<IProps> {
   private parseFilter(props?) {
     const search = (props || this.props).location.search;
     return queryString.parse(search).filter;
-  }
-
-  private extractNameComponents(name) {
-    if (name == null) {
-      return [undefined, undefined, undefined];
-    } else {
-      return name.split("/");
-    }
   }
 }
 
