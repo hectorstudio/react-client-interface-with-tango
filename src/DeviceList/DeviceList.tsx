@@ -113,9 +113,12 @@ class DeviceList extends Component<IProps> {
   }
 
   public render() {
-    const { filter, tangoDB } = this.props;
+    const { filter, tangoDB, deviceNames, currentDeviceName } = this.props;
+    const [currentDomain, currentFamily] = this.extractNameComponents(
+      currentDeviceName
+    );
 
-    const triplets = this.props.deviceNames.map(name => name.split("/"));
+    const triplets = deviceNames.map(this.extractNameComponents.bind(this))
     const domains = unique(triplets.map(([domain, ,]) => domain));
 
     const entries = domains.map(domain => {
@@ -141,11 +144,11 @@ class DeviceList extends Component<IProps> {
           return (
             <ScrollIntoViewIfNeeded
               key={name}
-              isSelected={name === this.props.currentDeviceName}
+              isSelected={name === currentDeviceName}
             >
               <li key={name}>
                 <DeviceEntry
-                  isSelected={name === this.props.currentDeviceName}
+                  isSelected={name === currentDeviceName}
                   tangoDB={tangoDB}
                   domain={domain}
                   family={family}
@@ -158,8 +161,11 @@ class DeviceList extends Component<IProps> {
         });
 
         const key = `${domain}/${family}`;
+        const containsCurrentFamily = currentFamily === family;
         const innerIsExpanded =
-          filter.length > 0 || this.props.expandedFamilies.indexOf(key) !== -1;
+          filter.length > 0 ||
+          this.props.expandedFamilies.indexOf(key) !== -1 ||
+          containsCurrentFamily;
 
         return (
           <li
@@ -173,8 +179,11 @@ class DeviceList extends Component<IProps> {
         );
       });
 
+      const containsCurrentDomain = currentDomain === domain;
       const isExpanded =
-        filter.length > 0 || this.props.expandedDomains.indexOf(domain) !== -1;
+        filter.length > 0 ||
+        this.props.expandedDomains.indexOf(domain) !== -1 ||
+        containsCurrentDomain;
 
       return (
         <li key={domain} onClick={this.handleToggleDomain.bind(null, domain)}>
@@ -235,6 +244,14 @@ class DeviceList extends Component<IProps> {
   private parseFilter(props?) {
     const search = (props || this.props).location.search;
     return queryString.parse(search).filter;
+  }
+
+  private extractNameComponents(name) {
+    if (name == null) {
+      return [undefined, undefined, undefined];
+    } else {
+      return name.split("/");
+    }
   }
 }
 
