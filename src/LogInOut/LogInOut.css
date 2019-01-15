@@ -1,0 +1,9 @@
+.LogInOut {
+  font-size: 0.75em;
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  background-color: white;
+  box-shadow: 0 0 1em 0.5em white;
+  z-index: 1;
+}

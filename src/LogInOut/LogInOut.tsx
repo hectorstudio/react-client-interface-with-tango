@@ -1,4 +1,4 @@
-import React, { Fragment, CSSProperties } from "react";
+import React, { Fragment } from "react";
 import { connect } from "react-redux";
 
 import { logout, openLoginDialog } from "../actions/typedActionCreators";
@@ -9,6 +9,8 @@ import {
   getAwaitingResponse,
   getLoginFailure
 } from "../selectors/user";
+
+import "./LogInOut.css";
 
 const WhenLoggedIn = ({ username, onPressLogout }) => (
   <Fragment>
@@ -55,16 +57,6 @@ interface IState {
   password: string;
 }
 
-const style: CSSProperties = {
-  fontSize: "0.75em",
-  position: "absolute",
-  top: "0.5em",
-  right: "0.5em",
-  backgroundColor: "white",
-  boxShadow: "0 0 1em 0.5em white",
-  zIndex: 1
-};
-
 class LogInOut extends React.Component<IProps, IState> {
   constructor(props) {
     super(props);
@@ -85,7 +77,7 @@ class LogInOut extends React.Component<IProps, IState> {
     } = this.props;
 
     return awaitingResponse ? null : (
-      <div style={style}>
+      <div className="LogInOut">
         {isLoggedIn ? (
           <WhenLoggedIn username={username} onPressLogout={onPressLogout} />
         ) : (
