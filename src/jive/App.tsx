@@ -7,6 +7,7 @@ import Layout from "./Layout/Layout";
 import configureStore from "./store/configureStore";
 import InfoPage from "./InfoPage/InfoPage";
 
+import "./index.css";
 import "./App.css";
 
 const App = () => {
