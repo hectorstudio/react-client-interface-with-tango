@@ -121,6 +121,7 @@ class DeviceList extends Component<IProps> {
       expandedDomains,
       expandedFamilies
     } = this.props;
+
     const [currentDomain, currentFamily] = this.extractNameComponents(
       currentDeviceName
     );
