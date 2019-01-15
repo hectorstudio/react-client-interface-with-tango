@@ -109,3 +109,8 @@
   transition: opacity 0.1s linear;
   user-select: none;
 }
+
+.Dashboard .LogInOut {
+  box-shadow: unset;
+  background-color: unset;
+}
