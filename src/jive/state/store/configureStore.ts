@@ -3,7 +3,7 @@ import { createLogger } from "redux-logger";
 import createSagaMiddleware from "redux-saga";
 
 import rootReducer from "../reducers/rootReducer";
-import rootSaga from "../actions/sagas";
+import rootSaga from "../sagas";
 
 import { ATTRIBUTE_CHANGE } from "../actions/actionTypes";
 import { LOGIN } from "../../../shared/user/state/actionTypes";
