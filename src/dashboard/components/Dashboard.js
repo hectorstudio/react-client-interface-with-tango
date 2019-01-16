@@ -27,7 +27,7 @@ import "./Dashboard.css";
 import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
 
-import { SELECT_WIDGET } from "../state/actionTypes";
+import { SELECT_WIDGET, DELETE_WIDGET, ADD_WIDGET } from "../state/actionTypes";
 
 const DEFAULT_CANVASES = [
   {
@@ -106,6 +106,7 @@ class Dashboard extends Component {
   }
 
   toggleMode() {
+    this.props.dispatch({ type: TOGGLE_MODE });
     const mode = { edit: "run", run: "edit" }[this.state.mode];
     this.setState({ mode });
   }
@@ -148,6 +149,8 @@ class Dashboard extends Component {
   }
 
   handleParamChange(param, value) {
+    this.props.dispatch({ type: SET_WIDGET_PARAM, param, value }); // need to pass the widget?
+
     const index = this.state.selectedWidgetIndex;
     const widget = this.selectedWidget();
 
