@@ -21,10 +21,11 @@
 	position: sticky;
 	top: 0;
 	padding: 1em;
-	background-color: rgba(255, 255, 255, 0.75);
-	border-bottom: 1px solid lightgray;
+	padding-bottom: 0;
+	background-color: rgba(255, 255, 255); /*, 0.8);*/
 	margin-bottom: 0.5em;
 	z-index: 1;
+	box-shadow: 0 0.5em 0.75em white;
 }
 
 .device-list .search input {
