@@ -6,7 +6,7 @@ import rootReducer from "../reducers/rootReducer";
 import rootSaga from "../actions/sagas";
 
 import { ATTRIBUTE_CHANGE } from "../actions/actionTypes";
-import { LOGIN } from "src/shared/user/state/actionTypes";
+import { LOGIN } from "../../../shared/user/state/actionTypes";
 
 function createLoggerMiddleware(supressAttributeChanges?: boolean) {
   return createLogger({

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 
-import Modal from "../../../shared/modal/components/Modal/Modal";
+import Modal from "../../../../shared/modal/components/Modal/Modal";
 
 const DeletePropertyModal = ({ name, onDelete, onClose }) => (
   <Modal>

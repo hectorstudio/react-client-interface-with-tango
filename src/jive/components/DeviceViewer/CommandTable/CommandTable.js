@@ -4,28 +4,28 @@ import PropTypes from 'prop-types';
 
 import {
   getCommandOutputs
-} from '../../selectors/commandOutput';
+} from '../../../state/selectors/commandOutput';
 
 import {
   getDisabledDisplevels
-} from '../../selectors/deviceDetail';
+} from '../../../state/selectors/deviceDetail';
 
 import {
   getCommandOutputsLoading
-} from '../../selectors/loadingStatus';
+} from '../../../state/selectors/loadingStatus';
 
-import { getIsLoggedIn } from "src/shared/user/state/selectors";
+import { getIsLoggedIn } from "../../../../shared/user/state/selectors";
 
 import {
   executeCommand,
-} from '../../actions/tango';
+} from '../../../state/actions/tango';
 
 import Spinner from '../../Spinner/Spinner';
 
 import NotLoggedIn from '../NotLoggedIn/NotLoggedIn';
 import DescriptionDisplay from '../DescriptionDisplay/DescriptionDisplay';
 
-import { command } from  "../../propTypes";
+import { command } from  "../../../propTypes";
 import './CommandTable.css';
 
 const OutputDisplay = ({value, isLoading}) => isLoading

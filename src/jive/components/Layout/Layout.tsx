@@ -7,8 +7,8 @@ import DeviceViewer from "../DeviceViewer/DeviceViewer";
 // import HomeViewer from "../HomeViewer/HomeViewer";
 import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";
 
-import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
-import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
+import LogInOut from "../../../shared/user/components/LogInOut/LogInOut";
+import LoginDialog from "../../../shared/user/components/LoginDialog/LoginDialog";
 
 import "./Layout.css";
 

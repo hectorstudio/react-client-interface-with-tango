@@ -2,8 +2,8 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { isMobile } from "react-device-detect";
 
-import { setDeviceProperty, deleteDeviceProperty } from "../../actions/tango";
-import { getIsLoggedIn } from "src/shared/user/state/selectors";
+import { setDeviceProperty, deleteDeviceProperty } from "../../../state/actions/tango";
+import { getIsLoggedIn } from "../../../../shared/user/state/selectors";
 
 import AddPropertyModal from "./AddPropertyModal";
 import DeletePropertyModal from "./DeletePropertyModal";

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import "./DisplevelChooser.css";
-import { unique } from "../../utils";
+import { unique } from "../../../utils";
 
 export default class DisplevelChooser extends Component {
   handleInputChange(name, e) {

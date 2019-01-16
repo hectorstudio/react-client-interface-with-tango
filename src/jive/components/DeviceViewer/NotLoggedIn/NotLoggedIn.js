@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
-import { openLoginDialog } from "src/shared/user/state/actionCreators";
-import { getIsLoggedIn } from "src/shared/user/state/selectors";
+import { openLoginDialog } from "../../../../shared/user/state/actionCreators";
+import { getIsLoggedIn } from "../../../../shared/user/state/selectors";
 
 class NotLoggedIn extends Component {
   constructor(props) {
