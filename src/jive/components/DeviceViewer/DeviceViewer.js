@@ -15,17 +15,17 @@ import ErrorTable from "./ErrorTable/ErrorTable";
 
 import Spinner from "../Spinner/Spinner";
 
-import { getDevice } from "../selectors/devices";
+import { getDevice } from "../../state/selectors/devices";
 
-import { getDeviceIsLoading } from "../selectors/loadingStatus";
-import { getDisabledDisplevels } from "../selectors/deviceDetail";
+import { getDeviceIsLoading } from "../../state/selectors/loadingStatus";
+import { getDisabledDisplevels } from "../../state/selectors/deviceDetail";
 
 import {
   enableDisplevel,
   disableDisplevel,
   requireDevice,
   fetchDevice
-} from "../actions/tango";
+} from "../../state/actions/tango";
 
 import "./DeviceViewer.css";
 

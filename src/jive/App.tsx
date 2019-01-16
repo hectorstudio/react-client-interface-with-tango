@@ -3,9 +3,9 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import UserAware from "../shared/user/components/UserAware";
-import Layout from "./Layout/Layout";
-import configureStore from "./store/configureStore";
-import InfoPage from "./InfoPage/InfoPage";
+import Layout from "./components/Layout/Layout";
+import configureStore from "./state/store/configureStore";
+import InfoPage from "./components/InfoPage/InfoPage";
 
 import "./App.css";
 

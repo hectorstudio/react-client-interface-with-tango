@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import Modal from "../../../shared/modal/components/Modal/Modal";
+import Modal from "../../../../shared/modal/components/Modal/Modal";
 
 export default class EditPropertyModal extends Component {
   constructor(props) {

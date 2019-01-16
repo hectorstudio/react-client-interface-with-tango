@@ -9,7 +9,7 @@ import {
   setDeviceFilter,
   toggleExpandDomain,
   toggleExpandFamily
-} from "../actions/deviceList";
+} from "../../state/actions/deviceList";
 
 import {
   getFilter,
@@ -17,12 +17,13 @@ import {
   getHasDevices,
   getExpandedDomains,
   getExpandedFamilies
-} from "../selectors/deviceList";
+} from "../../state/selectors/deviceList";
+
+import { fetchDeviceNames } from "../../state/actions/tango";
+import { getDeviceNamesAreLoading } from "../../state/selectors/loadingStatus";
+import { unique } from "../../utils";
 
 import ScrollIntoViewIfNeeded from "./ScrollIntoView.js";
-import { fetchDeviceNames } from "../actions/tango";
-import { getDeviceNamesAreLoading } from "../selectors/loadingStatus";
-import { unique } from "../utils";
 
 import "./DeviceList.css";
 

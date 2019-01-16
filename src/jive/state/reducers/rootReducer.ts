@@ -10,7 +10,7 @@ import devices, { IDevicesState } from "./devices";
 import attributes, { IAttributesState } from "./attributes";
 import commands, { ICommandsState } from "./commands";
 import properties, { IPropertiesState } from "./properties";
-import user, { IUserState } from "../../shared/user/state/reducer";
+import user, { IUserState } from "../../../shared/user/state/reducer";
 
 import error from "./error";
 

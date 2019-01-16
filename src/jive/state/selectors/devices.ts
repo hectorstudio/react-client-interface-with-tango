@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 
-import { IRootState } from "../reducers/rootReducer";
-import { objectValues } from "../utils";
+import { IRootState } from "../../state/reducers/rootReducer";
+import { objectValues } from "../../utils";
 
 const getAttributesState = (state: IRootState) => state.attributes;
 const getCommandsState = (state: IRootState) => state.commands;

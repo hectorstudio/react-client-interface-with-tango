@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import ValueDisplay from "./ValueDisplay/ValueDisplay";
 import DescriptionDisplay from "../DescriptionDisplay/DescriptionDisplay";
 
-import { setDeviceAttribute } from "../../actions/tango";
+import { setDeviceAttribute } from "../../../state/actions/tango";
 
 import "./AttributeTable.css";
 
@@ -14,9 +14,9 @@ import {
   getFilteredCurrentDeviceAttributes,
   getActiveDataFormat,
   getDisabledDisplevels
-} from "../../selectors/deviceDetail";
+} from "../../../state/selectors/deviceDetail";
 
-import { setDataFormat } from "../../actions/deviceList";
+import { setDataFormat } from "../../../state/actions/deviceList";
 import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
 
 const DataFormatChooser = ({ dataFormats, selected, onSelect }) => {
