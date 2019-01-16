@@ -1,0 +1,117 @@
+.Dashboard {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: grid;
+  grid-template-rows: min-content auto;
+  grid-template-columns: auto 22em;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.Dashboard .CanvasArea {
+  grid-row: 2;
+  overflow: hidden;
+}
+
+.Dashboard .CanvasArea.edit {
+  grid-column: 1;
+}
+
+.Dashboard .CanvasArea.run {
+  grid-column: -1 / 1;
+}
+
+.Dashboard .Canvas {
+  position: relative;
+}
+
+.Dashboard .Canvas.edit {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+      rgb(232, 239, 249),
+      rgb(232, 239, 249) 1px,
+      rgba(0, 0, 0, 0) 1px,
+      rgba(0, 0, 0, 0) 15px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgb(232, 239, 249),
+      rgb(232, 239, 249) 1px,
+      rgba(0, 0, 0, 0) 1px,
+      rgba(0, 0, 0, 0) 15px
+    );
+  background-position-x: -1px;
+  background-position-y: -1px;
+  box-shadow: inset -1em 0 1em -1em rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+
+.Dashboard .Canvas.edit .Widget {
+  cursor: pointer;
+}
+
+.Dashboard .Canvas.edit .Widget.selected {
+  border: 2px solid lightskyblue;
+  margin-left: -2px;
+  margin-top: -2px;
+  cursor: grab;
+  box-sizing: border-box;
+}
+
+.Dashboard .Canvas.run  .Widget,
+.Dashboard .Canvas.edit .Widget {
+  position: absolute;
+}
+
+.Dashboard .TopBar {
+  padding: 0.5em;
+  background-image: linear-gradient(to bottom, #eee, #ccc);
+  grid-row: 1;
+  grid-column: -1 / 1;
+}
+
+.Dashboard .Sidebar {
+  padding: 1em;
+  user-select: none;
+  grid-row: 2;
+  grid-column: 2;
+  overflow-y: scroll;
+}
+
+.Dashboard .Sidebar h1 {
+  font-size: 1em;
+  font-weight: bold;
+  color: #999;
+  margin-bottom: 1em;
+  border-bottom: 1px solid #ddd;
+}
+
+.Dashboard .Library .LibraryWidget {
+  cursor: grab;
+  margin-bottom: 1em;
+}
+
+.Dashboard .Inspector td:first-child {
+  padding-right: 0.5em;
+}
+
+.Dashboard .Canvas.edit .Placeholder {
+  position: relative;
+  width: 15em;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.075);
+  border-radius: 1em;
+  padding: 0.5em;
+  color: gray;
+  transition: opacity 0.1s linear;
+  user-select: none;
+}
+
+.Dashboard .LogInOut {
+  box-shadow: unset;
+  background-color: unset;
+}

@@ -1,20 +1,18 @@
-import * as React from 'react';
+import React from "react";
+import { render } from "react-dom";
+import { Route, BrowserRouter, Switch } from "react-router-dom";
 
-import { render } from 'react-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import App from './App';
-import InfoPage from "./InfoPage/InfoPage";
+import JiveApp from "./jive/App";
+import DashboardApp from "./dashboard/App";
 
-import './index.css';
-import { Route, BrowserRouter } from "react-router-dom";
-
+import "bootstrap/dist/css/bootstrap.min.css";
 
 render(
   <BrowserRouter>
-    <div>
-      <Route path={"/:tangoDB/"} component={App} />
-      <Route path="/" exact={true} component={InfoPage}  />
-    </div>
+    <Switch>
+      <Route path={"/:tangoDB/dashboard"} component={DashboardApp} />
+      <Route path={"/"} component={JiveApp} />
+    </Switch>
   </BrowserRouter>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
