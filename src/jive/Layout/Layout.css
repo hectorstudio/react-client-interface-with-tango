@@ -6,6 +6,8 @@
   display: grid;
   grid-template-rows: 0em auto;
   grid-template-columns: 22em auto;
+
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 .Layout header {
