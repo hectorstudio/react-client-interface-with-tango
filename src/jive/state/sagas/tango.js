@@ -1,3 +1,4 @@
+import { eventChannel } from "redux-saga";
 import { fork, take, put, call, cancel, cancelled } from "redux-saga/effects";
 
 import {
@@ -9,8 +10,8 @@ import {
   DELETE_DEVICE_PROPERTY,
   FETCH_DEVICE_SUCCESS,
   FETCH_DEVICE,
-  ATTRIBUTE_CHANGE,
-} from "../actionTypes";
+  ATTRIBUTE_CHANGE
+} from "../actions/actionTypes";
 
 import TangoAPI from "../api/tango";
 import {
@@ -29,10 +30,9 @@ import {
   fetchDeviceSuccess,
   fetchDeviceFailed,
   attributeChange
-} from "../tango";
+} from "../actions/tango";
 
-import { displayError } from "../error";
-import { eventChannel } from "redux-saga";
+import { displayError } from "../actions/error";
 
 export default function* tango() {
   yield fork(fetchDeviceNames);
