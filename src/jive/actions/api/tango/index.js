@@ -65,7 +65,7 @@ export default {
       device = data.device;
     } catch (err) {
       // The structure of errors is currently not ideal and will probably undergo change. Update this logic accordingly.
-      errors = err.response.errors.map(({ message }) => message[0]);
+      errors = err.response.errors[0];
       device = err.response.data.device;
       if (device == null) {
         return null;
