@@ -5,7 +5,7 @@ import store from "./state/store";
 import Dashboard from "./components/Dashboard";
 import { BrowserRouter, Route } from "react-router-dom";
 
-import UserAware from "src/shared/user/components/UserAware";
+import UserAware from "../shared/user/components/UserAware";
 
 export default class App extends Component {
   render() {

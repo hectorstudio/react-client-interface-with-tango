@@ -1,14 +1,17 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 
-import { logout, openLoginDialog } from "src/shared/user/state/actionCreators";
+import {
+  logout,
+  openLoginDialog
+} from "../../../../shared/user/state/actionCreators";
 
 import {
   getIsLoggedIn,
   getUsername,
   getAwaitingResponse,
   getLoginFailure
-} from "src/shared/user/state/selectors";
+} from "../../../../shared/user/state/selectors";
 
 import "./LogInOut.css";
 
