@@ -106,6 +106,7 @@ class DeviceList extends Component<IProps> {
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleToggleDomain = this.handleToggleDomain.bind(this);
     this.handleToggleFamily = this.handleToggleFamily.bind(this);
+    this.state = { initial: true };
   }
 
   public componentWillMount() {
@@ -116,6 +117,12 @@ class DeviceList extends Component<IProps> {
   public componentDidMount() {
     const filter = this.parseFilter();
     this.props.onSetFilter(filter || "");
+    
+    const [domain, family] = extractNameComponents(this.props.currentDeviceName);
+    if (domain != null && family != null) {
+      this.props.onToggleDomain(domain);
+      this.props.onToggleFamily(domain, family);
+    }
   }
 
   public componentDidUpdate(prevProps) {
@@ -134,10 +141,6 @@ class DeviceList extends Component<IProps> {
       expandedDomains,
       expandedFamilies
     } = this.props;
-
-    const [currentDomain, currentFamily] = extractNameComponents(
-      currentDeviceName
-    );
 
     const triplets = deviceNames.map(extractNameComponents);
     const domains = unique(triplets.map(([domain, ,]) => domain));
@@ -184,8 +187,7 @@ class DeviceList extends Component<IProps> {
         const key = `${domain}/${family}`;
         const innerIsExpanded =
           filter.length > 0 ||
-          expandedFamilies.indexOf(key) !== -1 ||
-          currentFamily === family;
+          expandedFamilies.indexOf(key) !== -1;
 
         return (
           <li
@@ -201,8 +203,7 @@ class DeviceList extends Component<IProps> {
 
       const isExpanded =
         filter.length > 0 ||
-        expandedDomains.indexOf(domain!) !== -1 ||
-        currentDomain === domain;
+        expandedDomains.indexOf(domain!) !== -1;
 
       return (
         <li key={domain} onClick={this.handleToggleDomain.bind(null, domain)}>
