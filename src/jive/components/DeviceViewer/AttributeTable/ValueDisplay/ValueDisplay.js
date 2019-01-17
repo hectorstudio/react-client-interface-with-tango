@@ -70,7 +70,7 @@ const ScalarValueDisplay = ({value, datatype, name, writable, setDeviceAttribute
       minvalue={minvalue} 
     />
   }else{
-    return value;
+    return String(value);
   }
 }
 ScalarValueDisplay.propTypes = {
