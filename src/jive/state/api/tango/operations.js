@@ -47,6 +47,7 @@ export const FETCH_DEVICE = `
 query FetchDevice($name: String!) {
   device(name: $name) {
     name
+    connected
     state
     server {
       id
