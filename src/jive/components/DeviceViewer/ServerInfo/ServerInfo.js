@@ -23,7 +23,7 @@ const ServerInfo = ({ device }) => {
 
   const inner =
     connected === false ? (
-      "Cannot connect to the device server."
+      "Couldn't connect to the device."
     ) : server == null ? (
       "No server information available."
     ) : (
