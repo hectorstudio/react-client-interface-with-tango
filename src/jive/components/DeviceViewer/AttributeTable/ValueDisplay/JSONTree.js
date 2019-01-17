@@ -9,7 +9,7 @@ const theme = {
 };
 
 export const JSONTree = ({ data }) => {
-  const hideRoot = Object.keys(data).length >= 5;
+  const hideRoot = Object.keys(data).length <= 5;
   return (
     <ReactJSONTree
       data={data}
