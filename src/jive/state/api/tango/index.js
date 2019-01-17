@@ -72,9 +72,7 @@ export default {
       }
     }
 
-    const attributes = device.attributes || [];
-    const commands = device.commands || [];
-    return { ...device, attributes, commands, errors };
+    return { ...device, errors };
   },
 
   changeEventEmitter(tangoDB, models) {
