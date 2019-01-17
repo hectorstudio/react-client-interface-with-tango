@@ -7,6 +7,7 @@ import Layout from "./components/Layout/Layout";
 import configureStore from "./state/store/configureStore";
 import InfoPage from "./components/InfoPage/InfoPage";
 
+import "font-awesome/css/font-awesome.min.css"; 
 import "./App.css";
 
 const App = () => {
