@@ -1,5 +1,5 @@
 .ValueDisplay.no-value {
-    color: red;
+    color: lightgray;
 }
 
 .ValueDisplay canvas {
