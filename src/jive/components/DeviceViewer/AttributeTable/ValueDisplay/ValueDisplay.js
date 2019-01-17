@@ -31,10 +31,14 @@ const DevStringValueDisplay = ({ value }) => {
   }
 
   const anyLooksLikeMonospace = null != values.find(looksLikeMonospace);
-  const extraClass = anyLooksLikeMonospace ? "pre" : "";
+  const extraClass = anyLooksLikeMonospace ? "monospace" : "";
 
-  return values.map((val, i) => <p key={i} className={extraClass}>{val}</p>);
-}
+  return values.map((val, i) => (
+    <p key={i} className={extraClass}>
+      {val}
+    </p>
+  ));
+};
 
 DevStringValueDisplay.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),

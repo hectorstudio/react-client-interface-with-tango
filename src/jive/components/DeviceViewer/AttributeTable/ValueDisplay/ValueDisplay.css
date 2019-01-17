@@ -10,13 +10,12 @@
 .ValueDisplay.DevEncoded p {
     margin: 0;
     word-break: break-all;
-    text-indent: -1em;
-    margin-left: 1em;
+    white-space: pre-wrap;
 }
 
-.ValueDisplay p.pre {
-    white-space: pre-wrap;
+.ValueDisplay p.monospace {
     font-family: monospace;
+    white-space: pre;
     overflow: scroll;
     text-indent: unset;
 }
