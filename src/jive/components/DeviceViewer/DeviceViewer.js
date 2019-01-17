@@ -117,7 +117,7 @@ class DeviceViewer extends Component {
         <AttributeTable tangoDB={tangoDB} attributes={device.attributes} />
       );
     } else {
-      return <ServerInfo server={device.server} />;
+      return <ServerInfo device={device} server={device.server} />;
     }
   }
 
