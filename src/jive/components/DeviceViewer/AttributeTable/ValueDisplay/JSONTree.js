@@ -20,7 +20,7 @@ export const JSONTree = ({ data }) => {
       labelRenderer={keyPath => {
         const first = keyPath[0];
         return keyPath.length === 1 && first === "root" ? (
-          <span style={{ fontStyle: "italic" }}>Root</span>
+          <span style={{ fontStyle: "italic" }}>Object</span>
         ) : (
           first
         );
