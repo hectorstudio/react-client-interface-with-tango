@@ -1,19 +1,39 @@
 import React, { Component } from 'react';
 import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
-
-import AttributeInput from '../AttributeInput/AttributeInput';
-import './ValueDisplay.css';
 import PropTypes from 'prop-types'
 
-const DevStringValueDisplay = ({value}) => {
+import AttributeInput from '../AttributeInput/AttributeInput';
+import { JSONTree } from './JSONTree';
+
+import './ValueDisplay.css';
+
+function parseJSONObject(str) {
+  try {
+    const obj = JSON.parse(str);
+    return typeof(obj) === "object" ? obj : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+function looksLikeMonospace(str) {
+  return str.match(/(\n  )|\t|    /);
+}
+
+const DevStringValueDisplay = ({ value }) => {
   const values = [].concat(value);
 
-  // Heuristic to check whether value is meant to be read in preformatted monospace
-  // Example attribute: `Status' of `lab/adlinkiods/ao'
-  const indicators = /(\n  )|\t|(    )/;
-  const pre = values.find(val => val.match(indicators));
+  const valuesAsObjects = values.map(parseJSONObject);
+  const allAreObjects = valuesAsObjects.indexOf(null) === -1;
 
-  return values.map((val, i) => <p className={pre ? 'pre' : ''} key={i}>{val}</p>);
+  if (allAreObjects) {
+    return valuesAsObjects.map((obj, i) => <JSONTree key={i} data={obj} />);
+  }
+
+  const anyLooksLikeMonospace = null != values.find(looksLikeMonospace);
+  const extraClass = anyLooksLikeMonospace ? "pre" : "";
+
+  return values.map((val, i) => <p key={i} className={extraClass}>{val}</p>);
 }
 
 DevStringValueDisplay.propTypes = {
