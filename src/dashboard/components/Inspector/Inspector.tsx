@@ -155,9 +155,15 @@ class InputList extends Component<{
           <tr key={i}>
             <td>{label}</td>
             <td>
-              <select className="form-control" defaultValue={value}>
-                {inputDefinition.options.map(({ name }, j) => (
-                  <option key={j}>{name}</option>
+              <select
+                className="form-control"
+                value={value}
+                onChange={e => this.props.onChange([inputName], e.currentTarget.value)}
+              >
+                {inputDefinition.options.map((option, j) => (
+                  <option key={j} value={option.value}>
+                    {option.name}
+                  </option>
                 ))}
               </select>
             </td>
@@ -309,8 +315,6 @@ export default class Inspector extends Component<IProps, IState> {
               ...this.state.widget,
               inputs: updatedInputs
             };
-
-            // alert(JSON.stringify(updatedWidget, null, 2));
             this.setState({ widget: updatedWidget });
           }}
         />
