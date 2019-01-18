@@ -25,7 +25,7 @@ class InputList extends Component<{
 
       if (inputDefinition.type === "number") {
         return (
-          <tr>
+          <tr key={i}>
             <td>{label}</td>
             <td>
               <input
@@ -41,7 +41,7 @@ class InputList extends Component<{
         );
       } else if (inputDefinition.type === "boolean") {
         return (
-          <tr>
+          <tr key={i}>
             <td>{label}</td>
             <td>
               <input
@@ -56,7 +56,7 @@ class InputList extends Component<{
         );
       } else if (inputDefinition.type === "string") {
         return (
-          <tr>
+          <tr key={i}>
             <td> {label}</td>
             <td>
               <input
@@ -70,17 +70,21 @@ class InputList extends Component<{
         );
       } else if (inputDefinition.type === "attribute") {
         return (
-          <tr>
+          <tr key={i}>
             <td colSpan={2}>
               {label}
-              <AttributeSelect
-                onSelect={(device, attribute) =>
-                  this.props.onChange([inputName], {
-                    device,
-                    attribute
-                  })
-                }
-              />
+              <div style={{ marginLeft: "0.5em" }}>
+                <AttributeSelect
+                  device={value.device}
+                  attribute={value.attribute}
+                  onSelect={(device, attribute) =>
+                    this.props.onChange([inputName], {
+                      device,
+                      attribute
+                    })
+                  }
+                />
+              </div>
             </td>
           </tr>
         );
@@ -89,7 +93,7 @@ class InputList extends Component<{
         inputDefinition.repeat === false
       ) {
         return (
-          <tr>
+          <tr key={i}>
             <td colSpan={2}>
               {label}
               <div style={{ marginLeft: "1em" }}>
@@ -109,17 +113,19 @@ class InputList extends Component<{
         inputDefinition.repeat === true
       ) {
         return (
-          <tr>
+          <tr key={i}>
             <td colSpan={2}>
               {label}
               {value.map((each, j) => (
-                <div style={{ paddingLeft: "0.5em" }}>
+                <div key={j} style={{ paddingLeft: "0.5em" }}>
                   <InputList
-                    key={j}
                     inputDefinitions={inputDefinition.inputs}
                     inputs={each}
                     onChange={(path2, value2) => {
-                      this.props.onChange([inputName, ...path2], value2);
+                      this.props.onChange(
+                        [inputName, String(j), ...path2],
+                        value2
+                      );
                     }}
                   />
                 </div>
@@ -130,12 +136,12 @@ class InputList extends Component<{
         );
       } else if (inputDefinition.type === "select") {
         return (
-          <tr>
+          <tr key={i}>
             <td>{label}</td>
             <td>
-              <select className="form-control" value={value}>
-                {inputDefinition.options.map(({ name }) => (
-                  <option>{name}</option>
+              <select className="form-control" defaultValue={value}>
+                {inputDefinition.options.map(({ name }, j) => (
+                  <option key={j}>{name}</option>
                 ))}
               </select>
             </td>
@@ -146,7 +152,11 @@ class InputList extends Component<{
       return <pre key={i}>{JSON.stringify(inputDefinition)}</pre>;
     });
 
-    return <table style={{ width: "100%" }}>{inner}</table>;
+    return (
+      <table style={{ width: "100%" }}>
+        <tbody>{inner}</tbody>
+      </table>
+    );
   }
 }
 
@@ -240,13 +250,17 @@ export default class Inspector extends Component<IProps, IState> {
           showGrid: true,
           attributes: [
             {
-              device: "sys/tg_test/1",
-              attribute: "ampli",
+              attribute: {
+                device: "sys/tg_test/1",
+                attribute: "ampli"
+              },
               strokeStyle: "line"
             },
             {
-              device: "sys/tg_test/1",
-              attribute: "ampli",
+              attribute: {
+                device: "sys/tg_test/1",
+                attribute: "ampli"
+              },
               strokeStyle: "dashed"
             }
           ]
@@ -281,7 +295,7 @@ export default class Inspector extends Component<IProps, IState> {
           }}
         />
         <hr />
-        <pre>{JSON.stringify(this.state.widget, null, 2)}</pre>
+        <pre>{JSON.stringify(inputs, null, 2)}</pre>
       </div>
     );
   }

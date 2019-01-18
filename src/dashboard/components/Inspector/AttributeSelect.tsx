@@ -63,8 +63,10 @@ export default class AttributeSelect extends Component<IProps, IState> {
       <div>
         <select className="form-control">
           {device == null && <option>Select device</option>}
-          {this.state.deviceNames.map(name => (
-            <option>{name}</option>
+          {this.state.deviceNames.map((name, i) => (
+            <option key={i} selected={name === device}>
+              {name}
+            </option>
           ))}
         </select>
         <select
@@ -80,8 +82,8 @@ export default class AttributeSelect extends Component<IProps, IState> {
               Select attribute
             </option>
           )}
-          {this.state.attributes.map(attr => (
-            <option>{attr.name}</option>
+          {this.state.attributes.map((attr, i) => (
+            <option key={i}>{attr.name}</option>
           ))}
         </select>
       </div>
