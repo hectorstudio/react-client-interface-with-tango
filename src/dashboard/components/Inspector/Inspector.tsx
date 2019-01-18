@@ -8,6 +8,8 @@ import {
   IWidget
 } from "./types";
 
+const REMOVAL_SYMBOL = Symbol();
+
 type IndexPath = Array<string | number>;
 
 class InputList extends Component<{
@@ -136,6 +138,14 @@ class InputList extends Component<{
                     marginBottom: "0.5em"
                   }}
                 >
+                  <button
+                    type="button"
+                    onClick={() =>
+                      this.props.onChange([inputName, j], REMOVAL_SYMBOL)
+                    }
+                  >
+                    x
+                  </button>
                   <InputList
                     inputDefinitions={inputDefinition.inputs}
                     inputs={each}
@@ -145,7 +155,17 @@ class InputList extends Component<{
                   />
                 </div>
               ))}
-              <button type="button">+</button>
+              <button
+                type="button"
+                onClick={() => {
+                  // For now, copies the currently last item. Will have to take from default later
+                  const lastEntry = value.slice(-1)[0];
+                  const copy = { ...lastEntry };
+                  this.props.onChange([inputName, value.length], copy);
+                }}
+              >
+                +
+              </button>
             </td>
           </tr>
         );
@@ -158,7 +178,9 @@ class InputList extends Component<{
               <select
                 className="form-control"
                 value={value}
-                onChange={e => this.props.onChange([inputName], e.currentTarget.value)}
+                onChange={e =>
+                  this.props.onChange([inputName], e.currentTarget.value)
+                }
               >
                 {inputDefinition.options.map((option, j) => (
                   <option key={j} value={option.value}>
@@ -331,7 +353,15 @@ function copySetWithIndexPath(obj: object, path: IndexPath, value: any) {
     tail.length > 0 ? copySetWithIndexPath(obj[head], tail, value) : value;
   if (Array.isArray(obj)) {
     const copy = obj.concat();
-    copy[head] = replacement;
+    if (typeof head !== "number") {
+      throw new Error("head must be an integer when obj is an array");
+    } else {
+      if (replacement === REMOVAL_SYMBOL) {
+        copy.splice(head, 1);
+      } else {
+        copy[head] = replacement;
+      }
+    }
     return copy;
   } else {
     return { ...obj, [head]: replacement };
