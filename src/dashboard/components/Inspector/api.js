@@ -12,7 +12,7 @@ query FetchNames($device: String!) {
 }
 `;
 
-const FETCH_NAMES = `
+const FETCH_DEVICE_NAMES = `
 query {
   devices {
     name
@@ -25,9 +25,11 @@ function createClient(tangoDB) {
 }
 
 export async function fetchAttributes(tangoDB, device) {
-  return await createClient(tangoDB).query(FETCH_ATTRIBUTES, { device });
+  const res = await createClient(tangoDB).query(FETCH_ATTRIBUTES, { device });
+  return res.data.device.attributes;
 }
 
-export async function fetchNames(tangoDB) {
-  return await createClient(tangoDB).query(FETCH_NAMES);
+export async function fetchDeviceNames(tangoDB) {
+  const res = await createClient(tangoDB).query(FETCH_DEVICE_NAMES);
+  return res.data.devices.map(({ name }) => name);
 }
