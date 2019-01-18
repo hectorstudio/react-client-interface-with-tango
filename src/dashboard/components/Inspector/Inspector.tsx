@@ -127,7 +127,15 @@ class InputList extends Component<{
             <td colSpan={2}>
               {label}
               {value.map((each, j) => (
-                <div key={j} style={{ paddingLeft: "0.5em" }}>
+                <div
+                  key={j}
+                  style={{
+                    padding: "0.5em",
+                    backgroundColor: "#f4f4f4",
+                    borderRadius: "0.25em",
+                    marginBottom: "0.5em"
+                  }}
+                >
                   <InputList
                     inputDefinitions={inputDefinition.inputs}
                     inputs={each}
