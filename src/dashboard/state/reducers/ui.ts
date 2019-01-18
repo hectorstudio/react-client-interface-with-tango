@@ -6,7 +6,8 @@ interface IUIState {
   selectedCanvas: number;
 }
 
-const initialState = {
+const initialState: IUIState = {
+  mode: "edit",
   selectedWidget: -1,
   selectedCanvas: 0
 };
