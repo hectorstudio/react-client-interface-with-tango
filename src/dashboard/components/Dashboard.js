@@ -368,27 +368,6 @@ class Dashboard extends Component {
                     }
                   }
                 }}
-                newWidget={{
-                  x: 100,
-                  y: 200,
-                  inputs: {
-                    xMin: -10,
-                    xMax: 10,
-                    yMin: -10,
-                    yMax: 10,
-                    showGrid: true,
-                    attributes: [
-                      {
-                        attribute: "sys/tg_test/1/ampli",
-                        strokeStyle: "line"
-                      },
-                      {
-                        attribute: "sys/tg_test/3/ampli",
-                        strokeStyle: "dashed"
-                      }
-                    ]
-                  }
-                }}
                 widget={widgets[this.state.selectedWidgetIndex]}
                 widgetDefinitions={widgetDefinitions}
                 deviceNames={this.state.deviceNames}
