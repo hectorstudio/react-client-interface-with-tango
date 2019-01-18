@@ -1,6 +1,7 @@
 import { SELECT_WIDGET, SELECT_CANVAS } from "../actionTypes";
 
 interface IUIState {
+  mode: "edit" | "run"
   selectedWidget: number;
   selectedCanvas: number;
 }
