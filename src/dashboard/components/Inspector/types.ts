@@ -1,4 +1,4 @@
-interface IBaseInputDefinition {
+export interface IBaseInputDefinition {
   label: string;
   repeat: boolean;
 }
@@ -38,7 +38,7 @@ interface IAttributeInputDefinition extends IBaseInputDefinition {
   default: null;
 }
 
-type IInputDefinition =
+export type IInputDefinition =
   | IBooleanInputDefinition
   | INumberInputDefinition
   | IStringInputDefinition
