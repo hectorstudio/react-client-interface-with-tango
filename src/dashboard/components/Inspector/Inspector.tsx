@@ -8,10 +8,12 @@ import {
   IWidget
 } from "./types";
 
+type IndexPath = Array<string | number>;
+
 class InputList extends Component<{
   inputDefinitions: IInputDefinitionMapping;
   inputs: IInputMapping;
-  onChange: (inputPath: string[], value) => void;
+  onChange: (inputPath: IndexPath, value) => void;
   basePath?: string[];
 }> {
   public render() {
@@ -21,9 +23,9 @@ class InputList extends Component<{
     const inner = inputNames.map((inputName, i) => {
       const inputDefinition = inputDefinitions[inputName];
       const label = inputDefinition.label || inputName;
-      const value = inputs[inputName];
 
       if (inputDefinition.type === "number") {
+        const value = inputs[inputName] as number;
         return (
           <tr key={i}>
             <td>{label}</td>
@@ -40,6 +42,7 @@ class InputList extends Component<{
           </tr>
         );
       } else if (inputDefinition.type === "boolean") {
+        const value = inputs[inputName] as boolean;
         return (
           <tr key={i}>
             <td>{label}</td>
@@ -55,9 +58,10 @@ class InputList extends Component<{
           </tr>
         );
       } else if (inputDefinition.type === "string") {
+        const value = inputs[inputName] as string;
         return (
           <tr key={i}>
-            <td> {label}</td>
+            <td>{label}</td>
             <td>
               <input
                 className="form-control"
@@ -69,6 +73,10 @@ class InputList extends Component<{
           </tr>
         );
       } else if (inputDefinition.type === "attribute") {
+        const value = inputs[inputName] as {
+          device: string;
+          attribute: string;
+        };
         return (
           <tr key={i}>
             <td colSpan={2}>
@@ -92,6 +100,7 @@ class InputList extends Component<{
         inputDefinition.type === "complex" &&
         inputDefinition.repeat === false
       ) {
+        const value = inputs[inputName] as IInputMapping;
         return (
           <tr key={i}>
             <td colSpan={2}>
@@ -112,6 +121,7 @@ class InputList extends Component<{
         inputDefinition.type === "complex" &&
         inputDefinition.repeat === true
       ) {
+        const value = inputs[inputName] as IInputMapping[];
         return (
           <tr key={i}>
             <td colSpan={2}>
@@ -122,10 +132,7 @@ class InputList extends Component<{
                     inputDefinitions={inputDefinition.inputs}
                     inputs={each}
                     onChange={(path2, value2) => {
-                      this.props.onChange(
-                        [inputName, String(j), ...path2],
-                        value2
-                      );
+                      this.props.onChange([inputName, j, ...path2], value2);
                     }}
                   />
                 </div>
@@ -135,6 +142,7 @@ class InputList extends Component<{
           </tr>
         );
       } else if (inputDefinition.type === "select") {
+        const value = inputs[inputName] as string[];
         return (
           <tr key={i}>
             <td>{label}</td>
@@ -282,7 +290,7 @@ export default class Inspector extends Component<IProps, IState> {
           inputDefinitions={definition.inputs}
           inputs={inputs}
           onChange={(path, value) => {
-            const updatedInputs = copySetWithPath(
+            const updatedInputs = copySetWithIndexPath(
               this.state.widget.inputs,
               path,
               value
@@ -291,6 +299,8 @@ export default class Inspector extends Component<IProps, IState> {
               ...this.state.widget,
               inputs: updatedInputs
             };
+
+            // alert(JSON.stringify(updatedWidget, null, 2));
             this.setState({ widget: updatedWidget });
           }}
         />
@@ -301,9 +311,15 @@ export default class Inspector extends Component<IProps, IState> {
   }
 }
 
-function copySetWithPath(obj, path, value) {
+function copySetWithIndexPath(obj: object, path: IndexPath, value: any) {
   const [head, ...tail] = path;
   const replacement =
-    tail.length > 0 ? copySetWithPath(obj[head], tail, value) : value;
-  return { ...obj, [head]: replacement };
+    tail.length > 0 ? copySetWithIndexPath(obj[head], tail, value) : value;
+  if (Array.isArray(obj)) {
+    const copy = obj.concat();
+    copy[head] = replacement;
+    return copy;
+  } else {
+    return { ...obj, [head]: replacement };
+  }
 }
