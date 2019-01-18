@@ -1,33 +1,125 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { getWidgetDefinition } from "../../utils";
 
-interface IBaseInput {
+interface IBaseInputDefinition {
   label: string;
 }
 
-interface IBooleanInput extends IBaseInput {
+interface IBooleanInputDefinition extends IBaseInputDefinition {
   type: "boolean";
   default: boolean;
 }
 
-interface INumberInput extends IBaseInput {
+interface INumberInputDefinition extends IBaseInputDefinition {
   type: "number";
   default: number;
 }
 
-interface IStringInput extends IBaseInput {
+interface IStringInputDefinition extends IBaseInputDefinition {
   type: "string";
   default: string;
 }
 
-interface IComplexInput extends IBaseInput {
+interface IComplexInputDefinition extends IBaseInputDefinition {
   type: "complex";
+  inputs: IInputDefinitionMapping;
+  default: object;
 }
 
-type IInput = IBooleanInput | INumberInput | IStringInput | IComplexInput;
+interface ISelectInputDefinition extends IBaseInputDefinition {
+  type: "select";
+  default: string;
+  options: Array<{
+    name: string;
+    value: any;
+  }>;
+}
+
+interface IAttributeInputDefinition extends IBaseInputDefinition {
+  type: "attribute";
+  default: null;
+}
+
+type IInputDefinition =
+  | IBooleanInputDefinition
+  | INumberInputDefinition
+  | IStringInputDefinition
+  | IComplexInputDefinition
+  | IAttributeInputDefinition
+  | ISelectInputDefinition;
+
+interface IInputDefinitionMapping {
+  [name: string]: IInputDefinition;
+}
 
 interface INewDefinition {
-  inputs: { [name: string]: IInput };
+  inputs: IInputDefinitionMapping;
+}
+
+interface IWidget {
+  [input: string]: any;
+}
+
+class InputList extends Component<{
+  inputDefinitions: IInputDefinitionMapping;
+  widget: IWidget;
+}> {
+  public render() {
+    const { inputDefinitions, widget } = this.props;
+    const inputNames = Object.keys(inputDefinitions);
+
+    return inputNames.map((inputName, i) => {
+      const input = inputDefinitions[inputName];
+      const label = input.label || inputName;
+
+      const value = widget[inputName] || input.default; // Later, default value will always be set on widget creation
+
+      if (input.type === "number") {
+        return (
+          <div>
+            {label}: <input type="text" value={value} />
+          </div>
+        );
+      } else if (input.type === "boolean") {
+        return (
+          <div>
+            {label}: <input type="checkbox" checked={value} />
+          </div>
+        );
+      } else if (input.type === "string") {
+        return (
+          <div>
+            {label}: <input type="text" value={value} />;
+          </div>
+        );
+      } else if (input.type === "attribute") {
+        return <div>{label}: ATTRIBUTE</div>;
+      } else if (input.type === "complex") {
+        return (
+          <div>
+            {label}:{" "}
+            <div style={{ marginLeft: "1em" }}>
+              <InputList inputDefinitions={input.inputs} widget={widget} />
+              [+]
+            </div>
+          </div>
+        );
+      } else if (input.type === "select") {
+        return (
+          <div>
+            {label}:{" "}
+            <select>
+              {input.options.map(({ name }) => (
+                <option selected={name === value}>{name}</option>
+              ))}
+            </select>
+          </div>
+        );
+      }
+
+      return <pre key={i}>{JSON.stringify(input)}</pre>;
+    });
+  }
 }
 
 interface IProps {
@@ -41,6 +133,7 @@ interface IProps {
   isRootCanvas: boolean;
 
   newDefinition: INewDefinition;
+  newWidget: IWidget;
 }
 
 interface IState {
@@ -298,104 +391,77 @@ export default class Inspector extends Component<IProps, IState> {
   }
 
   public render() {
-    const { newDefinition } = this.props;
+    const { newDefinition: definition, newWidget: widget } = this.props;
+    return <InputList inputDefinitions={definition.inputs} widget={widget} />;
 
-    const inputs = newDefinition.inputs;
-    const inputNames = Object.keys(inputs);
+    // const { widget, widgetDefinitions } = this.props;
 
-    return inputNames.map((inputName, i) => {
-      const input = inputs[inputName];
-      if (input.type === "number") {
-        return (
-          <div>
-            {inputName}: <input type="text" value={input.default} />
-          </div>
-        );
-      } else if (input.type === "boolean") {
-        return (
-          <div>
-            {inputName}: <input type="checkbox" checked={input.default} />
-          </div>
-        );
-      } else if (input.type === "string") {
-        return (
-          <div>
-            {inputName}: <input type="text" value={input.default} />;
-          </div>
-        );
-      }
+    // if (widget == null) {
+    //   return null;
+    // }
 
-      return <pre key={i}>{JSON.stringify(input)}</pre>;
-    });
+    // const { type, params, device, attribute } = widget;
+    // const definition = getWidgetDefinition(widgetDefinitions, type);
+    // const fields = definition.fields;
+    // const paramDefinitions = definition.params;
 
-    const { widget, widgetDefinitions } = this.props;
+    // const fieldTypes = fields.map(field => field.type);
 
-    if (widget == null) {
-      return null;
-    }
-
-    const { type, params, device, attribute } = widget;
-    const definition = getWidgetDefinition(widgetDefinitions, type);
-    const fields = definition.fields;
-    const paramDefinitions = definition.params;
-
-    const fieldTypes = fields.map(field => field.type);
-
-    return (
-      <div className="Inspector">
-        <h1>Inspector</h1>
-        {fields.length > 0 &&
-          [...Array(device.length || 1)].map((e, i) => (
-            <Fragment key={i}>
-              {i !== 0 && fieldTypes.indexOf("multi") !== -1 && (
-                <i
-                  className="fa fa-times"
-                  onClick={() => this.handleRemoveDevice(i)}
-                />
-              )}
-              <table>
-                <tbody>
-                  {fieldTypes.indexOf("device") !== -1 && (
-                    <tr>
-                      <td>Device: </td>
-                      {this.deviceChooser(device[i], i)}
-                    </tr>
-                  )}
-                  {fieldTypes.indexOf("attribute") !== -1 && (
-                    <tr>
-                      <td>Attribute:</td>
-                      <td>
-                        {this.attributeChooser(
-                          device[i],
-                          attribute[i],
-                          definition,
-                          i
-                        )}
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-              <hr />
-            </Fragment>
-          ))}
-        {fieldTypes.indexOf("multi") !== -1 && (
-          <button onClick={() => this.handleAddDevice(device.length)}>
-            Add device
-          </button>
-        )}
-        {paramDefinitions.length * fields.length > 0 && <hr />}
-        <table>
-          <tbody>
-            {paramDefinitions.map(({ name, description }) => (
-              <tr key={name}>
-                <td>{description || name}: </td>
-                <td>{this.inputForParam(name, params[name])}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
+    // return (
+    //   <div className="Inspector">
+    //     <h1>Inspector</h1>
+    //     {fields.length > 0 &&
+    //       [...Array(device.length || 1)].map((e, i) => (
+    //         <Fragment key={i}>
+    //           {i !== 0 && fieldTypes.indexOf("multi") !== -1 && (
+    //             <i
+    //               className="fa fa-times"
+    //               onClick={() => this.handleRemoveDevice(i)}
+    //             />
+    //           )}
+    //           <table>
+    //             <tbody>
+    //               {fieldTypes.indexOf("device") !== -1 && (
+    //                 <tr>
+    //                   <td>Device: </td>
+    //                   {this.deviceChooser(device[i], i)}
+    //                 </tr>
+    //               )}
+    //               {fieldTypes.indexOf("attribute") !== -1 && (
+    //                 <tr>
+    //                   <td>Attribute:</td>
+    //                   <td>
+    //                     {this.attributeChooser(
+    //                       device[i],
+    //                       attribute[i],
+    //                       definition,
+    //                       i
+    //                     )}
+    //                   </td>
+    //                 </tr>
+    //               )}
+    //             </tbody>
+    //           </table>
+    //           <hr />
+    //         </Fragment>
+    //       ))}
+    //     {fieldTypes.indexOf("multi") !== -1 && (
+    //       <button onClick={() => this.handleAddDevice(device.length)}>
+    //         Add device
+    //       </button>
+    //     )}
+    //     {paramDefinitions.length * fields.length > 0 && <hr />}
+    //     <table>
+    //       <tbody>
+    //         {paramDefinitions.map(({ name, description }) => (
+    //           <tr key={name}>
+    //             <td>{description || name}: </td>
+    //             <td>{this.inputForParam(name, params[name])}</td>
+    //           </tr>
+    //         ))}
+    //       </tbody>
+    //     </table>
+    //   </div>
+    // );
   }
 }
