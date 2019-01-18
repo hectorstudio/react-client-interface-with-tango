@@ -60,15 +60,19 @@ export default class AttributeSelect extends Component<IProps, IState> {
     const { device, attribute } = this.props;
 
     return (
-      <div>
-        <select>
+      <div style={{ marginLeft: "0.5em" }}>
+        <select className="form-control">
           {device == null && <option>Select device</option>}
           {this.state.deviceNames.map(name => (
             <option>{name}</option>
           ))}
         </select>
         <br />
-        <select disabled={false} onChange={this.handleSelectAttribute}>
+        <select
+          className="form-control"
+          disabled={false}
+          onChange={this.handleSelectAttribute}
+        >
           {attribute == null && (
             <option
               selected={true}
