@@ -1,71 +1,12 @@
 import React, { Component } from "react";
 
 import AttributeSelect from "./AttributeSelect";
-
-interface IBaseInputDefinition {
-  label: string;
-  repeat: boolean;
-}
-
-interface IBooleanInputDefinition extends IBaseInputDefinition {
-  type: "boolean";
-  default: boolean;
-}
-
-interface INumberInputDefinition extends IBaseInputDefinition {
-  type: "number";
-  default: number;
-}
-
-interface IStringInputDefinition extends IBaseInputDefinition {
-  type: "string";
-  default: string;
-}
-
-interface IComplexInputDefinition extends IBaseInputDefinition {
-  type: "complex";
-  inputs: IInputDefinitionMapping;
-  default: object;
-}
-
-interface ISelectInputDefinition extends IBaseInputDefinition {
-  type: "select";
-  default: string;
-  options: Array<{
-    name: string;
-    value: any;
-  }>;
-}
-
-interface IAttributeInputDefinition extends IBaseInputDefinition {
-  type: "attribute";
-  default: null;
-}
-
-type IInputDefinition =
-  | IBooleanInputDefinition
-  | INumberInputDefinition
-  | IStringInputDefinition
-  | IComplexInputDefinition
-  | IAttributeInputDefinition
-  | ISelectInputDefinition;
-
-interface IInputDefinitionMapping {
-  [name: string]: IInputDefinition;
-}
-
-interface INewDefinition {
-  inputs: IInputDefinitionMapping;
-}
-
-interface IWidget {
-  type: string;
-  [input: string]: any;
-}
-
-interface IInputMapping {
-  [name: string]: any;
-}
+import {
+  IInputDefinitionMapping,
+  IInputMapping,
+  INewDefinition,
+  IWidget
+} from "./types";
 
 class InputList extends Component<{
   inputDefinitions: IInputDefinitionMapping;
