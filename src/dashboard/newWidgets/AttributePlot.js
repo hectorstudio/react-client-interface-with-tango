@@ -41,7 +41,8 @@ const definition = {
         attribute: {
           label: "Attribute",
           type: "attribute",
-          required: true
+          required: true,
+          format: "scalar"
         },
         strokeStyle: {
           type: "select",
