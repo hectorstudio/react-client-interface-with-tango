@@ -63,6 +63,8 @@ export interface IWidget {
   type: string;
   x: number;
   y: number;
+  width: number;
+  height: number;
   [input: string]: any;
 }
 
