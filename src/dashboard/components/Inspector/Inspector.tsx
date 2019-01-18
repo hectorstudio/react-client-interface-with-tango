@@ -1,18 +1,63 @@
 import React, { Component, Fragment } from "react";
-import createGQLClient from "graphql-client";
-import PropTypes from "prop-types";
-
 import { getWidgetDefinition } from "../../utils";
-import { widget, widgetDefinition } from "../../propTypes";
 
-export default class Inspector extends Component {
+interface IBaseInput {
+  label: string;
+}
+
+interface IBooleanInput extends IBaseInput {
+  type: "boolean";
+  default: boolean;
+}
+
+interface INumberInput extends IBaseInput {
+  type: "number";
+  default: number;
+}
+
+interface IStringInput extends IBaseInput {
+  type: "string";
+  default: string;
+}
+
+interface IComplexInput extends IBaseInput {
+  type: "complex";
+}
+
+type IInput = IBooleanInput | INumberInput | IStringInput | IComplexInput;
+
+interface INewDefinition {
+  inputs: { [name: string]: IInput };
+}
+
+interface IProps {
+  tangoDB: string;
+  onDeviceChange: any;
+  onAttributeChange: any;
+  onDeviceRemove: any;
+  onParamChange: any;
+  widget: any;
+  widgetDefinitions: any;
+  isRootCanvas: boolean;
+
+  newDefinition: INewDefinition;
+}
+
+interface IState {
+  attributes: any;
+  fetchingDeviceNames: any;
+  deviceNames: any;
+  fetchingAttributes: any;
+}
+
+export default class Inspector extends Component<IProps, IState> {
   constructor(props) {
     super(props);
     this.state = {
       fetchingDeviceNames: true,
       deviceNames: [], // Should be lifted out to higher component in order to reduce data fetching
       fetchingAttributes: false,
-      attributes: {},
+      attributes: {}
     };
 
     this.handleSelectDevice = this.handleSelectDevice.bind(this);
@@ -21,47 +66,46 @@ export default class Inspector extends Component {
     this.handleRemoveDevice = this.handleRemoveDevice.bind(this);
     this.deviceChooser = this.deviceChooser.bind(this);
     this.attributeChooser = this.attributeChooser.bind(this);
-    this.gqlClient = createGQLClient({ url: "/" + this.props.tangoDB + "/db" });
   }
 
-  handleSelectDevice(event, index) {
+  public handleSelectDevice(event, index) {
     this.props.onDeviceChange(event.target.value, index);
     this.fetchAttributes(event.target.value);
   }
 
-  handleSelectAttribute(event, index) {
+  public handleSelectAttribute(event, index) {
     this.props.onAttributeChange(event.target.value, index);
   }
 
-  handleAddDevice(index){
+  public handleAddDevice(index) {
     this.props.onDeviceChange(null, index);
   }
 
-  handleRemoveDevice(index){
+  public handleRemoveDevice(index) {
     this.props.onDeviceRemove(index);
   }
 
-  componentDidUpdate(prevProps) {
+  public componentDidUpdate(prevProps) {
     const oldWidget = prevProps.widget;
     const newWidget = this.props.widget;
     const oldDevice = oldWidget ? oldWidget.device : null;
     const newDevice = newWidget ? newWidget.device : null;
 
     if (newDevice && newDevice !== oldDevice) {
-      newDevice.forEach((device) => {
+      newDevice.forEach(device => {
         this.fetchAttributes(device);
       });
     }
   }
 
-  sortedDeviceNames(deviceNames) {
+  public sortedDeviceNames(deviceNames) {
     return [...deviceNames].sort((a, b) =>
       a.toLowerCase().localeCompare(b.toLowerCase())
     );
   }
 
-  fetchAttributes(device) {
-    this.setState({
+  public fetchAttributes(device) {
+    /*this.setState({
       fetchingAttributes: true
     });
 
@@ -82,11 +126,15 @@ export default class Inspector extends Component {
       .then(res => res.data.device.attributes)
       .catch(() => [])
       .then(attributes =>
-        this.setState({ fetchingAttributes: false, attributes : {...this.state.attributes, [device]: attributes} })
+        this.setState({
+          fetchingAttributes: false,
+          attributes: { ...this.state.attributes, [device]: attributes }
+        })
       );
+    */
   }
 
-  inputForParam(param, value) {
+  public inputForParam(param, value) {
     const type = this.props.widget.type;
     const widgetDefinition = getWidgetDefinition(
       this.props.widgetDefinitions,
@@ -130,16 +178,8 @@ export default class Inspector extends Component {
     }
   }
 
-  callServiceGraphQL(query, variables) {
-    return this.gqlClient.query(query, variables || {}, (req, res) => {
-      if (res.status === 401) {
-        throw new Error("Not authorized");
-      }
-    });
-  }
-
-  componentDidMount() {
-    this.callServiceGraphQL(
+  public componentDidMount() {
+    /*this.callServiceGraphQL(
       `
       query {
         devices {
@@ -160,26 +200,26 @@ export default class Inspector extends Component {
 
     const widget = this.props.widget;
     if (widget != null && widget.device != null) {
-      widget.device.forEach((device) => {
-        if(device !== "__parent__"){
+      widget.device.forEach(device => {
+        if (device !== "__parent__") {
           this.fetchAttributes(device);
         }
       });
-    }
+    }*/
   }
 
-  filteredAttributes(definition, device) {
+  public filteredAttributes(definition, device) {
     return this.state.attributes[device]
       .filter(({ dataformat }) => {
         const field = definition.fields.find(
-          field => field.type === "attribute"
+          field2 => field2.type === "attribute"
         );
         const dataformats = (field || {}).dataformats;
         return dataformats == null || dataformats.indexOf(dataformat) !== -1;
       })
       .filter(({ datatype }) => {
         const field = definition.fields.find(
-          field => field.type === "attribute"
+          field2 => field2.type === "attribute"
         );
         const onlyNumeric = field != null && field.onlyNumeric;
         if (!onlyNumeric) {
@@ -201,16 +241,16 @@ export default class Inspector extends Component {
       });
   }
 
-  deviceChooser(deviceName, index){
+  public deviceChooser(deviceName, index) {
     return (
       <td>
         <select
           className="form-control"
           value={deviceName || ""}
-          onChange={(e) => this.handleSelectDevice(e, index)}
+          onChange={e => this.handleSelectDevice(e, index)}
         >
           {deviceName == null && (
-            <option value="" disabled>
+            <option value="none" disabled={true}>
               None
             </option>
           )}
@@ -223,41 +263,71 @@ export default class Inspector extends Component {
             </option>
           ))}
         </select>
-      </td>);
+      </td>
+    );
   }
 
-  attributeChooser(device, attribute, definition, index){
-    return(
-    device === "__parent__" ? (
+  public attributeChooser(device, attribute, definition, index) {
+    return device === "__parent__" ? (
       <input
         className="form-control"
         type="text"
         value={attribute || ""}
-        onChange={(e) => this.handleSelectAttribute(e, index)}
+        onChange={e => this.handleSelectAttribute(e, index)}
       />
     ) : (
       <select
         className="form-control"
         value={attribute || ""}
-        onChange={(e) => this.handleSelectAttribute(e, index)}
+        onChange={e => this.handleSelectAttribute(e, index)}
         disabled={device == null}
       >
         {attribute == null && (
-          <option value="" disabled>
+          <option value="" disabled={true}>
             {device ? "None" : "Select Device First"}
           </option>
         )}
-        {this.state.attributes[device] && this.filteredAttributes(definition, device).map(({ name }, i) => (
-          <option key={i} value={name}>
-            {name}
-          </option>
-        ))}
+        {this.state.attributes[device] &&
+          this.filteredAttributes(definition, device).map(({ name }, i) => (
+            <option key={i} value={name}>
+              {name}
+            </option>
+          ))}
       </select>
-    )
     );
   }
 
-  render() {
+  public render() {
+    const { newDefinition } = this.props;
+
+    const inputs = newDefinition.inputs;
+    const inputNames = Object.keys(inputs);
+
+    return inputNames.map((inputName, i) => {
+      const input = inputs[inputName];
+      if (input.type === "number") {
+        return (
+          <div>
+            {inputName}: <input type="text" value={input.default} />
+          </div>
+        );
+      } else if (input.type === "boolean") {
+        return (
+          <div>
+            {inputName}: <input type="checkbox" checked={input.default} />
+          </div>
+        );
+      } else if (input.type === "string") {
+        return (
+          <div>
+            {inputName}: <input type="text" value={input.default} />;
+          </div>
+        );
+      }
+
+      return <pre key={i}>{JSON.stringify(input)}</pre>;
+    });
+
     const { widget, widgetDefinitions } = this.props;
 
     if (widget == null) {
@@ -274,30 +344,45 @@ export default class Inspector extends Component {
     return (
       <div className="Inspector">
         <h1>Inspector</h1>
-        {fields.length > 0 && [...Array(device.length || 1)].map((e, i) =>
-          <Fragment key={i}>
-          {i !== 0 && fieldTypes.indexOf("multi") !== -1 && <i className="fa fa-times" onClick={() => this.handleRemoveDevice(i)}/>}
-          <table>
-            <tbody>
-                {fieldTypes.indexOf("device") !== -1 && (
-                  <tr>
-                    <td>Device: </td>
-                    {this.deviceChooser(device[i], i)}
-                  </tr>
-                )}
-                {fieldTypes.indexOf("attribute") !== -1 && (
-                  <tr>
-                    <td>Attribute:</td>
-                    <td>{this.attributeChooser(device[i], attribute[i], definition, i)}</td>
-                  </tr>
-                )}
-            </tbody>
-          </table>
-          <hr />
-          </Fragment>
-        )}
+        {fields.length > 0 &&
+          [...Array(device.length || 1)].map((e, i) => (
+            <Fragment key={i}>
+              {i !== 0 && fieldTypes.indexOf("multi") !== -1 && (
+                <i
+                  className="fa fa-times"
+                  onClick={() => this.handleRemoveDevice(i)}
+                />
+              )}
+              <table>
+                <tbody>
+                  {fieldTypes.indexOf("device") !== -1 && (
+                    <tr>
+                      <td>Device: </td>
+                      {this.deviceChooser(device[i], i)}
+                    </tr>
+                  )}
+                  {fieldTypes.indexOf("attribute") !== -1 && (
+                    <tr>
+                      <td>Attribute:</td>
+                      <td>
+                        {this.attributeChooser(
+                          device[i],
+                          attribute[i],
+                          definition,
+                          i
+                        )}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+              <hr />
+            </Fragment>
+          ))}
         {fieldTypes.indexOf("multi") !== -1 && (
-          <button onClick={() => this.handleAddDevice(device.length)}>Add device</button>
+          <button onClick={() => this.handleAddDevice(device.length)}>
+            Add device
+          </button>
         )}
         {paramDefinitions.length * fields.length > 0 && <hr />}
         <table>
@@ -314,13 +399,3 @@ export default class Inspector extends Component {
     );
   }
 }
-
-Inspector.propTypes = {
-  deviceNames: PropTypes.arrayOf(PropTypes.string),
-  isRootCanvas: PropTypes.bool,
-  onAttributeChange: PropTypes.func,
-  onDeviceChange: PropTypes.func,
-  onParamChange: PropTypes.func,
-  widget: widget,
-  widgetDefinitions: PropTypes.arrayOf(widgetDefinition)
-};
