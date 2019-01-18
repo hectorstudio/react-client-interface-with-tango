@@ -36,6 +36,7 @@ export default class AttributeSelect extends Component<IProps, IState> {
 
   public componentDidUpdate(prevProps) {
     if (this.props.device !== prevProps.device) {
+      this.setState({ attributes: [] });
       this.fetchAttributes();
     }
   }
