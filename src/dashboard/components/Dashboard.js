@@ -13,6 +13,9 @@ import Inspector from "./Inspector/Inspector";
 import { save as saveToRepo } from "../dashboardRepo";
 import { load as loadFromRepo } from "../dashboardRepo";
 
+import attributePlotWidget from "../newWidgets/AttributePlot";
+import attributeDisplayWidget from "../newWidgets/AttributeDisplay";
+
 import {
   WIDGET_DEFINITIONS,
   getWidgetDefinition,
@@ -314,67 +317,7 @@ class Dashboard extends Component {
               />
             ) : (
               <Inspector
-                newDefinition={{
-                  inputs: {
-                    xMin: {
-                      type: "number",
-                      default: 0,
-                      label: "X min"
-                    },
-                    xMax: {
-                      type: "number",
-                      default: 100,
-                      label: "X max"
-                    },
-                    yMin: {
-                      type: "number",
-                      default: 0,
-                      label: "Y min"
-                    },
-                    yMax: {
-                      type: "number",
-                      default: 100,
-                      label: "Y max"
-                    },
-                    showGrid: {
-                      type: "boolean",
-                      default: true,
-                      label: "Show Grid"
-                    },
-                    attributes: {
-                      label: "Graphs",
-                      type: "complex",
-                      repeat: true,
-                      inputs: {
-                        attribute: {
-                          label: "Attribute",
-                          type: "attribute",
-                          required: true
-                        },
-                        strokeStyle: {
-                          type: "select",
-                          default: "line",
-                          label: "Stroke Style",
-                          options: [
-                            {
-                              name: "Line",
-                              value: "line"
-                            },
-                            {
-                              name: "Dashed",
-                              value: "dashed"
-                            }
-                          ]
-                        },
-                        strokeWidth: {
-                          type: "number",
-                          default: 1,
-                          label: "Stroke Width"
-                        }
-                      }
-                    }
-                  }
-                }}
+                newDefinition={attributePlotWidget.definition}
                 widget={widgets[this.state.selectedWidgetIndex]}
                 widgetDefinitions={widgetDefinitions}
                 deviceNames={this.state.deviceNames}
