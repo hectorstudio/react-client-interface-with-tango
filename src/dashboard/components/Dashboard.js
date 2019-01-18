@@ -365,6 +365,11 @@ class Dashboard extends Component {
                               value: "dashed"
                             }
                           ]
+                        },
+                        strokeWidth: {
+                          type: "number",
+                          default: 1,
+                          label: "Stroke Width"
                         }
                       }
                     }

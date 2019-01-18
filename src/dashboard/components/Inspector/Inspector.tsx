@@ -270,14 +270,16 @@ export default class Inspector extends Component<IProps, IState> {
                 device: "sys/tg_test/1",
                 attribute: "ampli"
               },
-              strokeStyle: "line"
+              strokeStyle: "line",
+              strokeWidth: 3
             },
             {
               attribute: {
                 device: "sys/tg_test/1",
                 attribute: "ampli"
               },
-              strokeStyle: "dashed"
+              strokeStyle: "dashed",
+              strokeWidth: 10
             }
           ]
         }
