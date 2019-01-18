@@ -35,7 +35,12 @@ interface ISelectInputDefinition extends IBaseInputDefinition {
 
 interface IAttributeInputDefinition extends IBaseInputDefinition {
   type: "attribute";
-  default: null;
+  default: {
+    device: null;
+    attribute: null;
+  };
+  dataFormat?: "scalar" | "spectrum" | "image";
+  dataType?: "numeric";
 }
 
 export type IInputDefinition =
@@ -56,6 +61,8 @@ export interface INewDefinition {
 
 export interface IWidget {
   type: string;
+  x: number;
+  y: number;
   [input: string]: any;
 }
 

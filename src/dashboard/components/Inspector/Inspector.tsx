@@ -87,6 +87,8 @@ class InputList extends Component<{
                 <AttributeSelect
                   device={value.device}
                   attribute={value.attribute}
+                  dataFormat={inputDefinition.dataFormat}
+                  dataType={inputDefinition.dataType}
                   onSelect={(device, attribute) =>
                     this.props.onChange([inputName], {
                       device,

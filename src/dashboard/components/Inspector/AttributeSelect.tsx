@@ -5,6 +5,8 @@ import { fetchAttributes, fetchDeviceNames } from "./api";
 interface IProps {
   device?: string;
   attribute?: string;
+  dataFormat?: "scalar" | "spectrum" | "image";
+  dataType?: "numeric";
   onSelect?: (device: string | null, attribute: string | null) => void;
 }
 
@@ -86,7 +88,7 @@ export default class AttributeSelect extends Component<IProps, IState> {
               Select attribute
             </option>
           )}
-          {this.state.attributes.map(({ name }, i) => (
+          {this.filteredAttributes().map(({ name }, i) => (
             <option key={i} value={name}>
               {name}
             </option>
@@ -96,19 +98,38 @@ export default class AttributeSelect extends Component<IProps, IState> {
     );
   }
 
-  // private filteredAttributes() {
-  //   const numericTypes = [
-  //     "DevDouble",
-  //     "DevFloat",
-  //     "DevLong",
-  //     "DevLong64",
-  //     "DevShort",
-  //     "DevUChar",
-  //     "DevULong",
-  //     "DevULong64",
-  //     "DevUShort"
-  //   ];
-  // }
+  private filteredAttributes() {
+    const numericTypes = [
+      "DevDouble",
+      "DevFloat",
+      "DevLong",
+      "DevLong64",
+      "DevShort",
+      "DevUChar",
+      "DevULong",
+      "DevULong64",
+      "DevUShort"
+    ];
+
+    return this.state.attributes.filter(attr => {
+      const { dataType, dataFormat } = this.props;
+
+      if (dataFormat === "scalar" && attr.dataformat !== "SCALAR") {
+        return false;
+      } else if (dataFormat === "spectrum" && attr.dataformat !== "SPECTRUM") {
+        return false;
+      } else if (dataFormat === "image" && attr.dataformat !== "IMAGE") {
+        return false;
+      } else if (
+        dataType === "numeric" &&
+        numericTypes.indexOf(attr.datatype) === -1
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+  }
 
   private async fetchAttributes() {
     const { device } = this.props;
