@@ -139,12 +139,13 @@ class InputList extends Component<{
                   }}
                 >
                   <button
+                    className="close float-left"
                     type="button"
                     onClick={() =>
                       this.props.onChange([inputName, j], REMOVAL_SYMBOL)
                     }
                   >
-                    x
+                    <span>&times;</span>
                   </button>
                   <InputList
                     inputDefinitions={inputDefinition.inputs}
