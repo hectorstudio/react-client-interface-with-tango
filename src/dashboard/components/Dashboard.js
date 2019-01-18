@@ -347,12 +347,14 @@ class Dashboard extends Component {
                       repeat: true,
                       inputs: {
                         attribute: {
+                          label: "Attribute",
                           type: "attribute",
                           required: true
                         },
                         strokeStyle: {
                           type: "select",
                           default: "line",
+                          label: "Stroke Style",
                           options: [
                             {
                               name: "Line",

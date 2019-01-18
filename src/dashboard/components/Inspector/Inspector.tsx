@@ -63,61 +63,76 @@ interface IWidget {
   [input: string]: any;
 }
 
+interface IInputMapping {
+  [name: string]: any;
+}
+
 class InputList extends Component<{
   inputDefinitions: IInputDefinitionMapping;
-  widget: IWidget;
+  inputs: IInputMapping;
   onChange: (inputPath: string[], value) => void;
   basePath?: string[];
 }> {
   public render() {
-    const { inputDefinitions, widget } = this.props;
+    const { inputDefinitions, inputs } = this.props;
     const inputNames = Object.keys(inputDefinitions);
 
-    return inputNames.map((inputName, i) => {
+    const inner = inputNames.map((inputName, i) => {
       const inputDefinition = inputDefinitions[inputName];
       const label = inputDefinition.label || inputName;
-      const value = widget.inputs[inputName];
+      const value = inputs[inputName];
 
       if (inputDefinition.type === "number") {
         return (
-          <div>
-            {label}:{" "}
-            <input
-              type="text"
-              value={value}
-              onChange={e =>
-                this.props.onChange([inputName], Number(e.target.value) || 0)
-              }
-            />
-          </div>
+          <tr>
+            <td>{label}</td>
+            <td>
+              <input
+                className="form-control"
+                type="text"
+                value={value}
+                onChange={e =>
+                  this.props.onChange([inputName], Number(e.target.value) || 0)
+                }
+              />
+            </td>
+          </tr>
         );
       } else if (inputDefinition.type === "boolean") {
         return (
-          <div>
-            {label}:{" "}
-            <input
-              type="checkbox"
-              checked={value}
-              onChange={e => this.props.onChange([inputName], e.target.checked)}
-            />
-          </div>
+          <tr>
+            <td>{label}</td>
+            <td>
+              <input
+                className="form-control"
+                type="checkbox"
+                checked={value}
+                onChange={e =>
+                  this.props.onChange([inputName], e.target.checked)
+                }
+              />
+            </td>
+          </tr>
         );
       } else if (inputDefinition.type === "string") {
         return (
-          <div>
-            {label}:{" "}
-            <input
-              type="text"
-              value={value}
-              onChange={e => this.props.onChange([inputName], e.target.value)}
-            />
-          </div>
+          <tr>
+            <td> {label}</td>
+            <td>
+              <input
+                className="form-control"
+                type="text"
+                value={value}
+                onChange={e => this.props.onChange([inputName], e.target.value)}
+              />
+            </td>
+          </tr>
         );
       } else if (inputDefinition.type === "attribute") {
         return (
-          <div>
-            {label}:{" "}
-            <div style={{ marginLeft: "1em" }}>
+          <tr>
+            <td colSpan={2}>
+              {label}
               <AttributeSelect
                 onSelect={(device, attribute) =>
                   this.props.onChange([inputName], {
@@ -126,61 +141,72 @@ class InputList extends Component<{
                   })
                 }
               />
-            </div>
-          </div>
+            </td>
+          </tr>
         );
       } else if (
         inputDefinition.type === "complex" &&
         inputDefinition.repeat === false
       ) {
         return (
-          <div>
-            {label}:{" "}
-            <div style={{ marginLeft: "1em" }}>
-              <InputList
-                inputDefinitions={inputDefinition.inputs}
-                widget={widget}
-                onChange={(path2, value2) => {
-                  this.props.onChange([inputName, ...path2], value2);
-                }}
-              />
-            </div>
-          </div>
+          <tr>
+            <td colSpan={2}>
+              {label}
+              <div style={{ marginLeft: "1em" }}>
+                <InputList
+                  inputDefinitions={inputDefinition.inputs}
+                  inputs={value}
+                  onChange={(path2, value2) => {
+                    this.props.onChange([inputName, ...path2], value2);
+                  }}
+                />
+              </div>
+            </td>
+          </tr>
         );
       } else if (
         inputDefinition.type === "complex" &&
         inputDefinition.repeat === true
       ) {
         return (
-          <div>
-            {label}:{" "}
-            <div style={{ marginLeft: "1em" }}>
-              <InputList
-                inputDefinitions={inputDefinition.inputs}
-                widget={widget}
-                onChange={(path2, value2) => {
-                  this.props.onChange([inputName, ...path2], value2);
-                }}
-              />
-            </div>
-            <button type="button">+</button>
-          </div>
+          <tr>
+            <td colSpan={2}>
+              {label}
+              {value.map((each, j) => (
+                <div>
+                  <InputList
+                    key={j}
+                    inputDefinitions={inputDefinition.inputs}
+                    inputs={each}
+                    onChange={(path2, value2) => {
+                      this.props.onChange([inputName, ...path2], value2);
+                    }}
+                  />
+                </div>
+              ))}
+              <button type="button">+</button>
+            </td>
+          </tr>
         );
       } else if (inputDefinition.type === "select") {
         return (
-          <div>
-            {label}:{" "}
-            <select value={value}>
-              {inputDefinition.options.map(({ name }) => (
-                <option>{name}</option>
-              ))}
-            </select>
-          </div>
+          <tr>
+            <td>{label}</td>
+            <td>
+              <select className="form-control" value={value}>
+                {inputDefinition.options.map(({ name }) => (
+                  <option>{name}</option>
+                ))}
+              </select>
+            </td>
+          </tr>
         );
       }
 
       return <pre key={i}>{JSON.stringify(inputDefinition)}</pre>;
     });
+
+    return <table style={{ width: "100%" }}>{inner}</table>;
   }
 }
 
@@ -291,26 +317,31 @@ export default class Inspector extends Component<IProps, IState> {
 
   public render() {
     const { newDefinition: definition } = this.props;
-    const { widget } = this.state;
+    const {
+      widget: { inputs }
+    } = this.state;
 
     return (
       <div className="Inspector">
         <h1>Inspector</h1>
         <InputList
           inputDefinitions={definition.inputs}
-          widget={widget}
+          inputs={inputs}
           onChange={(path, value) => {
             const updatedInputs = copySetWithPath(
               this.state.widget.inputs,
               path,
               value
             );
-            const updatedWidget = { ...widget, inputs: updatedInputs };
+            const updatedWidget = {
+              ...this.state.widget,
+              inputs: updatedInputs
+            };
             this.setState({ widget: updatedWidget });
           }}
         />
         <hr />
-        <pre>{JSON.stringify(widget, null, 2)}</pre>
+        <pre>{JSON.stringify(this.state.widget, null, 2)}</pre>
       </div>
     );
   }
