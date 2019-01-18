@@ -60,14 +60,13 @@ export default class AttributeSelect extends Component<IProps, IState> {
     const { device, attribute } = this.props;
 
     return (
-      <div style={{ marginLeft: "0.5em" }}>
+      <div>
         <select className="form-control">
           {device == null && <option>Select device</option>}
           {this.state.deviceNames.map(name => (
             <option>{name}</option>
           ))}
         </select>
-        <br />
         <select
           className="form-control"
           disabled={false}

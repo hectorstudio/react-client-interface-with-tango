@@ -45,7 +45,6 @@ class InputList extends Component<{
             <td>{label}</td>
             <td>
               <input
-                className="form-control"
                 type="checkbox"
                 checked={value}
                 onChange={e =>
@@ -114,7 +113,7 @@ class InputList extends Component<{
             <td colSpan={2}>
               {label}
               {value.map((each, j) => (
-                <div>
+                <div style={{ paddingLeft: "0.5em" }}>
                   <InputList
                     key={j}
                     inputDefinitions={inputDefinition.inputs}

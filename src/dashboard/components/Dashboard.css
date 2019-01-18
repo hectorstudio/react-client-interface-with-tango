@@ -92,10 +92,6 @@
   margin-bottom: 1em;
 }
 
-.Dashboard .Inspector td:first-child {
-  padding-right: 0.5em;
-}
-
 .Dashboard .Canvas.edit .Placeholder {
   position: relative;
   width: 15em;
