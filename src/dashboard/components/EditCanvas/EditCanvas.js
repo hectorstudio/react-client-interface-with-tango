@@ -7,59 +7,12 @@ import { connect } from "react-redux";
 import dndTypes from "../../dndTypes";
 import { getWidgetDefinition } from "../../utilsOld";
 import { widget, widgetDefinition } from "../../propTypes";
-import WarningBadge from "./WarningBadge";
-
 import widgetBundles from "../../newWidgets";
+
+import EditWidget from "./EditWidget";
 
 const BACKSPACE = 8;
 const DELETE = 46;
-
-class EditWidget extends Component {
-  render() {
-    if (this.props.isDragging) {
-      return null;
-    }
-
-    return this.props.connectDragSource(
-      <div
-        className={this.props.isSelected ? "Widget selected" : "Widget"}
-        style={{ left: this.props.x, top: this.props.y }}
-        onClick={event => {
-          event.stopPropagation();
-          this.props.onClick();
-        }}
-      >
-        {this.props.warning && <WarningBadge />}
-        {this.props.children}
-      </div>
-    );
-  }
-}
-
-const editWidgetSource = {
-  beginDrag(props) {
-    return {
-      index: props.index,
-      warning: props.warning
-    };
-  },
-
-  endDrag(props, monitor) {
-    const { dx, dy } = monitor.getDropResult();
-    props.onMove(dx, dy);
-  }
-};
-
-function editWidgetCollect(connect, monitor) {
-  return {
-    connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging()
-  };
-}
-
-EditWidget = DragSource("EDIT_WIDGET", editWidgetSource, editWidgetCollect)(
-  EditWidget
-);
 
 const editCanvasTarget = {
   canDrop(props, monitor) {

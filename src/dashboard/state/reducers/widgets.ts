@@ -59,8 +59,7 @@ export default function canvases(
       };
     }
     case MOVE_WIDGET: {
-      const { dx, dy } = action;
-      const index = state.selectedIndex;
+      const { dx, dy, index } = action;
       const oldWidget = state.widgets[index];
       const newWidget = move(oldWidget, dx, dy);
       const widgets = replaceAt(state.widgets, index, newWidget);
