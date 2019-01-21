@@ -126,7 +126,7 @@ class EditCanvas extends Component {
             the canvas.
           </div>
 
-          {this.props.widgetsNew.map((widget, i) => {
+          {this.props.widgetsNew.map((widget, index) => {
             /*const Widget = this.componentForWidget(widget);
             const { x, y, device, attribute, params } = widget;
 
@@ -164,13 +164,16 @@ class EditCanvas extends Component {
 
             return (
               <EditWidget
-                index={i}
-                key={i}
-                isSelected={false}
+                index={index}
+                key={index}
+                isSelected={index === this.props.selectedIndex}
                 x={x}
                 y={y}
-                onClick={() => null}
-                onMove={(dx, dy) => this.props.onMoveWidget(i, dx, dy)}
+                onClick={event => {
+                  event.stopPropagation();
+                  this.props.onSelectWidget(index);
+                }}
+                onMove={(dx, dy) => this.props.onMoveWidget(index, dx, dy)}
                 warning={warning}
               >
                 {element}
@@ -210,18 +213,23 @@ const addFromLibraryDropTarget = DropTarget(
 
 function mapStateToProps(state) {
   return {
-    widgetsNew: state.widgets
+    widgetsNew: state.widgets.widgets,
+    selectedIndex: state.widgets.selectedIndex
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     onMoveWidget: (index, dx, dy) =>
-      dispatch({ type: "MOVE_WIDGET", index, dx, dy })
+      dispatch({ type: "MOVE_WIDGET", index, dx, dy }),
+    onSelectWidget: index => dispatch({ type: "SELECT_WIDGET", index })
   };
 }
 
-const connectWithState = connect(mapStateToProps, mapDispatchToProps);
+const connectWithState = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 export default [
   moveDropTarget,
