@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 class AttributeReadOnly extends Component {
   render() {
+    return <em>Attribute Read Only</em>;
+
     const attribute = this.props.inputs.attribute;
     const { device, name, value } = attribute;
     return (
@@ -13,7 +15,8 @@ class AttributeReadOnly extends Component {
 }
 
 const definition = {
-  type: "ATTRIBUTE_READ_ONLY",
+  type: "ATTRIBUTE_DISPLAY",
+  name: "Attribute Display",
   inputs: {
     attribute: {
       type: "attribute",

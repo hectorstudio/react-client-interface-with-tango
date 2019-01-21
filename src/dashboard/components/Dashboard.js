@@ -13,8 +13,7 @@ import Inspector from "./Inspector/Inspector";
 import { save as saveToRepo } from "../dashboardRepo";
 import { load as loadFromRepo } from "../dashboardRepo";
 
-import attributePlotWidget from "../newWidgets/AttributePlot";
-import attributeDisplayWidget from "../newWidgets/AttributeDisplay";
+import widgetBundles from "../newWidgets";
 
 import {
   WIDGET_DEFINITIONS,
@@ -313,11 +312,12 @@ class Dashboard extends Component {
             {this.state.selectedWidgetIndex === -1 ? (
               <Library
                 widgetDefinitions={widgetDefinitions}
+                widgetBundles={widgetBundles}
                 showCustom={this.state.selectedCanvasIndex === 0}
               />
             ) : (
               <Inspector
-                newDefinition={attributePlotWidget.definition}
+                newDefinition={newWidgetDefinitions[0]}
                 widget={widgets[this.state.selectedWidgetIndex]}
                 widgetDefinitions={widgetDefinitions}
                 deviceNames={this.state.deviceNames}
