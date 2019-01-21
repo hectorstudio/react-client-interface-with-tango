@@ -1,33 +1,18 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import { DragSource, DropTarget } from "react-dnd";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 import dndTypes from "../../dndTypes";
 import { getWidgetDefinition } from "../../utilsOld";
-import {widget, widgetDefinition} from "../../propTypes"
+import { widget, widgetDefinition } from "../../propTypes";
+import WarningBadge from "./WarningBadge";
+
+import widgetBundles from "../../newWidgets";
 
 const BACKSPACE = 8;
 const DELETE = 46;
-
-const WarningBadge = () => (
-  <div
-    style={{
-      position: "absolute",
-      marginLeft: "-10px",
-      marginTop: "-10px",
-      backgroundColor: "red",
-      borderRadius: "10px",
-      width: "20px",
-      height: "20px",
-      color: "white",
-      textAlign: "center",
-      zIndex: 1000
-    }}
-  >
-    <span className="fa fa-exclamation" />
-  </div>
-);
 
 class EditWidget extends Component {
   render() {
@@ -55,8 +40,8 @@ EditWidget.propTypes = {
   onClick: PropTypes.func,
   warning: PropTypes.bool,
   x: PropTypes.number,
-  y: PropTypes.number,
-}
+  y: PropTypes.number
+};
 
 const editWidgetSource = {
   beginDrag(props) {
@@ -103,8 +88,8 @@ class EditCanvas extends Component {
     };
   }
 
-  definitionForWidget(widget) {
-    return getWidgetDefinition(this.props.widgetDefinitions, widget.type);
+  bundleForWidget(widget) {
+    return widgetBundles.find(bundle => bundle.definition.type === widget.type);
   }
 
   componentForWidget(widget) {
@@ -131,7 +116,7 @@ class EditCanvas extends Component {
 
   render() {
     const { connectMoveDropTarget, connectLibraryDropTarget } = this.props;
-    const hasWidgets = this.props.widgets.length > 0;
+    const hasWidgets = this.props.widgetsNew.length > 0;
 
     return connectLibraryDropTarget(
       connectMoveDropTarget(
@@ -146,8 +131,8 @@ class EditCanvas extends Component {
             the canvas.
           </div>
 
-          {this.props.widgets.map((widget, i) => {
-            const Widget = this.componentForWidget(widget);
+          {this.props.widgetsNew.map((widget, i) => {
+            /*const Widget = this.componentForWidget(widget);
             const { x, y, device, attribute, params } = widget;
 
             const definition = this.definitionForWidget(widget);
@@ -174,6 +159,27 @@ class EditCanvas extends Component {
                 />
               </EditWidget>
             );
+            */
+
+            const { x, y } = widget;
+            const { component } = this.bundleForWidget(widget);
+            const { inputs } = widget;
+            const element = React.createElement(component, { inputs });
+            const warning = true; // Is any required field missing?
+
+            return (
+              <EditWidget
+                index={i}
+                key={i}
+                isSelected={false}
+                x={x}
+                y={y}
+                onClick={() => null}
+                warning={warning}
+              >
+                {element}
+              </EditWidget>
+            );
           })}
         </div>
       )
@@ -189,8 +195,8 @@ EditCanvas.propTypes = {
   onSelectWidget: PropTypes.func,
   selectedWidgetIndex: PropTypes.number,
   widgetDefinitions: PropTypes.arrayOf(widgetDefinition),
-  widgets: PropTypes.arrayOf(widget),
-}
+  widgets: PropTypes.arrayOf(widget)
+};
 
 const moveDropTarget = DropTarget(
   dndTypes.EDIT_WIDGET,
@@ -217,7 +223,16 @@ const addFromLibraryDropTarget = DropTarget(
   })
 );
 
-export default [moveDropTarget, addFromLibraryDropTarget].reduce(
-  (cls, decorator) => decorator(cls),
-  EditCanvas
-);
+function mapStateToProps(state) {
+  return {
+    widgetsNew: state.widgets
+  };
+}
+
+const connectWithState = connect(mapStateToProps);
+
+export default [
+  moveDropTarget,
+  addFromLibraryDropTarget,
+  connectWithState
+].reduce((cls, decorator) => decorator(cls), EditCanvas);
