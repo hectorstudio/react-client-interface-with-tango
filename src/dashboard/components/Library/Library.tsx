@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import {
   IWidgetBundle
-} from "../types";
+} from "../../types";
 
 import LibraryWidget from "./LibraryWidget";
 
