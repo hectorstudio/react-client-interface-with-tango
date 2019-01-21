@@ -1,12 +1,14 @@
 import React, { Component } from "react";
+import { IWidgetProps } from "./types";
+import { IWidgetDefinition } from "../types";
 
-class AttributePlot extends Component {
-  render() {
+class AttributePlot extends Component<IWidgetProps> {
+  public render() {
     return <div>Mode: {this.props.mode}</div>;
   }
 }
 
-const definition = {
+const definition: IWidgetDefinition = {
   type: "ATTRIBUTE_PLOT",
   name: "Attribute Plot",
   inputs: {

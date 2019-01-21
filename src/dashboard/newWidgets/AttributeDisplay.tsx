@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { IWidgetProps } from "./types";
+import { IWidgetDefinition } from "../types";
 
-class AttributeReadOnly extends Component {
-  render() {
+class AttributeReadOnly extends Component<IWidgetProps> {
+  public render() {
     return <em>Attribute Read Only</em>;
 
     const attribute = this.props.inputs.attribute;
@@ -14,7 +16,7 @@ class AttributeReadOnly extends Component {
   }
 }
 
-const definition = {
+const definition: IWidgetDefinition = {
   type: "ATTRIBUTE_DISPLAY",
   name: "Attribute Display",
   inputs: {
