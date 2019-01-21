@@ -16,11 +16,10 @@ export function addWidget(
 }
 
 export function moveWidget(
-  index: number,
   dx: number,
   dy: number
 ): IMoveWidgetAction {
-  return { type: MOVE_WIDGET, index, dx, dy };
+  return { type: MOVE_WIDGET, dx, dy };
 }
 
 export function selectWidget(index: number): ISelectWidgetAction {

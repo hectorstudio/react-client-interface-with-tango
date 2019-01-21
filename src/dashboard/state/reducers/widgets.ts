@@ -1,11 +1,22 @@
 import { IWidget } from "../../types";
-import { ADD_WIDGET, MOVE_WIDGET, SELECT_WIDGET } from "../actionTypes";
+import {
+  ADD_WIDGET,
+  MOVE_WIDGET,
+  SELECT_WIDGET,
+  DELETE_WIDGET
+} from "../actionTypes";
 import { defaultInputs } from "src/dashboard/utils";
 import { DashboardAction } from "../actions";
 
 function replaceAt<T>(arr: T[], index: number, repl: T) {
   const copy = arr.concat();
   copy.splice(index, 1, repl);
+  return copy;
+}
+
+function removeAt<T>(arr: T[], index: number) {
+  const copy = arr.concat();
+  copy.splice(index, 1);
   return copy;
 }
 
@@ -48,7 +59,8 @@ export default function canvases(
       };
     }
     case MOVE_WIDGET: {
-      const { index, dx, dy } = action;
+      const { dx, dy } = action;
+      const index = state.selectedIndex;
       const oldWidget = state.widgets[index];
       const newWidget = move(oldWidget, dx, dy);
       const widgets = replaceAt(state.widgets, index, newWidget);
@@ -57,6 +69,10 @@ export default function canvases(
     case SELECT_WIDGET: {
       const { index } = action;
       return { ...state, selectedIndex: index };
+    }
+    case DELETE_WIDGET: {
+      const widgets = removeAt(state.widgets, state.selectedIndex);
+      return { ...state, widgets };
     }
     default:
       return state;
