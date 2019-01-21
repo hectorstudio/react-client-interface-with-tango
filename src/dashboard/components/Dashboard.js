@@ -311,7 +311,7 @@ class Dashboard extends Component {
         </div>
         {mode === "edit" && (
           <div className="Sidebar">
-            {this.state.selectedWidgetIndex === -1 ? (
+            {this.props.selectedWidgetIndex === -1 ? (
               <Library
                 widgetDefinitions={widgetDefinitions}
                 widgetBundles={widgetBundles}
@@ -319,8 +319,7 @@ class Dashboard extends Component {
               />
             ) : (
               <Inspector
-                newDefinition={newWidgetDefinitions[0]}
-                widget={widgets[this.state.selectedWidgetIndex]}
+                widget={this.props.selectedWidget}
                 widgetDefinitions={widgetDefinitions}
                 deviceNames={this.state.deviceNames}
                 onParamChange={this.handleParamChange}
@@ -348,4 +347,16 @@ export function expandToGrid(val) {
   return val + (GRID_TILE_SIZE - (val % GRID_TILE_SIZE));
 }
 
-export default connect()(DragDropContext(HTML5Backend)(Dashboard));
+function mapStateToProps(state) {
+  const { widgets, selectedIndex } = state.widgets;
+  const selectedWidget = widgets[selectedIndex];
+
+  return {
+    selectedWidget,
+    selectedWidgetIndex: selectedIndex
+  };
+}
+
+export default connect(mapStateToProps)(
+  DragDropContext(HTML5Backend)(Dashboard)
+);

@@ -1,22 +1,24 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
-import AttributeSelect from "./AttributeSelect";
 import {
   IInputDefinitionMapping,
   IInputMapping,
   IWidget,
-  IWidgetDefinition
+  IndexPath
 } from "../../types";
+import widgetBundles from "../../newWidgets";
 
-const REMOVAL_SYMBOL = Symbol();
-
-type IndexPath = Array<string | number>;
+import AttributeSelect from "./AttributeSelect";
+import { DELETE_INPUT, ADD_INPUT, SET_INPUT } from "../../state/actionTypes";
 
 class InputList extends Component<{
   inputDefinitions: IInputDefinitionMapping;
   inputs: IInputMapping;
-  onChange: (inputPath: IndexPath, value) => void;
-  basePath?: string[];
+  onChange: (path: IndexPath, value) => void;
+  onAdd: (path: IndexPath) => void;
+  onDelete: (path: IndexPath) => void;
+  basePath?: IndexPath;
 }> {
   public render() {
     const { inputDefinitions, inputs } = this.props;
@@ -102,27 +104,6 @@ class InputList extends Component<{
         );
       } else if (
         inputDefinition.type === "complex" &&
-        inputDefinition.repeat === false
-      ) {
-        const value = inputs[inputName] as IInputMapping;
-        return (
-          <tr key={i}>
-            <td colSpan={2}>
-              {label}
-              <div style={{ marginLeft: "1em" }}>
-                <InputList
-                  inputDefinitions={inputDefinition.inputs}
-                  inputs={value}
-                  onChange={(path2, value2) => {
-                    this.props.onChange([inputName, ...path2], value2);
-                  }}
-                />
-              </div>
-            </td>
-          </tr>
-        );
-      } else if (
-        inputDefinition.type === "complex" &&
         inputDefinition.repeat === true
       ) {
         const value = inputs[inputName] as IInputMapping[];
@@ -143,9 +124,7 @@ class InputList extends Component<{
                   <button
                     className="close float-left"
                     type="button"
-                    onClick={() =>
-                      this.props.onChange([inputName, j], REMOVAL_SYMBOL)
-                    }
+                    onClick={() => this.props.onDelete([inputName, j])}
                   >
                     <span>&times;</span>
                   </button>
@@ -155,16 +134,18 @@ class InputList extends Component<{
                     onChange={(path2, value2) => {
                       this.props.onChange([inputName, j, ...path2], value2);
                     }}
+                    onDelete={path2 =>
+                      this.props.onDelete([inputName, j, ...path2])
+                    }
+                    onAdd={path => null /* ??? */}
                   />
                 </div>
               ))}
               <button
                 type="button"
                 onClick={() => {
-                  // For now, copies the currently last item. Will have to take from default later
-                  const lastEntry = value.slice(-1)[0];
-                  const copy = { ...lastEntry };
-                  this.props.onChange([inputName, value.length], copy);
+                  // Doesn't support more than one degree of nesting
+                  this.props.onAdd([inputName]);
                 }}
               >
                 +
@@ -213,19 +194,15 @@ interface IProps {
   onAttributeChange: any;
   onDeviceRemove: any;
   onParamChange: any;
-  widget: any;
+  widget: IWidget;
   widgetDefinitions: any;
   isRootCanvas: boolean;
-
-  newDefinition: IWidgetDefinition;
-  newWidget: IWidget;
+  onSetInput: (path: IndexPath, value: any) => void;
+  onDeleteInput: (path: IndexPath) => void;
+  onAddInput: (path: IndexPath) => void;
 }
 
-interface IState {
-  widget: any;
-}
-
-export default class Inspector extends Component<IProps, IState> {
+class Inspector extends Component<IProps> {
   // public deviceChooser(deviceName, index) {
   //   return (
   //     <td>
@@ -282,91 +259,42 @@ export default class Inspector extends Component<IProps, IState> {
   //   );
   // }
 
-  public constructor(props) {
-    super(props);
-    this.state = {
-      widget: {
-        type: "ATTRIBUTE_PLOTTER",
-        x: 100,
-        y: 200,
-        inputs: {
-          xMin: -10,
-          xMax: 10,
-          yMin: -10,
-          yMax: 10,
-          showGrid: true,
-          attributes: [
-            {
-              attribute: {
-                device: "sys/tg_test/1",
-                attribute: "ampli"
-              },
-              strokeStyle: "line",
-              strokeWidth: 3
-            },
-            {
-              attribute: {
-                device: "sys/tg_test/1",
-                attribute: "ampli"
-              },
-              strokeStyle: "dashed",
-              strokeWidth: 10
-            }
-          ]
-        }
-      }
-    };
-  }
-
   public render() {
-    const { newDefinition: definition } = this.props;
-    const {
-      widget: { inputs }
-    } = this.state;
+    const { widget } = this.props;
+    const definitions = widgetBundles.map(bundle => bundle.definition);
+    const definition = definitions.find(({ type }) => type === widget.type);
+
+    if (definition == null) {
+      return null;
+    }
 
     return (
       <div className="Inspector">
         <h1>Inspector</h1>
         <InputList
-          inputDefinitions={definition[0].inputs}
-          inputs={inputs}
-          onChange={(path, value) => {
-            const updatedInputs = copySetWithIndexPath(
-              this.state.widget.inputs,
-              path,
-              value
-            );
-            const updatedWidget = {
-              ...this.state.widget,
-              inputs: updatedInputs
-            };
-            this.setState({ widget: updatedWidget });
-          }}
+          inputDefinitions={definition.inputs}
+          inputs={widget.inputs}
+          onChange={(path, value) => this.props.onSetInput(path, value)}
+          onDelete={path => this.props.onDeleteInput(path)}
+          onAdd={path => this.props.onAddInput(path)}
         />
         <hr />
-        <pre>{JSON.stringify(inputs, null, 2)}</pre>
+        <pre>{JSON.stringify(this.props.widget, null, 2)}</pre>
       </div>
     );
   }
 }
 
-function copySetWithIndexPath(obj: object, path: IndexPath, value: any) {
-  const [head, ...tail] = path;
-  const replacement =
-    tail.length > 0 ? copySetWithIndexPath(obj[head], tail, value) : value;
-  if (Array.isArray(obj)) {
-    const copy = obj.concat();
-    if (typeof head !== "number") {
-      throw new Error("head must be an integer when obj is an array");
-    } else {
-      if (replacement === REMOVAL_SYMBOL) {
-        copy.splice(head, 1);
-      } else {
-        copy[head] = replacement;
-      }
-    }
-    return copy;
-  } else {
-    return { ...obj, [head]: replacement };
-  }
+function mapDispatchToProps(dispatch) {
+  return {
+    onSetInput: (path: IndexPath, value: any) =>
+      dispatch({ type: SET_INPUT, path, value }),
+    onAddInput: (path: IndexPath) => dispatch({ type: ADD_INPUT, path }),
+    onDeleteInput: (path: IndexPath) => dispatch({ type: DELETE_INPUT, path })
+  };
 }
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Inspector);

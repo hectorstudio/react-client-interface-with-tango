@@ -1,9 +1,12 @@
-import { IWidget } from "../../types";
+import { IWidget, IndexPath, IInputMapping } from "../../types";
 import {
   ADD_WIDGET,
   MOVE_WIDGET,
   SELECT_WIDGET,
-  DELETE_WIDGET
+  DELETE_WIDGET,
+  SET_INPUT,
+  DELETE_INPUT,
+  ADD_INPUT
 } from "../actionTypes";
 import { defaultInputs } from "src/dashboard/utils";
 import { DashboardAction } from "../actions";
@@ -23,6 +26,29 @@ function removeAt<T>(arr: T[], index: number) {
 function move(widget: IWidget, dx: number, dy: number) {
   const { x, y } = widget;
   return { ...widget, x: x + dx, y: y + dy };
+}
+
+const REMOVAL_SYMBOL = Symbol("REMOVAL_SYMBOL");
+
+function setWithIndexPath(obj: object, path: IndexPath, value: any) {
+  const [head, ...tail] = path;
+  const replacement =
+    tail.length > 0 ? setWithIndexPath(obj[head], tail, value) : value;
+  if (Array.isArray(obj)) {
+    const copy = obj.concat();
+    if (typeof head !== "number") {
+      throw new Error("head must be an integer when obj is an array");
+    } else {
+      if (replacement === REMOVAL_SYMBOL) {
+        copy.splice(head, 1);
+      } else {
+        copy[head] = replacement;
+      }
+    }
+    return copy;
+  } else {
+    return { ...obj, [head]: replacement };
+  }
 }
 
 interface IWidgetState {
@@ -71,6 +97,32 @@ export default function canvases(
     }
     case DELETE_WIDGET: {
       const widgets = removeAt(state.widgets, state.selectedIndex);
+      return { ...state, widgets };
+    }
+    case SET_INPUT: {
+      const { path, value } = action;
+      const index = state.selectedIndex;
+      const oldWidget = state.widgets[index];
+      const oldInputs = oldWidget.inputs;
+      const newInputs = setWithIndexPath(oldInputs, path, value);
+      const newWidget = { ...oldWidget, inputs: newInputs };
+      const widgets = replaceAt(state.widgets, index, newWidget);
+      return { ...state, widgets };
+    }
+    // ADD_INPUT: {
+    //   const { path } = action;
+    //   const index = state.selectedIndex;
+    //   const oldWidget = state.widgets[index];
+    //   const oldInputs = oldWidget.inputs;
+    // }
+    case DELETE_INPUT: {
+      const { path } = action;
+      const index = state.selectedIndex;
+      const oldWidget = state.widgets[index];
+      const oldInputs = oldWidget.inputs;
+      const newInputs = setWithIndexPath(oldInputs, path, REMOVAL_SYMBOL);
+      const newWidget = { ...oldWidget, inputs: newInputs };
+      const widgets = replaceAt(state.widgets, index, newWidget);
       return { ...state, widgets };
     }
     default:

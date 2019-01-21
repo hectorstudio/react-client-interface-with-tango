@@ -1,9 +1,10 @@
 import React from "react";
 
 export interface IBaseInputDefinition<T> {
-  label: string;
-  repeat: boolean;
+  label?: string;
+  repeat?: boolean;
   default?: T;
+  required?: boolean;
 }
 
 interface IBooleanInputDefinition extends IBaseInputDefinition<boolean> {
@@ -59,7 +60,7 @@ export interface IWidget {
   y: number;
   width: number;
   height: number;
-  [input: string]: any;
+  inputs: IInputMapping;
 }
 
 export interface IInputMapping {
@@ -76,3 +77,5 @@ export interface IWidgetBundle {
   definition: IWidgetDefinition;
   component: React.Component;
 }
+
+export type IndexPath = Array<string | number>;
