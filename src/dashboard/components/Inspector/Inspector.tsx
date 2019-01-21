@@ -4,8 +4,8 @@ import AttributeSelect from "./AttributeSelect";
 import {
   IInputDefinitionMapping,
   IInputMapping,
-  INewDefinition,
-  IWidget
+  IWidget,
+  IWidgetDefinition
 } from "../types";
 
 const REMOVAL_SYMBOL = Symbol();
@@ -217,7 +217,7 @@ interface IProps {
   widgetDefinitions: any;
   isRootCanvas: boolean;
 
-  newDefinition: INewDefinition;
+  newDefinition: IWidgetDefinition;
   newWidget: IWidget;
 }
 
@@ -328,7 +328,7 @@ export default class Inspector extends Component<IProps, IState> {
       <div className="Inspector">
         <h1>Inspector</h1>
         <InputList
-          inputDefinitions={definition.inputs}
+          inputDefinitions={definition[0].inputs}
           inputs={inputs}
           onChange={(path, value) => {
             const updatedInputs = copySetWithIndexPath(

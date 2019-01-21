@@ -7,6 +7,8 @@ class AttributePlot extends Component {
 }
 
 const definition = {
+  type: "ATTRIBUTE_PLOT",
+  name: "Attribute Plot",
   inputs: {
     xMin: {
       type: "number",
@@ -42,7 +44,8 @@ const definition = {
           label: "Attribute",
           type: "attribute",
           required: true,
-          format: "scalar"
+          dataFormat: "scalar",
+          dataType: "numeric"
         },
         strokeStyle: {
           type: "select",
