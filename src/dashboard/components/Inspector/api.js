@@ -25,11 +25,19 @@ function createClient(tangoDB) {
 }
 
 export async function fetchAttributes(tangoDB, device) {
-  const res = await createClient(tangoDB).query(FETCH_ATTRIBUTES, { device });
-  return res.data.device.attributes;
+  try {
+    const res = await createClient(tangoDB).query(FETCH_ATTRIBUTES, { device });
+    return res.data.device.attributes;
+  } catch (err) {
+    return [];
+  }
 }
 
 export async function fetchDeviceNames(tangoDB) {
-  const res = await createClient(tangoDB).query(FETCH_DEVICE_NAMES);
-  return res.data.devices.map(({ name }) => name);
+  try {
+    const res = await createClient(tangoDB).query(FETCH_DEVICE_NAMES);
+    return res.data.devices.map(({ name }) => name);
+  } catch (err) {
+    return [];
+  }
 }
