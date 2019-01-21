@@ -6,7 +6,7 @@ import {
   IInputMapping,
   IWidget,
   IWidgetDefinition
-} from "../types";
+} from "../../types";
 
 const REMOVAL_SYMBOL = Symbol();
 

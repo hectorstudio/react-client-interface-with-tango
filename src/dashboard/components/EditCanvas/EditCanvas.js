@@ -4,7 +4,7 @@ import { DragSource, DropTarget } from "react-dnd";
 import PropTypes from 'prop-types'
 
 import dndTypes from "../../dndTypes";
-import { getWidgetDefinition } from "../../utils";
+import { getWidgetDefinition } from "../../utilsOld";
 import {widget, widgetDefinition} from "../../propTypes"
 
 const BACKSPACE = 8;

@@ -129,6 +129,7 @@ class Dashboard extends Component {
   handleAddWidget(definition, x, y) {
     this.props.dispatch({ type: ADD_WIDGET, x, y, definition });
 
+    /*
     const params = definition.params.reduce(
       (accum, param) => ({
         ...accum,
@@ -148,6 +149,7 @@ class Dashboard extends Component {
     };
     const widgets = [...this.currentWidgets(), widget];
     this.updateWidgets(widgets, widgets.length - 1);
+    */
   }
 
   handleParamChange(param, value) {

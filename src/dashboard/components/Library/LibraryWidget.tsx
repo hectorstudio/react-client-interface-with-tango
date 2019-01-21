@@ -6,37 +6,13 @@ import {
   DragSourceMonitor
 } from "react-dnd";
 
-import {
-  IWidgetBundle,
-  IInputDefinitionMapping,
-  IInputDefinition
-} from "../types";
+import { IWidgetBundle } from "../../types";
 import dndTypes from "../../dndTypes";
+import { defaultInputs } from "../../utils";
 
 interface IProps {
   bundle: IWidgetBundle;
   connectDragSource: ConnectDragSource;
-}
-
-function defaultInput(input: IInputDefinition) {
-  if (input.type === "complex") {
-    if (input.repeat) {
-      return [];
-    } else {
-      return defaultInputs(input.inputs);
-    }
-  } else {
-    return input.default;
-  }
-}
-
-function defaultInputs(inputs: IInputDefinitionMapping) {
-  const inputNames = Object.keys(inputs);
-  return inputNames.reduce((accum, name) => {
-    const input = inputs[name];
-    const value = defaultInput(input);
-    return { ...accum, [name]: value };
-  }, {});
 }
 
 const libraryWidgetSource = {
