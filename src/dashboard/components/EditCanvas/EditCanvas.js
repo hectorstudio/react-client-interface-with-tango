@@ -19,8 +19,8 @@ class EditWidget extends Component {
     if (this.props.isDragging) {
       return null;
     }
-    const { connectDragSource } = this.props;
-    return connectDragSource(
+
+    return this.props.connectDragSource(
       <div
         className={this.props.isSelected ? "Widget selected" : "Widget"}
         style={{ left: this.props.x, top: this.props.y }}
@@ -32,16 +32,6 @@ class EditWidget extends Component {
     );
   }
 }
-EditWidget.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number,
-  isSelected: PropTypes.bool,
-  isDragging: PropTypes.bool,
-  onClick: PropTypes.func,
-  warning: PropTypes.bool,
-  x: PropTypes.number,
-  y: PropTypes.number
-};
 
 const editWidgetSource = {
   beginDrag(props) {
@@ -49,6 +39,11 @@ const editWidgetSource = {
       index: props.index,
       warning: props.warning
     };
+  },
+
+  endDrag(props, monitor) {
+    const { dx, dy } = monitor.getDropResult();
+    props.onMove(dx, dy);
   }
 };
 
@@ -76,7 +71,7 @@ const editCanvasTarget = {
     // a warning badge offsets the position by -10 px hor/ver
 
     const compensation = warning ? 10 : 0;
-    props.onMoveWidget(index, x + compensation, y + compensation);
+    return { dx: x + compensation, dy: y + compensation };
   }
 };
 
@@ -175,6 +170,7 @@ class EditCanvas extends Component {
                 x={x}
                 y={y}
                 onClick={() => null}
+                onMove={(dx, dy) => this.props.onMoveWidget(i, dx, dy)}
                 warning={warning}
               >
                 {element}
@@ -186,17 +182,6 @@ class EditCanvas extends Component {
     );
   }
 }
-EditCanvas.propTypes = {
-  connectLibraryDropTarget: PropTypes.func,
-  connectMoveDropTarget: PropTypes.func,
-  onAddWidget: PropTypes.func,
-  onDeleteWidget: PropTypes.func,
-  onMoveWidget: PropTypes.func,
-  onSelectWidget: PropTypes.func,
-  selectedWidgetIndex: PropTypes.number,
-  widgetDefinitions: PropTypes.arrayOf(widgetDefinition),
-  widgets: PropTypes.arrayOf(widget)
-};
 
 const moveDropTarget = DropTarget(
   dndTypes.EDIT_WIDGET,
@@ -229,7 +214,14 @@ function mapStateToProps(state) {
   };
 }
 
-const connectWithState = connect(mapStateToProps);
+function mapDispatchToProps(dispatch) {
+  return {
+    onMoveWidget: (index, dx, dy) =>
+      dispatch({ type: "MOVE_WIDGET", index, dx, dy })
+  };
+}
+
+const connectWithState = connect(mapStateToProps, mapDispatchToProps);
 
 export default [
   moveDropTarget,
