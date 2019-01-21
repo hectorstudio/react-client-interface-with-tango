@@ -1,5 +1,10 @@
 import { Action } from "redux";
-import { ADD_WIDGET, MOVE_WIDGET, SELECT_WIDGET } from "./actionTypes";
+import {
+  ADD_WIDGET,
+  MOVE_WIDGET,
+  SELECT_WIDGET,
+  DELETE_WIDGET
+} from "./actionTypes";
 import { IWidgetDefinition } from "../types";
 
 export interface IAddWidgetAction extends Action {
@@ -11,7 +16,6 @@ export interface IAddWidgetAction extends Action {
 
 export interface IMoveWidgetAction extends Action {
   type: typeof MOVE_WIDGET;
-  index: number;
   dx: number;
   dy: number;
 }
@@ -21,4 +25,12 @@ export interface ISelectWidgetAction extends Action {
   index: number;
 }
 
-export type DashboardAction = IAddWidgetAction | IMoveWidgetAction | ISelectWidgetAction;
+export interface IDeleteWidgetAction extends Action {
+  type: typeof DELETE_WIDGET;
+}
+
+export type DashboardAction =
+  | IAddWidgetAction
+  | IMoveWidgetAction
+  | ISelectWidgetAction
+  | IDeleteWidgetAction;

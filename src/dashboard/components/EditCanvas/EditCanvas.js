@@ -24,7 +24,10 @@ class EditWidget extends Component {
       <div
         className={this.props.isSelected ? "Widget selected" : "Widget"}
         style={{ left: this.props.x, top: this.props.y }}
-        onClick={this.props.onClick}
+        onClick={event => {
+          event.stopPropagation();
+          this.props.onClick();
+        }}
       >
         {this.props.warning && <WarningBadge />}
         {this.props.children}
@@ -91,24 +94,6 @@ class EditCanvas extends Component {
     return this.definitionForWidget(widget).component;
   }
 
-  handleSelectWidget(i, event) {
-    event.stopPropagation();
-    if (this.props.onSelectWidget) {
-      this.props.onSelectWidget(i);
-    }
-  }
-
-  handleKeyDown(event) {
-    if ([BACKSPACE, DELETE].indexOf(event.keyCode) !== -1) {
-      event.preventDefault();
-      this.props.onDeleteWidget(this.props.selectedWidgetIndex);
-    }
-  }
-
-  onMoveWidget(index, x, y) {
-    this.props.onMoveWidget(index, x, y);
-  }
-
   render() {
     const { connectMoveDropTarget, connectLibraryDropTarget } = this.props;
     const hasWidgets = this.props.widgetsNew.length > 0;
@@ -117,8 +102,14 @@ class EditCanvas extends Component {
       connectMoveDropTarget(
         <div
           className="Canvas edit"
-          onClick={this.handleSelectWidget.bind(this, -1)}
-          onKeyDown={this.handleKeyDown.bind(this)}
+          onClick={() => this.props.onSelectWidget(-1)}
+          onKeyDown={event => {
+            event.preventDefault();
+            if ([BACKSPACE, DELETE].indexOf(event.keyCode) !== -1) {
+              event.preventDefault();
+              this.props.onDeleteWidget();
+            }
+          }}
           tabIndex="0"
         >
           <div className="Placeholder" style={{ opacity: hasWidgets ? 0 : 1 }}>
@@ -127,35 +118,6 @@ class EditCanvas extends Component {
           </div>
 
           {this.props.widgetsNew.map((widget, index) => {
-            /*const Widget = this.componentForWidget(widget);
-            const { x, y, device, attribute, params } = widget;
-
-            const definition = this.definitionForWidget(widget);
-            const fieldTypes = definition.fields.map(field => field.type);
-            const warning =
-              (device == null && fieldTypes.indexOf("device") !== -1) ||
-              (attribute == null && fieldTypes.indexOf("attribute") !== -1);
-
-            return (
-              <EditWidget
-                index={i}
-                key={i}
-                isSelected={this.props.selectedWidgetIndex === i}
-                x={x}
-                y={y}
-                onClick={this.handleSelectWidget.bind(this, i)}
-                warning={warning}
-              >
-                <Widget
-                  device={device}
-                  attribute={attribute}
-                  params={params}
-                  mode="edit"
-                />
-              </EditWidget>
-            );
-            */
-
             const { x, y } = widget;
             const { component } = this.bundleForWidget(widget);
             const { inputs } = widget;
@@ -169,11 +131,9 @@ class EditCanvas extends Component {
                 isSelected={index === this.props.selectedIndex}
                 x={x}
                 y={y}
-                onClick={event => {
-                  event.stopPropagation();
-                  this.props.onSelectWidget(index);
-                }}
-                onMove={(dx, dy) => this.props.onMoveWidget(index, dx, dy)}
+                onDelete={() => this.props.onDeleteWidget(index)}
+                onClick={() => this.props.onSelectWidget(index)}
+                onMove={(dx, dy) => this.props.onMoveWidget(dx, dy)}
                 warning={warning}
               >
                 {element}
@@ -220,9 +180,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onMoveWidget: (index, dx, dy) =>
-      dispatch({ type: "MOVE_WIDGET", index, dx, dy }),
-    onSelectWidget: index => dispatch({ type: "SELECT_WIDGET", index })
+    onMoveWidget: (dx, dy) =>
+      dispatch({ type: "MOVE_WIDGET", dx, dy }),
+    onSelectWidget: index => dispatch({ type: "SELECT_WIDGET", index }),
+    onDeleteWidget: () =>
+      dispatch({ type: "DELETE_WIDGET" })
   };
 }
 
