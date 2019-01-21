@@ -104,7 +104,6 @@ class EditCanvas extends Component {
           className="Canvas edit"
           onClick={() => this.props.onSelectWidget(-1)}
           onKeyDown={event => {
-            event.preventDefault();
             if ([BACKSPACE, DELETE].indexOf(event.keyCode) !== -1) {
               event.preventDefault();
               this.props.onDeleteWidget();
@@ -121,8 +120,8 @@ class EditCanvas extends Component {
             const { x, y } = widget;
             const { component } = this.bundleForWidget(widget);
             const { inputs } = widget;
-            const element = React.createElement(component, { inputs });
-            const warning = true; // Is any required field missing?
+            const element = React.createElement(component, { inputs, mode: "edit" });
+            const warning = true; // TODO: Is any required field missing?
 
             return (
               <EditWidget
@@ -133,7 +132,7 @@ class EditCanvas extends Component {
                 y={y}
                 onDelete={() => this.props.onDeleteWidget(index)}
                 onClick={() => this.props.onSelectWidget(index)}
-                onMove={(dx, dy) => this.props.onMoveWidget(dx, dy)}
+                onMove={(dx, dy) => this.props.onMoveWidget(index, dx, dy)}
                 warning={warning}
               >
                 {element}
@@ -180,11 +179,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onMoveWidget: (dx, dy) =>
-      dispatch({ type: "MOVE_WIDGET", dx, dy }),
+    onMoveWidget: (index, dx, dy) => dispatch({ type: "MOVE_WIDGET", index, dx, dy }),
     onSelectWidget: index => dispatch({ type: "SELECT_WIDGET", index }),
-    onDeleteWidget: () =>
-      dispatch({ type: "DELETE_WIDGET" })
+    onDeleteWidget: () => dispatch({ type: "DELETE_WIDGET" })
   };
 }
 

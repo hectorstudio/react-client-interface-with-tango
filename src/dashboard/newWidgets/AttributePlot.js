@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 class AttributePlot extends Component {
   render() {
-    return <div>Nothing</div>;
+    return <div>Mode: {this.props.mode}</div>;
   }
 }
 

@@ -18,6 +18,7 @@ export interface IMoveWidgetAction extends Action {
   type: typeof MOVE_WIDGET;
   dx: number;
   dy: number;
+  index: number;
 }
 
 export interface ISelectWidgetAction extends Action {

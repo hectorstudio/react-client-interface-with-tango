@@ -17,9 +17,10 @@ export function addWidget(
 
 export function moveWidget(
   dx: number,
-  dy: number
+  dy: number,
+  index: number
 ): IMoveWidgetAction {
-  return { type: MOVE_WIDGET, dx, dy };
+  return { type: MOVE_WIDGET, dx, dy, index };
 }
 
 export function selectWidget(index: number): ISelectWidgetAction {
