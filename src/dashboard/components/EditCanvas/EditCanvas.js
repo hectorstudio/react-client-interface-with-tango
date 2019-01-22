@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 
 import dndTypes from "../../dndTypes";
 import { componentForWidget } from "../../newWidgets";
+import { TILE_SIZE } from "../constants";
 
 import EditWidget from "./EditWidget";
 import {
@@ -17,8 +18,6 @@ import {
 const BACKSPACE = 8;
 const DELETE = 46;
 
-const gridSize = 20;
-
 const editCanvasTarget = {
   canDrop(props, monitor) {
     return true;
@@ -27,8 +26,8 @@ const editCanvasTarget = {
   drop(props, monitor, component) {
     const { x, y } = monitor.getDifferenceFromInitialOffset();
     const { index, warning } = monitor.getItem();
-    const dx = Math.floor(x / gridSize);
-    const dy = Math.floor(y / gridSize);
+    const dx = Math.floor(x / TILE_SIZE);
+    const dy = Math.floor(y / TILE_SIZE);
     return { dx, dy };
   }
 };
@@ -80,10 +79,10 @@ class EditCanvas extends Component {
                 index={index}
                 key={index}
                 isSelected={index === this.props.selectedIndex}
-                x={1 + gridSize * x}
-                y={1 + gridSize * y}
-                width={gridSize * width}
-                height={gridSize * height}
+                x={1 + TILE_SIZE * x}
+                y={1 + TILE_SIZE * y}
+                width={TILE_SIZE * width}
+                height={TILE_SIZE * height}
                 onDelete={() => this.props.onDeleteWidget(index)}
                 onClick={() => this.props.onSelectWidget(index)}
                 onMove={(dx, dy) => this.props.onMoveWidget(index, dx, dy)}
@@ -116,8 +115,8 @@ const addFromLibraryDropTarget = DropTarget(
     drop(props, monitor, component) {
       const { x: x1, y: y1 } = findDOMNode(component).getBoundingClientRect();
       const { x: x2, y: y2 } = monitor.getClientOffset();
-      const x = Math.floor((x2 - x1) / gridSize);
-      const y = Math.floor((y2 - y1) / gridSize);
+      const x = Math.floor((x2 - x1) / TILE_SIZE);
+      const y = Math.floor((y2 - y1) / TILE_SIZE);
       props.onAddWidget(monitor.getItem().type, x, y);
     }
   },
