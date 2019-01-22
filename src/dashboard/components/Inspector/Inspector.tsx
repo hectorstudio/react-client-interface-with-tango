@@ -303,9 +303,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     onSetInput: (path: IndexPath, value: any) =>
       dispatch({ type: SET_INPUT, path, value }),
-    onAddInput: (path: IndexPath) => {
-      // addInput(ownProps.definition)
-    }, // dispatch({ type: ADD_INPUT, path }),
+    onAddInput: (path: IndexPath) => dispatch({ type: ADD_INPUT, path }),
     onDeleteInput: (path: IndexPath) => dispatch({ type: DELETE_INPUT, path })
   };
 }

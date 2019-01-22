@@ -19,31 +19,49 @@ export function move(widget: IWidget, dx: number, dy: number) {
 
 export function setInput(widget: IWidget, path: IndexPath, value: any) {
   const oldInputs = widget.inputs;
-  const newInputs = setWithIndexPath(oldInputs, path, value);
+  const newInputs = setWithIndexPath(oldInputs, path, value, REPLACE);
   return { ...widget, inputs: newInputs };
 }
 
-export function deleteInput(widget: IWidget, path) {
+export function deleteInput(widget: IWidget, path: IndexPath) {
   const oldInputs = widget.inputs;
-  const newInputs = setWithIndexPath(oldInputs, path, DELETE_SYMBOL);
+  const newInputs = setWithIndexPath(oldInputs, path, null, DELETE);
   return { ...widget, inputs: newInputs };
 }
 
-const DELETE_SYMBOL = Symbol("DELETE_SYMBOL");
+export function addInput(widget: IWidget, path: IndexPath, value: any) {
+  const oldInputs = widget.inputs;
+  const newInputs = setWithIndexPath(oldInputs, path, value, ADD);
+  return { ...widget, inputs: newInputs };
+}
 
-export function setWithIndexPath(obj: object, path: IndexPath, value: any) {
+const DELETE = Symbol("DELETE");
+const ADD = Symbol("ADD");
+const REPLACE = Symbol("REPLACE");
+
+type Mode = typeof DELETE | typeof ADD | typeof REPLACE;
+
+export function setWithIndexPath(
+  obj: object,
+  path: IndexPath,
+  value: any,
+  mode: Mode
+) {
   const [head, ...tail] = path;
-  const replacement =
-    tail.length > 0 ? setWithIndexPath(obj[head], tail, value) : value;
+  const replacement = tail.length > 0
+      ? setWithIndexPath(obj[head], tail, value, mode)
+      : value;
   if (Array.isArray(obj)) {
     const copy = obj.concat();
     if (typeof head !== "number") {
       throw new Error("head must be an integer when obj is an array");
     } else {
-      if (replacement === DELETE_SYMBOL) {
+      if (mode === DELETE) {
         copy.splice(head, 1);
-      } else {
-        copy[head] = replacement;
+      } else if (mode === REPLACE) {
+        copy.splice(head, 1, replacement);
+      } else if (mode === ADD) {
+        copy.splice(head, 0, replacement);
       }
     }
     return copy;
