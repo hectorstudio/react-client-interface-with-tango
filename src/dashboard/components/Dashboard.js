@@ -239,15 +239,6 @@ class Dashboard extends Component {
     const widgets = this.currentWidgets();
     const selectedWidget = this.selectedWidget();
 
-    /*const complexWidgetDefinitions = this.state.canvases
-      .slice(1)
-      .map(complexWidgetDefinition);*/
-
-    /*const widgetDefinitions = normalizeWidgetDefinitions([
-      ...WIDGET_DEFINITIONS,
-      ...complexWidgetDefinitions
-    ]);*/
-
     return (
       <div className="Dashboard">
         <DeviceProvider tangoDB="kitslab">
@@ -267,7 +258,7 @@ class Dashboard extends Component {
                   "fa-play": mode === "edit",
                   "fa-pause": mode === "run"
                 })}
-                disabled={!this.isRootCanvas()}
+                disabled={!this.props.allAreValid || !this.isRootCanvas()}
               />
               <select
                 className="form-control"
@@ -305,7 +296,7 @@ class Dashboard extends Component {
             ) : (
               <RunCanvas
                 widgets={widgets}
-                tangoDB={this.props.match.params.tangoDB}
+                tangoDB={/*this.props.match.params.tangoDB*/ "kitslab"}
               />
             )}
           </div>
@@ -346,10 +337,15 @@ export function expandToGrid(val) {
 function mapStateToProps(state) {
   const { widgets, selectedIndex } = state.widgets;
   const selectedWidget = widgets[selectedIndex];
+  const allAreValid = widgets.reduce(
+    (prev, widget) => prev && widget.valid,
+    true
+  );
 
   return {
     selectedWidget,
     selectedWidgetIndex: selectedIndex,
+    allAreValid,
     mode: state.ui.mode
   };
 }
