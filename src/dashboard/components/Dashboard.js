@@ -15,13 +15,18 @@ import { load as loadFromRepo } from "../dashboardRepo";
 
 import { complexWidgetDefinition } from "./ComplexWidget/ComplexWidget";
 
-
 import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
 
-import { SELECT_WIDGET, DELETE_WIDGET, ADD_WIDGET } from "../state/actionTypes";
+import {
+  SELECT_WIDGET,
+  DELETE_WIDGET,
+  ADD_WIDGET,
+  TOGGLE_MODE
+} from "../state/actionTypes";
 
 import "./Dashboard.css";
+import { DeviceProvider } from "./DevicesProvider";
 
 const GRID_TILE_SIZE = 15;
 const DEFAULT_CANVASES = [
@@ -230,7 +235,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const mode = this.state.mode;
+    const mode = this.props.mode;
     const widgets = this.currentWidgets();
     const selectedWidget = this.selectedWidget();
 
@@ -245,81 +250,84 @@ class Dashboard extends Component {
 
     return (
       <div className="Dashboard">
-        <LogInOut />
-        <LoginDialog />
-        <div className="TopBar">
-          <form className="form-inline">
-            <button
-              type="button"
-              onClick={this.toggleMode}
-              style={{ fontSize: "small", width: "2.5em", textAlign: "center" }}
-              className={classNames("form-control fa", {
-                "fa-play": mode === "edit",
-                "fa-pause": mode === "run"
-              })}
-              disabled={!this.isRootCanvas()}
-            />
-            <select
-              className="form-control"
-              style={{
-                marginLeft: "0.5em",
-                height: "2em"
-              }}
-              onChange={this.handleChangeCanvas}
-            >
-              {this.state.canvases.map((canvas, i) => (
-                <option key={i} value={i}>
-                  {i === 0 ? "Root" : canvas.name}
-                </option>
-              ))}
-            </select>
-            {false && (
+        <DeviceProvider tangoDB="kitslab">
+          <LogInOut />
+          <LoginDialog />
+          <div className="TopBar">
+            <form className="form-inline">
               <button
-                onClick={() => alert(JSON.stringify(this.state.canvases))}
+                type="button"
+                onClick={this.toggleMode}
+                style={{
+                  fontSize: "small",
+                  width: "2.5em",
+                  textAlign: "center"
+                }}
+                className={classNames("form-control fa", {
+                  "fa-play": mode === "edit",
+                  "fa-pause": mode === "run"
+                })}
+                disabled={!this.isRootCanvas()}
+              />
+              <select
+                className="form-control"
+                style={{
+                  marginLeft: "0.5em",
+                  height: "2em"
+                }}
+                onChange={this.handleChangeCanvas}
               >
-                Dump
-              </button>
-            )}
-          </form>
-        </div>
-        <div className={classNames("CanvasArea", mode)}>
-          {mode === "edit" ? (
-            <EditCanvas
-              widgetsOld={widgets}
-              onMoveWidget={this.handleMoveWidget}
-              onSelectWidget={this.handleSelectWidget}
-              onDeleteWidget={this.handleDeleteWidget}
-              selectedWidgetIndex={this.state.selectedWidgetIndex}
-              onAddWidget={this.handleAddWidget}
-            />
-          ) : (
-            <RunCanvas
-              widgets={widgets}
-              tangoDB={this.props.match.params.tangoDB}
-              subCanvases={[null, ...this.state.canvases.slice(1)]}
-            />
-          )}
-        </div>
-        {mode === "edit" && (
-          <div className="Sidebar">
-            {this.props.selectedWidgetIndex === -1 ? (
-              <Library
-                showCustom={this.state.selectedCanvasIndex === 0}
+                {this.state.canvases.map((canvas, i) => (
+                  <option key={i} value={i}>
+                    {i === 0 ? "Root" : canvas.name}
+                  </option>
+                ))}
+              </select>
+              {false && (
+                <button
+                  onClick={() => alert(JSON.stringify(this.state.canvases))}
+                >
+                  Dump
+                </button>
+              )}
+            </form>
+          </div>
+          <div className={classNames("CanvasArea", mode)}>
+            {mode === "edit" ? (
+              <EditCanvas
+                widgetsOld={widgets}
+                onMoveWidget={this.handleMoveWidget}
+                onSelectWidget={this.handleSelectWidget}
+                onDeleteWidget={this.handleDeleteWidget}
+                selectedWidgetIndex={this.state.selectedWidgetIndex}
+                onAddWidget={this.handleAddWidget}
               />
             ) : (
-              <Inspector
-                widget={this.props.selectedWidget}
-                deviceNames={this.state.deviceNames}
-                onParamChange={this.handleParamChange}
-                onDeviceChange={this.handleDeviceChange}
-                onDeviceRemove={this.handleDeviceRemove}
-                onAttributeChange={this.handleAttributeChange}
-                isRootCanvas={this.isRootCanvas()}
+              <RunCanvas
+                widgets={widgets}
                 tangoDB={this.props.match.params.tangoDB}
               />
             )}
           </div>
-        )}
+          {mode === "edit" && (
+            <div className="Sidebar">
+              {this.props.selectedWidgetIndex === -1 ? (
+                <Library showCustom={this.state.selectedCanvasIndex === 0} />
+              ) : (
+                <Inspector
+                  widget={this.props.selectedWidget}
+                  deviceNames={this.state.deviceNames}
+                  onParamChange={this.handleParamChange}
+                  onDeviceChange={this.handleDeviceChange}
+                  onDeviceRemove={this.handleDeviceRemove}
+                  onAttributeChange={this.handleAttributeChange}
+                  isRootCanvas={this.isRootCanvas()}
+                  tangoDB={this.props.match.params.tangoDB}
+                />
+              )}
+            </div>
+          )}
+        </DeviceProvider>
       </div>
     );
   }
@@ -336,12 +344,13 @@ export function expandToGrid(val) {
 }
 
 function mapStateToProps(state) {
-  const { widgets, selectedIndex } = state.widgets;
+  const { widgets, selectedIndex } = state.widgets;
   const selectedWidget = widgets[selectedIndex];
 
   return {
     selectedWidget,
-    selectedWidgetIndex: selectedIndex
+    selectedWidgetIndex: selectedIndex,
+    mode: state.ui.mode
   };
 }
 
