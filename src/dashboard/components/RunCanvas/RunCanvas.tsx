@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import { IRootState } from "../../state/reducers";
 import { IWidget, IInputMapping, IInputDefinitionMapping } from "../../types";
 import { definitionForWidget } from "../../newWidgets";
+import { changeEventEmitter } from "./emitter";
 
-function* extractModelsFromInputs(
+function* extractModelsFromInputsGen(
   inputs: IInputMapping,
   inputDefinitions: IInputDefinitionMapping
 ) {
@@ -23,10 +24,13 @@ function* extractModelsFromInputs(
       if (inputDefinition.type === "complex") {
         if (repeat) {
           for (const entry of input) {
-            yield* extractModelsFromInputs(entry, inputDefinition.inputs);
+            yield* extractModelsFromInputsGen(entry, inputDefinition.inputs);
           }
         } else {
-          yield* extractModelsFromInputs(input.inputs, inputDefinition.inputs);
+          yield* extractModelsFromInputsGen(
+            input.inputs,
+            inputDefinition.inputs
+          );
         }
       } else {
         throw new Error();
@@ -35,27 +39,51 @@ function* extractModelsFromInputs(
   }
 }
 
-function* extractModelsFromWidgets(widgets: IWidget[]) {
+function* extractModelsFromWidgetsGen(widgets: IWidget[]) {
   for (const widget of widgets) {
     const definition = definitionForWidget(widget);
     const inputs = widget.inputs;
     const inputDefinitions = definition!.inputs;
-    yield* extractModelsFromInputs(inputs, inputDefinitions);
+    yield* extractModelsFromInputsGen(inputs, inputDefinitions);
   }
+}
+
+function extractModelsFromWidgets(widgets: IWidget[]) {
+  return Array.from(extractModelsFromWidgetsGen(widgets));
 }
 
 interface IProps {
   widgets: IWidget[];
+  tangoDB: string;
 }
 
-class RunCanvas extends Component<IProps> {
+interface IState {
+  attributes: { [model: string]: any };
+}
+
+class RunCanvas extends Component<IProps, IState> {
+  private unsub?: () => void;
+
+  componentDidMount() {
+    const { widgets, tangoDB } = this.props;
+    const models = extractModelsFromWidgets(widgets);
+    const emit = changeEventEmitter(tangoDB, models);
+    this.unsub = emit(event => null);
+  }
+
+  componentWillUnmount() {
+    if (this.unsub) {
+      this.unsub();
+    }
+  }
+
   public render() {
     const { widgets } = this.props;
-    const models = Array.from(extractModelsFromWidgets(widgets));
-
     return (
       <div>
-        <pre>{models.join(", ")}</pre>
+        {widgets.map(widget => (
+          <pre>{JSON.stringify(widget)}</pre>
+        ))}
       </div>
     );
   }
