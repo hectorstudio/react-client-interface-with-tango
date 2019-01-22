@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import { IRootState } from "../../state/reducers";
 import { IWidget } from "../../types";
-import { componentForWidget, definitionForWidget } from "../../newWidgets";
+import { componentForWidget, definitionForWidget, bundleForWidget } from "../../newWidgets";
 import { TILE_SIZE } from "../constants";
 
 import { changeEventEmitter } from "./emitter";
@@ -54,13 +54,12 @@ class RunCanvas extends Component<IProps, IState> {
     return (
       <div className="Canvas run">
         {widgets.map((widget, i) => {
-          const component = componentForWidget(widget);
+          const { component, definition } = bundleForWidget(widget)!;
           const { x, y } = widget;
 
-          const inputs = this.inputsForWidget(widget);
-
-
+          const inputs = enrichedInputs(widget.inputs, definition.inputs, this.state.attributes);
           const props = { mode: "run", inputs };
+
           // ???
           const element = React.createElement(component as any, props);
           return (
@@ -75,13 +74,6 @@ class RunCanvas extends Component<IProps, IState> {
         })}
       </div>
     );
-  }
-
-  private inputsForWidget(widget: IWidget) {
-    const definition = definitionForWidget(widget);
-    const inputDefinitions = definition!.inputs;
-    const inputs = widget.inputs;
-    return enrichedInputs(inputs, inputDefinitions, this.state.attributes);
   }
 }
 
