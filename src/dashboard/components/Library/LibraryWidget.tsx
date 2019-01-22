@@ -18,7 +18,7 @@ interface IProps {
 const libraryWidgetSource = {
   beginDrag(props) {
     return {
-      definition: props.bundle.definition
+      type: props.bundle.definition.type
     };
   }
 };
