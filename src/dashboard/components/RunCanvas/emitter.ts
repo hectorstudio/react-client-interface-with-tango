@@ -13,7 +13,7 @@ subscription ChangeEvent($models: [String]) {
 function socketUrl(tangoDB) {
   const loc = window.location;
   const protocol = loc.protocol.replace("http", "ws");
-  return protocol + "//" + loc.host + "/" + tangoDB + "/socket";
+  return protocol + "//" + loc.host + "/" + tangoDB + "/socket?dashboard";
 }
 
 function createSocket(tangoDB) {
@@ -21,8 +21,8 @@ function createSocket(tangoDB) {
 }
 
 export function changeEventEmitter(tangoDB, models) {
-  const socket = createSocket(tangoDB);
   return emit => {
+    const socket = createSocket(tangoDB);
     socket.addEventListener("open", () => {
       const variables = { models };
       const startMessage = JSON.stringify({
@@ -32,6 +32,7 @@ export function changeEventEmitter(tangoDB, models) {
           variables
         }
       });
+
       socket.send(startMessage);
     });
 
