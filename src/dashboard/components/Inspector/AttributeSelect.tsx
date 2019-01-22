@@ -1,7 +1,7 @@
 import React, { Component, FormEvent } from "react";
 
-import { fetchAttributes, fetchDeviceNames } from "./api";
-import { DeviceProvider, DeviceConsumer } from "./DeviceProvider";
+import { fetchAttributes } from "../api";
+import { DeviceProvider, DeviceConsumer } from "../DevicesProvider";
 
 interface IProps {
   device?: string;
@@ -91,7 +91,9 @@ export default class AttributeSelect extends Component<IProps, IState> {
                     Select attribute
                   </option>
                 )}
-                {attributes.length === 0 && <option disabled={true}>No attributes</option>}
+                {attributes.length === 0 && (
+                  <option disabled={true}>No attributes</option>
+                )}
                 {attributes.map(({ name }, i) => (
                   <option key={i} value={name}>
                     {name}
