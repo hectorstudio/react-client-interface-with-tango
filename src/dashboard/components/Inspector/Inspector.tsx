@@ -287,18 +287,6 @@ class Inspector extends Component<IProps> {
   }
 }
 
-function addInput(definition: IWidgetDefinition, path: IndexPath) {
-  const deepInput = path.reduce(
-    (accum: IInputMapping, segment: string | number) => {
-      return accum[segment];
-    },
-    definition.inputs
-  );
-  
-  // tslint:disable-next-line:no-console
-  console.log(deepInput);
-}
-
 function mapDispatchToProps(dispatch, ownProps) {
   return {
     onSetInput: (path: IndexPath, value: any) =>

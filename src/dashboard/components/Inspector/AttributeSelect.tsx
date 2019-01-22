@@ -1,6 +1,7 @@
 import React, { Component, FormEvent } from "react";
 
 import { fetchAttributes, fetchDeviceNames } from "./api";
+import { DeviceProvider, DeviceConsumer } from "./DeviceProvider";
 
 interface IProps {
   device?: string;
@@ -12,7 +13,6 @@ interface IProps {
 
 interface IState {
   fetchingAttributes: boolean;
-  deviceNames: string[];
   attributes: Array<{
     name: string;
     datatype: string;
@@ -23,16 +23,12 @@ interface IState {
 export default class AttributeSelect extends Component<IProps, IState> {
   public constructor(props) {
     super(props);
-    this.state = { fetchingAttributes: false, deviceNames: [], attributes: [] };
+    this.state = { fetchingAttributes: false, attributes: [] };
     this.handleSelectDevice = this.handleSelectDevice.bind(this);
     this.handleSelectAttribute = this.handleSelectAttribute.bind(this);
   }
 
-  public async componentDidMount() {
-    // Eventually shouldn't be done by this component
-    const deviceNames = await fetchDeviceNames("kitslab");
-    this.setState({ deviceNames });
-
+  public componentDidMount() {
     this.fetchAttributes();
   }
 
@@ -62,39 +58,50 @@ export default class AttributeSelect extends Component<IProps, IState> {
 
   public render() {
     const { device, attribute } = this.props;
+    const attributes = this.filteredAttributes();
 
     return (
-      <div>
-        <select
-          value={device}
-          className="form-control"
-          onChange={this.handleSelectDevice}
-        >
-          {device == null && <option>Select device</option>}
-          {this.state.deviceNames.map((name, i) => (
-            <option key={i} value={name}>
-              {name}
-            </option>
-          ))}
-        </select>
-        <select
-          className="form-control"
-          value={attribute}
-          disabled={false}
-          onChange={this.handleSelectAttribute}
-        >
-          {attribute == null && (
-            <option disabled={this.state.fetchingAttributes || device == null}>
-              Select attribute
-            </option>
+      <DeviceProvider tangoDB="kitslab">
+        <DeviceConsumer>
+          {({ devices }) => (
+            <div>
+              <select
+                value={device}
+                className="form-control"
+                onChange={this.handleSelectDevice}
+              >
+                {device == null && <option>Select device</option>}
+                {devices.map((name, i) => (
+                  <option key={i} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="form-control"
+                value={attribute}
+                disabled={false}
+                onChange={this.handleSelectAttribute}
+              >
+                {attributes.length > 0 && attribute == null && (
+                  <option
+                    disabled={this.state.fetchingAttributes || device == null}
+                    value={""}
+                  >
+                    Select attribute
+                  </option>
+                )}
+                {attributes.length === 0 && <option disabled={true}>No attributes</option>}
+                {attributes.map(({ name }, i) => (
+                  <option key={i} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
-          {this.filteredAttributes().map(({ name }, i) => (
-            <option key={i} value={name}>
-              {name}
-            </option>
-          ))}
-        </select>
-      </div>
+        </DeviceConsumer>
+      </DeviceProvider>
     );
   }
 
