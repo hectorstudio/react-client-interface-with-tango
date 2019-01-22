@@ -2,58 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import { IRootState } from "../../state/reducers";
-import { IWidget, IInputMapping, IInputDefinitionMapping } from "../../types";
-import { definitionForWidget, componentForWidget } from "../../newWidgets";
+import { IWidget } from "../../types";
+import { componentForWidget, definitionForWidget } from "../../newWidgets";
 import { TILE_SIZE } from "../constants";
 
 import { changeEventEmitter } from "./emitter";
-
-function* extractModelsFromInputsGen(
-  inputs: IInputMapping,
-  inputDefinitions: IInputDefinitionMapping
-) {
-  const inputNames = Object.keys(inputs);
-  for (const name of inputNames) {
-    const inputDefinition = inputDefinitions[name];
-    const input = inputs[name];
-    const { type, repeat } = inputDefinition;
-
-    if (type === "attribute") {
-      const { device, attribute } = input;
-      if (device != null && attribute != null) {
-        yield `${device}/${attribute}`;
-      }
-    } else if (type === "complex") {
-      if (inputDefinition.type === "complex") {
-        if (repeat) {
-          for (const entry of input) {
-            yield* extractModelsFromInputsGen(entry, inputDefinition.inputs);
-          }
-        } else {
-          yield* extractModelsFromInputsGen(
-            input.inputs,
-            inputDefinition.inputs
-          );
-        }
-      } else {
-        throw new Error();
-      }
-    }
-  }
-}
-
-function* extractModelsFromWidgetsGen(widgets: IWidget[]) {
-  for (const widget of widgets) {
-    const definition = definitionForWidget(widget);
-    const inputs = widget.inputs;
-    const inputDefinitions = definition!.inputs;
-    yield* extractModelsFromInputsGen(inputs, inputDefinitions);
-  }
-}
-
-function extractModelsFromWidgets(widgets: IWidget[]) {
-  return Array.from(extractModelsFromWidgetsGen(widgets));
-}
+import { extractModelsFromWidgets, enrichedInputs } from "./lib";
 
 interface IProps {
   widgets: IWidget[];
@@ -102,7 +56,11 @@ class RunCanvas extends Component<IProps, IState> {
         {widgets.map((widget, i) => {
           const component = componentForWidget(widget);
           const { x, y } = widget;
-          const props = { mode: "run" };
+
+          const inputs = this.inputsForWidget(widget);
+
+
+          const props = { mode: "run", inputs };
           // ???
           const element = React.createElement(component as any, props);
           return (
@@ -117,6 +75,13 @@ class RunCanvas extends Component<IProps, IState> {
         })}
       </div>
     );
+  }
+
+  private inputsForWidget(widget: IWidget) {
+    const definition = definitionForWidget(widget);
+    const inputDefinitions = definition!.inputs;
+    const inputs = widget.inputs;
+    return enrichedInputs(inputs, inputDefinitions, this.state.attributes);
   }
 }
 

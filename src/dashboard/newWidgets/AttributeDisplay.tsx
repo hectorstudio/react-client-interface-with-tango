@@ -4,7 +4,7 @@ import { IWidgetDefinition } from "../types";
 
 class AttributeReadOnly extends Component<IWidgetProps> {
   public render() {
-    return <em>Attribute Read Only</em>;
+    return <em>{this.props.mode}</em>;
 
     const attribute = this.props.inputs.attribute;
     const { device, name, value } = attribute;
