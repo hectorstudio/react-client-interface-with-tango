@@ -5,9 +5,11 @@ import {
   IInputDefinitionMapping,
   IInputMapping,
   IWidget,
-  IndexPath
+  IndexPath,
+  IWidgetDefinition
 } from "../../types";
-import widgetBundles from "../../newWidgets";
+
+import { bundles } from "../../newWidgets";
 
 import AttributeSelect from "./AttributeSelect";
 import { DELETE_INPUT, ADD_INPUT, SET_INPUT } from "../../state/actionTypes";
@@ -261,7 +263,7 @@ class Inspector extends Component<IProps> {
 
   public render() {
     const { widget } = this.props;
-    const definitions = widgetBundles.map(bundle => bundle.definition);
+    const definitions = bundles.map(bundle => bundle.definition);
     const definition = definitions.find(({ type }) => type === widget.type);
 
     if (definition == null) {
@@ -285,11 +287,25 @@ class Inspector extends Component<IProps> {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function addInput(definition: IWidgetDefinition, path: IndexPath) {
+  const deepInput = path.reduce(
+    (accum: IInputMapping, segment: string | number) => {
+      return accum[segment];
+    },
+    definition.inputs
+  );
+  
+  // tslint:disable-next-line:no-console
+  console.log(deepInput);
+}
+
+function mapDispatchToProps(dispatch, ownProps) {
   return {
     onSetInput: (path: IndexPath, value: any) =>
       dispatch({ type: SET_INPUT, path, value }),
-    onAddInput: (path: IndexPath) => dispatch({ type: ADD_INPUT, path }),
+    onAddInput: (path: IndexPath) => {
+      // addInput(ownProps.definition)
+    }, // dispatch({ type: ADD_INPUT, path }),
     onDeleteInput: (path: IndexPath) => dispatch({ type: DELETE_INPUT, path })
   };
 }
