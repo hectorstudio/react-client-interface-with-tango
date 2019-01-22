@@ -7,24 +7,24 @@ export interface IBaseInputDefinition<T> {
   required?: boolean;
 }
 
-interface IBooleanInputDefinition extends IBaseInputDefinition<boolean> {
+export interface IBooleanInputDefinition extends IBaseInputDefinition<boolean> {
   type: "boolean";
 }
 
-interface INumberInputDefinition extends IBaseInputDefinition<number> {
+export interface INumberInputDefinition extends IBaseInputDefinition<number> {
   type: "number";
 }
 
-interface IStringInputDefinition extends IBaseInputDefinition<string> {
+export interface IStringInputDefinition extends IBaseInputDefinition<string> {
   type: "string";
 }
 
-interface IComplexInputDefinition extends IBaseInputDefinition<null> {
+export interface IComplexInputDefinition extends IBaseInputDefinition<null> {
   type: "complex";
   inputs: IInputDefinitionMapping;
 }
 
-interface ISelectInputDefinition extends IBaseInputDefinition<string> {
+export interface ISelectInputDefinition extends IBaseInputDefinition<string> {
   type: "select";
   options: Array<{
     name: string;
@@ -32,7 +32,7 @@ interface ISelectInputDefinition extends IBaseInputDefinition<string> {
   }>;
 }
 
-interface IAttributeInputDefinition
+export interface IAttributeInputDefinition
   extends IBaseInputDefinition<{
     device: null;
     attribute: null;
