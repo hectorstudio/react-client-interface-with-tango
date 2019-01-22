@@ -285,7 +285,7 @@ class Dashboard extends Component {
         <div className={classNames("CanvasArea", mode)}>
           {mode === "edit" ? (
             <EditCanvas
-              widgets={widgets}
+              widgetsOld={widgets}
               onMoveWidget={this.handleMoveWidget}
               onSelectWidget={this.handleSelectWidget}
               onDeleteWidget={this.handleDeleteWidget}

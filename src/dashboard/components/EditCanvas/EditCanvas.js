@@ -48,7 +48,7 @@ class EditCanvas extends Component {
 
   render() {
     const { connectMoveDropTarget, connectLibraryDropTarget } = this.props;
-    const hasWidgets = this.props.widgetsNew.length > 0;
+    const hasWidgets = this.props.widgets.length > 0;
 
     return connectLibraryDropTarget(
       connectMoveDropTarget(
@@ -68,15 +68,13 @@ class EditCanvas extends Component {
             the canvas.
           </div>
 
-          {this.props.widgetsNew.map((widget, index) => {
-            const { x, y } = widget;
+          {this.props.widgets.map((widget, index) => {
+            const { x, y, inputs, valid } = widget;
             const component = componentForWidget(widget);
-            const { inputs } = widget;
             const element = React.createElement(component, {
               inputs,
               mode: "edit"
             });
-            const warning = true; // TODO: Is any required field missing?
 
             return (
               <EditWidget
@@ -88,7 +86,7 @@ class EditCanvas extends Component {
                 onDelete={() => this.props.onDeleteWidget(index)}
                 onClick={() => this.props.onSelectWidget(index)}
                 onMove={(dx, dy) => this.props.onMoveWidget(index, dx, dy)}
-                warning={warning}
+                warning={!valid}
               >
                 {element}
               </EditWidget>
@@ -127,7 +125,7 @@ const addFromLibraryDropTarget = DropTarget(
 
 function mapStateToProps(state) {
   return {
-    widgetsNew: state.widgets.widgets,
+    widgets: state.widgets.widgets,
     selectedIndex: state.widgets.selectedIndex
   };
 }

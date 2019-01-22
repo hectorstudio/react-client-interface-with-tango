@@ -107,7 +107,7 @@ export function nestedDefault(definition: IWidgetDefinition, path: IndexPath) {
   return defaultInputs(leaf.inputs);
 }
 
-// TODO: implement validation
+// TODO: cover more validation cases
 function inputIsValid(definition: IInputDefinition, value: any): boolean {
   if (definition.type === "complex") {
     if (definition.repeat) {
@@ -128,7 +128,6 @@ function inputIsValid(definition: IInputDefinition, value: any): boolean {
 
   if (definition.type === "attribute") {
     const { device, attribute } = value;
-    alert(device);
     return device != null && attribute != null;
   }
 
