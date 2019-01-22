@@ -1,4 +1,10 @@
-import { IWidget, IndexPath } from "src/dashboard/types";
+import {
+  IWidget,
+  IndexPath,
+  IWidgetDefinition,
+  IInputDefinitionMapping
+} from "src/dashboard/types";
+import { defaultInputs } from "src/dashboard/utils";
 
 export function replaceAt<T>(arr: T[], index: number, repl: T) {
   const copy = arr.concat();
@@ -48,9 +54,8 @@ export function setWithIndexPath(
   mode: Mode
 ) {
   const [head, ...tail] = path;
-  const replacement = tail.length > 0
-      ? setWithIndexPath(obj[head], tail, value, mode)
-      : value;
+  const replacement =
+    tail.length > 0 ? setWithIndexPath(obj[head], tail, value, mode) : value;
   if (Array.isArray(obj)) {
     const copy = obj.concat();
     if (typeof head !== "number") {
@@ -68,4 +73,27 @@ export function setWithIndexPath(
   } else {
     return { ...obj, [head]: replacement };
   }
+}
+
+export function defaultDimensions(
+  definition: IWidgetDefinition
+): { width: number; height: number } {
+  const { defaultWidth: width, defaultHeight: height } = definition;
+  return { width, height };
+}
+
+export function nestedDefault(definition: IWidgetDefinition, path: IndexPath) {
+  const leaf = path.reduce((accum, segment): {
+    inputs: IInputDefinitionMapping;
+  } => {
+    const input = accum.inputs[segment];
+    if (typeof segment === "number") {
+      return accum;
+    } else if (input.type === "complex") {
+      return input;
+    } else {
+      throw new Error("only complex inputs can be traversed");
+    }
+  }, definition);
+  return defaultInputs(leaf.inputs);
 }

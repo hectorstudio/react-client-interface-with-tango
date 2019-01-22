@@ -1,10 +1,4 @@
-import {
-  IWidget,
-  IWidgetDefinition,
-  IndexPath,
-  IComplexInputDefinition,
-  IInputDefinitionMapping
-} from "../../../types";
+import { IWidget } from "../../../types";
 
 import {
   ADD_WIDGET,
@@ -16,13 +10,24 @@ import {
   ADD_INPUT
 } from "../../actionTypes";
 
-import { defaultInputs } from "src/dashboard/utils";
 import { DashboardAction } from "../../actions";
-import { move, replaceAt, removeAt, setInput, deleteInput, addInput } from "./lib";
+import {
+  move,
+  replaceAt,
+  removeAt,
+  setInput,
+  deleteInput,
+  addInput,
+  defaultDimensions,
+  nestedDefault
+} from "./lib";
+
 import {
   definitionForType,
   definitionForWidget
 } from "src/dashboard/newWidgets";
+
+import { defaultInputs } from "src/dashboard/utils";
 
 interface IWidgetState {
   selectedIndex: number;
@@ -33,29 +38,6 @@ const initialState = {
   selectedIndex: -1,
   widgets: []
 };
-
-function defaultDimensions(
-  definition: IWidgetDefinition
-): { width: number; height: number } {
-  const { defaultWidth: width, defaultHeight: height } = definition;
-  return { width, height };
-}
-
-function nestedDefault(definition: IWidgetDefinition, path: IndexPath) {
-  const leaf = path.reduce((accum, segment): {
-    inputs: IInputDefinitionMapping;
-  } => {
-    const input = accum.inputs[segment];
-    if (typeof segment === "number") {
-      return accum;
-    } else if (input.type === "complex") {
-      return input;
-    } else {
-      throw new Error("only complex inputs can be traversed");
-    }
-  }, definition);
-  return defaultInputs(leaf.inputs);
-}
 
 export default function canvases(
   state: IWidgetState = initialState,
