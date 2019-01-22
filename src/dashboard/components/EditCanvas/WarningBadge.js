@@ -5,8 +5,10 @@ export default function WarningBadge() {
     <div
       style={{
         position: "absolute",
-        marginLeft: "-10px",
-        marginTop: "-10px",
+        // marginLeft: "-10px",
+        // marginTop: "-10px",
+        left: 0,
+        top: 0,
         backgroundColor: "red",
         borderRadius: "10px",
         width: "20px",

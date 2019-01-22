@@ -19,8 +19,8 @@ class AttributeReadOnly extends Component<IWidgetProps> {
 const definition: IWidgetDefinition = {
   type: "ATTRIBUTE_DISPLAY",
   name: "Attribute Display",
-  defaultWidth: 100,
-  defaultHeight: 100,
+  defaultWidth: 5,
+  defaultHeight: 2,
   inputs: {
     attribute: {
       type: "attribute",

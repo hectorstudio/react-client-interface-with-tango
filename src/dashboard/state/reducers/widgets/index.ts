@@ -20,7 +20,6 @@ import {
   addInput,
   defaultDimensions,
   nestedDefault,
-  inputsAreValid,
   validate
 } from "./lib";
 

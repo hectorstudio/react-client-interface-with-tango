@@ -17,6 +17,8 @@ import {
 const BACKSPACE = 8;
 const DELETE = 46;
 
+const gridSize = 20;
+
 const editCanvasTarget = {
   canDrop(props, monitor) {
     return true;
@@ -25,12 +27,9 @@ const editCanvasTarget = {
   drop(props, monitor, component) {
     const { x, y } = monitor.getDifferenceFromInitialOffset();
     const { index, warning } = monitor.getItem();
-
-    // This is a fairly ugly hack to compensate for the fact that
-    // a warning badge offsets the position by -10 px hor/ver
-
-    const compensation = warning ? 10 : 0;
-    return { dx: x + compensation, dy: y + compensation };
+    const dx = Math.floor(x / gridSize);
+    const dy = Math.floor(y / gridSize);
+    return { dx, dy };
   }
 };
 
@@ -69,7 +68,7 @@ class EditCanvas extends Component {
           </div>
 
           {this.props.widgets.map((widget, index) => {
-            const { x, y, inputs, valid } = widget;
+            const { x, y, width, height, inputs, valid } = widget;
             const component = componentForWidget(widget);
             const element = React.createElement(component, {
               inputs,
@@ -81,8 +80,10 @@ class EditCanvas extends Component {
                 index={index}
                 key={index}
                 isSelected={index === this.props.selectedIndex}
-                x={x}
-                y={y}
+                x={1 + gridSize * x}
+                y={1 + gridSize * y}
+                width={gridSize * width}
+                height={gridSize * height}
                 onDelete={() => this.props.onDeleteWidget(index)}
                 onClick={() => this.props.onSelectWidget(index)}
                 onMove={(dx, dy) => this.props.onMoveWidget(index, dx, dy)}
@@ -115,7 +116,9 @@ const addFromLibraryDropTarget = DropTarget(
     drop(props, monitor, component) {
       const { x: x1, y: y1 } = findDOMNode(component).getBoundingClientRect();
       const { x: x2, y: y2 } = monitor.getClientOffset();
-      props.onAddWidget(monitor.getItem().type, x2 - x1, y2 - y1);
+      const x = Math.floor((x2 - x1) / gridSize);
+      const y = Math.floor((y2 - y1) / gridSize);
+      props.onAddWidget(monitor.getItem().type, x, y);
     }
   },
   (connect, monitor) => ({
