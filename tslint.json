@@ -13,6 +13,7 @@
     "no-string-literal": false
   },
   "rules": {
+    "no-debugger": false,
     "ordered-imports": false,
     "object-literal-sort-keys": false,
     "max-classes-per-file": false,
