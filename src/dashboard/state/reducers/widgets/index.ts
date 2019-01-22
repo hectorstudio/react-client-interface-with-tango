@@ -30,7 +30,7 @@ import {
 
 import { defaultInputs } from "src/dashboard/utils";
 
-interface IWidgetState {
+export interface IWidgetsState {
   selectedIndex: number;
   widgets: IWidget[];
 }
@@ -41,9 +41,9 @@ const initialState = {
 };
 
 export default function canvases(
-  state: IWidgetState = initialState,
+  state: IWidgetsState = initialState,
   action: DashboardAction
-): IWidgetState {
+): IWidgetsState {
   switch (action.type) {
     case ADD_WIDGET: {
       const { x, y, widgetType: type } = action;
