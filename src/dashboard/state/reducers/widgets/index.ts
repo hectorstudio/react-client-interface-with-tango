@@ -1,4 +1,9 @@
-import { IWidget } from "../../../types";
+import {
+  IWidget,
+  IInputDefinition,
+  IInputMapping,
+  IInputDefinitionMapping
+} from "../../../types";
 
 import {
   ADD_WIDGET,
@@ -19,7 +24,8 @@ import {
   deleteInput,
   addInput,
   defaultDimensions,
-  nestedDefault
+  nestedDefault,
+  inputsAreValid
 } from "./lib";
 
 import {
@@ -49,6 +55,7 @@ export default function canvases(
       const definition = definitionForType(type)!;
       const inputs = defaultInputs(definition.inputs);
       const { width, height } = defaultDimensions(definition);
+      const valid = inputsAreValid(definition.inputs, inputs);
 
       const widget = {
         x,
@@ -56,7 +63,8 @@ export default function canvases(
         width,
         height,
         type,
-        inputs
+        inputs,
+        valid
       };
 
       return {
