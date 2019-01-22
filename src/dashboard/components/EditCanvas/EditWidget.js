@@ -30,10 +30,12 @@ class EditWidget extends Component {
       return null;
     }
 
+    const { width, height } = this.props;
+
     return this.props.connectDragSource(
       <div
         className={this.props.isSelected ? "Widget selected" : "Widget"}
-        style={{ left: this.props.x, top: this.props.y }}
+        style={{ left: this.props.x, top: this.props.y, width, height }}
         onClick={event => {
           event.stopPropagation();
           this.props.onClick();
