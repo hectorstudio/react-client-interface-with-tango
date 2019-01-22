@@ -2,7 +2,9 @@ import {
   IWidget,
   IndexPath,
   IWidgetDefinition,
-  IInputDefinitionMapping
+  IInputDefinitionMapping,
+  IInputMapping,
+  IInputDefinition
 } from "src/dashboard/types";
 import { defaultInputs } from "src/dashboard/utils";
 
@@ -96,4 +98,37 @@ export function nestedDefault(definition: IWidgetDefinition, path: IndexPath) {
     }
   }, definition);
   return defaultInputs(leaf.inputs);
+}
+
+// TODO: implement validation
+function inputIsValid(definition: IInputDefinition, value: any): boolean {
+  if (definition.type === "complex" && definition.repeat) {
+    return true;
+  }
+
+  if (!definition.required) {
+    return true;
+  }
+
+  if (definition.type === "number") {
+    if (isNaN(value)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function inputsAreValid(
+  definition: IInputDefinitionMapping,
+  inputs: IInputMapping
+): boolean {
+  const inputNames = Object.keys(definition);
+  const results = inputNames.map(name => {
+    const inputDefinition = definition[name];
+    const input = inputs[name].value;
+    return inputIsValid(inputDefinition, input);
+  });
+
+  return results.reduce((prev, curr) => prev && curr, true);
 }
