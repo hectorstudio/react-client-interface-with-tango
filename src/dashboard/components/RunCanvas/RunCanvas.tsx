@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+
 import { IRootState } from "../../state/reducers";
 import { IWidget, IInputMapping, IInputDefinitionMapping } from "../../types";
-import { definitionForWidget } from "../../newWidgets";
+import { definitionForWidget, componentForWidget } from "../../newWidgets";
+import { TILE_SIZE } from "../constants";
+
 import { changeEventEmitter } from "./emitter";
 
 function* extractModelsFromInputsGen(
@@ -64,14 +67,28 @@ interface IState {
 class RunCanvas extends Component<IProps, IState> {
   private unsub?: () => void;
 
-  componentDidMount() {
+  public constructor(props) {
+    super(props);
+    this.state = { attributes: {} };
+  }
+
+  public componentDidMount() {
     const { widgets, tangoDB } = this.props;
     const models = extractModelsFromWidgets(widgets);
     const emit = changeEventEmitter(tangoDB, models);
-    this.unsub = emit(event => null);
+    this.unsub = emit(event => {
+      const {
+        device,
+        name,
+        data: { value }
+      } = event;
+      const model = `${device}/${name}`;
+      const attributes = { ...this.state.attributes, [model]: value };
+      this.setState({ attributes });
+    });
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     if (this.unsub) {
       this.unsub();
     }
@@ -79,11 +96,25 @@ class RunCanvas extends Component<IProps, IState> {
 
   public render() {
     const { widgets } = this.props;
+
     return (
-      <div>
-        {widgets.map(widget => (
-          <pre>{JSON.stringify(widget)}</pre>
-        ))}
+      <div className="Canvas run">
+        {widgets.map((widget, i) => {
+          const component = componentForWidget(widget);
+          const { x, y } = widget;
+          const props = { mode: "run" };
+          // ???
+          const element = React.createElement(component as any, props);
+          return (
+            <div
+              key={i}
+              className="Widget"
+              style={{ left: 1 + x * TILE_SIZE, top: 1 + y * TILE_SIZE }}
+            >
+              {element}
+            </div>
+          );
+        })}
       </div>
     );
   }
