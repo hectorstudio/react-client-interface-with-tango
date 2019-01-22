@@ -18,6 +18,10 @@ export function componentForType(type: string) {
   return bundle && bundle.component;
 }
 
+export function bundleForWidget(widget: IWidget) {
+  return bundleForType(widget.type);
+}
+
 export function definitionForWidget(widget: IWidget) {
   return definitionForType(widget.type);
 }
