@@ -7,6 +7,7 @@ import {
   IInputDefinition
 } from "src/dashboard/types";
 import { defaultInputs } from "src/dashboard/utils";
+import { definitionForWidget } from "src/dashboard/newWidgets";
 
 export function replaceAt<T>(arr: T[], index: number, repl: T) {
   const copy = arr.concat();
@@ -23,6 +24,12 @@ export function removeAt<T>(arr: T[], index: number) {
 export function move(widget: IWidget, dx: number, dy: number) {
   const { x, y } = widget;
   return { ...widget, x: x + dx, y: y + dy };
+}
+
+export function validate(widget: IWidget) {
+  const definition = definitionForWidget(widget);
+  const valid = inputsAreValid(definition!.inputs, widget.inputs);
+  return { ...widget, valid };
 }
 
 export function setInput(widget: IWidget, path: IndexPath, value: any) {
@@ -102,12 +109,27 @@ export function nestedDefault(definition: IWidgetDefinition, path: IndexPath) {
 
 // TODO: implement validation
 function inputIsValid(definition: IInputDefinition, value: any): boolean {
-  if (definition.type === "complex" && definition.repeat) {
+  if (definition.type === "complex") {
+    if (definition.repeat) {
+      return value
+        .map(input => inputIsValid({ ...definition, repeat: false }, input))
+        .reduce((prev, curr) => prev && curr, true);
+    } else {
+      const inputNames = Object.keys(definition.inputs);
+      return inputNames
+        .map(name => inputIsValid(definition.inputs[name], value[name]))
+        .reduce((prev, curr) => prev && curr, true);
+    }
+  }
+
+  if (definition.required !== true) {
     return true;
   }
 
-  if (!definition.required) {
-    return true;
+  if (definition.type === "attribute") {
+    const { device, attribute } = value;
+    alert(device);
+    return device != null && attribute != null;
   }
 
   if (definition.type === "number") {
@@ -126,7 +148,7 @@ export function inputsAreValid(
   const inputNames = Object.keys(definition);
   const results = inputNames.map(name => {
     const inputDefinition = definition[name];
-    const input = inputs[name].value;
+    const input = inputs[name];
     return inputIsValid(inputDefinition, input);
   });
 

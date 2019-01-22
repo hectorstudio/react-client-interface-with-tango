@@ -143,13 +143,15 @@ class InputList extends Component<{
                 </div>
               ))}
               <button
+                className="btn btn-outline-dark"
+                style={{display: "block"}}
                 type="button"
                 onClick={() => {
                   // Doesn't support more than one degree of nesting
                   this.props.onAdd([inputName]);
                 }}
               >
-                +
+                <span className="fa fa-plus"/>
               </button>
             </td>
           </tr>

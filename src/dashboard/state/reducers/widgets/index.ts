@@ -1,9 +1,4 @@
-import {
-  IWidget,
-  IInputDefinition,
-  IInputMapping,
-  IInputDefinitionMapping
-} from "../../../types";
+import { IWidget } from "../../../types";
 
 import {
   ADD_WIDGET,
@@ -25,7 +20,8 @@ import {
   addInput,
   defaultDimensions,
   nestedDefault,
-  inputsAreValid
+  inputsAreValid,
+  validate
 } from "./lib";
 
 import {
@@ -55,17 +51,16 @@ export default function canvases(
       const definition = definitionForType(type)!;
       const inputs = defaultInputs(definition.inputs);
       const { width, height } = defaultDimensions(definition);
-      const valid = inputsAreValid(definition.inputs, inputs);
 
-      const widget = {
+      const widget = validate({
         x,
         y,
         width,
         height,
         type,
         inputs,
-        valid
-      };
+        valid: false
+      });
 
       return {
         ...state,
@@ -90,7 +85,7 @@ export default function canvases(
     case SET_INPUT: {
       const { path, value } = action;
       const index = state.selectedIndex;
-      const newWidget = setInput(state.widgets[index], path, value);
+      const newWidget = validate(setInput(state.widgets[index], path, value));
       const widgets = replaceAt(state.widgets, index, newWidget);
       return { ...state, widgets };
     }
@@ -100,15 +95,16 @@ export default function canvases(
       const oldWidget = state.widgets[index];
       const definition = definitionForWidget(oldWidget)!;
       const value = nestedDefault(definition, path);
-      const newWidget = addInput(state.widgets[index], [...path, -1], value);
+      const newWidget = validate(
+        addInput(state.widgets[index], [...path, -1], value)
+      );
       const widgets = replaceAt(state.widgets, index, newWidget);
       return { ...state, widgets };
     }
     case DELETE_INPUT: {
-      debugger;
       const { path } = action;
       const index = state.selectedIndex;
-      const newWidget = deleteInput(state.widgets[index], path);
+      const newWidget = validate(deleteInput(state.widgets[index], path));
       const widgets = replaceAt(state.widgets, index, newWidget);
       return { ...state, widgets };
     }
