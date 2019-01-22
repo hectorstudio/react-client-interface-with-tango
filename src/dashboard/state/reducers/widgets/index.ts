@@ -1,4 +1,4 @@
-import { IWidget } from "../../../types";
+import { IWidget, IWidgetDefinition } from "../../../types";
 
 import {
   ADD_WIDGET,
@@ -25,8 +25,9 @@ const initialState = {
   widgets: []
 };
 
-function defaultDimensions(definition): { width: number; height: number } {
-  return { width: 100, height: 100 };
+function defaultDimensions(definition: IWidgetDefinition): { width: number; height: number } {
+  const { defaultWidth: width, defaultHeight: height } = definition;
+  return { width, height };
 }
 
 export default function canvases(
@@ -36,8 +37,8 @@ export default function canvases(
   switch (action.type) {
     case ADD_WIDGET: {
       const { x, y, widgetType: type } = action;
-      const definition = definitionForType(type);
-      const inputs = defaultInputs(definition!.inputs);
+      const definition = definitionForType(type)!;
+      const inputs = defaultInputs(definition.inputs);
       const { width, height } = defaultDimensions(definition);
 
       const widget = {
