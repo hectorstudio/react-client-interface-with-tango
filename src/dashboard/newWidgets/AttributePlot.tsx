@@ -4,7 +4,7 @@ import { IWidgetDefinition } from "../types";
 
 class AttributePlot extends Component<IWidgetProps> {
   public render() {
-    return <div>Mode: {this.props.mode}</div>;
+    return <div>Input: <pre>{JSON.stringify(this.props.inputs)}</pre></div>;
   }
 }
 
