@@ -13,24 +13,17 @@ import Inspector from "./Inspector/Inspector";
 import { save as saveToRepo } from "../dashboardRepo";
 import { load as loadFromRepo } from "../dashboardRepo";
 
-import widgetBundles from "../newWidgets";
-
-import {
-  WIDGET_DEFINITIONS,
-  getWidgetDefinition,
-  normalizeWidgetDefinitions
-} from "../widgets/widgetDefinitions";
-
 import { complexWidgetDefinition } from "./ComplexWidget/ComplexWidget";
 
-const GRID_TILE_SIZE = 15;
-import "./Dashboard.css";
 
 import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
 
 import { SELECT_WIDGET, DELETE_WIDGET, ADD_WIDGET } from "../state/actionTypes";
 
+import "./Dashboard.css";
+
+const GRID_TILE_SIZE = 15;
 const DEFAULT_CANVASES = [
   {
     id: 0,
@@ -241,14 +234,14 @@ class Dashboard extends Component {
     const widgets = this.currentWidgets();
     const selectedWidget = this.selectedWidget();
 
-    const complexWidgetDefinitions = this.state.canvases
+    /*const complexWidgetDefinitions = this.state.canvases
       .slice(1)
-      .map(complexWidgetDefinition);
+      .map(complexWidgetDefinition);*/
 
-    const widgetDefinitions = normalizeWidgetDefinitions([
+    /*const widgetDefinitions = normalizeWidgetDefinitions([
       ...WIDGET_DEFINITIONS,
       ...complexWidgetDefinitions
-    ]);
+    ]);*/
 
     return (
       <div className="Dashboard">
@@ -293,7 +286,6 @@ class Dashboard extends Component {
           {mode === "edit" ? (
             <EditCanvas
               widgets={widgets}
-              widgetDefinitions={widgetDefinitions}
               onMoveWidget={this.handleMoveWidget}
               onSelectWidget={this.handleSelectWidget}
               onDeleteWidget={this.handleDeleteWidget}
@@ -303,7 +295,6 @@ class Dashboard extends Component {
           ) : (
             <RunCanvas
               widgets={widgets}
-              widgetDefinitions={widgetDefinitions}
               tangoDB={this.props.match.params.tangoDB}
               subCanvases={[null, ...this.state.canvases.slice(1)]}
             />
@@ -313,14 +304,11 @@ class Dashboard extends Component {
           <div className="Sidebar">
             {this.props.selectedWidgetIndex === -1 ? (
               <Library
-                widgetDefinitions={widgetDefinitions}
-                widgetBundles={widgetBundles}
                 showCustom={this.state.selectedCanvasIndex === 0}
               />
             ) : (
               <Inspector
                 widget={this.props.selectedWidget}
-                widgetDefinitions={widgetDefinitions}
                 deviceNames={this.state.deviceNames}
                 onParamChange={this.handleParamChange}
                 onDeviceChange={this.handleDeviceChange}

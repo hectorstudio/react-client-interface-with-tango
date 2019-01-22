@@ -1,20 +1,13 @@
 import React, { Component } from "react";
 
-import {
-  IWidgetBundle
-} from "../../types";
-
 import LibraryWidget from "./LibraryWidget";
+import { bundles } from "../../newWidgets";
 
-interface IProps {
-  widgetBundles: IWidgetBundle[];
-}
-
-export default class Library extends Component<IProps> {
+export default class Library extends Component {
   public render() {
     return (
       <div className="Library">
-        {this.props.widgetBundles.map((bundle, i) => {
+        {bundles.map((bundle, i) => {
           return <LibraryWidget key={i} bundle={bundle} />;
         })}
       </div>

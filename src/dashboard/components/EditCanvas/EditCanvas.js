@@ -5,9 +5,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import dndTypes from "../../dndTypes";
-import { getWidgetDefinition } from "../../utilsOld";
-import { widget, widgetDefinition } from "../../propTypes";
-import widgetBundles from "../../newWidgets";
+import { componentForWidget } from "../../newWidgets";
 
 import EditWidget from "./EditWidget";
 
@@ -39,10 +37,6 @@ class EditCanvas extends Component {
     };
   }
 
-  bundleForWidget(widget) {
-    return widgetBundles.find(bundle => bundle.definition.type === widget.type);
-  }
-
   componentForWidget(widget) {
     return this.definitionForWidget(widget).component;
   }
@@ -71,7 +65,7 @@ class EditCanvas extends Component {
 
           {this.props.widgetsNew.map((widget, index) => {
             const { x, y } = widget;
-            const { component } = this.bundleForWidget(widget);
+            const component = componentForWidget(widget);
             const { inputs } = widget;
             const element = React.createElement(component, { inputs, mode: "edit" });
             const warning = true; // TODO: Is any required field missing?
