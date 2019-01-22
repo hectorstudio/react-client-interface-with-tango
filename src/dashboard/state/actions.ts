@@ -8,13 +8,14 @@ import {
   ADD_INPUT,
   SET_INPUT
 } from "./actionTypes";
-import { IWidgetDefinition, IndexPath } from "../types";
+import { IndexPath } from "../types";
 
 export interface IAddWidgetAction extends Action {
   type: typeof ADD_WIDGET;
   x: number;
   y: number;
-  definition: IWidgetDefinition;
+  widgetType: string;
+  canvas: number;
 }
 
 export interface IMoveWidgetAction extends Action {

@@ -8,6 +8,11 @@ import dndTypes from "../../dndTypes";
 import { componentForWidget } from "../../newWidgets";
 
 import EditWidget from "./EditWidget";
+import {
+  moveWidget,
+  selectWidget,
+  addWidget
+} from "src/dashboard/state/actionCreators";
 
 const BACKSPACE = 8;
 const DELETE = 46;
@@ -67,7 +72,10 @@ class EditCanvas extends Component {
             const { x, y } = widget;
             const component = componentForWidget(widget);
             const { inputs } = widget;
-            const element = React.createElement(component, { inputs, mode: "edit" });
+            const element = React.createElement(component, {
+              inputs,
+              mode: "edit"
+            });
             const warning = true; // TODO: Is any required field missing?
 
             return (
@@ -109,7 +117,7 @@ const addFromLibraryDropTarget = DropTarget(
     drop(props, monitor, component) {
       const { x: x1, y: y1 } = findDOMNode(component).getBoundingClientRect();
       const { x: x2, y: y2 } = monitor.getClientOffset();
-      props.onAddWidget(monitor.getItem().definition, x2 - x1, y2 - y1);
+      props.onAddWidget(monitor.getItem().type, x2 - x1, y2 - y1);
     }
   },
   (connect, monitor) => ({
@@ -126,9 +134,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onMoveWidget: (index, dx, dy) => dispatch({ type: "MOVE_WIDGET", index, dx, dy }),
-    onSelectWidget: index => dispatch({ type: "SELECT_WIDGET", index }),
-    onDeleteWidget: () => dispatch({ type: "DELETE_WIDGET" })
+    onMoveWidget: (index, dx, dy) => dispatch(moveWidget(index, dx, dy)),
+    onSelectWidget: index => dispatch(selectWidget(index)),
+    onDeleteWidget: index => dispatch({ type: "DELETE_WIDGET", index }),
+    onAddWidget: (type, x, y) => dispatch(addWidget(x, y, type, 0))
   };
 }
 

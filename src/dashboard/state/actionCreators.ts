@@ -1,5 +1,4 @@
 import { ADD_WIDGET, MOVE_WIDGET, SELECT_WIDGET } from "./actionTypes";
-import { IWidgetDefinition } from "../types";
 
 import {
   IAddWidgetAction,
@@ -10,15 +9,16 @@ import {
 export function addWidget(
   x: number,
   y: number,
-  definition: IWidgetDefinition
+  widgetType: string,
+  canvas: number
 ): IAddWidgetAction {
-  return { type: ADD_WIDGET, x, y, definition };
+  return { type: ADD_WIDGET, x, y, widgetType, canvas };
 }
 
 export function moveWidget(
+  index: number,
   dx: number,
-  dy: number,
-  index: number
+  dy: number
 ): IMoveWidgetAction {
   return { type: MOVE_WIDGET, dx, dy, index };
 }

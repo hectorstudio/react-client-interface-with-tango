@@ -13,6 +13,7 @@ import {
 import { defaultInputs } from "src/dashboard/utils";
 import { DashboardAction } from "../../actions";
 import { move, replaceAt, removeAt, setInput, deleteInput } from "./lib";
+import { definitionForType } from "src/dashboard/newWidgets";
 
 interface IWidgetState {
   selectedIndex: number;
@@ -24,23 +25,30 @@ const initialState = {
   widgets: []
 };
 
+function defaultDimensions(definition): { width: number; height: number } {
+  return { width: 100, height: 100 };
+}
+
 export default function canvases(
   state: IWidgetState = initialState,
   action: DashboardAction
 ): IWidgetState {
   switch (action.type) {
     case ADD_WIDGET: {
-      const { x, y, definition } = action;
-      const { type } = definition;
-      const inputs = defaultInputs(definition.inputs);
+      const { x, y, widgetType: type } = action;
+      const definition = definitionForType(type);
+      const inputs = defaultInputs(definition!.inputs);
+      const { width, height } = defaultDimensions(definition);
+
       const widget = {
         x,
         y,
-        width: 100, // ??
-        height: 100, // ??
+        width,
+        height,
         type,
         inputs
       };
+
       return {
         ...state,
         widgets: [...state.widgets, widget],
@@ -59,7 +67,7 @@ export default function canvases(
     }
     case DELETE_WIDGET: {
       const widgets = removeAt(state.widgets, state.selectedIndex);
-      return { ...state, widgets };
+      return { ...state, widgets, selectedIndex: -1 };
     }
     case SET_INPUT: {
       const { path, value } = action;
