@@ -11,6 +11,8 @@ class AttributePlot extends Component<IWidgetProps> {
 const definition: IWidgetDefinition = {
   type: "ATTRIBUTE_PLOT",
   name: "Attribute Plot",
+  defaultWidth: 100,
+  defaultHeight: 100,
   inputs: {
     xMin: {
       type: "number",

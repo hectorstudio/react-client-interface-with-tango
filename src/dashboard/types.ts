@@ -70,6 +70,8 @@ export interface IInputMapping {
 export interface IWidgetDefinition {
   type: string;
   name: string;
+  defaultWidth: number;
+  defaultHeight: number;
   inputs: IInputDefinitionMapping;
 }
 
