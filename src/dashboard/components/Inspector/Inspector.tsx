@@ -5,8 +5,7 @@ import {
   IInputDefinitionMapping,
   IInputMapping,
   IWidget,
-  IndexPath,
-  IWidgetDefinition
+  IndexPath
 } from "../../types";
 
 import { bundles } from "../../newWidgets";
@@ -205,62 +204,6 @@ interface IProps {
 }
 
 class Inspector extends Component<IProps> {
-  // public deviceChooser(deviceName, index) {
-  //   return (
-  //     <td>
-  //       <select
-  //         className="form-control"
-  //         value={deviceName || ""}
-  //         onChange={e => this.handleSelectDevice(e, index)}
-  //       >
-  //         {deviceName == null && (
-  //           <option value="none" disabled={true}>
-  //             None
-  //           </option>
-  //         )}
-  //         {this.props.isRootCanvas === false && (
-  //           <option value="__parent__">Parent Device</option>
-  //         )}
-  //         {this.state.deviceNames.map((name, i) => (
-  //           <option key={i} value={name}>
-  //             {name}
-  //           </option>
-  //         ))}
-  //       </select>
-  //     </td>
-  //   );
-  // }
-
-  // public attributeChooser(device, attribute, definition, index) {
-  //   return device === "__parent__" ? (
-  //     <input
-  //       className="form-control"
-  //       type="text"
-  //       value={attribute || ""}
-  //       onChange={e => this.handleSelectAttribute(e, index)}
-  //     />
-  //   ) : (
-  //     <select
-  //       className="form-control"
-  //       value={attribute || ""}
-  //       onChange={e => this.handleSelectAttribute(e, index)}
-  //       disabled={device == null}
-  //     >
-  //       {attribute == null && (
-  //         <option value="" disabled={true}>
-  //           {device ? "None" : "Select Device First"}
-  //         </option>
-  //       )}
-  //       {this.state.attributes[device] &&
-  //         this.filteredAttributes(definition, device).map(({ name }, i) => (
-  //           <option key={i} value={name}>
-  //             {name}
-  //           </option>
-  //         ))}
-  //     </select>
-  //   );
-  // }
-
   public render() {
     const { widget } = this.props;
     const definitions = bundles.map(bundle => bundle.definition);
