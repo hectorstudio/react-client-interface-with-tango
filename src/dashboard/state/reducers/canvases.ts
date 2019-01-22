@@ -3,7 +3,7 @@ interface ICanvas {
   name: string;
 }
 
-interface ICanvasesState {
+export interface ICanvasesState {
   [id: string]: ICanvas;
 }
 

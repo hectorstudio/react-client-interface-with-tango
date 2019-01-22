@@ -8,3 +8,5 @@ export const ADD_INPUT = "ADD_INPUT";
 export const DELETE_INPUT = "DELETE_INPUT";
 
 export const SELECT_CANVAS = "SELECT_CANVAS";
+
+export const TOGGLE_MODE = "TOGGLE_MODE";
