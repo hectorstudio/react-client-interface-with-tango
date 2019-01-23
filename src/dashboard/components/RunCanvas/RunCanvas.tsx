@@ -3,8 +3,10 @@ import { connect } from "react-redux";
 
 import { IRootState } from "../../state/reducers";
 import { IWidget } from "../../types";
-import { componentForWidget, definitionForWidget, bundleForWidget } from "../../newWidgets";
+import { bundleForWidget } from "../../newWidgets";
 import { TILE_SIZE } from "../constants";
+
+import ErrorBoundary from "../ErrorBoundary";
 
 import { changeEventEmitter } from "./emitter";
 import { extractModelsFromWidgets, enrichedInputs } from "./lib";
@@ -57,18 +59,22 @@ class RunCanvas extends Component<IProps, IState> {
           const { component, definition } = bundleForWidget(widget)!;
           const { x, y } = widget;
 
-          const inputs = enrichedInputs(widget.inputs, definition.inputs, this.state.attributes);
-          const props = { mode: "run", inputs };
+          const inputs = enrichedInputs(
+            widget.inputs,
+            definition.inputs,
+            this.state.attributes
+          );
 
-          // ???
-          const element = React.createElement(component as any, props);
+          const props = { mode: "run", inputs };
+          const element = React.createElement(component as any, props); // How to avoid the cast?
+
           return (
             <div
               key={i}
               className="Widget"
               style={{ left: 1 + x * TILE_SIZE, top: 1 + y * TILE_SIZE }}
             >
-              {element}
+              <ErrorBoundary>{element}</ErrorBoundary>
             </div>
           );
         })}
@@ -84,35 +90,6 @@ function mapStateToProps(state: IRootState) {
 }
 
 export default connect(mapStateToProps)(RunCanvas);
-
-// import React, { Component } from "react";
-// import PropTypes from "prop-types";
-
-// import { getWidgetDefinition } from "../../utilsOld";
-// import { widget, widgetDefinition, subCanvas } from "../../propTypes";
-
-// class ErrorBoundary extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = { error: null };
-//   }
-
-//   componentDidCatch(error) {
-//     this.setState({ error });
-//   }
-
-//   render() {
-//     if (this.state.error == null) {
-//       return this.props.children;
-//     }
-
-//     return (
-//       <div style={{ backgroundColor: "#ff8888" }}>
-//         {String(this.state.error)}
-//       </div>
-//     );
-//   }
-// }
 
 // export default class RunCanvas extends Component {
 //   constructor(props) {
