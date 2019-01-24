@@ -134,26 +134,24 @@ function mapStateToProps(state) {
   };
 }
 
+function toTile(value) {
+  return Math.floor(0.5 + value / TILE_SIZE);
+}
+
 function mapDispatchToProps(dispatch) {
   return {
     onMoveWidget: (index, dx, dy) => {
-      const adx = Math.floor(dx / TILE_SIZE);
-      const ady = Math.floor(dy / TILE_SIZE);
-      dispatch(moveWidget(index, adx, ady));
+      dispatch(moveWidget(index, toTile(dx), toTile(dy)));
     },
     onSelectWidget: index => dispatch(selectWidget(index)),
     onDeleteWidget: index => dispatch({ type: "DELETE_WIDGET", index }),
     onAddWidget: (type, x, y) => {
-      const ax = Math.floor(x / TILE_SIZE);
-      const ay = Math.floor(y / TILE_SIZE);
-      dispatch(addWidget(ax, ay, type, 0));
+      dispatch(addWidget(toTile(x), toTile(y), type, 0));
     },
     onResizeWidget: (index, mx, my, dx, dy) => {
-      const amx = Math.floor(mx / TILE_SIZE);
-      const amy = Math.floor(my / TILE_SIZE);
-      const adx = Math.floor(dx / TILE_SIZE);
-      const ady = Math.floor(dy / TILE_SIZE);
-      dispatch(resizeWidget(index, amx, amy, adx, ady));
+      dispatch(
+        resizeWidget(index, toTile(mx), toTile(my), toTile(dx), toTile(dy))
+      );
     }
   };
 }
