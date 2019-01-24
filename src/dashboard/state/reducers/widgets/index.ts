@@ -7,7 +7,8 @@ import {
   DELETE_WIDGET,
   SET_INPUT,
   DELETE_INPUT,
-  ADD_INPUT
+  ADD_INPUT,
+  RESIZE_WIDGET
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
@@ -20,7 +21,8 @@ import {
   addInput,
   defaultDimensions,
   nestedDefault,
-  validate
+  validate,
+  resize
 } from "./lib";
 
 import {
@@ -70,6 +72,12 @@ export default function canvases(
     case MOVE_WIDGET: {
       const { dx, dy, index } = action;
       const newWidget = move(state.widgets[index], dx, dy);
+      const widgets = replaceAt(state.widgets, index, newWidget);
+      return { ...state, widgets };
+    }
+    case RESIZE_WIDGET: {
+      const { dx, dy, mx, my, index } = action;
+      const newWidget = resize(state.widgets[index], mx, my, dx, dy);
       const widgets = replaceAt(state.widgets, index, newWidget);
       return { ...state, widgets };
     }

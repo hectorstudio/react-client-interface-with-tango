@@ -173,7 +173,7 @@ const definition: IWidgetDefinition = {
   type: "ATTRIBUTE_PLOT",
   name: "Attribute Plot",
   defaultWidth: 30,
-  defaultHeight: 30,
+  defaultHeight: 20,
   inputs: {
     xMin: {
       type: "number",

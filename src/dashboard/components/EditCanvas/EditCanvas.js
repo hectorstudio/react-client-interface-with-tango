@@ -12,7 +12,8 @@ import EditWidget from "./EditWidget";
 import {
   moveWidget,
   selectWidget,
-  addWidget
+  addWidget,
+  resizeWidget
 } from "src/dashboard/state/actionCreators";
 
 const BACKSPACE = 8;
@@ -25,10 +26,8 @@ const editCanvasTarget = {
 
   drop(props, monitor, component) {
     const { x, y } = monitor.getDifferenceFromInitialOffset();
-    const { index, warning } = monitor.getItem();
-    const dx = Math.floor(x / TILE_SIZE);
-    const dy = Math.floor(y / TILE_SIZE);
-    return { dx, dy };
+    // const { index, warning } = monitor.getItem();
+    return { dx: x, dy: y };
   }
 };
 
@@ -82,11 +81,12 @@ class EditCanvas extends Component {
                 isSelected={index === this.props.selectedIndex}
                 x={1 + TILE_SIZE * x}
                 y={1 + TILE_SIZE * y}
-                width={actualHeight}
+                width={actualWidth}
                 height={actualHeight}
                 onDelete={() => this.props.onDeleteWidget(index)}
                 onClick={() => this.props.onSelectWidget(index)}
                 onMove={(dx, dy) => this.props.onMoveWidget(index, dx, dy)}
+                onResize={(moveX, moveY, dx, dy) => this.props.onResizeWidget(index, moveX, moveY, dx, dy)}
                 warning={!valid}
               >
                 {element}
@@ -116,9 +116,7 @@ const addFromLibraryDropTarget = DropTarget(
     drop(props, monitor, component) {
       const { x: x1, y: y1 } = findDOMNode(component).getBoundingClientRect();
       const { x: x2, y: y2 } = monitor.getClientOffset();
-      const x = Math.floor((x2 - x1) / TILE_SIZE);
-      const y = Math.floor((y2 - y1) / TILE_SIZE);
-      props.onAddWidget(monitor.getItem().type, x, y);
+      props.onAddWidget(monitor.getItem().type, x2 - x1, y2 - y1);
     }
   },
   (connect, monitor) => ({
@@ -135,10 +133,25 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onMoveWidget: (index, dx, dy) => dispatch(moveWidget(index, dx, dy)),
+    onMoveWidget: (index, dx, dy) => {
+      const adx = Math.floor(dx / TILE_SIZE);
+      const ady = Math.floor(dy / TILE_SIZE);
+      dispatch(moveWidget(index, adx, ady));
+    },
     onSelectWidget: index => dispatch(selectWidget(index)),
     onDeleteWidget: index => dispatch({ type: "DELETE_WIDGET", index }),
-    onAddWidget: (type, x, y) => dispatch(addWidget(x, y, type, 0))
+    onAddWidget: (type, x, y) => {
+      const ax = Math.floor(x / TILE_SIZE);
+      const ay = Math.floor(y / TILE_SIZE);
+      dispatch(addWidget(ax, ay, type, 0))
+    },
+    onResizeWidget: (index, mx, my, dx, dy) => {
+      const amx = Math.floor(mx / TILE_SIZE);
+      const amy = Math.floor(my / TILE_SIZE);
+      const adx = Math.floor(dx / TILE_SIZE);
+      const ady = Math.floor(dy / TILE_SIZE);
+      dispatch(resizeWidget(index, amx, amy, adx, ady));
+    }
   };
 }
 

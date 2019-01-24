@@ -6,7 +6,8 @@ import {
   DELETE_WIDGET,
   DELETE_INPUT,
   ADD_INPUT,
-  SET_INPUT
+  SET_INPUT,
+  RESIZE_WIDGET
 } from "./actionTypes";
 import { IndexPath } from "../types";
 
@@ -20,6 +21,15 @@ export interface IAddWidgetAction extends Action {
 
 export interface IMoveWidgetAction extends Action {
   type: typeof MOVE_WIDGET;
+  dx: number;
+  dy: number;
+  index: number;
+}
+
+export interface IResizeWidgetAction extends Action {
+  type: typeof RESIZE_WIDGET;
+  mx: number;
+  my: number;
   dx: number;
   dy: number;
   index: number;
@@ -53,6 +63,7 @@ export interface IDeleteInputAction extends Action {
 export type DashboardAction =
   | IAddWidgetAction
   | IMoveWidgetAction
+  | IResizeWidgetAction
   | ISelectWidgetAction
   | IDeleteWidgetAction
   | ISetInputAction

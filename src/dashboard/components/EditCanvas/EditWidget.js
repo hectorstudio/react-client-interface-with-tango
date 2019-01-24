@@ -5,28 +5,33 @@ import WarningBadge from "./WarningBadge";
 
 class ResizeKnob extends Component {
   render() {
-    const { position } = this.props; // nw, ne, sw, se
-    const cursorPrefix = position === "nw" || position === "se" ? "nwse" : "nesw";
+    const { location } = this.props;
+    const cursorPrefix =
+      location === "nw" || location === "se" ? "nwse" : "nesw";
 
-    const isLeft = position === "nw" || position === "sw";
-    const isTop = position === "nw" || position === "ne";
+    const isLeft = location === "nw" || location === "sw";
+    const isTop = location === "nw" || location === "ne";
 
     const horizontalStyle = isLeft ? { left: 0 } : { right: 0 };
-    const verticalStyle = isTop ? { top: 0 } : { bottom : 0 };
-    const locationStyle = { ...horizontalStyle, ...verticalStyle };
+    const verticalStyle = isTop ? { top: 0 } : { bottom: 0 };
+    const locationStyle = { ...horizontalStyle, ...verticalStyle };
 
     return (
       <div
+        onMouseDown={e =>
+          this.props.onMouseDown(location, e.screenX, e.screenY)
+        }
         style={{
           position: "absolute",
           ...locationStyle,
           zIndex: 1,
-          backgroundColor: "magenta",
           cursor: `${cursorPrefix}-resize`,
-          width: "10px",
-          height: "10px"
+          width: "15px",
+          height: "15px"
         }}
-      />
+      >
+        {JSON.stringify(this.props.offset)}
+      </div>
     );
   }
 }
@@ -53,21 +58,108 @@ function editWidgetCollect(connect, monitor) {
 }
 
 class EditWidget extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      resizingLocation: null,
+      startX: 0,
+      startY: 0,
+      currentX: 0,
+      currentY: 0
+    };
+    this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+  }
+
+  handleMouseMove(event) {
+    const { screenX: currentX, screenY: currentY } = event;
+    this.setState({ currentX, currentY });
+  }
+
+  handleMouseUp() {
+    const [diffX, diffY] = this.sizeDifference();
+    const [moveX, moveY] = this.positionAdjustedForOngoingResize();
+    const { x, y } = this.props;
+    this.props.onResize(moveX - x, moveY - y, diffX, diffY);
+
+    this.setState({ resizingLocation: null });
+    document.removeEventListener("mouseup", this.handleMouseUp);
+    document.removeEventListener("mousemove", this.handleMouseMove);
+  }
+
+  handleBeginResize(knobLocation, startX, startY) {
+    const [currentX, currentY] = [startX, startY];
+    this.setState({
+      resizingLocation: knobLocation,
+      startX,
+      startY,
+      currentX,
+      currentY
+    });
+    document.addEventListener("mouseup", this.handleMouseUp);
+    document.addEventListener("mousemove", this.handleMouseMove);
+  }
+
+  sizeDifference() {
+    const { resizingLocation } = this.state;
+    if (resizingLocation == null) {
+      return [0, 0];
+    }
+
+    const [vertical, horizontal] = resizingLocation;
+    const factorX = horizontal === "w" ? -1 : 1;
+    const factorY = vertical === "n" ? -1 : 1;
+
+    const { currentX, currentY, startX, startY } = this.state;
+    const diffX = factorX * (currentX - startX);
+    const diffY = factorY * (currentY - startY);
+    
+    return [diffX, diffY];
+  }
+
+  positionAdjustedForOngoingResize() {
+    const { x, y } = this.props;
+    const { resizingLocation } = this.state;
+
+    if (resizingLocation == null) {
+      return [x, y];
+    }
+
+    const [diffX, diffY] = this.sizeDifference();
+    const [vertical, horizontal] = resizingLocation;
+    const adjustX = horizontal === "w" ? -diffX : 0;
+    const adjustY = vertical === "n" ? -diffY : 0;
+    return [x + adjustX, y + adjustY];
+  }
+
   render() {
     if (this.props.isDragging) {
       return null;
     }
 
-    const { width, height } = this.props;
+    const { width, height, connectDragSource } = this.props;
 
-    return this.props.connectDragSource(
+    const knobs = ["nw", "ne", "sw", "se"].map(knobLocation => (
+      <ResizeKnob
+        key={knobLocation}
+        location={knobLocation}
+        onMouseDown={(knobLocation, x, y) =>
+          this.handleBeginResize(knobLocation, x, y)
+        }
+      />
+    ));
+
+    const [x, y] = this.positionAdjustedForOngoingResize();
+    const [diffX, diffY] = this.sizeDifference();
+
+    return (
       <div
         className={this.props.isSelected ? "Widget selected" : "Widget"}
         style={{
-          left: this.props.x,
-          top: this.props.y,
-          width,
-          height,
+          left: x,
+          top: y,
+          width: width + diffX,
+          height: height + diffY,
           overflow: "hidden"
         }}
         onClick={event => {
@@ -75,12 +167,9 @@ class EditWidget extends Component {
           this.props.onClick();
         }}
       >
-        <ResizeKnob position="nw"/>
-        <ResizeKnob position="ne"/>
-        <ResizeKnob position="sw"/>
-        <ResizeKnob position="se"/>
+        {knobs}
         {this.props.warning && <WarningBadge />}
-        {this.props.children}
+        {connectDragSource(<div>{this.props.children}</div>)}
       </div>
     );
   }
