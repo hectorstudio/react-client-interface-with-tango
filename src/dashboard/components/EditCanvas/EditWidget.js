@@ -3,6 +3,10 @@ import { DragSource } from "react-dnd";
 
 import WarningBadge from "./WarningBadge";
 
+/* Resizing was difficult/impractical to implement with React features and react-dnd, so
+   an approach using vanilla JavaScript event listeners was used instead. Subject to change
+   at a later stage if a better solution is found. */
+
 class ResizeKnob extends Component {
   render() {
     const { location } = this.props;
@@ -29,9 +33,7 @@ class ResizeKnob extends Component {
           width: "15px",
           height: "15px"
         }}
-      >
-        {JSON.stringify(this.props.offset)}
-      </div>
+      />
     );
   }
 }
