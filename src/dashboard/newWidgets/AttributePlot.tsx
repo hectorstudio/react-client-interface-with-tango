@@ -66,16 +66,19 @@ class BufferingPlot extends Component<
       return [x, y];
     });
 
-    return <Plot models={this.props.models} values={values} />;
+    return (
+      <Plot models={this.props.models} values={values} staticMode={false} />
+    );
   }
 }
 
 class Plot extends Component<{
   values: number[][][];
   models: string[];
+  staticMode: boolean;
 }> {
   public render() {
-    const { values, models } = this.props;
+    const { values, models, staticMode } = this.props;
     const data = models.map((model, i) => {
       return { x: values[i][0], y: values[i][1], name: model };
     });
@@ -91,7 +94,14 @@ class Plot extends Component<{
       }
     };
 
-    return <Plotly data={data} layout={layout} />;
+    return (
+      <Plotly
+        data={data}
+        layout={layout}
+        config={{ staticPlot: staticMode }}
+        responsive={true}
+      />
+    );
   }
 }
 
@@ -126,7 +136,13 @@ class AttributePlot extends Component<IWidgetProps, IState> {
     const sample2 = xValues.map(x => 0.5 * Math.cos(x / 3));
     const sampleValues = [[xValues, sample1], [xValues, sample2]];
 
-    return <Plot values={sampleValues} models={["test1", "test2"]} />;
+    return (
+      <Plot
+        values={sampleValues}
+        models={["test1", "test2"]}
+        staticMode={true}
+      />
+    );
   }
 }
 
