@@ -57,7 +57,7 @@ class RunCanvas extends Component<IProps, IState> {
       <div className="Canvas run">
         {widgets.map((widget, i) => {
           const { component, definition } = bundleForWidget(widget)!;
-          const { x, y } = widget;
+          const { x, y, width, height } = widget;
 
           const inputs = enrichedInputs(
             widget.inputs,
@@ -65,7 +65,10 @@ class RunCanvas extends Component<IProps, IState> {
             this.state.attributes
           );
 
-          const props = { mode: "run", inputs };
+          const actualWidth = width * TILE_SIZE;
+          const actualHeight = height * TILE_SIZE;
+
+          const props = { mode: "run", inputs, actualWidth, actualHeight };
           const element = React.createElement(component as any, props); // How to avoid the cast?
 
           return (

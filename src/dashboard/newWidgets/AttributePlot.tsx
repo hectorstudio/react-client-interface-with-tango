@@ -11,6 +11,8 @@ interface IState {
 interface IBufferingPlotProps {
   values: number[];
   models: string[];
+  width: number;
+  height: number;
 }
 
 interface IBuffer {
@@ -20,6 +22,14 @@ interface IBuffer {
 interface IBufferingPlotState {
   t0: number;
   buffer: IBuffer;
+}
+
+interface IPlotProps {
+  values: number[][][];
+  models: string[];
+  staticMode: boolean;
+  width: number;
+  height: number;
 }
 
 class BufferingPlot extends Component<
@@ -67,28 +77,32 @@ class BufferingPlot extends Component<
     });
 
     return (
-      <Plot models={this.props.models} values={values} staticMode={false} />
+      <Plot
+        models={this.props.models}
+        values={values}
+        width={this.props.width}
+        height={this.props.height}
+        staticMode={false}
+      />
     );
   }
 }
 
-class Plot extends Component<{
-  values: number[][][];
-  models: string[];
-  staticMode: boolean;
-}> {
+class Plot extends Component<IPlotProps> {
   public render() {
-    const { values, models, staticMode } = this.props;
+    const { values, models, staticMode, width, height } = this.props;
     const data = models.map((model, i) => {
       return { x: values[i][0], y: values[i][1], name: model };
     });
 
     const layout = {
       margin: {
-        l: 20,
-        r: 20,
-        t: 20
+        l: 30,
+        r: 15,
+        t: 15
       },
+      width,
+      height,
       legend: {
         orientation: "h"
       }
@@ -112,7 +126,7 @@ class AttributePlot extends Component<IWidgetProps, IState> {
   }
 
   public render() {
-    const { mode, inputs } = this.props;
+    const { mode, inputs, actualWidth, actualHeight } = this.props;
     const { attributes } = inputs;
 
     const singleAttributes = attributes.map(({ attribute }) => attribute);
@@ -122,7 +136,14 @@ class AttributePlot extends Component<IWidgetProps, IState> {
 
     if (mode === "run") {
       const values = singleAttributes.map(({ value }) => value);
-      return <BufferingPlot values={values} models={models} />;
+      return (
+        <BufferingPlot
+          width={actualWidth}
+          height={actualHeight}
+          values={values}
+          models={models}
+        />
+      );
     }
 
     // if (mode === "edit") {
@@ -140,6 +161,8 @@ class AttributePlot extends Component<IWidgetProps, IState> {
       <Plot
         values={sampleValues}
         models={["test1", "test2"]}
+        width={actualWidth}
+        height={actualHeight}
         staticMode={true}
       />
     );
