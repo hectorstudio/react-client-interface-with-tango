@@ -64,35 +64,39 @@ class EditCanvas extends Component {
             Add widgets by dragging them from the library and dropping them on
             the canvas.
           </div>
+          
+          <div className="grid">
+            {this.props.widgets.map((widget, index) => {
+              const { x, y, width, height, inputs, valid } = widget;
+              const actualWidth = TILE_SIZE * width;
+              const actualHeight = TILE_SIZE * height;
+              const props = { inputs, mode: "edit", actualWidth, actualHeight };
 
-          {this.props.widgets.map((widget, index) => {
-            const { x, y, width, height, inputs, valid } = widget;
-            const actualWidth = TILE_SIZE * width;
-            const actualHeight = TILE_SIZE * height;
-            const props = { inputs, mode: "edit", actualWidth, actualHeight };
+              const component = componentForWidget(widget);
+              const element = React.createElement(component, props);
 
-            const component = componentForWidget(widget);
-            const element = React.createElement(component, props);
-
-            return (
-              <EditWidget
-                index={index}
-                key={index}
-                isSelected={index === this.props.selectedIndex}
-                x={1 + TILE_SIZE * x}
-                y={1 + TILE_SIZE * y}
-                width={actualWidth}
-                height={actualHeight}
-                onDelete={() => this.props.onDeleteWidget(index)}
-                onClick={() => this.props.onSelectWidget(index)}
-                onMove={(dx, dy) => this.props.onMoveWidget(index, dx, dy)}
-                onResize={(moveX, moveY, dx, dy) => this.props.onResizeWidget(index, moveX, moveY, dx, dy)}
-                warning={!valid}
-              >
-                {element}
-              </EditWidget>
-            );
-          })}
+              return (
+                <EditWidget
+                  index={index}
+                  key={index}
+                  isSelected={index === this.props.selectedIndex}
+                  x={1 + TILE_SIZE * x}
+                  y={1 + TILE_SIZE * y}
+                  width={actualWidth}
+                  height={actualHeight}
+                  onDelete={() => this.props.onDeleteWidget(index)}
+                  onClick={() => this.props.onSelectWidget(index)}
+                  onMove={(dx, dy) => this.props.onMoveWidget(index, dx, dy)}
+                  onResize={(moveX, moveY, dx, dy) =>
+                    this.props.onResizeWidget(index, moveX, moveY, dx, dy)
+                  }
+                  warning={!valid}
+                >
+                  {element}
+                </EditWidget>
+              );
+            })}
+          </div>
         </div>
       )
     );
@@ -143,7 +147,7 @@ function mapDispatchToProps(dispatch) {
     onAddWidget: (type, x, y) => {
       const ax = Math.floor(x / TILE_SIZE);
       const ay = Math.floor(y / TILE_SIZE);
-      dispatch(addWidget(ax, ay, type, 0))
+      dispatch(addWidget(ax, ay, type, 0));
     },
     onResizeWidget: (index, mx, my, dx, dy) => {
       const amx = Math.floor(mx / TILE_SIZE);
