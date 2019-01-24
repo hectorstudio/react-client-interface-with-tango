@@ -68,11 +68,12 @@ class EditCanvas extends Component {
 
           {this.props.widgets.map((widget, index) => {
             const { x, y, width, height, inputs, valid } = widget;
+            const actualWidth = TILE_SIZE * width;
+            const actualHeight = TILE_SIZE * height;
+            const props = { inputs, mode: "edit", actualWidth, actualHeight };
+
             const component = componentForWidget(widget);
-            const element = React.createElement(component, {
-              inputs,
-              mode: "edit"
-            });
+            const element = React.createElement(component, props);
 
             return (
               <EditWidget
@@ -81,8 +82,8 @@ class EditCanvas extends Component {
                 isSelected={index === this.props.selectedIndex}
                 x={1 + TILE_SIZE * x}
                 y={1 + TILE_SIZE * y}
-                width={TILE_SIZE * width}
-                height={TILE_SIZE * height}
+                width={actualHeight}
+                height={actualHeight}
                 onDelete={() => this.props.onDeleteWidget(index)}
                 onClick={() => this.props.onSelectWidget(index)}
                 onMove={(dx, dy) => this.props.onMoveWidget(index, dx, dy)}
