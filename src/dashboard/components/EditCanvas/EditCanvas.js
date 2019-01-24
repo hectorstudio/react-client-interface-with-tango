@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
-import { DragSource, DropTarget } from "react-dnd";
-import PropTypes from "prop-types";
+import { DropTarget } from "react-dnd";
 import { connect } from "react-redux";
 
 import dndTypes from "../../dndTypes";
@@ -64,7 +63,7 @@ class EditCanvas extends Component {
             Add widgets by dragging them from the library and dropping them on
             the canvas.
           </div>
-          
+
           <div className="grid">
             {this.props.widgets.map((widget, index) => {
               const { x, y, width, height, inputs, valid } = widget;
