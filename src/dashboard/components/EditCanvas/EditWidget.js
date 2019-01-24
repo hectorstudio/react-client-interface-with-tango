@@ -115,7 +115,7 @@ class EditWidget extends Component {
     const { currentX, currentY, startX, startY } = this.state;
     const diffX = factorX * (currentX - startX);
     const diffY = factorY * (currentY - startY);
-    
+
     return [diffX, diffY];
   }
 
