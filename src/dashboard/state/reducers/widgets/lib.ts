@@ -26,6 +26,23 @@ export function move(widget: IWidget, dx: number, dy: number) {
   return { ...widget, x: x + dx, y: y + dy };
 }
 
+export function resize(
+  widget: IWidget,
+  mx: number,
+  my: number,
+  dx: number,
+  dy: number
+) {
+  const { x, y, width, height } = widget;
+  return {
+    ...widget,
+    x: x + mx,
+    y: y + my,
+    width: width + dx,
+    height: height + dy
+  };
+}
+
 export function validate(widget: IWidget) {
   const definition = definitionForWidget(widget);
   const valid = inputsAreValid(definition!.inputs, widget.inputs);

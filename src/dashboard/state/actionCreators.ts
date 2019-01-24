@@ -1,9 +1,10 @@
-import { ADD_WIDGET, MOVE_WIDGET, SELECT_WIDGET } from "./actionTypes";
+import { ADD_WIDGET, MOVE_WIDGET, SELECT_WIDGET, RESIZE_WIDGET } from "./actionTypes";
 
 import {
   IAddWidgetAction,
   IMoveWidgetAction,
-  ISelectWidgetAction
+  ISelectWidgetAction,
+  IResizeWidgetAction
 } from "./actions";
 
 export function addWidget(
@@ -21,6 +22,16 @@ export function moveWidget(
   dy: number
 ): IMoveWidgetAction {
   return { type: MOVE_WIDGET, dx, dy, index };
+}
+
+export function resizeWidget(
+  index: number,
+  mx: number,
+  my: number,
+  dx: number,
+  dy: number
+): IResizeWidgetAction {
+  return { type: RESIZE_WIDGET, mx, my, dx, dy, index };
 }
 
 export function selectWidget(index: number): ISelectWidgetAction {
