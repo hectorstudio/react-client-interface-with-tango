@@ -4,7 +4,6 @@ import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { Helmet } from "react-helmet";
-import "font-awesome/css/font-awesome.min.css";
 
 import AttributeTable from "./AttributeTable/AttributeTable";
 import CommandTable from "./CommandTable/CommandTable";
@@ -12,11 +11,9 @@ import PropertyTable from "./PropertyTable/PropertyTable";
 import ServerInfo from "./ServerInfo/ServerInfo";
 import DisplevelChooser from "./DisplevelChooser/DisplevelChooser";
 import ErrorTable from "./ErrorTable/ErrorTable";
-
 import Spinner from "../Spinner/Spinner";
 
 import { getDevice } from "../../state/selectors/devices";
-
 import { getDeviceIsLoading } from "../../state/selectors/loadingStatus";
 import { getDisabledDisplevels } from "../../state/selectors/deviceDetail";
 

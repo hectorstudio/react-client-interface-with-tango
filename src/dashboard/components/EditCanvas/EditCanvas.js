@@ -1,82 +1,22 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
-import { DragSource, DropTarget } from "react-dnd";
-import PropTypes from 'prop-types'
+import { DropTarget } from "react-dnd";
+import { connect } from "react-redux";
 
 import dndTypes from "../../dndTypes";
-import { getWidgetDefinition } from "../../utils";
-import {widget, widgetDefinition} from "../../propTypes"
+import { componentForWidget } from "../../newWidgets";
+import { TILE_SIZE } from "../constants";
+
+import EditWidget from "./EditWidget";
+import {
+  moveWidget,
+  selectWidget,
+  addWidget,
+  resizeWidget
+} from "src/dashboard/state/actionCreators";
 
 const BACKSPACE = 8;
 const DELETE = 46;
-
-const WarningBadge = () => (
-  <div
-    style={{
-      position: "absolute",
-      marginLeft: "-10px",
-      marginTop: "-10px",
-      backgroundColor: "red",
-      borderRadius: "10px",
-      width: "20px",
-      height: "20px",
-      color: "white",
-      textAlign: "center",
-      zIndex: 1000
-    }}
-  >
-    <span className="fa fa-exclamation" />
-  </div>
-);
-
-class EditWidget extends Component {
-  render() {
-    if (this.props.isDragging) {
-      return null;
-    }
-    const { connectDragSource } = this.props;
-    return connectDragSource(
-      <div
-        className={this.props.isSelected ? "Widget selected" : "Widget"}
-        style={{ left: this.props.x, top: this.props.y }}
-        onClick={this.props.onClick}
-      >
-        {this.props.warning && <WarningBadge />}
-        {this.props.children}
-      </div>
-    );
-  }
-}
-EditWidget.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number,
-  isSelected: PropTypes.bool,
-  isDragging: PropTypes.bool,
-  onClick: PropTypes.func,
-  warning: PropTypes.bool,
-  x: PropTypes.number,
-  y: PropTypes.number,
-}
-
-const editWidgetSource = {
-  beginDrag(props) {
-    return {
-      index: props.index,
-      warning: props.warning
-    };
-  }
-};
-
-function editWidgetCollect(connect, monitor) {
-  return {
-    connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging()
-  };
-}
-
-EditWidget = DragSource("EDIT_WIDGET", editWidgetSource, editWidgetCollect)(
-  EditWidget
-);
 
 const editCanvasTarget = {
   canDrop(props, monitor) {
@@ -85,13 +25,8 @@ const editCanvasTarget = {
 
   drop(props, monitor, component) {
     const { x, y } = monitor.getDifferenceFromInitialOffset();
-    const { index, warning } = monitor.getItem();
-
-    // This is a fairly ugly hack to compensate for the fact that
-    // a warning badge offsets the position by -10 px hor/ver
-
-    const compensation = warning ? 10 : 0;
-    props.onMoveWidget(index, x + compensation, y + compensation);
+    // const { index, warning } = monitor.getItem();
+    return { dx: x, dy: y };
   }
 };
 
@@ -103,30 +38,8 @@ class EditCanvas extends Component {
     };
   }
 
-  definitionForWidget(widget) {
-    return getWidgetDefinition(this.props.widgetDefinitions, widget.type);
-  }
-
   componentForWidget(widget) {
     return this.definitionForWidget(widget).component;
-  }
-
-  handleSelectWidget(i, event) {
-    event.stopPropagation();
-    if (this.props.onSelectWidget) {
-      this.props.onSelectWidget(i);
-    }
-  }
-
-  handleKeyDown(event) {
-    if ([BACKSPACE, DELETE].indexOf(event.keyCode) !== -1) {
-      event.preventDefault();
-      this.props.onDeleteWidget(this.props.selectedWidgetIndex);
-    }
-  }
-
-  onMoveWidget(index, x, y) {
-    this.props.onMoveWidget(index, x, y);
   }
 
   render() {
@@ -137,8 +50,13 @@ class EditCanvas extends Component {
       connectMoveDropTarget(
         <div
           className="Canvas edit"
-          onClick={this.handleSelectWidget.bind(this, -1)}
-          onKeyDown={this.handleKeyDown.bind(this)}
+          onClick={() => this.props.onSelectWidget(-1)}
+          onKeyDown={event => {
+            if ([BACKSPACE, DELETE].indexOf(event.keyCode) !== -1) {
+              event.preventDefault();
+              this.props.onDeleteWidget();
+            }
+          }}
           tabIndex="0"
         >
           <div className="Placeholder" style={{ opacity: hasWidgets ? 0 : 1 }}>
@@ -146,50 +64,42 @@ class EditCanvas extends Component {
             the canvas.
           </div>
 
-          {this.props.widgets.map((widget, i) => {
-            const Widget = this.componentForWidget(widget);
-            const { x, y, device, attribute, params } = widget;
+          <div className="grid">
+            {this.props.widgets.map((widget, index) => {
+              const { x, y, width, height, inputs, valid } = widget;
+              const actualWidth = TILE_SIZE * width;
+              const actualHeight = TILE_SIZE * height;
+              const props = { inputs, mode: "edit", actualWidth, actualHeight };
 
-            const definition = this.definitionForWidget(widget);
-            const fieldTypes = definition.fields.map(field => field.type);
-            const warning =
-              (device == null && fieldTypes.indexOf("device") !== -1) ||
-              (attribute == null && fieldTypes.indexOf("attribute") !== -1);
+              const component = componentForWidget(widget);
+              const element = React.createElement(component, props);
 
-            return (
-              <EditWidget
-                index={i}
-                key={i}
-                isSelected={this.props.selectedWidgetIndex === i}
-                x={x}
-                y={y}
-                onClick={this.handleSelectWidget.bind(this, i)}
-                warning={warning}
-              >
-                <Widget
-                  device={device}
-                  attribute={attribute}
-                  params={params}
-                  mode="edit"
-                />
-              </EditWidget>
-            );
-          })}
+              return (
+                <EditWidget
+                  index={index}
+                  key={index}
+                  isSelected={index === this.props.selectedIndex}
+                  x={1 + TILE_SIZE * x}
+                  y={1 + TILE_SIZE * y}
+                  width={actualWidth}
+                  height={actualHeight}
+                  onDelete={() => this.props.onDeleteWidget(index)}
+                  onClick={() => this.props.onSelectWidget(index)}
+                  onMove={(dx, dy) => this.props.onMoveWidget(index, dx, dy)}
+                  onResize={(moveX, moveY, dx, dy) =>
+                    this.props.onResizeWidget(index, moveX, moveY, dx, dy)
+                  }
+                  warning={!valid}
+                >
+                  {element}
+                </EditWidget>
+              );
+            })}
+          </div>
         </div>
       )
     );
   }
-}
-EditCanvas.propTypes = {
-  connectLibraryDropTarget: PropTypes.func,
-  connectMoveDropTarget: PropTypes.func,
-  onAddWidget: PropTypes.func,
-  onDeleteWidget: PropTypes.func,
-  onMoveWidget: PropTypes.func,
-  onSelectWidget: PropTypes.func,
-  selectedWidgetIndex: PropTypes.number,
-  widgetDefinitions: PropTypes.arrayOf(widgetDefinition),
-  widgets: PropTypes.arrayOf(widget),
 }
 
 const moveDropTarget = DropTarget(
@@ -209,7 +119,7 @@ const addFromLibraryDropTarget = DropTarget(
     drop(props, monitor, component) {
       const { x: x1, y: y1 } = findDOMNode(component).getBoundingClientRect();
       const { x: x2, y: y2 } = monitor.getClientOffset();
-      props.onAddWidget(monitor.getItem().definition, x2 - x1, y2 - y1);
+      props.onAddWidget(monitor.getItem().type, x2 - x1, y2 - y1);
     }
   },
   (connect, monitor) => ({
@@ -217,7 +127,44 @@ const addFromLibraryDropTarget = DropTarget(
   })
 );
 
-export default [moveDropTarget, addFromLibraryDropTarget].reduce(
-  (cls, decorator) => decorator(cls),
-  EditCanvas
+function mapStateToProps(state) {
+  return {
+    widgets: state.widgets.widgets,
+    selectedIndex: state.widgets.selectedIndex
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    onMoveWidget: (index, dx, dy) => {
+      const adx = Math.floor(dx / TILE_SIZE);
+      const ady = Math.floor(dy / TILE_SIZE);
+      dispatch(moveWidget(index, adx, ady));
+    },
+    onSelectWidget: index => dispatch(selectWidget(index)),
+    onDeleteWidget: index => dispatch({ type: "DELETE_WIDGET", index }),
+    onAddWidget: (type, x, y) => {
+      const ax = Math.floor(x / TILE_SIZE);
+      const ay = Math.floor(y / TILE_SIZE);
+      dispatch(addWidget(ax, ay, type, 0));
+    },
+    onResizeWidget: (index, mx, my, dx, dy) => {
+      const amx = Math.floor(mx / TILE_SIZE);
+      const amy = Math.floor(my / TILE_SIZE);
+      const adx = Math.floor(dx / TILE_SIZE);
+      const ady = Math.floor(dy / TILE_SIZE);
+      dispatch(resizeWidget(index, amx, amy, adx, ady));
+    }
+  };
+}
+
+const connectWithState = connect(
+  mapStateToProps,
+  mapDispatchToProps
 );
+
+export default [
+  moveDropTarget,
+  addFromLibraryDropTarget,
+  connectWithState
+].reduce((cls, decorator) => decorator(cls), EditCanvas);
