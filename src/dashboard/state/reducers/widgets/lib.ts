@@ -92,7 +92,11 @@ export function setWithIndexPath(
       } else if (mode === REPLACE) {
         copy.splice(head, 1, replacement);
       } else if (mode === ADD) {
-        copy.splice(head, 0, replacement);
+        // Some logic to support both negative and positive indices. Needs to be tested more thorougly
+        const length = copy.length;
+        const norm = length > 0 ? (length + head) % length : 0;
+        const index = norm + (head < 0 ? 1 : 0);
+        copy.splice(index, 0, replacement);
       }
     }
     return copy;
