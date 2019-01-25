@@ -2,6 +2,7 @@ import React, { Component, FormEvent } from "react";
 
 import { fetchAttributes } from "../api";
 import { DeviceConsumer } from "../DevicesProvider";
+import DeviceSuggester from "./DeviceSuggester";
 
 interface IProps {
   device?: string;
@@ -39,10 +40,9 @@ export default class AttributeSelect extends Component<IProps, IState> {
     }
   }
 
-  public handleSelectDevice(event: FormEvent<HTMLSelectElement>) {
+  public handleSelectDevice(newDevice: string) {
     this.fetchAttributes();
     const { onSelect } = this.props;
-    const newDevice = event.currentTarget.value;
     if (onSelect && newDevice) {
       onSelect(newDevice, null);
     }
@@ -64,18 +64,12 @@ export default class AttributeSelect extends Component<IProps, IState> {
       <DeviceConsumer>
         {({ devices }) => (
           <div>
-            <select
-              value={device}
-              className="form-control"
-              onChange={this.handleSelectDevice}
-            >
-              {device == null && <option>Select device</option>}
-              {devices.map((name, i) => (
-                <option key={i} value={name}>
-                  {name}
-                </option>
-              ))}
-            </select>
+            <DeviceSuggester 
+              deviceName={device}
+              devices={devices}
+              onSelection={newValue => this.handleSelectDevice(newValue)}
+            />
+
             <select
               className="form-control"
               value={attribute}
