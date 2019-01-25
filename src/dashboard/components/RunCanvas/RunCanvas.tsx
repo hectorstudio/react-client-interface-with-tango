@@ -17,7 +17,7 @@ interface IProps {
 }
 
 interface IState {
-  attributes: { [model: string]: any };
+  attributeValues: { [model: string]: any };
 }
 
 class RunCanvas extends Component<IProps, IState> {
@@ -25,7 +25,7 @@ class RunCanvas extends Component<IProps, IState> {
 
   public constructor(props) {
     super(props);
-    this.state = { attributes: {} };
+    this.state = { attributeValues: {} };
   }
 
   public componentDidMount() {
@@ -39,8 +39,8 @@ class RunCanvas extends Component<IProps, IState> {
         data: { value }
       } = event;
       const model = `${device}/${name}`;
-      const attributes = { ...this.state.attributes, [model]: value };
-      this.setState({ attributes });
+      const attributeValues = { ...this.state.attributeValues, [model]: value };
+      this.setState({ attributeValues });
     });
   }
 
@@ -62,7 +62,7 @@ class RunCanvas extends Component<IProps, IState> {
           const inputs = enrichedInputs(
             widget.inputs,
             definition.inputs,
-            this.state.attributes
+            this.state.attributeValues
           );
 
           const actualWidth = width * TILE_SIZE;
@@ -75,7 +75,12 @@ class RunCanvas extends Component<IProps, IState> {
             <div
               key={i}
               className="Widget"
-              style={{ left: 1 + x * TILE_SIZE, top: 1 + y * TILE_SIZE }}
+              style={{
+                left: 1 + x * TILE_SIZE,
+                top: 1 + y * TILE_SIZE,
+                width: actualWidth,
+                height: actualHeight
+              }}
             >
               <ErrorBoundary>{element}</ErrorBoundary>
             </div>
