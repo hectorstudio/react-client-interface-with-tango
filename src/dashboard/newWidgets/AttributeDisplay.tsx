@@ -65,7 +65,7 @@ const definition: IWidgetDefinition = {
     },
     showDevice: {
       type: "boolean",
-      label: "Display Device Name",
+      label: "Device Name",
       default: false
     }
   }
