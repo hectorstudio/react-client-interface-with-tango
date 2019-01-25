@@ -86,7 +86,7 @@ class InputList extends Component<{
           <tr key={i}>
             <td colSpan={2}>
               {label}
-              <div style={{ marginLeft: "0.5em" }}>
+              <div style={{ marginLeft: "0.5em", marginBottom: "0.5em" }}>
                 <AttributeSelect
                   device={value.device}
                   attribute={value.attribute}
