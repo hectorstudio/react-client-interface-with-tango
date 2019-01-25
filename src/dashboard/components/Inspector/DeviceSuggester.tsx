@@ -28,11 +28,25 @@ export default class DeviceSuggester extends Component<IProps, IState> {
   }
 
   public renderSuggestion = (suggestion: string) => {
+    // deal with highlighting of matching texts
+
     const { value } = this.state;
-    const index = suggestion.indexOf(value.toLowerCase());
+    const index = suggestion.toLowerCase().indexOf(value.toLowerCase());
     if (index === -1) {
+      // no highlight, e.g. when value === "*"
       return <div>{suggestion}</div>;
     }
+    if (value.includes("/")) {
+      // highlight everything that matches
+      return (
+        <div>
+          {suggestion.substring(0, index)}
+          <b>{suggestion.substring(index, index + value.length)}</b>
+          {suggestion.substring(index + value.length)}
+        </div>
+      );
+    }
+    // hightlight matching beginnings of each slash-separated token in the device string
     const split = suggestion.split("/");
     let s1 = split[0];
     let s2 = split[1];
@@ -119,10 +133,7 @@ export default class DeviceSuggester extends Component<IProps, IState> {
     return res;
   }
 
-  public onSuggestionSelected(
-    event,
-    { suggestion, suggestionValue}
-  ): void {
+  public onSuggestionSelected(event, { suggestion, suggestionValue }): void {
     this.props.onSelection(suggestionValue);
   }
 
