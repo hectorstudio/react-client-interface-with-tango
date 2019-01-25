@@ -119,15 +119,27 @@ class InputList extends Component<{
                     padding: "0.5em",
                     backgroundColor: "#f4f4f4",
                     borderRadius: "0.25em",
-                    marginBottom: "0.5em"
+                    marginBottom: "0.5em",
+                    position: "relative"
                   }}
                 >
                   <button
-                    className="close float-left"
+                    className="close"
                     type="button"
                     onClick={() => this.props.onDelete([inputName, j])}
+                    style={{
+                      width: "1em",
+                      height: "1em",
+                      borderRadius: "0.5em",
+                      position: "absolute",
+                      right: "-0.25em",
+                      top: "-0.25em",
+                      paddingTop: 0,
+                      backgroundColor: "rgba(0, 0, 0, 0.5)",
+                      outline: "none"
+                    }}
                   >
-                    <span>&times;</span>
+                    &times;
                   </button>
                   <InputList
                     inputDefinitions={inputDefinition.inputs}
@@ -144,14 +156,14 @@ class InputList extends Component<{
               ))}
               <button
                 className="btn btn-outline-dark"
-                style={{display: "block"}}
+                style={{ display: "block" }}
                 type="button"
                 onClick={() => {
                   // Doesn't support more than one degree of nesting
                   this.props.onAdd([inputName]);
                 }}
               >
-                <span className="fa fa-plus"/>
+                <span className="fa fa-plus" />
               </button>
             </td>
           </tr>
