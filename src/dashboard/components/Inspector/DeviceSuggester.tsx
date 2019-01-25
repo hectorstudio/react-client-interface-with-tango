@@ -1,12 +1,22 @@
 import React, { Component } from "react";
-import createGQLClient from "graphql-client";
 import Autosuggest from "react-autosuggest";
 import "./DeviceSuggester.css";
 
-export default class DeviceSuggester extends Component {
+interface IState {
+  value: string;
+  suggestions: string[];
+}
+
+interface IProps {
+  devices: string[];
+  deviceName: string | undefined;
+  onSelection: (newValue: string) => void;
+}
+
+export default class DeviceSuggester extends Component<IProps, IState> {
   constructor(props) {
     super(props);
-    const { devices, deviceName, onSelection } = this.props;
+    const { devices, deviceName } = this.props;
     this.state = {
       value: deviceName || "",
       suggestions: devices || []
@@ -17,11 +27,11 @@ export default class DeviceSuggester extends Component {
     this.storeInputReference = this.storeInputReference.bind(this);
   }
 
-  renderSuggestion = suggestion => {
+  public renderSuggestion = (suggestion: string) => {
     const { value } = this.state;
     const index = suggestion.indexOf(value.toLowerCase());
-    if (index === -1){
-      return <div>{suggestion}</div>
+    if (index === -1) {
+      return <div>{suggestion}</div>;
     }
     const split = suggestion.split("/");
     let s1 = split[0];
@@ -30,22 +40,29 @@ export default class DeviceSuggester extends Component {
     let s1bold = "";
     let s2bold = "";
     let s3bold = "";
-    if (split[0].toLowerCase().startsWith(value)){
-      s1bold = split[0].substring(0, value.length)
+    if (split[0].toLowerCase().startsWith(value)) {
+      s1bold = split[0].substring(0, value.length);
       s1 = split[0].substring(value.length);
     }
-    if (split[1].toLowerCase().startsWith(value)){
-      s2bold = split[1].substring(0, value.length)
+    if (split[1].toLowerCase().startsWith(value)) {
+      s2bold = split[1].substring(0, value.length);
       s2 = split[1].substring(value.length);
     }
-    if (split[2].toLowerCase().startsWith(value)){
-      s3bold = split[2].substring(0, value.length) 
+    if (split[2].toLowerCase().startsWith(value)) {
+      s3bold = split[2].substring(0, value.length);
       s3 = split[2].substring(value.length);
     }
-    return <div><b>{s1bold}</b>{s1}/<b>{s2bold}</b>{s2}/<b>{s3bold}</b>{s3}</div>
-  }
+    return (
+      <div>
+        <b>{s1bold}</b>
+        {s1}/<b>{s2bold}</b>
+        {s2}/<b>{s3bold}</b>
+        {s3}
+      </div>
+    );
+  };
 
-  storeInputReference(autosuggest) {
+  public storeInputReference(autosuggest: Autosuggest): void {
     if (autosuggest !== null) {
       autosuggest.input.onfocus = () => {
         autosuggest.input.select();
@@ -53,7 +70,7 @@ export default class DeviceSuggester extends Component {
     }
   }
 
-  render() {
+  public render(): Autosuggest {
     const { value, suggestions } = this.state;
     const inputProps = {
       placeholder: "Specify device",
@@ -75,11 +92,11 @@ export default class DeviceSuggester extends Component {
     );
   }
 
-  getSuggestions(value) {
+  public getSuggestions(value: string): string[] {
     if (value.trim() === "") {
       return [];
     }
-    if (value.trim() === ".") {
+    if (value.trim() === "*") {
       return this.props.devices.slice();
     }
     if (value.includes("/")) {
@@ -101,30 +118,30 @@ export default class DeviceSuggester extends Component {
     return res;
   }
 
-  onSuggestionSelected(
+  public onSuggestionSelected(
     event,
-    { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }
-  ) {
+    { suggestion, suggestionValue}
+  ): void {
     this.props.onSelection(suggestionValue);
   }
 
-  onChange = (event, { newValue, method }) => {
+  public onChange = (event, { newValue, method }): void => {
     this.setState({
       value: newValue
     });
   };
 
-  onSuggestionsFetchRequested = ({ value }) => {
+  public onSuggestionsFetchRequested = ({ value }): void => {
     this.setState({
       suggestions: this.getSuggestions(value)
     });
   };
 
-  onSuggestionsClearRequested = () => {
+  public onSuggestionsClearRequested = (): void => {
     this.setState({
       suggestions: []
     });
   };
 }
 
-const getSuggestionValue = suggestion => suggestion;
+const getSuggestionValue = (suggestion: string) => suggestion;
