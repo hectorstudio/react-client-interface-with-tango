@@ -16,6 +16,7 @@ class ResizeKnob extends Component {
     const isLeft = location === "nw" || location === "sw";
     const isTop = location === "nw" || location === "ne";
 
+    const size = 20;
     const horizontalStyle = isLeft ? { left: 0 } : { right: 0 };
     const verticalStyle = isTop ? { top: 0 } : { bottom: 0 };
     const locationStyle = { ...horizontalStyle, ...verticalStyle };
@@ -33,8 +34,8 @@ class ResizeKnob extends Component {
           ...locationStyle,
           zIndex: 1,
           cursor: `${cursorPrefix}-resize`,
-          width: "15px",
-          height: "15px"
+          width: `${size}px`,
+          height: `${size}px`
         }}
       />
     );
