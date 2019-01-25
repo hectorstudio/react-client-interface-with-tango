@@ -146,10 +146,6 @@ class AttributePlot extends Component<IWidgetProps, IState> {
       );
     }
 
-    // if (mode === "edit") {
-    //   return <Plot values={[]} models={models}/>;
-    // }
-
     const xValues = Array(25)
       .fill(0)
       .map((_, i) => i);
@@ -160,7 +156,7 @@ class AttributePlot extends Component<IWidgetProps, IState> {
     return (
       <Plot
         values={sampleValues}
-        models={["test1", "test2"]}
+        models={["attribute 1", "attribute 2"]}
         width={actualWidth}
         height={actualHeight}
         staticMode={true}
