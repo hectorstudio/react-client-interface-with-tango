@@ -60,16 +60,21 @@
 }
 
 .Dashboard .Canvas.edit .Widget.selected {
-  border: 2px solid lightskyblue;
-  margin-left: -2px;
-  margin-top: -2px;
+  outline: 2px solid lightskyblue;
   cursor: grab;
   box-sizing: border-box;
 }
 
-.Dashboard .Canvas.run  .Widget,
+.Dashboard .Canvas.run .Widget,
 .Dashboard .Canvas.edit .Widget {
   position: absolute;
+  overflow: hidden;
+  outline: 1px solid #ddd;
+}
+
+.Dashboard .Canvas.edit .Widget {
+  margin-left: -1px;
+  margin-top: -1px;
 }
 
 .Dashboard .TopBar {

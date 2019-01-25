@@ -161,8 +161,7 @@ class EditWidget extends Component {
           left: x,
           top: y,
           width: width + diffX,
-          height: height + diffY,
-          overflow: "hidden"
+          height: height + diffY
         }}
         onClick={event => {
           event.stopPropagation();
