@@ -64,6 +64,7 @@ export default class DeviceSuggester extends Component<IProps, IState> {
 
   public storeInputReference(autosuggest: Autosuggest): void {
     if (autosuggest !== null) {
+      autosuggest.input.spellcheck = false;
       autosuggest.input.onfocus = () => {
         autosuggest.input.select();
       };
@@ -73,7 +74,7 @@ export default class DeviceSuggester extends Component<IProps, IState> {
   public render(): Autosuggest {
     const { value, suggestions } = this.state;
     const inputProps = {
-      placeholder: "Specify device",
+      placeholder: "Select a device...",
       value,
       onChange: this.onChange
     };
