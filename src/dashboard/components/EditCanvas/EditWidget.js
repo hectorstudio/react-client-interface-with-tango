@@ -22,6 +22,9 @@ class ResizeKnob extends Component {
 
     return (
       <div
+        onDrag={
+          () => false /* Necessary to prevent default behaviour of dragging */
+        }
         onMouseDown={e =>
           this.props.onMouseDown(location, e.screenX, e.screenY)
         }
@@ -155,14 +158,21 @@ class EditWidget extends Component {
     const [x, y] = this.positionAdjustedForOngoingResize();
     const [diffX, diffY] = this.sizeDifference();
 
+    const actualWidth = width + diffX - 1;
+    const actualHeight = height + diffY - 1;
+    const render = React.cloneElement(this.props.render, {
+      actualWidth,
+      actualHeight
+    });
+
     return (
       <div
         className={this.props.isSelected ? "Widget selected" : "Widget"}
         style={{
           left: x,
           top: y,
-          width: width + diffX - 1,
-          height: height + diffY - 1
+          width: actualWidth,
+          height: actualHeight
         }}
         onClick={event => {
           event.stopPropagation();
@@ -171,7 +181,7 @@ class EditWidget extends Component {
       >
         {knobs}
         {this.props.warning && <WarningBadge />}
-        {connectDragSource(<div>{this.props.children}</div>)}
+        {connectDragSource(<div>{render}</div>)}
       </div>
     );
   }

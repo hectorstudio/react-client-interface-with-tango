@@ -90,9 +90,8 @@ class EditCanvas extends Component {
                     this.props.onResizeWidget(index, moveX, moveY, dx, dy)
                   }
                   warning={!valid}
-                >
-                  {element}
-                </EditWidget>
+                  render={element}
+                />
               );
             })}
           </div>
