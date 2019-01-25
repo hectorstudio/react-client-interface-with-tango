@@ -145,9 +145,10 @@ class EditWidget extends Component {
       <ResizeKnob
         key={knobLocation}
         location={knobLocation}
-        onMouseDown={(knobLocation, x, y) =>
-          this.handleBeginResize(knobLocation, x, y)
-        }
+        onMouseDown={(knobLocation, x, y) => {
+          this.props.onClick();
+          this.handleBeginResize(knobLocation, x, y);
+        }}
       />
     ));
 
