@@ -119,6 +119,7 @@
   transition: opacity 0.1s linear;
   user-select: none;
   z-index: 1;
+  pointer-events: none;
 }
 
 .Dashboard .LogInOut {
