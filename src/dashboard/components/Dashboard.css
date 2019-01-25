@@ -69,7 +69,7 @@
 .Dashboard .Canvas.edit .Widget {
   position: absolute;
   overflow: hidden;
-  outline: 1px solid #ddd;
+  outline: 1px solid #ccc;
 }
 
 .Dashboard .Canvas.edit .Widget {

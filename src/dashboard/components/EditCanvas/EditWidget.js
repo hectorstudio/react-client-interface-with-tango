@@ -160,8 +160,8 @@ class EditWidget extends Component {
         style={{
           left: x,
           top: y,
-          width: width + diffX,
-          height: height + diffY
+          width: width + diffX - 1,
+          height: height + diffY - 1
         }}
         onClick={event => {
           event.stopPropagation();
