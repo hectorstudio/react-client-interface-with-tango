@@ -39,12 +39,10 @@ class AttributeReadOnly extends Component<IWidgetProps> {
   }
 
   private deviceAndAttribute(): { device: string; name: string } {
-    if (this.props.mode === "run") {
-      const { device, attribute: name } = this.props.inputs.attribute;
-      return { device, name };
-    } else {
-      return { device: "device", name: "attribute" };
-    }
+    const { attribute } = this.props.inputs;
+    const device = attribute.device || "device";
+    const name = attribute.attribute || "attribute";
+    return { device, name };
   }
 }
 
