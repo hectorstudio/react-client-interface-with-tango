@@ -4,14 +4,14 @@
   
   .react-autosuggest__input {
     width: 100%;
-    height: 35px;
+    height: 38px;
     padding: 0px 10px;
     font-family: Helvetica, sans-serif;
     font-weight: 300;
     font-size: 16px;
-    border: 1px solid #aaa;
+    border: 1px solid #ced4da;
     border-radius: 4px;
-    margin-bottom: 1em;
+    margin-bottom: 0.3em;
   }
   
   .react-autosuggest__input:focus {
@@ -28,9 +28,9 @@
   .react-autosuggest__container--open .react-autosuggest__suggestions-container {
     display: block;
     position: absolute;
-    top: 35px;
+    top: 38px;
     width: 100%;
-    border: 1px solid #aaa;
+    border: 1px solid #ced4da;
     border-top: none;
     background-color: #fff;
     font-family: Helvetica, sans-serif;
