@@ -1,30 +1,74 @@
-import React, { Component } from "react";
+import React, { Component, Fragment, CSSProperties } from "react";
 import { IWidgetProps } from "./types";
 import { IWidgetDefinition } from "../types";
 
 class AttributeReadOnly extends Component<IWidgetProps> {
   public render() {
-    return <em>{this.props.mode}</em>;
+    const { device, name } = this.deviceAndAttribute();
+    const value = this.value();
 
-    const attribute = this.props.inputs.attribute;
-    const { device, name, value } = attribute;
-    return (
-      <div style={{ backgroundColor: "purple", padding: "1em" }}>
+    const style = { padding: "0.5em", whiteSpace: "nowrap" } as CSSProperties;
+    const inner = this.props.inputs.showDevice ? (
+      <Fragment>
         {device}/{name}: {value}
-      </div>
+      </Fragment>
+    ) : (
+      <Fragment>
+        {name}: {value}
+      </Fragment>
     );
+
+    return <div style={style}>{inner}</div>;
+  }
+
+  private value(): any {
+    if (this.props.mode !== "run") {
+      return <span style={{ fontStyle: "italic" }}>value</span>;
+    }
+
+    const {
+      attribute: { value },
+      precision
+    } = this.props.inputs;
+
+    if (Number(parseFloat(value)) === value) {
+      return value.toFixed(precision);
+    } else {
+      return value;
+    }
+  }
+
+  private deviceAndAttribute(): { device: string; name: string } {
+    if (this.props.mode === "run") {
+      const { device, attribute: name } = this.props.inputs.attribute;
+      return { device, name };
+    } else {
+      return { device: "device", name: "attribute" };
+    }
   }
 }
 
 const definition: IWidgetDefinition = {
   type: "ATTRIBUTE_DISPLAY",
   name: "Attribute Display",
-  defaultWidth: 5,
+  defaultWidth: 10,
   defaultHeight: 2,
   inputs: {
     attribute: {
       type: "attribute",
+      label: "Attribute",
+      dataFormat: "scalar",
       required: true
+    },
+    precision: {
+      type: "number",
+      label: "Precision",
+      default: 2
+    },
+    showDevice: {
+      type: "boolean",
+      label: "Display Device Name",
+      default: false
     }
   }
 };
