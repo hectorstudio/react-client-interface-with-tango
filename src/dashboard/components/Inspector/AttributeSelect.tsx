@@ -22,7 +22,7 @@ interface IState {
 }
 
 export default class AttributeSelect extends Component<IProps, IState> {
-  public constructor(props) {
+  public constructor(props:IProps) {
     super(props);
     this.state = { fetchingAttributes: false, attributes: [] };
     this.handleSelectDevice = this.handleSelectDevice.bind(this);
@@ -81,11 +81,11 @@ export default class AttributeSelect extends Component<IProps, IState> {
                   disabled={this.state.fetchingAttributes || device == null}
                   value={""}
                 >
-                  Select attribute
+                  Select an attribute...
                 </option>
               )}
               {attributes.length === 0 && (
-                <option disabled={true}>No attributes</option>
+                <option value={""} disabled={true} selected={true}>No attributes</option>
               )}
               {attributes.map(({ name }, i) => (
                 <option key={i} value={name}>
