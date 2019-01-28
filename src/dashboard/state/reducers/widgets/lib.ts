@@ -23,7 +23,9 @@ export function removeAt<T>(arr: T[], index: number) {
 
 export function move(widget: IWidget, dx: number, dy: number) {
   const { x, y } = widget;
-  return { ...widget, x: x + dx, y: y + dy };
+  const targetX = Math.max(0, x + dx);
+  const targetY = Math.max(0, y + dy);
+  return { ...widget, x: targetX, y: targetY };
 }
 
 export function resize(
@@ -33,11 +35,10 @@ export function resize(
   dx: number,
   dy: number
 ) {
-  const { x, y, width, height } = widget;
+  const moved = move(widget, mx, my);
+  const { width, height } = moved;
   return {
-    ...widget,
-    x: x + mx,
-    y: y + my,
+    ...moved,
     width: width + dx,
     height: height + dy
   };

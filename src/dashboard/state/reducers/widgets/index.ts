@@ -79,7 +79,7 @@ export default function canvases(
       const { dx, dy, mx, my, index } = action;
       const newWidget = resize(state.widgets[index], mx, my, dx, dy);
       const widgets = replaceAt(state.widgets, index, newWidget);
-      return { ...state, widgets };
+      return { ...state, widgets, selectedIndex: index };
     }
     case SELECT_WIDGET: {
       const { index } = action;
