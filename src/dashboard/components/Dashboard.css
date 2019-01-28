@@ -129,3 +129,8 @@
   box-shadow: unset;
   background-color: unset;
 }
+
+.Dashboard .Inspector table td {
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+}
