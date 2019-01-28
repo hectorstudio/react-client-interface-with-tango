@@ -103,6 +103,7 @@ class Plot extends Component<IPlotProps> {
       },
       width,
       height,
+      showlegend: true,
       legend: {
         orientation: "h"
       }
@@ -146,22 +147,39 @@ class AttributePlot extends Component<IWidgetProps, IState> {
       );
     }
 
-    const xValues = Array(25)
-      .fill(0)
-      .map((_, i) => i);
-    const sample1 = xValues.map(x => Math.sin(x / 2));
-    const sample2 = xValues.map(x => 0.5 * Math.cos(x / 3));
-    const sampleValues = [[xValues, sample1], [xValues, sample2]];
+    if (mode === "library") {
+      const xValues = Array(25)
+        .fill(0)
+        .map((_, i) => i);
+      const sample1 = xValues.map(x => Math.sin(x / 2));
+      const sample2 = xValues.map(x => 0.5 * Math.cos(x / 3));
+      const sampleValues = [[xValues, sample1], [xValues, sample2]];
 
-    return (
-      <Plot
-        values={sampleValues}
-        models={["attribute 1", "attribute 2"]}
-        width={actualWidth}
-        height={actualHeight}
-        staticMode={true}
-      />
-    );
+      return (
+        <Plot
+          values={sampleValues}
+          models={["attribute 1", "attribute 2"]}
+          width={actualWidth}
+          height={actualHeight}
+          staticMode={true}
+        />
+      );
+    } else {
+      const editValues = models.map(() => [[null]]); // [null] tricks Plotly to display the legend even though the trace doesn't contain any points
+      const editModels = singleAttributes.map(
+        ({ device, attribute }) => `${device || "?"}/${attribute || "?"}`
+      );
+
+      return (
+        <Plot
+          width={actualWidth}
+          height={actualHeight}
+          values={editValues}
+          models={editModels}
+          staticMode={true}
+        />
+      );
+    }
   }
 }
 
