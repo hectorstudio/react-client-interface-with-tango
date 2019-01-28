@@ -79,15 +79,19 @@ export default function canvases(
       const { dx, dy, mx, my, index } = action;
       const newWidget = resize(state.widgets[index], mx, my, dx, dy);
       const widgets = replaceAt(state.widgets, index, newWidget);
-      return { ...state, widgets, selectedIndex: index };
+      return { ...state, widgets };
     }
     case SELECT_WIDGET: {
       const { index } = action;
       return { ...state, selectedIndex: index };
     }
     case DELETE_WIDGET: {
-      const widgets = removeAt(state.widgets, state.selectedIndex);
-      return { ...state, widgets, selectedIndex: -1 };
+      if (state.selectedIndex !== -1) {
+        const widgets = removeAt(state.widgets, state.selectedIndex);
+        return { ...state, widgets, selectedIndex: -1 };
+      } else {
+        return state;
+      }
     }
     case SET_INPUT: {
       const { path, value } = action;
