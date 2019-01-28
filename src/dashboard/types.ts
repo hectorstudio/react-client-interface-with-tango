@@ -56,6 +56,7 @@ export interface IInputDefinitionMapping {
 
 export interface IWidget {
   type: string;
+  id: number;
   valid: boolean;
   x: number;
   y: number;

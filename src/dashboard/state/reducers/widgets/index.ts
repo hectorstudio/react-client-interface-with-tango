@@ -22,7 +22,8 @@ import {
   defaultDimensions,
   nestedDefault,
   validate,
-  resize
+  resize,
+  nextId
 } from "./lib";
 
 import {
@@ -52,8 +53,10 @@ export default function canvases(
       const definition = definitionForType(type)!;
       const inputs = defaultInputs(definition.inputs);
       const { width, height } = defaultDimensions(definition);
+      const id = nextId(state.widgets);
 
       const widget = validate({
+        id,
         x,
         y,
         width,
