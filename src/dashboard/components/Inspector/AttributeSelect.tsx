@@ -22,7 +22,7 @@ interface IState {
 }
 
 export default class AttributeSelect extends Component<IProps, IState> {
-  public constructor(props:IProps) {
+  public constructor(props: IProps) {
     super(props);
     this.state = { fetchingAttributes: false, attributes: [] };
     this.handleSelectDevice = this.handleSelectDevice.bind(this);
@@ -62,39 +62,43 @@ export default class AttributeSelect extends Component<IProps, IState> {
 
     return (
       <DeviceConsumer>
-        {({ devices }) => (
-          <div>
-            <DeviceSuggester 
-              deviceName={device}
-              devices={devices}
-              onSelection={newValue => this.handleSelectDevice(newValue)}
-            />
+        {({ devices }) => {
+          const hasDevice = device != null && device !== "";
+          const hasAttributes = attributes.length > 0;
 
-            <select
-              className="form-control"
-              value={attribute}
-              disabled={false}
-              onChange={this.handleSelectAttribute}
-            >
-              {attributes.length > 0 && attribute == null && (
-                <option
-                  disabled={this.state.fetchingAttributes || device == null}
-                  value={""}
-                >
-                  Select an attribute...
-                </option>
-              )}
-              {attributes.length === 0 && (
-                <option value={""} disabled={true} selected={true}>No attributes</option>
-              )}
-              {attributes.map(({ name }, i) => (
-                <option key={i} value={name}>
-                  {name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+          return (
+            <div>
+              <DeviceSuggester
+                deviceName={device}
+                devices={devices}
+                onSelection={newValue => this.handleSelectDevice(newValue)}
+              />
+
+              <select
+                className="form-control"
+                value={attribute}
+                disabled={hasAttributes === false}
+                onChange={this.handleSelectAttribute}
+              >
+                {hasDevice === false && (
+                  <option selected={true} value="">
+                    Pick a device first
+                  </option>
+                )}
+                {hasDevice && hasAttributes === false && (
+                  <option value="" selected={true}>
+                    No attributes
+                  </option>
+                )}
+                {attributes.map(({ name }, i) => (
+                  <option key={i} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          );
+        }}
       </DeviceConsumer>
     );
   }
@@ -135,7 +139,7 @@ export default class AttributeSelect extends Component<IProps, IState> {
   private async fetchAttributes() {
     const { device } = this.props;
     if (device) {
-      this.setState({ fetchingAttributes: true });
+      this.setState({ attributes: [], fetchingAttributes: true });
       const attributes = await fetchAttributes("kitslab", device);
       this.setState({ attributes, fetchingAttributes: false });
     }
