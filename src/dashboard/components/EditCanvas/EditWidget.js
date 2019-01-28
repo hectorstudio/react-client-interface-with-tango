@@ -51,8 +51,11 @@ const editWidgetSource = {
   },
 
   endDrag(props, monitor) {
-    const { dx, dy } = monitor.getDropResult();
-    props.onMove(dx, dy);
+    const result = monitor.getDropResult();
+    if (result) {
+      const { dx, dy } = monitor.getDropResult();
+      props.onMove(dx, dy);
+    }
   }
 };
 
