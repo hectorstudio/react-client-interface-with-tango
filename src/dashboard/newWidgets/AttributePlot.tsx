@@ -11,8 +11,7 @@ interface IState {
 interface IBufferingPlotProps {
   values: number[];
   models: string[];
-  width: number;
-  height: number;
+  params: IParams;
 }
 
 interface IBuffer {
@@ -27,9 +26,14 @@ interface IBufferingPlotState {
 interface IPlotProps {
   values: number[][][];
   models: string[];
-  staticMode: boolean;
-  width: number;
+  params: IParams;
+}
+
+interface IParams {
   height: number;
+  width: number;
+  staticMode?: boolean;
+  timeWindow: number;
 }
 
 class BufferingPlot extends Component<
@@ -80,9 +84,7 @@ class BufferingPlot extends Component<
       <Plot
         models={this.props.models}
         values={values}
-        width={this.props.width}
-        height={this.props.height}
-        staticMode={false}
+        params={this.props.params}
       />
     );
   }
@@ -90,21 +92,40 @@ class BufferingPlot extends Component<
 
 class Plot extends Component<IPlotProps> {
   public render() {
-    const { values, models, staticMode, width, height } = this.props;
+    const { values, models, params } = this.props;
+    const { staticMode, width, height, timeWindow } = params;
+
     const data = models.map((model, i) => {
       return { x: values[i][0], y: values[i][1], name: model };
     });
 
+    const latestX = data
+      .map(point => point.x.slice(-1))
+      .filter(slice => slice.length === 1)
+      .map(slice => slice[0])
+      .reduce((x1, x2) => Math.max(x1, x2), 0);
+
+    const offset = Math.max(0, latestX - timeWindow);
+    const xaxis = {
+      range: [offset, offset + timeWindow],
+      title: "Time (s)",
+      titlefont: { size: 12 }
+    };
+
     const layout = {
+      font: { family: "Helvetica, Arial, sans-serif" },
+      xaxis,
       margin: {
         l: 30,
         r: 15,
-        t: 15
+        t: 15,
+        b: 35
       },
       width,
       height,
       showlegend: true,
       legend: {
+        y: 1.2,
         orientation: "h"
       }
     };
@@ -113,7 +134,7 @@ class Plot extends Component<IPlotProps> {
       <Plotly
         data={data}
         layout={layout}
-        config={{ staticPlot: staticMode }}
+        config={{ staticPlot: staticMode === true }}
         responsive={true}
       />
     );
@@ -128,40 +149,40 @@ class AttributePlot extends Component<IWidgetProps, IState> {
 
   public render() {
     const { mode, inputs, actualWidth, actualHeight } = this.props;
-    const { attributes } = inputs;
+    const { attributes, timeWindow } = inputs;
 
     const singleAttributes = attributes.map(({ attribute }) => attribute);
     const models = singleAttributes.map(
       ({ device, attribute }) => `${device}/${attribute}`
     );
 
+    const runParams = {
+      width: actualWidth,
+      height: actualHeight,
+      timeWindow
+    };
+    const staticParams = { ...runParams, staticMode: true };
+
     if (mode === "run") {
       const values = singleAttributes.map(({ value }) => value);
       return (
-        <BufferingPlot
-          width={actualWidth}
-          height={actualHeight}
-          values={values}
-          models={models}
-        />
+        <BufferingPlot params={runParams} values={values} models={models} />
       );
     }
 
     if (mode === "library") {
-      const xValues = Array(25)
+      const xValues = Array(120)
         .fill(0)
         .map((_, i) => i);
-      const sample1 = xValues.map(x => Math.sin(x / 2));
-      const sample2 = xValues.map(x => 0.5 * Math.cos(x / 3));
+      const sample1 = xValues.map(x => 8 * Math.sin(x / 6) * Math.sin(x / 20));
+      const sample2 = xValues.map(x => 5 * Math.cos(x / 20) * Math.cos(x / 3));
       const sampleValues = [[xValues, sample1], [xValues, sample2]];
 
       return (
         <Plot
           values={sampleValues}
           models={["attribute 1", "attribute 2"]}
-          width={actualWidth}
-          height={actualHeight}
-          staticMode={true}
+          params={{...staticParams, height: 250}}
         />
       );
     } else {
@@ -171,13 +192,7 @@ class AttributePlot extends Component<IWidgetProps, IState> {
       );
 
       return (
-        <Plot
-          width={actualWidth}
-          height={actualHeight}
-          values={editValues}
-          models={editModels}
-          staticMode={true}
-        />
+        <Plot values={editValues} models={editModels} params={staticParams} />
       );
     }
   }
@@ -189,30 +204,10 @@ const definition: IWidgetDefinition = {
   defaultWidth: 30,
   defaultHeight: 20,
   inputs: {
-    xMin: {
+    timeWindow: {
       type: "number",
-      default: 0,
-      label: "X min"
-    },
-    xMax: {
-      type: "number",
-      default: 100,
-      label: "X max"
-    },
-    yMin: {
-      type: "number",
-      default: 0,
-      label: "Y min"
-    },
-    yMax: {
-      type: "number",
-      default: 100,
-      label: "Y max"
-    },
-    showGrid: {
-      type: "boolean",
-      default: true,
-      label: "Show Grid"
+      default: 120,
+      label: "Time Window"
     },
     attributes: {
       label: "Graphs",
