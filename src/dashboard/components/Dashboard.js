@@ -59,170 +59,64 @@ class Dashboard extends Component {
     this.state = {
       mode: "edit",
       sidebar: "library", // Belongs in edit component
-      selectedWidgetIndex: -1, // Belongs in edit component
       selectedCanvasIndex: 0,
-      canvases: DEFAULT_CANVASES,
-      deviceNames: [] // Not used?
+      canvases: DEFAULT_CANVASES
     };
 
-    const id = this.parseId();
-    if (id) {
-      loadFromRepo(id).then(res => {
-        if (res) {
-          this.setState({ canvases: res.canvases });
-        }
-      });
-    }
+    // const id = this.parseId();
+    // if (id) {
+    //   loadFromRepo(id).then(res => {
+    //     if (res) {
+    //       this.setState({ canvases: res.canvases });
+    //     }
+    //   });
+    // }
 
     this.toggleMode = this.toggleMode.bind(this);
-    this.handleMoveWidget = this.handleMoveWidget.bind(this);
     this.handleAddWidget = this.handleAddWidget.bind(this);
     this.handleSelectWidget = this.handleSelectWidget.bind(this);
     this.handleDeleteWidget = this.handleDeleteWidget.bind(this);
     this.handleParamChange = this.handleParamChange.bind(this);
-    this.handleDeviceChange = this.handleDeviceChange.bind(this);
-    this.handleDeviceRemove = this.handleDeviceRemove.bind(this);
-    this.handleAttributeChange = this.handleAttributeChange.bind(this);
     this.handleChangeCanvas = this.handleChangeCanvas.bind(this);
   }
 
-  parseId() {
-    const search = this.props.location.search;
-    const parsed = queryString.parse(search);
-    return parsed.id || "";
-  }
+  // parseId() {
+  //   const search = this.props.location.search;
+  //   const parsed = queryString.parse(search);
+  //   return parsed.id || "";
+  // }
 
-  componentDidUpdate() {
-    var id = this.parseId();
-    saveToRepo(id, this.state.canvases)
-      .then(res => {
-        if (res.created) {
-          this.props.history.replace("?id=" + res.id);
-        }
-      })
-      .catch(function() {
-        console.log("Couldn't reach dashboard repo");
-      });
-  }
+  // componentDidUpdate() {
+  //   var id = this.parseId();
+  //   saveToRepo(id, this.state.canvases)
+  //     .then(res => {
+  //       if (res.created) {
+  //         this.props.history.replace("?id=" + res.id);
+  //       }
+  //     })
+  //     .catch(function() {
+  //       console.log("Couldn't reach dashboard repo");
+  //     });
+  // }
 
   toggleMode() {
     this.props.dispatch({ type: TOGGLE_MODE });
-    const mode = { edit: "run", run: "edit" }[this.state.mode];
-    this.setState({ mode });
   }
 
   handleSelectWidget(index) {
     this.props.dispatch({ type: SELECT_WIDGET, index });
-    this.setState({ selectedWidgetIndex: index });
   }
 
   handleDeleteWidget(index) {
     this.props.dispatch({ type: DELETE_WIDGET, index });
-
-    const widgets = [...this.currentWidgets()];
-    widgets.splice(index, 1);
-    this.updateWidgets(widgets, -1);
   }
 
   handleAddWidget(definition, x, y) {
     this.props.dispatch({ type: ADD_WIDGET, x, y, definition });
-
-    /*
-    const params = definition.params.reduce(
-      (accum, param) => ({
-        ...accum,
-        [param.name]: param.default
-      }),
-      {}
-    );
-
-    const device = this.isRootCanvas() ? [null] : ["__parent__"];
-    const widget = {
-      type: definition.type,
-      device,
-      x: roundToGrid(x),
-      y: roundToGrid(y),
-      attribute: [null],
-      params
-    };
-    const widgets = [...this.currentWidgets(), widget];
-    this.updateWidgets(widgets, widgets.length - 1);
-    */
   }
 
   handleParamChange(param, value) {
-    this.props.dispatch({ type: SET_WIDGET_PARAM, param, value }); // need to pass the widget?
-
-    const index = this.state.selectedWidgetIndex;
-    const widget = this.selectedWidget();
-
-    const params = { ...widget.params, [param]: value };
-    const updatedWidget = { ...widget, params };
-    const widgets = this.currentWidgets();
-    widgets.splice(index, 1, updatedWidget);
-    this.updateWidgets(widgets);
-  }
-
-  updateWidgets(widgets, selectedWidgetIndex) {
-    selectedWidgetIndex =
-      selectedWidgetIndex != null
-        ? selectedWidgetIndex
-        : this.state.selectedWidgetIndex;
-
-    const canvases = [...this.state.canvases];
-    const canvas = { ...canvases[this.state.selectedCanvasIndex], widgets };
-    canvases[this.state.selectedCanvasIndex] = canvas;
-    this.setState({ canvases, selectedWidgetIndex });
-  }
-
-  // Convenience method used by handler methods
-  updateWidget(index, changes) {
-    const widgets = this.currentWidgets();
-    const widget = { ...widgets[index], ...changes };
-    widgets.splice(index, 1, widget);
-    this.updateWidgets(widgets);
-  }
-
-  currentWidgets() {
-    const { canvases, selectedCanvasIndex } = this.state;
-    const canvas = canvases[selectedCanvasIndex];
-    return [...canvas.widgets];
-  }
-
-  selectedWidget() {
-    const widgets = this.currentWidgets();
-    return widgets[this.state.selectedWidgetIndex];
-  }
-  handleMoveWidget(index, x, y) {
-    const widget = this.currentWidgets()[index];
-    const proposedPos = { x: widget.x + x, y: widget.y + y };
-    const newPos = {
-      x: Math.max(0, roundToGrid(proposedPos.x)),
-      y: Math.max(0, roundToGrid(proposedPos.y))
-    };
-    this.updateWidget(index, newPos);
-  }
-
-  handleDeviceChange(deviceName, index) {
-    let device = [...this.selectedWidget().device];
-    let attribute = [...this.selectedWidget().attribute];
-    attribute[index] = null;
-    device[index] = deviceName;
-    this.updateWidget(this.state.selectedWidgetIndex, { attribute, device });
-  }
-
-  handleAttributeChange(attributeName, index) {
-    let attribute = [...this.selectedWidget().attribute];
-    attribute[index] = attributeName;
-    this.updateWidget(this.state.selectedWidgetIndex, { attribute });
-  }
-
-  handleDeviceRemove(index) {
-    let device = [...this.selectedWidget().device];
-    let attribute = [...this.selectedWidget().attribute];
-    attribute.splice(index, 1);
-    device.splice(index, 1);
-    this.updateWidget(this.state.selectedWidgetIndex, { attribute, device });
+    this.props.dispatch({ type: SET_WIDGET_PARAM, param, value });
   }
 
   handleChangeCanvas(event) {
@@ -235,13 +129,12 @@ class Dashboard extends Component {
   }
 
   render() {
-    const mode = this.props.mode;
-    const widgets = this.currentWidgets();
-    const selectedWidget = this.selectedWidget();
+    const { mode, widgets, areAllValid } = this.props;
+    const { tangoDB } = this.props.match.params;
 
     return (
       <div className="Dashboard">
-        <DeviceProvider tangoDB="kitslab">
+        <DeviceProvider tangoDB={tangoDB}>
           <LogInOut />
           <LoginDialog />
           <div className="TopBar">
@@ -258,7 +151,7 @@ class Dashboard extends Component {
                   "fa-play": mode === "edit",
                   "fa-pause": mode === "run"
                 })}
-                disabled={!this.props.allAreValid || !this.isRootCanvas()}
+                disabled={!areAllValid || !this.isRootCanvas()}
               />
               <select
                 className="form-control"
@@ -296,7 +189,7 @@ class Dashboard extends Component {
             ) : (
               <RunCanvas
                 widgets={widgets}
-                tangoDB={/*this.props.match.params.tangoDB*/ "kitslab"}
+                tangoDB={tangoDB}
               />
             )}
           </div>
@@ -313,7 +206,7 @@ class Dashboard extends Component {
                   onDeviceRemove={this.handleDeviceRemove}
                   onAttributeChange={this.handleAttributeChange}
                   isRootCanvas={this.isRootCanvas()}
-                  tangoDB={this.props.match.params.tangoDB}
+                  tangoDB={tangoDB}
                 />
               )}
             </div>
@@ -324,28 +217,19 @@ class Dashboard extends Component {
   }
 }
 
-export function roundToGrid(val) {
-  return val % GRID_TILE_SIZE >= GRID_TILE_SIZE / 2
-    ? val + (GRID_TILE_SIZE - (val % GRID_TILE_SIZE))
-    : val - (val % GRID_TILE_SIZE);
-}
-
-export function expandToGrid(val) {
-  return val + (GRID_TILE_SIZE - (val % GRID_TILE_SIZE));
-}
-
 function mapStateToProps(state) {
   const { widgets, selectedIndex } = state.widgets;
   const selectedWidget = widgets[selectedIndex];
-  const allAreValid = widgets.reduce(
+  const areAllValid = widgets.reduce(
     (prev, widget) => prev && widget.valid,
     true
   );
 
   return {
+    widgets,
     selectedWidget,
     selectedWidgetIndex: selectedIndex,
-    allAreValid,
+    areAllValid,
     mode: state.ui.mode
   };
 }
