@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
 import {
@@ -27,7 +27,8 @@ class InputList extends Component<{
 
     const inner = inputNames.map((inputName, i) => {
       const inputDefinition = inputDefinitions[inputName];
-      const label = inputDefinition.label || inputName;
+      const definitionLabel = inputDefinition.label;
+      const label = definitionLabel == null ? inputName : definitionLabel;
 
       if (inputDefinition.type === "number") {
         const value = inputs[inputName] as number;
@@ -86,20 +87,18 @@ class InputList extends Component<{
           <tr key={i}>
             <td colSpan={2}>
               {label}
-              <div style={{ marginLeft: "0.5em", marginBottom: "0.5em" }}>
-                <AttributeSelect
-                  device={value.device}
-                  attribute={value.attribute}
-                  dataFormat={inputDefinition.dataFormat}
-                  dataType={inputDefinition.dataType}
-                  onSelect={(device, attribute) =>
-                    this.props.onChange([inputName], {
-                      device,
-                      attribute
-                    })
-                  }
-                />
-              </div>
+              <AttributeSelect
+                device={value.device}
+                attribute={value.attribute}
+                dataFormat={inputDefinition.dataFormat}
+                dataType={inputDefinition.dataType}
+                onSelect={(device, attribute) =>
+                  this.props.onChange([inputName], {
+                    device,
+                    attribute
+                  })
+                }
+              />
             </td>
           </tr>
         );
@@ -109,64 +108,70 @@ class InputList extends Component<{
       ) {
         const value = inputs[inputName] as IInputMapping[];
         return (
-          <tr key={i}>
-            <td colSpan={2}>
-              {label}
-              {value.map((each, j) => (
-                <div
-                  key={j}
-                  style={{
-                    padding: "0.5em",
-                    backgroundColor: "#f4f4f4",
-                    borderRadius: "0.25em",
-                    marginBottom: "0.5em",
-                    position: "relative"
+          <Fragment>
+            <tr key={i}>
+              <td>{label}</td>
+              <td>
+                <button
+                  className="btn btn-outline-dark"
+                  type="button"
+                  onClick={() => {
+                    // Doesn't support more than one degree of nesting
+                    this.props.onAdd([inputName]);
                   }}
                 >
-                  <button
-                    className="close"
-                    type="button"
-                    onClick={() => this.props.onDelete([inputName, j])}
+                  <span className="fa fa-plus" />
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td colSpan={2}>
+                {value.map((each, j) => (
+                  <div
+                    key={j}
                     style={{
-                      width: "1em",
-                      height: "1em",
-                      borderRadius: "0.5em",
-                      position: "absolute",
-                      right: "-0.25em",
-                      top: "-0.25em",
-                      paddingTop: 0,
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      outline: "none"
+                      padding: "0.5em",
+                      backgroundColor: "#f4f4f4",
+                      borderRadius: "0.25em",
+                      marginBottom: "0.5em",
+                      position: "relative"
                     }}
                   >
-                    &times;
-                  </button>
-                  <InputList
-                    inputDefinitions={inputDefinition.inputs}
-                    inputs={each}
-                    onChange={(path2, value2) => {
-                      this.props.onChange([inputName, j, ...path2], value2);
-                    }}
-                    onDelete={path2 =>
-                      this.props.onDelete([inputName, j, ...path2])
-                    }
-                    onAdd={path => null /* ??? */}
-                  />
-                </div>
-              ))}
-              <button
-                className="btn btn-outline-dark"
-                style={{ display: "block" }}
-                type="button"
-                onClick={() => {
-                  // Doesn't support more than one degree of nesting
-                  this.props.onAdd([inputName]);
-                }}
-              >
-                <span className="fa fa-plus" />
-              </button>
-            </td>
-          </tr>
+                    <button
+                      className="close"
+                      type="button"
+                      onClick={() => this.props.onDelete([inputName, j])}
+                      style={{
+                        width: "1em",
+                        height: "1em",
+                        borderRadius: "0.5em",
+                        position: "absolute",
+                        right: "-0.25em",
+                        top: "-0.5em",
+                        paddingTop: 0,
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        outline: "none",
+                        zIndex: 2
+                      }}
+                    >
+                      &times;
+                    </button>
+                    <InputList
+                      inputDefinitions={inputDefinition.inputs}
+                      inputs={each}
+                      onChange={(path2, value2) => {
+                        this.props.onChange([inputName, j, ...path2], value2);
+                      }}
+                      onDelete={path2 =>
+                        this.props.onDelete([inputName, j, ...path2])
+                      }
+                      onAdd={path => null /* ??? */}
+                    />
+                  </div>
+                ))}
+              </td>
+            </tr>
+          </Fragment>
         );
       } else if (inputDefinition.type === "select") {
         const value = inputs[inputName] as string[];
@@ -237,8 +242,6 @@ class Inspector extends Component<IProps> {
           onDelete={path => this.props.onDeleteInput(path)}
           onAdd={path => this.props.onAddInput(path)}
         />
-        <hr />
-        <pre>{JSON.stringify(this.props.widget, null, 2)}</pre>
       </div>
     );
   }
