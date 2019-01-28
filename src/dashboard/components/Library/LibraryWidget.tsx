@@ -72,7 +72,7 @@ class LibraryWidget extends Component<IProps> {
         <span style={{ fontSize: "12px", fontWeight: "bold" }}>
           {definition.name}
         </span>
-        {this.props.connectDragSource(<div>{widget}</div>)}
+        {this.props.connectDragSource(<div className="Widget">{widget}</div>)}
       </div>
     );
   }
