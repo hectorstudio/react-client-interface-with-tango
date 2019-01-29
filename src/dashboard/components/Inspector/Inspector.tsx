@@ -128,6 +128,7 @@ class InputList extends Component<{
               <td colSpan={2}>
                 {value.map((each, j) => (
                   <div
+                    className="ComplexInput"
                     key={j}
                     style={{
                       padding: "0.5em",
