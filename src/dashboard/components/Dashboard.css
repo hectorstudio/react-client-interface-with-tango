@@ -134,3 +134,22 @@
   padding-top: 0.25em;
   padding-bottom: 0.25em;
 }
+
+.Dashboard .Inspector .ComplexInput {
+  padding: 0.5em;
+  background-color: #f4f4f4;
+  border-radius: 0.25em;
+  margin-bottom: 0.5em;
+  position: relative;
+}
+
+.Dashboard .Inspector .ComplexInput input::placeholder,
+.Dashboard .Inspector .ComplexInput select:disabled {
+  color: #888;
+  font-style: italic;
+}
+
+.Dashboard .Inspector .ComplexInput select:disabled {
+  background-color: white;
+  opacity: 0.5;
+}
