@@ -90,6 +90,11 @@ export default class AttributeSelect extends Component<IProps, IState> {
                     No attributes
                   </option>
                 )}
+                {hasDevice && hasAttributes && (
+                  <option value="" disabled={true} selected={true}>
+                    Select attribute...
+                  </option>
+                )}
                 {attributes.map(({ name }, i) => (
                   <option key={i} value={name}>
                     {name}
