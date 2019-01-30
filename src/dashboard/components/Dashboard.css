@@ -143,13 +143,12 @@
   position: relative;
 }
 
-.Dashboard .Inspector .ComplexInput input::placeholder,
-.Dashboard .Inspector .ComplexInput select:disabled {
+.Dashboard .Inspector .AttributeSelect input::placeholder,
+.Dashboard .Inspector .AttributeSelect select:disabled {
   color: #888;
-  font-style: italic;
 }
 
-.Dashboard .Inspector .ComplexInput select:disabled {
+.Dashboard .Inspector .AttributeSelect select:disabled {
   background-color: white;
   opacity: 0.5;
 }

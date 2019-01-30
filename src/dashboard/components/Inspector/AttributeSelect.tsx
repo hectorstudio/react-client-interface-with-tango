@@ -67,7 +67,7 @@ export default class AttributeSelect extends Component<IProps, IState> {
           const hasAttributes = attributes.length > 0;
 
           return (
-            <div>
+            <div className="AttributeSelect">
               <DeviceSuggester
                 deviceName={device}
                 devices={devices}
