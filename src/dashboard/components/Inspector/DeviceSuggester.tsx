@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import Autosuggest from "react-autosuggest";
+import alphanumSort from "alphanum-sort";
+
 import "./DeviceSuggester.css";
 
 interface IState {
@@ -145,7 +147,7 @@ export default class DeviceSuggester extends Component<IProps, IState> {
 
   public onSuggestionsFetchRequested = ({ value }): void => {
     this.setState({
-      suggestions: this.getSuggestions(value)
+      suggestions: alphanumSort(this.getSuggestions(value))
     });
   };
 
