@@ -130,13 +130,6 @@ class InputList extends Component<{
                   <div
                     className="ComplexInput"
                     key={j}
-                    style={{
-                      padding: "0.5em",
-                      backgroundColor: "#f4f4f4",
-                      borderRadius: "0.25em",
-                      marginBottom: "0.5em",
-                      position: "relative"
-                    }}
                   >
                     <button
                       className="close"
