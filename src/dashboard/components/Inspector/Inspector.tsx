@@ -79,6 +79,20 @@ class InputList extends Component<{
             </td>
           </tr>
         );
+      } else if (inputDefinition.type === "color") {
+        const value = inputs[inputName] as string;
+        return (
+          <tr key={i}>
+            <td>{label}</td>
+            <td>
+              <input
+                type="color"
+                value={value}
+                onChange={e => this.props.onChange([inputName], e.target.value)}
+              />
+            </td>
+          </tr>
+        );
       } else if (inputDefinition.type === "attribute") {
         const value = inputs[inputName] as {
           device: string;
@@ -129,10 +143,7 @@ class InputList extends Component<{
             <tr>
               <td colSpan={2}>
                 {value.map((each, j) => (
-                  <div
-                    className="ComplexInput"
-                    key={j}
-                  >
+                  <div className="ComplexInput" key={j}>
                     <button
                       className="close"
                       type="button"

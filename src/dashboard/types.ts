@@ -42,13 +42,18 @@ export interface IAttributeInputDefinition
   dataType?: "numeric";
 }
 
+export interface IColorInputDefinition extends IBaseInputDefinition<string> {
+  type: "color";
+}
+
 export type IInputDefinition =
   | IBooleanInputDefinition
   | INumberInputDefinition
   | IStringInputDefinition
   | IComplexInputDefinition
   | IAttributeInputDefinition
-  | ISelectInputDefinition;
+  | ISelectInputDefinition
+  | IColorInputDefinition;
 
 export interface IInputDefinitionMapping {
   [name: string]: IInputDefinition;
