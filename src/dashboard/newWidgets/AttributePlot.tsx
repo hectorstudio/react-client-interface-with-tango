@@ -182,7 +182,7 @@ class AttributePlot extends Component<IWidgetProps, IState> {
         <Plot
           values={sampleValues}
           models={["attribute 1", "attribute 2"]}
-          params={{...staticParams, height: 250}}
+          params={{...staticParams, height: 200}}
         />
       );
     } else {
