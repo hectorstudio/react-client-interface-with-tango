@@ -2,10 +2,17 @@ import attributeDisplayWidget from "./AttributeDisplay";
 import attributePlot from "./AttributePlot";
 import label from "./Label";
 import spectrum from "./Spectrum";
+import simpleMotor from "./SimpleMotor";
 
 import { IWidget } from "../types";
 
-export const bundles = [label, attributeDisplayWidget, attributePlot, spectrum];
+export const bundles = [
+  label,
+  attributeDisplayWidget,
+  attributePlot,
+  spectrum,
+  simpleMotor
+];
 
 function bundleForType(type: string) {
   return bundles.find(bundle => bundle.definition.type === type);

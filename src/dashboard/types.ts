@@ -40,10 +40,23 @@ export interface IAttributeInputDefinition
   type: "attribute";
   dataFormat?: "scalar" | "spectrum" | "image";
   dataType?: "numeric";
+  device?: string;
+  attribute?: string;
 }
 
 export interface IColorInputDefinition extends IBaseInputDefinition<string> {
   type: "color";
+}
+
+export interface IDeviceInputDefinition extends IBaseInputDefinition<null> {
+  type: "device",
+  publish?: string;
+}
+
+export interface ICommandInputDefinition extends IBaseInputDefinition<null> {
+  type: "command";
+  device?: string;
+  command?: string;
 }
 
 export type IInputDefinition =
@@ -53,7 +66,9 @@ export type IInputDefinition =
   | IComplexInputDefinition
   | IAttributeInputDefinition
   | ISelectInputDefinition
-  | IColorInputDefinition;
+  | IColorInputDefinition
+  | IDeviceInputDefinition
+  | ICommandInputDefinition;
 
 export interface IInputDefinitionMapping {
   [name: string]: IInputDefinition;
