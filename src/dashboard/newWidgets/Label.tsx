@@ -13,11 +13,19 @@ const Inner = ({ mode, text }) => {
   return text;
 };
 
-const Label = ({ mode, inputs }) => (
-  <div style={{ padding: "0.5em" }}>
-    <Inner mode={mode} text={inputs.text} />
-  </div>
-);
+const Label = ({ mode, inputs }) => {
+  const { text, backgroundColor } = inputs;
+  return (
+    <div
+      style={{
+        padding: "0.5em",
+        backgroundColor
+      }}
+    >
+      <Inner mode={mode} text={text} />
+    </div>
+  );
+};
 
 const definition: IWidgetDefinition = {
   type: "LABEL",
@@ -29,6 +37,11 @@ const definition: IWidgetDefinition = {
       label: "Text",
       type: "string",
       default: ""
+    },
+    backgroundColor: {
+      label: "Background Color",
+      type: "color",
+      default: "#ffffff"
     }
   }
 };
