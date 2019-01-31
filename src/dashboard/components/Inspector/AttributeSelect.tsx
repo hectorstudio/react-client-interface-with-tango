@@ -5,6 +5,7 @@ import { DeviceConsumer } from "../DevicesProvider";
 import DeviceSuggester from "./DeviceSuggester";
 
 interface IProps {
+  tangoDB: string;
   device?: string;
   attribute?: string;
   dataFormat?: "scalar" | "spectrum" | "image";
@@ -142,10 +143,10 @@ export default class AttributeSelect extends Component<IProps, IState> {
   }
 
   private async fetchAttributes() {
-    const { device } = this.props;
+    const { device, tangoDB } = this.props;
     if (device) {
       this.setState({ attributes: [], fetchingAttributes: true });
-      const attributes = await fetchAttributes("kitslab", device);
+      const attributes = await fetchAttributes(tangoDB, device);
       this.setState({ attributes, fetchingAttributes: false });
     }
   }

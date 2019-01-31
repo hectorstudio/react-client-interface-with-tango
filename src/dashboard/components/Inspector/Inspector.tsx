@@ -14,6 +14,7 @@ import AttributeSelect from "./AttributeSelect";
 import { DELETE_INPUT, ADD_INPUT, SET_INPUT } from "../../state/actionTypes";
 
 class InputList extends Component<{
+  tangoDB: string;
   inputDefinitions: IInputDefinitionMapping;
   inputs: IInputMapping;
   onChange: (path: IndexPath, value) => void;
@@ -22,7 +23,7 @@ class InputList extends Component<{
   basePath?: IndexPath;
 }> {
   public render() {
-    const { inputDefinitions, inputs } = this.props;
+    const { inputDefinitions, inputs, tangoDB } = this.props;
     const inputNames = Object.keys(inputDefinitions);
 
     const inner = inputNames.map((inputName, i) => {
@@ -88,6 +89,7 @@ class InputList extends Component<{
             <td colSpan={2}>
               {label}
               <AttributeSelect
+                tangoDB={tangoDB}
                 device={value.device}
                 attribute={value.attribute}
                 dataFormat={inputDefinition.dataFormat}
@@ -151,6 +153,7 @@ class InputList extends Component<{
                       &times;
                     </button>
                     <InputList
+                      tangoDB={tangoDB}
                       inputDefinitions={inputDefinition.inputs}
                       inputs={each}
                       onChange={(path2, value2) => {
@@ -218,7 +221,7 @@ interface IProps {
 
 class Inspector extends Component<IProps> {
   public render() {
-    const { widget } = this.props;
+    const { widget, tangoDB } = this.props;
     const definitions = bundles.map(bundle => bundle.definition);
     const definition = definitions.find(({ type }) => type === widget.type);
 
@@ -230,6 +233,7 @@ class Inspector extends Component<IProps> {
       <div className="Inspector">
         <h1>Inspector</h1>
         <InputList
+          tangoDB={tangoDB}
           inputDefinitions={definition.inputs}
           inputs={widget.inputs}
           onChange={(path, value) => this.props.onSetInput(path, value)}
@@ -241,7 +245,7 @@ class Inspector extends Component<IProps> {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
   return {
     onSetInput: (path: IndexPath, value: any) =>
       dispatch({ type: SET_INPUT, path, value }),
