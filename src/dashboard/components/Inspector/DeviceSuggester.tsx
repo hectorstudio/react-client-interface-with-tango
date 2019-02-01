@@ -94,6 +94,12 @@ export default class DeviceSuggester extends Component<IProps, IState> {
       value,
       onChange: this.onChange
     };
+
+    const theme = {
+      ...Autosuggest.defaultProps.theme,
+      input: "form-control react-autosuggest__input"
+    };
+
     return (
       <Autosuggest
         suggestions={suggestions}
@@ -105,6 +111,7 @@ export default class DeviceSuggester extends Component<IProps, IState> {
         highlightFirstSuggestion={true}
         ref={this.storeInputReference}
         inputProps={inputProps}
+        theme={theme}
       />
     );
   }
