@@ -1,18 +1,24 @@
-import React, { Component } from "react";
+import React, { Component, CSSProperties } from "react";
 
 import { IWidgetProps } from "./types";
 import { IWidgetDefinition } from "../types";
 
 class CommandExecutor extends Component<IWidgetProps> {
   public render() {
-    const { title, requireConfirmation, command } = this.props.inputs;
+    const { mode, inputs } = this.props;
+    const { title, requireConfirmation, command } = inputs;
     const actualTitle = title || command.command || "command";
+
+    const style: CSSProperties = mode === "run" ? {} : { pointerEvents: "none" };
 
     return (
       <div style={{ padding: "0.25em" }}>
         <button
+          style={style}
           onClick={() => {
-            const message = `Confirm execution of ${command.command} on ${command.device}`;
+            const message = `Confirm execution of ${command.command} on ${
+              command.device
+            }`;
             if (!requireConfirmation || confirm(message)) {
               command.execute();
             }
