@@ -153,6 +153,11 @@ function inputIsValid(definition: IInputDefinition, value: any): boolean {
     return device != null && attribute != null;
   }
 
+  if (definition.type === "command") {
+    const { device, command } = value;
+    return device != null && command != null;
+  }
+
   if (definition.type === "number") {
     if (isNaN(value)) {
       return false;

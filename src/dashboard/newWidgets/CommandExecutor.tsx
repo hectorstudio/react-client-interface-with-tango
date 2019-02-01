@@ -39,7 +39,8 @@ const definition: IWidgetDefinition = {
   inputs: {
     command: {
       label: "",
-      type: "command"
+      type: "command",
+      required: true
     },
     title: {
       type: "string",
