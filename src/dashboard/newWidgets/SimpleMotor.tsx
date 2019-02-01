@@ -1,15 +1,24 @@
 import React, { Component } from "react";
 import { IWidgetDefinition } from "../types";
+import { IWidgetProps } from "./types";
 
-class SimpleMotor extends Component {
+class SimpleMotor extends Component<IWidgetProps> {
   public render() {
-    return <div style={{ height: 200, width: 200 }}>MOTOR</div>;
+    const { doubleScalar, ulongScalar } = this.props.inputs;
+
+    return (
+      <div style={{ height: 200, width: 200 }}>
+        ULong Scalar: {ulongScalar.value}
+        <hr />
+        Double Scalar: {doubleScalar.value}
+      </div>
+    );
   }
 }
 
 const definition: IWidgetDefinition = {
-  type: "SIMPLE_MOTOR",
-  name: "Simple Motor",
+  type: "TEST_DEVICE",
+  name: "Test Device",
   defaultHeight: 5,
   defaultWidth: 10,
   inputs: {
@@ -17,20 +26,25 @@ const definition: IWidgetDefinition = {
       type: "device",
       publish: "$device"
     },
-    goForward: {
+    state: {
       type: "command",
       device: "$device",
-      command: "GoForward"
+      command: "State"
     },
-    goBackward: {
+    status: {
       type: "command",
       device: "$device",
-      command: "GoBackward"
+      command: "Status"
     },
-    position: {
+    doubleScalar: {
       type: "attribute",
       device: "$device",
-      attribute: "Position"
+      attribute: "double_scalar"
+    },
+    ulongScalar: {
+      type: "attribute",
+      device: "$device",
+      attribute: "ulong_scalar"
     }
   }
 };

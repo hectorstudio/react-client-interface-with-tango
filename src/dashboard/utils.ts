@@ -3,6 +3,8 @@ import { IInputDefinition, IInputDefinitionMapping } from "./types";
 function defaultInput(input: IInputDefinition) {
   if (input.type === "attribute") {
     return { device: null, attribute: null };
+  } else if (input.type === "device") {
+    return null;
   } else if (input.type === "complex") {
     if (input.repeat) {
       return [];
