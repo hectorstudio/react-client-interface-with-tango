@@ -11,6 +11,8 @@ import {
 import { bundles } from "../../newWidgets";
 
 import AttributeSelect from "./AttributeSelect";
+import DeviceSelect from "./DeviceSelect";
+
 import { DELETE_INPUT, ADD_INPUT, SET_INPUT } from "../../state/actionTypes";
 
 class InputList extends Component<{
@@ -98,6 +100,7 @@ class InputList extends Component<{
           device: string;
           attribute: string;
         };
+
         return (
           <tr key={i}>
             <td colSpan={2}>
@@ -114,6 +117,20 @@ class InputList extends Component<{
                     attribute
                   })
                 }
+              />
+            </td>
+          </tr>
+        );
+      } else if (inputDefinition.type === "device") {
+        const value = inputs[inputName] as string;
+        return (
+          <tr key={i}>
+            <td>{label}</td>
+            <td>
+              <DeviceSelect
+                tangoDB={tangoDB}
+                device={value}
+                onSelect={device => this.props.onChange([inputName], device)}
               />
             </td>
           </tr>
@@ -205,7 +222,14 @@ class InputList extends Component<{
         );
       }
 
-      return <pre key={i}>{JSON.stringify(inputDefinition)}</pre>;
+      return (
+        <tr key={i}>
+          <td colSpan={2}>
+            {label}
+            <pre>{JSON.stringify(inputDefinition)}</pre>
+          </td>
+        </tr>
+      );
     });
 
     return (

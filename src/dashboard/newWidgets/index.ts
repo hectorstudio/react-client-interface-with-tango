@@ -4,7 +4,14 @@ import label from "./Label";
 import spectrum from "./Spectrum";
 import simpleMotor from "./SimpleMotor";
 
-import { IWidget } from "../types";
+import {
+  IWidget,
+  IWidgetDefinition,
+  IndexPath,
+  IInputDefinition,
+  IInputDefinitionMapping,
+  IComplexInputDefinition
+} from "../types";
 
 export const bundles = [
   label,
@@ -18,14 +25,14 @@ function bundleForType(type: string) {
   return bundles.find(bundle => bundle.definition.type === type);
 }
 
-export function definitionForType(type: string) {
-  const bundle = bundleForType(type);
-  return bundle && bundle.definition;
+export function definitionForType(type: string): IWidgetDefinition {
+  const bundle = bundleForType(type)!;
+  return bundle.definition;
 }
 
 export function componentForType(type: string) {
-  const bundle = bundleForType(type);
-  return bundle && bundle.component;
+  const bundle = bundleForType(type)!;
+  return bundle.component;
 }
 
 export function bundleForWidget(widget: IWidget) {

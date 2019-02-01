@@ -1,4 +1,5 @@
 import React from "react";
+import { IWidgetProps } from "./newWidgets/types";
 
 export interface IBaseInputDefinition<T> {
   label?: string;
@@ -99,7 +100,7 @@ export interface IWidgetDefinition {
 
 export interface IWidgetBundle {
   definition: IWidgetDefinition;
-  component: React.Component;
+  component: React.Component<IWidgetProps>;
 }
 
 export type IndexPath = Array<string | number>;
