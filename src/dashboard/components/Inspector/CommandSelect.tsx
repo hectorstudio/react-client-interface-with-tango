@@ -3,16 +3,22 @@ import { DeviceConsumer } from "../DevicesProvider";
 import DeviceSuggester from "./DeviceSuggester";
 import { fetchCommands } from "../api";
 
+interface ICommand {
+  name: string;
+  intype: string;
+}
+
 interface IProps {
   tangoDB: string;
   device: string;
   command: string;
+  inputType?: string;
   onSelect: (device: string, command: string | null) => void;
 }
 
 interface IState {
   fetchingCommands: boolean;
-  commands: Array<{ name: string }>;
+  commands: ICommand[];
 }
 
 export default class CommandSelect extends Component<IProps, IState> {
@@ -52,7 +58,7 @@ export default class CommandSelect extends Component<IProps, IState> {
 
   public render() {
     const { device, command } = this.props;
-    const commands = this.state.commands;
+    const commands = this.filteredCommands();
 
     return (
       <DeviceConsumer>
@@ -100,6 +106,17 @@ export default class CommandSelect extends Component<IProps, IState> {
         }}
       </DeviceConsumer>
     );
+  }
+
+  private filteredCommands() {
+    const { commands } = this.state;
+    const { inputType } = this.props;
+
+    if (inputType === "void") {
+      return commands.filter(({ intype }) => intype === "DevVoid");
+    }
+    
+    return commands;
   }
 
   private async fetchCommands() {

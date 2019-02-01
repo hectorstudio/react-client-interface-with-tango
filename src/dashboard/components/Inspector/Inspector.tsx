@@ -285,6 +285,7 @@ class InputList extends Component<{
                   tangoDB={tangoDB}
                   device={value.device}
                   command={value.command}
+                  inputType={inputDefinition.intype}
                   onSelect={(device, command) =>
                     this.props.onChange([inputName], {
                       device,

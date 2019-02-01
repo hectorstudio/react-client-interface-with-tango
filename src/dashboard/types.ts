@@ -58,6 +58,7 @@ export interface ICommandInputDefinition extends IBaseInputDefinition<null> {
   type: "command";
   device?: string;
   command?: string;
+  intype?: string;
 }
 
 export type IInputDefinition =
