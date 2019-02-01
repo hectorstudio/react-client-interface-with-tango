@@ -66,6 +66,7 @@ class RunCanvas extends Component<IProps, IState> {
             widget.inputs,
             definition.inputs,
             this.state.attributeValues,
+            this.state.commandOutputs,
             (device, command) => this.executeCommand(device, command)
           );
 

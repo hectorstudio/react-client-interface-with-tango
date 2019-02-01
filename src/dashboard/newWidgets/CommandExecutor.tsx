@@ -26,6 +26,7 @@ class CommandExecutor extends Component<IWidgetProps> {
         >
           {actualTitle}
         </button>
+        {command.output}
       </div>
     );
   }

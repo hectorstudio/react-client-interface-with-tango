@@ -86,7 +86,8 @@ export function extractModelsFromWidgets(widgets: IWidget[]) {
 function enrichedInput(
   input: any,
   definition: IInputDefinition,
-  lookup: object,
+  attributeLookup: object,
+  commandLookup: object,
   published: { [variable: string]: string },
   onExecute: (device: string, command: string) => void
 ) {
@@ -95,7 +96,8 @@ function enrichedInput(
       enrichedInput(
         entry,
         { ...definition, repeat: false },
-        lookup,
+        attributeLookup,
+        commandLookup,
         published,
         onExecute
       )
@@ -111,27 +113,31 @@ function enrichedInput(
     const model = `${resolvedDevice}/${input.attribute ||
       definition.attribute}`;
 
-    if (lookup.hasOwnProperty(model)) {
-      const value = lookup[model];
+    if (attributeLookup.hasOwnProperty(model)) {
+      const value = attributeLookup[model];
       return { ...input, value };
     }
   }
 
   if (definition.type === "complex") {
-    return enrichedInputs(input, definition.inputs, lookup, onExecute);
+    return enrichedInputs(input, definition.inputs, attributeLookup, commandLookup, onExecute);
   }
 
   if (definition.type === "command") {
-    const command = input.command || definition.command;
+    const command = input.command || definition.command;
     const resolvedDevice = resolveDevice(
       published,
       input.device,
       definition.device
     );
 
+    const model = `${resolvedDevice}/${command}`
+    const output = commandLookup[model];
+
     return {
       ...input,
-      execute: () => onExecute(resolvedDevice, command)
+      execute: () => onExecute(resolvedDevice, command),
+      output
     };
   }
 
@@ -163,7 +169,8 @@ export function publishedDevices(
 export function enrichedInputs(
   inputs: IInputMapping,
   definitions: IInputDefinitionMapping,
-  lookup: object,
+  attributeLookup: object,
+  commandLookup: object,
   onExecute: (device: string, command: string) => void
 ) {
   const published = publishedDevices(inputs, definitions);
@@ -175,7 +182,8 @@ export function enrichedInputs(
     const value = enrichedInput(
       subInput,
       subDefinition,
-      lookup,
+      attributeLookup,
+      commandLookup,
       published,
       onExecute
     );
