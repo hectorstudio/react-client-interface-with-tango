@@ -5,13 +5,6 @@
 .react-autosuggest__input {
   margin-bottom: 0.25em;
 }
-
-  .react-autosuggest__container--open .react-autosuggest__input {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    max-height: 400px;
-    overflow: auto;
-  }
   
   .react-autosuggest__container--open .react-autosuggest__suggestions-container {
     display: block;
