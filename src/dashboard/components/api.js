@@ -30,6 +30,14 @@ query {
 }
 `;
 
+const EXECUTE_COMMAND = `
+mutation ExecuteCommand($device: String!, $command: String!) {
+  executeCommand(device: $device, command: $command) {
+    ok
+    output
+  }
+}`;
+
 function createClient(tangoDB) {
   return createGQLClient({ url: "/" + tangoDB + "/db" });
 }
@@ -58,5 +66,15 @@ export async function fetchDeviceNames(tangoDB) {
     return res.data.devices.map(({ name }) => name);
   } catch (err) {
     return [];
+  }
+}
+
+export async function executeCommand(tangoDB, device, command) {
+  try {
+    const args = { device, command };
+    const res = await createClient(tangoDB).query(EXECUTE_COMMAND, args);
+    return res.output;
+  } catch (err) {
+    return null;
   }
 }

@@ -10,6 +10,7 @@ import ErrorBoundary from "../ErrorBoundary";
 
 import { changeEventEmitter } from "./emitter";
 import { extractModelsFromWidgets, enrichedInputs } from "./lib";
+import { executeCommand } from "../api";
 
 interface IProps {
   widgets: IWidget[];
@@ -18,6 +19,7 @@ interface IProps {
 
 interface IState {
   attributeValues: { [model: string]: any };
+  commandOutputs: { [model: string]: any };
 }
 
 class RunCanvas extends Component<IProps, IState> {
@@ -25,7 +27,8 @@ class RunCanvas extends Component<IProps, IState> {
 
   public constructor(props) {
     super(props);
-    this.state = { attributeValues: {} };
+    this.state = { attributeValues: {}, commandOutputs: {} };
+    this.executeCommand = this.executeCommand.bind(this);
   }
 
   public componentDidMount() {
@@ -63,7 +66,7 @@ class RunCanvas extends Component<IProps, IState> {
             widget.inputs,
             definition.inputs,
             this.state.attributeValues,
-            (device, command) => alert(`${device} | ${command}`)
+            (device, command) => this.executeCommand(device, command)
           );
 
           const actualWidth = width * TILE_SIZE;
@@ -89,6 +92,13 @@ class RunCanvas extends Component<IProps, IState> {
         })}
       </div>
     );
+  }
+
+  private async executeCommand(device: string, command: string) {
+    const output = await executeCommand(this.props.tangoDB, device, command);
+    const model = `${device}/${command}`;
+    const commandOutputs = {...this.state.commandOutputs, [model]: output };
+    this.setState({ commandOutputs });
   }
 }
 
