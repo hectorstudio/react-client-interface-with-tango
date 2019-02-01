@@ -17,6 +17,7 @@ query FetchCommandNames($device: String!) {
   device(name: $device) {
     commands {
       name
+      intype
     }
   }
 }
