@@ -144,11 +144,14 @@
 }
 
 .Dashboard .Inspector .AttributeSelect input::placeholder,
-.Dashboard .Inspector .AttributeSelect select:disabled {
+.Dashboard .Inspector .AttributeSelect select:disabled,
+.Dashboard .Inspector .CommandSelect input::placeholder,
+.Dashboard .Inspector .CommandSelect select:disabled {
   color: #888;
 }
 
-.Dashboard .Inspector .AttributeSelect select:disabled {
+.Dashboard .Inspector .AttributeSelect select:disabled,
+.Dashboard .Inspector .CommandSelect select:disabled {
   background-color: white;
   opacity: 0.5;
 }
