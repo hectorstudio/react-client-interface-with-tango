@@ -14,6 +14,7 @@ import AttributeSelect from "./AttributeSelect";
 import DeviceSelect from "./DeviceSelect";
 
 import { DELETE_INPUT, ADD_INPUT, SET_INPUT } from "../../state/actionTypes";
+import CommandSelect from "./CommandSelect";
 
 class InputList extends Component<{
   tangoDB: string;
@@ -98,36 +99,57 @@ class InputList extends Component<{
       } else if (inputDefinition.type === "attribute") {
         const constantDevice = inputDefinition.device != null;
         const constantAttribute = inputDefinition.attribute != null;
-        
+
         if (constantDevice && constantAttribute) {
           return null;
         }
-        
+
         const value = inputs[inputName] as {
           device: string;
           attribute: string;
         };
 
-        return (
-          <tr key={i}>
-            <td colSpan={2}>
-              {label}
-              <AttributeSelect
-                tangoDB={tangoDB}
-                device={value.device}
-                attribute={value.attribute}
-                dataFormat={inputDefinition.dataFormat}
-                dataType={inputDefinition.dataType}
-                onSelect={(device, attribute) =>
-                  this.props.onChange([inputName], {
-                    device,
-                    attribute
-                  })
-                }
-              />
-            </td>
-          </tr>
-        );
+        if (constantDevice) {
+          return (
+            <tr key={i}>
+              <td colSpan={2}>
+                {label}
+                <input
+                  type="text"
+                  className="form-control"
+                  value={value.attribute}
+                  onChange={event =>
+                    this.props.onChange([inputName], {
+                      device: null,
+                      attribute: event.target.value
+                    })
+                  }
+                />
+              </td>
+            </tr>
+          );
+        } else {
+          return (
+            <tr key={i}>
+              <td colSpan={2}>
+                {label}
+                <AttributeSelect
+                  tangoDB={tangoDB}
+                  device={value.device}
+                  attribute={value.attribute}
+                  dataFormat={inputDefinition.dataFormat}
+                  dataType={inputDefinition.dataType}
+                  onSelect={(device, attribute) =>
+                    this.props.onChange([inputName], {
+                      device,
+                      attribute
+                    })
+                  }
+                />
+              </td>
+            </tr>
+          );
+        }
       } else if (inputDefinition.type === "device") {
         const value = inputs[inputName] as string;
         return (
@@ -227,6 +249,53 @@ class InputList extends Component<{
             </td>
           </tr>
         );
+      } else if (inputDefinition.type === "command") {
+        const value = inputs[inputName] as { device: string; command: string };
+        const constantDevice = inputDefinition.device != null;
+        const constantCommand = inputDefinition.command != null;
+
+        if (constantDevice && constantCommand) {
+          return null;
+        }
+
+        if (constantDevice) {
+          return (
+            <tr>
+              <td>{label}</td>
+              <td>
+                <input
+                  type="text"
+                  value={value.command}
+                  onChange={e =>
+                    this.props.onChange([inputName], {
+                      device: null,
+                      command: e.target.value
+                    })
+                  }
+                />
+              </td>
+            </tr>
+          );
+        } else {
+          return (
+            <tr key={i}>
+              <td colSpan={2}>
+                {label}
+                <CommandSelect
+                  tangoDB={tangoDB}
+                  device={value.device}
+                  command={value.command}
+                  onSelect={(device, command) =>
+                    this.props.onChange([inputName], {
+                      device,
+                      command
+                    })
+                  }
+                />
+              </td>
+            </tr>
+          );
+        }
       }
 
       return (

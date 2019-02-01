@@ -3,14 +3,11 @@ import attributePlot from "./AttributePlot";
 import label from "./Label";
 import spectrum from "./Spectrum";
 import simpleMotor from "./SimpleMotor";
+import commandExecutor from "./CommandExecutor";
 
 import {
   IWidget,
   IWidgetDefinition,
-  IndexPath,
-  IInputDefinition,
-  IInputDefinitionMapping,
-  IComplexInputDefinition
 } from "../types";
 
 export const bundles = [
@@ -18,7 +15,8 @@ export const bundles = [
   attributeDisplayWidget,
   attributePlot,
   spectrum,
-  simpleMotor
+  // simpleMotor
+  commandExecutor
 ];
 
 function bundleForType(type: string) {
