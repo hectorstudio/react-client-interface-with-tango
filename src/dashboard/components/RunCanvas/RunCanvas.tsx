@@ -62,7 +62,8 @@ class RunCanvas extends Component<IProps, IState> {
           const inputs = enrichedInputs(
             widget.inputs,
             definition.inputs,
-            this.state.attributeValues
+            this.state.attributeValues,
+            (device, command) => alert(`${device} | ${command}`)
           );
 
           const actualWidth = width * TILE_SIZE;
