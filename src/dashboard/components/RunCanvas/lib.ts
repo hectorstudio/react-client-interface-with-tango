@@ -87,11 +87,18 @@ function enrichedInput(
   input: any,
   definition: IInputDefinition,
   lookup: object,
-  published: { [variable: string]: string }
+  published: { [variable: string]: string },
+  onExecute: (device: string, command: string) => void
 ) {
   if (definition.repeat) {
     return input.map(entry =>
-      enrichedInput(entry, { ...definition, repeat: false }, lookup, published)
+      enrichedInput(
+        entry,
+        { ...definition, repeat: false },
+        lookup,
+        published,
+        onExecute
+      )
     );
   }
 
@@ -101,7 +108,8 @@ function enrichedInput(
       input.device,
       definition.device
     );
-    const model = `${resolvedDevice}/${input.attribute || definition.attribute}`;
+    const model = `${resolvedDevice}/${input.attribute ||
+      definition.attribute}`;
 
     if (lookup.hasOwnProperty(model)) {
       const value = lookup[model];
@@ -110,7 +118,21 @@ function enrichedInput(
   }
 
   if (definition.type === "complex") {
-    return enrichedInputs(input, definition.inputs, lookup);
+    return enrichedInputs(input, definition.inputs, lookup, onExecute);
+  }
+
+  if (definition.type === "command") {
+    const command = input.command || definition.command;
+    const resolvedDevice = resolveDevice(
+      published,
+      input.device,
+      definition.device
+    );
+
+    return {
+      ...input,
+      execute: () => onExecute(resolvedDevice, command)
+    };
   }
 
   return input;
@@ -141,7 +163,8 @@ export function publishedDevices(
 export function enrichedInputs(
   inputs: IInputMapping,
   definitions: IInputDefinitionMapping,
-  lookup: object
+  lookup: object,
+  onExecute: (device: string, command: string) => void
 ) {
   const published = publishedDevices(inputs, definitions);
   const names = Object.keys(inputs);
@@ -149,7 +172,13 @@ export function enrichedInputs(
   return names.reduce((accum, name) => {
     const subInput = inputs[name];
     const subDefinition = definitions[name];
-    const value = enrichedInput(subInput, subDefinition, lookup, published);
+    const value = enrichedInput(
+      subInput,
+      subDefinition,
+      lookup,
+      published,
+      onExecute
+    );
     return { ...accum, [name]: value };
   }, {});
 }
