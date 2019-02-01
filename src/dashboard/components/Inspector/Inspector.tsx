@@ -96,6 +96,13 @@ class InputList extends Component<{
           </tr>
         );
       } else if (inputDefinition.type === "attribute") {
+        const constantDevice = inputDefinition.device != null;
+        const constantAttribute = inputDefinition.attribute != null;
+        
+        if (constantDevice && constantAttribute) {
+          return null;
+        }
+        
         const value = inputs[inputName] as {
           device: string;
           attribute: string;
