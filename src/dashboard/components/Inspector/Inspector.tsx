@@ -8,7 +8,7 @@ import {
   IndexPath
 } from "../../types";
 
-import { bundles } from "../../newWidgets";
+import { bundles } from "../../widgets";
 
 import AttributeSelect from "./AttributeSelect";
 import DeviceSelect from "./DeviceSelect";

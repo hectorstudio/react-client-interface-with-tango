@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import LibraryWidget from "./LibraryWidget";
-import { bundles } from "../../newWidgets";
+import { bundles } from "../../widgets";
 
 export default class Library extends Component {
   public render() {

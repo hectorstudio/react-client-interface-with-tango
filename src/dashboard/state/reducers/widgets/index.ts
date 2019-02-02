@@ -29,7 +29,7 @@ import {
 import {
   definitionForType,
   definitionForWidget
-} from "src/dashboard/newWidgets";
+} from "src/dashboard/widgets";
 
 import { defaultInputs } from "src/dashboard/utils";
 

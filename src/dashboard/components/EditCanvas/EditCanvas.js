@@ -4,7 +4,7 @@ import { DropTarget } from "react-dnd";
 import { connect } from "react-redux";
 
 import dndTypes from "../../dndTypes";
-import { componentForWidget } from "../../newWidgets";
+import { componentForWidget } from "../../widgets";
 import { TILE_SIZE } from "../constants";
 
 import EditWidget from "./EditWidget";

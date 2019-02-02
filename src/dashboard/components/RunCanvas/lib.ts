@@ -5,7 +5,7 @@ import {
   IInputDefinition,
   IAttributeInputDefinition
 } from "src/dashboard/types";
-import { definitionForWidget } from "src/dashboard/newWidgets";
+import { definitionForWidget } from "src/dashboard/widgets";
 
 function resolveDevice(
   published: IPublishedDevices,
