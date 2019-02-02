@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import queryString from "query-string";
 import { connect } from "react-redux";
 
 import EditCanvas from "./EditCanvas/EditCanvas";
@@ -10,10 +9,9 @@ import Library from "./Library/Library";
 import RunCanvas from "./RunCanvas/RunCanvas";
 import Inspector from "./Inspector/Inspector";
 
-import { save as saveToRepo } from "../dashboardRepo";
-import { load as loadFromRepo } from "../dashboardRepo";
-
-import { complexWidgetDefinition } from "./ComplexWidget/ComplexWidget";
+// import queryString from "query-string";
+// import { save as saveToRepo } from "../dashboardRepo";
+// import { load as loadFromRepo } from "../dashboardRepo";
 
 import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
@@ -28,7 +26,6 @@ import {
 import "./Dashboard.css";
 import { DeviceProvider } from "./DevicesProvider";
 
-const GRID_TILE_SIZE = 15;
 const DEFAULT_CANVASES = [
   {
     id: 0,
