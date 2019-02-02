@@ -38,7 +38,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: repeating-linear-gradient(
+  background-image: url(./EditCanvas/grid.png);
+  
+  /* background: repeating-linear-gradient(
       rgb(232, 239, 249),
       rgb(232, 239, 249) 1px,
       rgba(0, 0, 0, 0) 1px,
@@ -50,7 +52,7 @@
       rgb(232, 239, 249) 1px,
       rgba(0, 0, 0, 0) 1px,
       rgba(0, 0, 0, 0) 20px
-    );
+    ); */
   background-position-x: -1px;
   background-position-y: -1px;
 }
