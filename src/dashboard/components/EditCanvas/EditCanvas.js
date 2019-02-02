@@ -118,7 +118,8 @@ const addFromLibraryDropTarget = DropTarget(
     drop(props, monitor, component) {
       const { x: x1, y: y1 } = findDOMNode(component).getBoundingClientRect();
       const { x: x2, y: y2 } = monitor.getClientOffset();
-      props.onAddWidget(monitor.getItem().type, x2 - x1, y2 - y1);
+      const { type, dragOffset } = monitor.getItem();
+      props.onAddWidget(type, x2 - x1 - dragOffset.x, y2 - y1 - dragOffset.y);
     }
   },
   (connect, monitor) => ({
