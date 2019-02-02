@@ -181,6 +181,6 @@ export function inputsAreValid(
   return results.reduce((prev, curr) => prev && curr, true);
 }
 
-export function nextId(widgets: IWidget[]) {
+export function nextId(widgets: IWidget[]): number {
   return 1 + widgets.reduce((max, widget) => Math.max(max, widget.id), 0);
 }

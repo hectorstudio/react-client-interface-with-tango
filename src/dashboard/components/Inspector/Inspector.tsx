@@ -37,7 +37,7 @@ class InputList extends Component<{
       if (inputDefinition.type === "number") {
         const value = inputs[inputName] as number;
         return (
-          <tr key={i}>
+          <tr key={inputName}>
             <td>{label}</td>
             <td>
               <input
@@ -54,7 +54,7 @@ class InputList extends Component<{
       } else if (inputDefinition.type === "boolean") {
         const value = inputs[inputName] as boolean;
         return (
-          <tr key={i}>
+          <tr key={inputName}>
             <td>{label}</td>
             <td>
               <input
@@ -70,7 +70,7 @@ class InputList extends Component<{
       } else if (inputDefinition.type === "string") {
         const value = inputs[inputName] as string;
         return (
-          <tr key={i}>
+          <tr key={inputName}>
             <td>{label}</td>
             <td>
               <input
@@ -85,7 +85,7 @@ class InputList extends Component<{
       } else if (inputDefinition.type === "color") {
         const value = inputs[inputName] as string;
         return (
-          <tr key={i}>
+          <tr key={inputName}>
             <td>{label}</td>
             <td>
               <input
@@ -111,7 +111,7 @@ class InputList extends Component<{
 
         if (constantDevice) {
           return (
-            <tr key={i}>
+            <tr key={inputName}>
               <td colSpan={2}>
                 {label}
                 <input
@@ -130,7 +130,7 @@ class InputList extends Component<{
           );
         } else {
           return (
-            <tr key={i}>
+            <tr key={inputName}>
               <td colSpan={2}>
                 {label}
                 <AttributeSelect
@@ -153,7 +153,7 @@ class InputList extends Component<{
       } else if (inputDefinition.type === "device") {
         const value = inputs[inputName] as string;
         return (
-          <tr key={i}>
+          <tr key={inputName}>
             <td>{label}</td>
             <td>
               <DeviceSelect
@@ -170,8 +170,8 @@ class InputList extends Component<{
       ) {
         const value = inputs[inputName] as IInputMapping[];
         return (
-          <Fragment>
-            <tr key={i}>
+          <Fragment key={inputName}>
+            <tr>
               <td>{label}</td>
               <td>
                 <button
@@ -230,7 +230,7 @@ class InputList extends Component<{
       } else if (inputDefinition.type === "select") {
         const value = inputs[inputName] as string[];
         return (
-          <tr key={i}>
+          <tr key={inputName}>
             <td>{label}</td>
             <td>
               <select
@@ -260,7 +260,7 @@ class InputList extends Component<{
 
         if (constantDevice) {
           return (
-            <tr>
+            <tr key={inputName}>
               <td>{label}</td>
               <td>
                 <input
@@ -278,7 +278,7 @@ class InputList extends Component<{
           );
         } else {
           return (
-            <tr key={i}>
+            <tr key={inputName}>
               <td colSpan={2}>
                 {label}
                 <CommandSelect
@@ -300,7 +300,7 @@ class InputList extends Component<{
       }
 
       return (
-        <tr key={i}>
+        <tr key={inputName}>
           <td colSpan={2}>
             {label}
             <pre>{JSON.stringify(inputDefinition)}</pre>
