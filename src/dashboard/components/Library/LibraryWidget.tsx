@@ -16,9 +16,17 @@ interface IProps {
 }
 
 const libraryWidgetSource = {
-  beginDrag(props) {
+  beginDrag(props, monitor) {
+    const c1 = monitor.getInitialSourceClientOffset()
+    const c2 = monitor.getInitialClientOffset()
+    const dragOffset = {
+      x: c2.x - c1.x,
+      y: c2.y - c1.y
+    };
+
     return {
-      type: props.bundle.definition.type
+      type: props.bundle.definition.type,
+      dragOffset
     };
   }
 };
