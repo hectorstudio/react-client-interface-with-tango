@@ -13,13 +13,16 @@ const Inner = ({ mode, text }) => {
   return text;
 };
 
-const Label = ({ mode, inputs }) => {
+const Label = ({ mode, inputs, actualWidth, actualHeight }) => {
   const { text, backgroundColor } = inputs;
   return (
     <div
       style={{
         padding: "0.5em",
-        backgroundColor
+        backgroundColor,
+        wordBreak: "break-word",
+        height: actualHeight,
+        width: actualWidth
       }}
     >
       <Inner mode={mode} text={text} />
