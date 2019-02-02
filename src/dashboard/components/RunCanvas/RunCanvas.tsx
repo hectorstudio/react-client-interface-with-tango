@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import { IRootState } from "../../state/reducers";
 import { IWidget } from "../../types";
-import { bundleForWidget } from "../../newWidgets";
+import { bundleForWidget } from "../../widgets";
 import { TILE_SIZE } from "../constants";
 
 import ErrorBoundary from "../ErrorBoundary";

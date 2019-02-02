@@ -7,7 +7,7 @@ import {
   IInputDefinition
 } from "src/dashboard/types";
 import { defaultInputs } from "src/dashboard/utils";
-import { definitionForWidget } from "src/dashboard/newWidgets";
+import { definitionForWidget } from "src/dashboard/widgets";
 
 export function replaceAt<T>(arr: T[], index: number, repl: T) {
   const copy = arr.concat();
