@@ -1,8 +1,9 @@
 import React from "react";
 
-export default function WarningBadge() {
+export default function WarningBadge({ visible }) {
   return (
     <div
+      className="WarningBadge"
       style={{
         position: "fixed",
         marginLeft: "-10px",
@@ -13,7 +14,9 @@ export default function WarningBadge() {
         height: "20px",
         color: "white",
         textAlign: "center",
-        zIndex: 1000
+        zIndex: 1000,
+        opacity: visible ? 1 : 0,
+        pointerEvents: "none"
       }}
     >
       <span className="fa fa-exclamation" />

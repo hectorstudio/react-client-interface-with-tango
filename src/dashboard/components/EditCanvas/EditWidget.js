@@ -184,7 +184,7 @@ class EditWidget extends Component {
         }}
       >
         {knobs}
-        {this.props.warning && <WarningBadge />}
+        <WarningBadge visible={this.props.warning} />
         {connectDragSource(<div>{render}</div>)}
       </div>
     );
