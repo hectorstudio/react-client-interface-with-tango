@@ -9,16 +9,20 @@ class CommandExecutor extends Component<IWidgetProps> {
     const { title, requireConfirmation, command } = inputs;
     const actualTitle = title || command.command || "command";
 
-    const style: CSSProperties = mode === "run" ? {} : { pointerEvents: "none" };
+    const style: CSSProperties =
+      mode === "run" ? {} : { pointerEvents: "none" };
+
+    const containerStyle: CSSProperties = { padding: "0.25em" };
+    const outputStyle: CSSProperties = { marginLeft: "0.5em" };
 
     return (
-      <div style={{ padding: "0.25em" }}>
+      <div style={containerStyle}>
         <button
           style={style}
           onClick={() => {
-            const message = `Confirm execution of ${command.command} on ${
+            const message = `Confirm executing "${command.command}" on "${
               command.device
-            }`;
+            }"`;
             if (!requireConfirmation || confirm(message)) {
               command.execute();
             }
@@ -26,7 +30,7 @@ class CommandExecutor extends Component<IWidgetProps> {
         >
           {actualTitle}
         </button>
-        {command.output}
+        <span style={outputStyle}>{command.output}</span>
       </div>
     );
   }
