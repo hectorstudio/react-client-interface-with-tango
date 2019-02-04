@@ -34,13 +34,13 @@ import {
 import { defaultInputs } from "src/dashboard/utils";
 
 export interface IWidgetsState {
-  selectedIndex: number;
-  widgets: IWidget[];
+  selectedId: string | null;
+  widgets: { [id: string]: IWidget };
 }
 
 const initialState = {
-  selectedIndex: -1,
-  widgets: []
+  selectedId: null,
+  widgets: {}
 };
 
 export default function canvases(
@@ -68,14 +68,14 @@ export default function canvases(
 
       return {
         ...state,
-        widgets: [...state.widgets, widget],
-        selectedIndex: state.widgets.length
+        widgets: { ...state.widgets, [id]: widget },
+        selectedId: id
       };
     }
     case MOVE_WIDGET: {
-      const { dx, dy, index } = action;
-      const newWidget = move(state.widgets[index], dx, dy);
-      const widgets = replaceAt(state.widgets, index, newWidget);
+      const { dx, dy, id } = action;
+      const newWidget = move(state.widgets[id], dx, dy);
+      const widgets = replaceAt(state.widgets, id, newWidget);
       return { ...state, widgets };
     }
     case RESIZE_WIDGET: {

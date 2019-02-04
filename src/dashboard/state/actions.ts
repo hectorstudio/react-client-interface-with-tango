@@ -23,7 +23,7 @@ export interface IMoveWidgetAction extends Action {
   type: typeof MOVE_WIDGET;
   dx: number;
   dy: number;
-  index: number;
+  id: string;
 }
 
 export interface IResizeWidgetAction extends Action {
@@ -32,12 +32,12 @@ export interface IResizeWidgetAction extends Action {
   my: number;
   dx: number;
   dy: number;
-  index: number;
+  id: string;
 }
 
 export interface ISelectWidgetAction extends Action {
   type: typeof SELECT_WIDGET;
-  index: number;
+  id: string;
 }
 
 export interface IDeleteWidgetAction extends Action {
