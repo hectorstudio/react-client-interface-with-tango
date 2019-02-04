@@ -137,6 +137,10 @@
   padding-bottom: 0.25em;
 }
 
+.Dashboard .Inspector table td:first-child {
+  padding-right: 0.5em;
+}
+
 .Dashboard .Inspector .ComplexInput {
   padding: 0.5em;
   background-color: #f4f4f4;
