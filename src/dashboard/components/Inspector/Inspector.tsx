@@ -343,7 +343,6 @@ class Inspector extends Component<IProps> {
 
     return (
       <div className="Inspector">
-        <h1>Inspector</h1>
         <InputList
           tangoDB={tangoDB}
           inputDefinitions={definition.inputs}
