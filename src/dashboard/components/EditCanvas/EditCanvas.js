@@ -14,6 +14,7 @@ import {
   addWidget,
   resizeWidget
 } from "src/dashboard/state/actionCreators";
+import { getWidgets } from "src/dashboard/state/selectors";
 
 const BACKSPACE = 8;
 const DELETE = 46;
@@ -25,7 +26,7 @@ const editCanvasTarget = {
 
   drop(props, monitor, component) {
     const { x, y } = monitor.getDifferenceFromInitialOffset();
-    // const { index, warning } = monitor.getItem();
+    // const { id, warning } = monitor.getItem();
     return { dx: x, dy: y };
   }
 };
@@ -65,8 +66,8 @@ class EditCanvas extends Component {
           </div>
 
           <div className="grid">
-            {this.props.widgets.map((widget, index) => {
-              const { x, y, width, height, inputs, valid } = widget;
+            {this.props.widgets.map(widget => {
+              const { x, y, id, width, height, inputs, valid } = widget;
               const actualWidth = TILE_SIZE * width;
               const actualHeight = TILE_SIZE * height;
               const props = { inputs, mode: "edit", actualWidth, actualHeight };
@@ -76,18 +77,18 @@ class EditCanvas extends Component {
 
               return (
                 <EditWidget
-                  index={index}
-                  key={index}
-                  isSelected={index === this.props.selectedIndex}
+                  id={id}
+                  key={id}
+                  isSelected={id === this.props.selectedId}
                   x={1 + TILE_SIZE * x}
                   y={1 + TILE_SIZE * y}
                   width={actualWidth}
                   height={actualHeight}
-                  onDelete={() => this.props.onDeleteWidget(index)}
-                  onClick={() => this.props.onSelectWidget(index)}
-                  onMove={(dx, dy) => this.props.onMoveWidget(index, dx, dy)}
+                  onDelete={() => this.props.onDeleteWidget(id)}
+                  onClick={() => this.props.onSelectWidget(id)}
+                  onMove={(dx, dy) => this.props.onMoveWidget(id, dx, dy)}
                   onResize={(moveX, moveY, dx, dy) =>
-                    this.props.onResizeWidget(index, moveX, moveY, dx, dy)
+                    this.props.onResizeWidget(id, moveX, moveY, dx, dy)
                   }
                   warning={!valid}
                   render={element}
@@ -129,8 +130,8 @@ const addFromLibraryDropTarget = DropTarget(
 
 function mapStateToProps(state) {
   return {
-    widgets: state.widgets.widgets,
-    selectedIndex: state.widgets.selectedIndex
+    widgets: getWidgets(state),
+    selectedId: state.widgets.selectedId
   };
 }
 
@@ -140,17 +141,17 @@ function toTile(value) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onMoveWidget: (index, dx, dy) => {
-      dispatch(moveWidget(index, toTile(dx), toTile(dy)));
+    onMoveWidget: (id, dx, dy) => {
+      dispatch(moveWidget(id, toTile(dx), toTile(dy)));
     },
-    onSelectWidget: index => dispatch(selectWidget(index)),
-    onDeleteWidget: index => dispatch({ type: "DELETE_WIDGET", index }),
+    onSelectWidget: id => dispatch(selectWidget(id)),
+    onDeleteWidget: id => dispatch({ type: "DELETE_WIDGET", id }),
     onAddWidget: (type, x, y) => {
       dispatch(addWidget(toTile(x), toTile(y), type, 0));
     },
-    onResizeWidget: (index, mx, my, dx, dy) => {
+    onResizeWidget: (id, mx, my, dx, dy) => {
       dispatch(
-        resizeWidget(index, toTile(mx), toTile(my), toTile(dx), toTile(dy))
+        resizeWidget(id, toTile(mx), toTile(my), toTile(dx), toTile(dy))
       );
     }
   };

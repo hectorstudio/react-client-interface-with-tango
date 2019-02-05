@@ -14,7 +14,6 @@ import {
 import { DashboardAction } from "../../actions";
 import {
   move,
-  replaceAt,
   removeAt,
   setInput,
   deleteInput,
@@ -26,16 +25,13 @@ import {
   nextId
 } from "./lib";
 
-import {
-  definitionForType,
-  definitionForWidget
-} from "src/dashboard/widgets";
+import { definitionForType, definitionForWidget } from "src/dashboard/widgets";
 
 import { defaultInputs } from "src/dashboard/utils";
 
 export interface IWidgetsState {
-  selectedId: string | null;
-  widgets: { [id: string]: IWidget };
+  selectedId: string | null;
+  widgets: Record<string, IWidget>;
 }
 
 const initialState = {
@@ -75,51 +71,60 @@ export default function canvases(
     case MOVE_WIDGET: {
       const { dx, dy, id } = action;
       const newWidget = move(state.widgets[id], dx, dy);
-      const widgets = replaceAt(state.widgets, id, newWidget);
+      const widgets = { ...state.widgets, [id]: newWidget };
       return { ...state, widgets };
     }
     case RESIZE_WIDGET: {
-      const { dx, dy, mx, my, index } = action;
-      const newWidget = resize(state.widgets[index], mx, my, dx, dy);
-      const widgets = replaceAt(state.widgets, index, newWidget);
+      const { dx, dy, mx, my, id } = action;
+      const newWidget = resize(state.widgets[id], mx, my, dx, dy);
+      const widgets = { ...state.widgets, [id]: newWidget };
       return { ...state, widgets };
     }
     case SELECT_WIDGET: {
-      const { index } = action;
-      return { ...state, selectedIndex: index };
+      const { id } = action;
+      return { ...state, selectedId: id };
     }
     case DELETE_WIDGET: {
-      if (state.selectedIndex !== -1) {
-        const widgets = removeAt(state.widgets, state.selectedIndex);
-        return { ...state, widgets, selectedIndex: -1 };
+      if (state.selectedId != null) {
+        const widgets = removeAt(state.widgets, state.selectedId);
+        return { ...state, widgets, selectedId: null };
       } else {
         return state;
       }
     }
     case SET_INPUT: {
       const { path, value } = action;
-      const index = state.selectedIndex;
-      const newWidget = validate(setInput(state.widgets[index], path, value));
-      const widgets = replaceAt(state.widgets, index, newWidget);
+      const id = state.selectedId;
+      if (id == null) {
+        return state;
+      }
+      const newWidget = validate(setInput(state.widgets[id], path, value));
+      const widgets = { ...state.widgets, [id]: newWidget };
       return { ...state, widgets };
     }
     case ADD_INPUT: {
       const { path } = action;
-      const index = state.selectedIndex;
-      const oldWidget = state.widgets[index];
+      const id = state.selectedId;
+      if (id == null) {
+        return state;
+      }
+      const oldWidget = state.widgets[id];
       const definition = definitionForWidget(oldWidget)!;
       const value = nestedDefault(definition, path);
       const newWidget = validate(
-        addInput(state.widgets[index], [...path, -1], value)
+        addInput(state.widgets[id], [...path, -1], value)
       );
-      const widgets = replaceAt(state.widgets, index, newWidget);
+      const widgets = { ...state.widgets, [id]: newWidget };
       return { ...state, widgets };
     }
     case DELETE_INPUT: {
       const { path } = action;
-      const index = state.selectedIndex;
-      const newWidget = validate(deleteInput(state.widgets[index], path));
-      const widgets = replaceAt(state.widgets, index, newWidget);
+      const id = state.selectedId;
+      if (id == null) {
+        return state;
+      }
+      const newWidget = validate(deleteInput(state.widgets[id], path));
+      const widgets = { ...state.widgets, [id]: newWidget };
       return { ...state, widgets };
     }
     default:

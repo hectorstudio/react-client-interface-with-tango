@@ -45,7 +45,7 @@ class ResizeKnob extends Component {
 const editWidgetSource = {
   beginDrag(props) {
     return {
-      index: props.index,
+      id: props.id,
       warning: props.warning
     };
   },
