@@ -45,7 +45,7 @@ export default function canvases(
 ): WidgetsState {
   switch (action.type) {
     case ADD_WIDGET: {
-      const { x, y, widgetType: type } = action;
+      const { x, y, canvas, widgetType: type } = action;
       const definition = definitionForType(type)!;
       const inputs = defaultInputs(definition.inputs);
       const { width, height } = defaultDimensions(definition);
@@ -55,6 +55,7 @@ export default function canvases(
         id,
         x,
         y,
+        canvas,
         width,
         height,
         type,

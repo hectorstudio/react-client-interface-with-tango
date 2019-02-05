@@ -15,7 +15,7 @@ import {
   resizeWidget,
   deleteWidget
 } from "src/dashboard/state/actionCreators";
-import { getWidgets, getSelectedWidget } from "src/dashboard/state/selectors";
+import { getWidgets, getSelectedWidget, getCurrentCanvasWidgets } from "src/dashboard/state/selectors";
 
 const BACKSPACE = 8;
 const DELETE = 46;
@@ -56,7 +56,7 @@ class EditCanvas extends Component {
       connectMoveDropTarget(
         <div
           className="Canvas edit"
-          onClick={() => this.props.onSelectWidget(-1)}
+          onClick={() => this.props.onSelectWidget(null)}
           onKeyDown={event => {
             if ([BACKSPACE, DELETE].indexOf(event.keyCode) !== -1) {
               event.preventDefault();
@@ -137,7 +137,7 @@ const addFromLibraryDropTarget = DropTarget(
 
 function mapStateToProps(state) {
   return {
-    widgets: getWidgets(state),
+    widgets: getCurrentCanvasWidgets(state),
     selectedWidget: getSelectedWidget(state)
   };
 }
@@ -154,7 +154,7 @@ function mapDispatchToProps(dispatch) {
     onSelectWidget: id => dispatch(selectWidget(id)),
     onDeleteWidget: id => dispatch(deleteWidget(id)),
     onAddWidget: (type, x, y) => {
-      dispatch(addWidget(toTile(x), toTile(y), type, 0));
+      dispatch(addWidget(toTile(x), toTile(y), type, "0"));
     },
     onResizeWidget: (id, mx, my, dx, dy) => {
       dispatch(

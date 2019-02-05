@@ -1,7 +1,4 @@
-interface Canvas {
-  id: string;
-  name: string;
-}
+import { Canvas } from "src/dashboard/types";
 
 export interface CanvasesState {
   [id: string]: Canvas;
