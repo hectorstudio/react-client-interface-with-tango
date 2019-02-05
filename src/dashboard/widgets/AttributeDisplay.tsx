@@ -1,14 +1,14 @@
 import React, { Component, Fragment, CSSProperties } from "react";
-import { IWidgetProps } from "./types";
-import { IWidgetDefinition, IAttributeInput } from "../types";
+import { WidgetProps } from "./types";
+import { WidgetDefinition, AttributeInput } from "../types";
 
-interface IInput {
+interface Input {
   showDevice: boolean;
   precision: number;
-  attribute: IAttributeInput;
+  attribute: AttributeInput;
 }
 
-type Props = IWidgetProps<IInput>;
+type Props = WidgetProps<Input>;
 
 class AttributeReadOnly extends Component<Props> {
   public render() {
@@ -54,7 +54,7 @@ class AttributeReadOnly extends Component<Props> {
   }
 }
 
-const definition: IWidgetDefinition = {
+const definition: WidgetDefinition = {
   type: "ATTRIBUTE_DISPLAY",
   name: "Attribute Display",
   defaultWidth: 10,

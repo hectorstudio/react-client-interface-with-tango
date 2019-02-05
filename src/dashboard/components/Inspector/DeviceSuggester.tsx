@@ -4,18 +4,18 @@ import alphanumSort from "alphanum-sort";
 
 import "./DeviceSuggester.css";
 
-interface IState {
+interface State {
   value: string;
   suggestions: string[];
 }
 
-interface IProps {
+interface Props {
   devices: string[];
   deviceName: string | undefined;
   onSelection: (newValue: string) => void;
 }
 
-export default class DeviceSuggester extends Component<IProps, IState> {
+export default class DeviceSuggester extends Component<Props, State> {
   constructor(props) {
     super(props);
     const { devices, deviceName } = this.props;

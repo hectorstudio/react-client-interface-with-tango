@@ -2,11 +2,11 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
 import {
-  IInputDefinitionMapping,
-  IInputMapping,
-  IWidget,
+  InputDefinitionMapping,
+  InputMapping,
+  Widget,
   IndexPath,
-  IWidgetDefinition
+  WidgetDefinition
 } from "../../types";
 
 import { bundles } from "../../widgets";
@@ -19,8 +19,8 @@ import CommandSelect from "./CommandSelect";
 
 class InputList extends Component<{
   tangoDB: string;
-  inputDefinitions: IInputDefinitionMapping;
-  inputs: IInputMapping;
+  inputDefinitions: InputDefinitionMapping;
+  inputs: InputMapping;
   onChange: (path: IndexPath, value) => void;
   onAdd: (path: IndexPath) => void;
   onDelete: (path: IndexPath) => void;
@@ -169,7 +169,7 @@ class InputList extends Component<{
         inputDefinition.type === "complex" &&
         inputDefinition.repeat === true
       ) {
-        const value = inputs[inputName] as IInputMapping[];
+        const value = inputs[inputName] as InputMapping[];
         return (
           <Fragment key={inputName}>
             <tr>
@@ -318,16 +318,16 @@ class InputList extends Component<{
   }
 }
 
-interface IProps {
+interface Props {
   tangoDB: string;
-  widget: IWidget;
+  widget: Widget;
   isRootCanvas: boolean;
   onSetInput: (path: IndexPath, value: any) => void;
   onDeleteInput: (path: IndexPath) => void;
   onAddInput: (path: IndexPath) => void;
 }
 
-class Inspector extends Component<IProps> {
+class Inspector extends Component<Props> {
   public render() {
     const { widget, tangoDB } = this.props;
     const definitions = bundles.map(bundle => bundle.definition);

@@ -1,4 +1,4 @@
-import { IWidget } from "../../../types";
+import { Widget } from "../../../types";
 
 import {
   ADD_WIDGET,
@@ -29,9 +29,9 @@ import { definitionForType, definitionForWidget } from "src/dashboard/widgets";
 
 import { defaultInputs } from "src/dashboard/utils";
 
-export interface IWidgetsState {
+export interface WidgetsState {
   selectedId: string | null;
-  widgets: Record<string, IWidget>;
+  widgets: Record<string, Widget>;
 }
 
 const initialState = {
@@ -40,9 +40,9 @@ const initialState = {
 };
 
 export default function canvases(
-  state: IWidgetsState = initialState,
+  state: WidgetsState = initialState,
   action: DashboardAction
-): IWidgetsState {
+): WidgetsState {
   switch (action.type) {
     case ADD_WIDGET: {
       const { x, y, widgetType: type } = action;

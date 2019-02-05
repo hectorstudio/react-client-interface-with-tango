@@ -1,33 +1,33 @@
 import React, { Component } from "react";
-import Plot, { IPlotParams } from "./Plot";
+import Plot, { PlotParams } from "./Plot";
 
-interface IBufferingPlotProps {
+interface BufferingPlotProps {
   models: string[];
   values: number[];
-  params: IPlotParams;
+  params: PlotParams;
   axes: Array<"left" | "right">
 }
 
 type Coord = [number, number];
 
-interface IBuffer {
+interface Buffer {
   [model: string]: Coord[];
 }
 
-interface IBufferingPlotState {
+interface BufferingPlotState {
   t0: number;
-  buffer: IBuffer;
+  buffer: Buffer;
 }
 
 export default class BufferingPlot extends Component<
-  IBufferingPlotProps,
-  IBufferingPlotState
+  BufferingPlotProps,
+  BufferingPlotState
 > {
-  public constructor(props: IBufferingPlotProps) {
+  public constructor(props: BufferingPlotProps) {
     super(props);
 
     const t0 = new Date().getTime() / 1000;
-    const buffer = props.models.reduce((accum: IBuffer, model, i) => {
+    const buffer = props.models.reduce((accum: Buffer, model, i) => {
       const value = this.props.values[i];
       const init = value === undefined ? [] : [[0, value]];
       return { ...accum, [model]: init };

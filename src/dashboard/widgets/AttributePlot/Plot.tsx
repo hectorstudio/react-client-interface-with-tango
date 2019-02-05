@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Plotly from "react-plotly.js";
 
-export interface IPlotParams {
+export interface PlotParams {
   height: number;
   width: number;
   staticMode?: boolean;
@@ -9,19 +9,19 @@ export interface IPlotParams {
   showZeroLine?: boolean;
 }
 
-export interface ITrace {
+export interface Trace {
   x?: number[];
   y?: number[];
   model: string;
   axisLocation: "left" | "right";
 }
 
-interface IPlotProps {
-  traces: ITrace[];
-  params: IPlotParams;
+interface PlotProps {
+  traces: Trace[];
+  params: PlotParams;
 }
 
-export default class Plot extends Component<IPlotProps> {
+export default class Plot extends Component<PlotProps> {
   public render() {
     const { params } = this.props;
     const { staticMode, width, height, showZeroLine } = params;
@@ -92,7 +92,7 @@ export default class Plot extends Component<IPlotProps> {
     const { traces, params } = this.props;
 
     const { timeWindow } = params;
-    const data = traces.map((trace: ITrace) => {
+    const data = traces.map((trace: Trace) => {
       const yaxis = trace.axisLocation === "left" ? "y1" : "y2";
       return {
         x: trace.x || [null],

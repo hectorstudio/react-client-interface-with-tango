@@ -1,6 +1,6 @@
-import { IInputDefinition, IInputDefinitionMapping } from "./types";
+import { InputDefinition, InputDefinitionMapping } from "./types";
 
-function defaultInput(input: IInputDefinition) {
+function defaultInput(input: InputDefinition) {
   if (input.type === "attribute") {
     return { device: null, attribute: null };
   } else if (input.type === "command") {
@@ -18,7 +18,7 @@ function defaultInput(input: IInputDefinition) {
   }
 }
 
-export function defaultInputs(inputs: IInputDefinitionMapping) {
+export function defaultInputs(inputs: InputDefinitionMapping) {
   const inputNames = Object.keys(inputs);
   return inputNames.reduce((accum, name) => {
     const input = inputs[name];

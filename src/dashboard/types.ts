@@ -1,31 +1,31 @@
 import React from "react";
-import { IWidgetProps } from "./widgets/types";
+import { WidgetProps } from "./widgets/types";
 
-export interface IBaseInputDefinition<T> {
+export interface BaseInputDefinition<T> {
   label?: string;
   repeat?: boolean;
   default?: T;
   required?: boolean;
 }
 
-export interface IBooleanInputDefinition extends IBaseInputDefinition<boolean> {
+export interface BooleanInputDefinition extends BaseInputDefinition<boolean> {
   type: "boolean";
 }
 
-export interface INumberInputDefinition extends IBaseInputDefinition<number> {
+export interface NumberInputDefinition extends BaseInputDefinition<number> {
   type: "number";
 }
 
-export interface IStringInputDefinition extends IBaseInputDefinition<string> {
+export interface StringInputDefinition extends BaseInputDefinition<string> {
   type: "string";
 }
 
-export interface IComplexInputDefinition extends IBaseInputDefinition<null> {
+export interface ComplexInputDefinition extends BaseInputDefinition<null> {
   type: "complex";
-  inputs: IInputDefinitionMapping;
+  inputs: InputDefinitionMapping;
 }
 
-export interface ISelectInputDefinition extends IBaseInputDefinition<string> {
+export interface SelectInputDefinition extends BaseInputDefinition<string> {
   type: "select";
   options: Array<{
     name: string;
@@ -33,8 +33,8 @@ export interface ISelectInputDefinition extends IBaseInputDefinition<string> {
   }>;
 }
 
-export interface IAttributeInputDefinition
-  extends IBaseInputDefinition<{
+export interface AttributeInputDefinition
+  extends BaseInputDefinition<{
     device: null;
     attribute: null;
   }> {
@@ -45,38 +45,38 @@ export interface IAttributeInputDefinition
   attribute?: string;
 }
 
-export interface IColorInputDefinition extends IBaseInputDefinition<string> {
+export interface ColorInputDefinition extends BaseInputDefinition<string> {
   type: "color";
 }
 
-export interface IDeviceInputDefinition extends IBaseInputDefinition<null> {
+export interface DeviceInputDefinition extends BaseInputDefinition<null> {
   type: "device",
   publish?: string;
 }
 
-export interface ICommandInputDefinition extends IBaseInputDefinition<null> {
+export interface CommandInputDefinition extends BaseInputDefinition<null> {
   type: "command";
   device?: string;
   command?: string;
   intype?: string;
 }
 
-export type IInputDefinition =
-  | IBooleanInputDefinition
-  | INumberInputDefinition
-  | IStringInputDefinition
-  | IComplexInputDefinition
-  | IAttributeInputDefinition
-  | ISelectInputDefinition
-  | IColorInputDefinition
-  | IDeviceInputDefinition
-  | ICommandInputDefinition;
+export type InputDefinition =
+  | BooleanInputDefinition
+  | NumberInputDefinition
+  | StringInputDefinition
+  | ComplexInputDefinition
+  | AttributeInputDefinition
+  | SelectInputDefinition
+  | ColorInputDefinition
+  | DeviceInputDefinition
+  | CommandInputDefinition;
 
-export interface IInputDefinitionMapping {
-  [name: string]: IInputDefinition;
+export interface InputDefinitionMapping {
+  [name: string]: InputDefinition;
 }
 
-export interface IWidget {
+export interface Widget {
   type: string;
   id: string;
   valid: boolean;
@@ -84,35 +84,35 @@ export interface IWidget {
   y: number;
   width: number;
   height: number;
-  inputs: IInputMapping;
+  inputs: InputMapping;
 }
 
-export interface IInputMapping {
+export interface InputMapping {
   [name: string]: any;
 }
 
-export interface IWidgetDefinition {
+export interface WidgetDefinition {
   type: string;
   name: string;
   defaultWidth: number;
   defaultHeight: number;
-  inputs: IInputDefinitionMapping;
+  inputs: InputDefinitionMapping;
 }
 
-export interface IWidgetBundle {
-  definition: IWidgetDefinition;
-  component: React.Component<IWidgetProps>;
+export interface WidgetBundle {
+  definition: WidgetDefinition;
+  component: React.Component<WidgetProps>;
 }
 
 export type IndexPath = Array<string | number>;
 
-export interface IAttributeInput<ValueT = any> {
+export interface AttributeInput<ValueT = any> {
   device: string;
   attribute: string;
   value: ValueT;
 }
 
-export interface ICommandInput<OutputT = any> {
+export interface CommandInput<OutputT = any> {
   device: string;
   command: string;
   output: OutputT;

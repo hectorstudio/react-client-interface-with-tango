@@ -23,8 +23,8 @@ import {
 } from "../state/actionTypes";
 
 import { getWidgets, getMode, getSelectedWidget } from "../state/selectors";
-import { IWidget } from "../types";
-import { IRootState } from "../state/reducers";
+import { Widget } from "../types";
+import { RootState } from "../state/reducers";
 
 import "./Dashboard.css";
 
@@ -51,23 +51,23 @@ const DEFAULT_CANVASES = [
   }
 ];
 
-interface IMatch {
+interface Match {
   tangoDB: string;
 }
 
-interface IProps extends RouteComponentProps<IMatch> {
+interface Props extends RouteComponentProps<Match> {
   dispatch: (action: object) => void;
   mode: "edit" | "run";
-  widgets: IWidget[];
-  selectedWidget: IWidget;
+  widgets: Widget[];
+  selectedWidget: Widget;
 }
 
-interface IState {
+interface State {
   canvases: typeof DEFAULT_CANVASES;
   selectedCanvasIndex: number;
 }
 
-class Dashboard extends Component<IProps, IState> {
+class Dashboard extends Component<Props, State> {
   public constructor(props) {
     super(props);
 
@@ -201,7 +201,7 @@ class Dashboard extends Component<IProps, IState> {
   }
 }
 
-function mapStateToProps(state: IRootState) {
+function mapStateToProps(state: RootState) {
   return {
     widgets: getWidgets(state),
     selectedWidget: getSelectedWidget(state),

@@ -5,16 +5,16 @@ const deviceContext = React.createContext<{ devices: string[] }>({
   devices: []
 });
 
-interface IProps {
+interface Props {
   tangoDB: string;
 }
 
-interface IState {
+interface State {
   fetching: boolean;
   devices: string[];
 }
 
-export class DeviceProvider extends Component<IProps, IState> {
+export class DeviceProvider extends Component<Props, State> {
   public constructor(props) {
     super(props);
     this.state = { fetching: false, devices: [] };

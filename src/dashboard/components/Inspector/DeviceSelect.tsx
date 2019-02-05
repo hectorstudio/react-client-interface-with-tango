@@ -3,13 +3,13 @@ import React, { Component } from "react";
 import DeviceSuggester from "./DeviceSuggester";
 import { DeviceConsumer } from "../DevicesProvider";
 
-interface IProps {
+interface Props {
   tangoDB: string;
   device: string;
   onSelect: (device: string) => void;
 }
 
-export default class DeviceSelect extends Component<IProps> {
+export default class DeviceSelect extends Component<Props> {
   public render() {
     return (
       <DeviceConsumer>

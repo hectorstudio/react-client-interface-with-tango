@@ -5,8 +5,8 @@ import spectrum from "./Spectrum";
 import commandExecutor from "./CommandExecutor";
 
 import {
-  IWidget,
-  IWidgetDefinition,
+  Widget,
+  WidgetDefinition,
 } from "../types";
 
 export const bundles = [
@@ -21,7 +21,7 @@ function bundleForType(type: string) {
   return bundles.find(bundle => bundle.definition.type === type);
 }
 
-export function definitionForType(type: string): IWidgetDefinition {
+export function definitionForType(type: string): WidgetDefinition {
   const bundle = bundleForType(type)!;
   return bundle.definition;
 }
@@ -31,14 +31,14 @@ export function componentForType(type: string) {
   return bundle.component;
 }
 
-export function bundleForWidget(widget: IWidget) {
+export function bundleForWidget(widget: Widget) {
   return bundleForType(widget.type);
 }
 
-export function definitionForWidget(widget: IWidget) {
+export function definitionForWidget(widget: Widget) {
   return definitionForType(widget.type);
 }
 
-export function componentForWidget(widget: IWidget) {
+export function componentForWidget(widget: Widget) {
   return componentForType(widget.type);
 }

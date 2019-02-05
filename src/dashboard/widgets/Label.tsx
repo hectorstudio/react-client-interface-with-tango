@@ -1,5 +1,5 @@
 import React from "react";
-import { IWidgetDefinition } from "../types";
+import { WidgetDefinition } from "../types";
 
 const Inner = ({ mode, text }) => {
   if (mode === "library") {
@@ -30,7 +30,7 @@ const Label = ({ mode, inputs, actualWidth, actualHeight }) => {
   );
 };
 
-const definition: IWidgetDefinition = {
+const definition: WidgetDefinition = {
   type: "LABEL",
   name: "Label",
   defaultHeight: 2,

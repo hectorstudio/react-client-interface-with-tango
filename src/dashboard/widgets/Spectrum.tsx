@@ -1,26 +1,26 @@
 import React, { Component } from "react";
 import Plotly from "react-plotly.js";
 
-import { IWidgetProps } from "./types";
-import { IWidgetDefinition, IAttributeInput } from "../types";
+import { WidgetProps } from "./types";
+import { WidgetDefinition, AttributeInput } from "../types";
 
 // prettier-ignore
 const sampleData = [0, -2, 3, -2, 1, -5, 4, -3, -2, -4, 0, -4, 2, 2, -2, -2, 2, -5, -2, -3, 0];
 
-interface IInputs {
-  attribute: IAttributeInput;
+interface Inputs {
+  attribute: AttributeInput;
   showTitle: boolean;
   inelastic: boolean;
 }
 
-interface IState {
+interface State {
   min?: number;
   max?: number;
 }
 
-type Props = IWidgetProps<IInputs>;
+type Props = WidgetProps<Inputs>;
 
-class Spectrum extends Component<Props, IState> {
+class Spectrum extends Component<Props, State> {
   public constructor(props: Props) {
     super(props);
     this.state = {};
@@ -98,7 +98,7 @@ class Spectrum extends Component<Props, IState> {
   }
 }
 
-const definition: IWidgetDefinition = {
+const definition: WidgetDefinition = {
   type: "SPECTRUM",
   name: "Spectrum",
   defaultWidth: 30,

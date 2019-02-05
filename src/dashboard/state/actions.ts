@@ -11,7 +11,7 @@ import {
 } from "./actionTypes";
 import { IndexPath } from "../types";
 
-export interface IAddWidgetAction extends Action {
+export interface AddWidgetAction extends Action {
   type: typeof ADD_WIDGET;
   x: number;
   y: number;
@@ -19,14 +19,14 @@ export interface IAddWidgetAction extends Action {
   canvas: number;
 }
 
-export interface IMoveWidgetAction extends Action {
+export interface MoveWidgetAction extends Action {
   type: typeof MOVE_WIDGET;
   dx: number;
   dy: number;
   id: string;
 }
 
-export interface IResizeWidgetAction extends Action {
+export interface ResizeWidgetAction extends Action {
   type: typeof RESIZE_WIDGET;
   mx: number;
   my: number;
@@ -35,38 +35,38 @@ export interface IResizeWidgetAction extends Action {
   id: string;
 }
 
-export interface ISelectWidgetAction extends Action {
+export interface SelectWidgetAction extends Action {
   type: typeof SELECT_WIDGET;
   id: string;
 }
 
-export interface IDeleteWidgetAction extends Action {
+export interface DeleteWidgetAction extends Action {
   type: typeof DELETE_WIDGET;
   id: string;
 }
 
-export interface ISetInputAction extends Action {
+export interface SetInputAction extends Action {
   type: typeof SET_INPUT;
   path: IndexPath;
   value: any;
 }
 
-export interface IAddInputAction extends Action {
+export interface AddInputAction extends Action {
   type: typeof ADD_INPUT;
   path: IndexPath;
 }
 
-export interface IDeleteInputAction extends Action {
+export interface DeleteInputAction extends Action {
   type: typeof DELETE_INPUT;
   path: IndexPath;
 }
 
 export type DashboardAction =
-  | IAddWidgetAction
-  | IMoveWidgetAction
-  | IResizeWidgetAction
-  | ISelectWidgetAction
-  | IDeleteWidgetAction
-  | ISetInputAction
-  | IAddInputAction
-  | IDeleteInputAction;
+  | AddWidgetAction
+  | MoveWidgetAction
+  | ResizeWidgetAction
+  | SelectWidgetAction
+  | DeleteWidgetAction
+  | SetInputAction
+  | AddInputAction
+  | DeleteInputAction;

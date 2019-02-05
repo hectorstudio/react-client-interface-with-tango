@@ -1,10 +1,10 @@
-interface ICanvas {
+interface Canvas {
   id: string;
   name: string;
 }
 
-export interface ICanvasesState {
-  [id: string]: ICanvas;
+export interface CanvasesState {
+  [id: string]: Canvas;
 }
 
 const initialState = {
@@ -26,7 +26,7 @@ const initialState = {
   }
 };
 
-export default function canvases(state: ICanvasesState = initialState, action) {
+export default function canvases(state: CanvasesState = initialState, action) {
   switch (action.type) {
     default:
       return state;
