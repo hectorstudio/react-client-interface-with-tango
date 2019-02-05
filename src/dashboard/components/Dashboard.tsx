@@ -3,11 +3,13 @@ import classNames from "classnames";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router";
 
 import EditCanvas from "./EditCanvas/EditCanvas";
 import Library from "./Library/Library";
 import RunCanvas from "./RunCanvas/RunCanvas";
 import Inspector from "./Inspector/Inspector";
+import { DeviceProvider } from "./DevicesProvider";
 
 // import queryString from "query-string";
 // import { save as saveToRepo } from "../dashboardRepo";
@@ -23,11 +25,11 @@ import {
   TOGGLE_MODE
 } from "../state/actionTypes";
 
-import "./Dashboard.css";
-import { DeviceProvider } from "./DevicesProvider";
 import { getWidgets, getMode, getSelectedWidget } from "../state/selectors";
 import { IWidget, IWidgetDefinition } from "../types";
-import { RouteComponentProps } from "react-router";
+import { IRootState } from "../state/reducers";
+
+import "./Dashboard.css";
 
 const DEFAULT_CANVASES = [
   {
@@ -222,7 +224,7 @@ class Dashboard extends Component<IProps, IState> {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state: IRootState) {
   return {
     widgets: getWidgets(state),
     selectedWidget: getSelectedWidget(state),
