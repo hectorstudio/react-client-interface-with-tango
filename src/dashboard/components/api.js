@@ -74,7 +74,7 @@ export async function executeCommand(tangoDB, device, command) {
   try {
     const args = { device, command };
     const res = await createClient(tangoDB).query(EXECUTE_COMMAND, args);
-    return res.output;
+    return res.data.executeCommand.output;
   } catch (err) {
     return null;
   }
