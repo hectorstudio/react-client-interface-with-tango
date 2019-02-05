@@ -11,6 +11,7 @@ import ErrorBoundary from "../ErrorBoundary";
 import { changeEventEmitter } from "./emitter";
 import { extractModelsFromWidgets, enrichedInputs } from "./lib";
 import { executeCommand } from "../api";
+import { getWidgets } from "src/dashboard/state/selectors";
 
 interface IProps {
   widgets: IWidget[];
@@ -58,9 +59,9 @@ class RunCanvas extends Component<IProps, IState> {
 
     return (
       <div className="Canvas run">
-        {widgets.map((widget, i) => {
+        {widgets.map(widget => {
           const { component, definition } = bundleForWidget(widget)!;
-          const { x, y, width, height } = widget;
+          const { x, y, id, width, height } = widget;
 
           const inputs = enrichedInputs(
             widget.inputs,
@@ -78,7 +79,7 @@ class RunCanvas extends Component<IProps, IState> {
 
           return (
             <div
-              key={i}
+              key={id}
               className="Widget"
               style={{
                 left: 1 + x * TILE_SIZE,
@@ -98,14 +99,14 @@ class RunCanvas extends Component<IProps, IState> {
   private async executeCommand(device: string, command: string) {
     const output = await executeCommand(this.props.tangoDB, device, command);
     const model = `${device}/${command}`;
-    const commandOutputs = {...this.state.commandOutputs, [model]: output };
+    const commandOutputs = { ...this.state.commandOutputs, [model]: output };
     this.setState({ commandOutputs });
   }
 }
 
 function mapStateToProps(state: IRootState) {
   return {
-    widgets: state.widgets.widgets
+    widgets: getWidgets(state)
   };
 }
 

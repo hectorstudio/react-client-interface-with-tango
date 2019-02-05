@@ -2,7 +2,6 @@ import attributeDisplayWidget from "./AttributeDisplay";
 import attributePlot from "./AttributePlot";
 import label from "./Label";
 import spectrum from "./Spectrum";
-import simpleMotor from "./SimpleMotor";
 import commandExecutor from "./CommandExecutor";
 
 import {
@@ -15,7 +14,6 @@ export const bundles = [
   attributeDisplayWidget,
   attributePlot,
   spectrum,
-  // simpleMotor
   commandExecutor
 ];
 
