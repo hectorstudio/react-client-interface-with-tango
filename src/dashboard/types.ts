@@ -80,6 +80,7 @@ export interface Widget {
   type: string;
   id: string;
   valid: boolean;
+  canvas: string;
   x: number;
   y: number;
   width: number;
@@ -117,4 +118,9 @@ export interface CommandInput<OutputT = any> {
   command: string;
   output: OutputT;
   execute: () => void;
+}
+
+export interface Canvas {
+  id: string;
+  name: string;
 }

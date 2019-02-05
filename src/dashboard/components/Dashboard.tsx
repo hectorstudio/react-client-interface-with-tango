@@ -19,37 +19,18 @@ import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
 
 import {
-  TOGGLE_MODE
-} from "../state/actionTypes";
+  getWidgets,
+  getMode,
+  getSelectedWidget,
+  getCanvases,
+  getSelectedCanvas
+} from "../state/selectors";
 
-import { getWidgets, getMode, getSelectedWidget } from "../state/selectors";
-import { Widget } from "../types";
+import { selectCanvas, toggleMode } from "../state/actionCreators";
+import { Widget, Canvas } from "../types";
 import { RootState } from "../state/reducers";
 
 import "./Dashboard.css";
-
-const DEFAULT_CANVASES = [
-  {
-    id: 0,
-    name: "Root",
-    widgets: []
-  },
-  {
-    id: 1,
-    name: "Subcanvas 1",
-    widgets: []
-  },
-  {
-    id: 2,
-    name: "Subcanvas 2",
-    widgets: []
-  },
-  {
-    id: 3,
-    name: "Subcanvas 3",
-    widgets: []
-  }
-];
 
 interface Match {
   tangoDB: string;
@@ -60,21 +41,13 @@ interface Props extends RouteComponentProps<Match> {
   mode: "edit" | "run";
   widgets: Widget[];
   selectedWidget: Widget;
+  canvases: Canvas[];
+  selectedCanvas: Canvas;
 }
 
-interface State {
-  canvases: typeof DEFAULT_CANVASES;
-  selectedCanvasIndex: number;
-}
-
-class Dashboard extends Component<Props, State> {
+class Dashboard extends Component<Props> {
   public constructor(props) {
     super(props);
-
-    this.state = {
-      selectedCanvasIndex: 0,
-      canvases: DEFAULT_CANVASES
-    };
 
     // const id = this.parseId();
     // if (id) {
@@ -140,21 +113,15 @@ class Dashboard extends Component<Props, State> {
                   marginLeft: "0.5em",
                   height: "2em"
                 }}
+                value={this.props.selectedCanvas.id}
                 onChange={this.handleChangeCanvas}
               >
-                {this.state.canvases.map((canvas, i) => (
+                {this.props.canvases.map((canvas, i) => (
                   <option key={i} value={i}>
                     {i === 0 ? "Root" : canvas.name}
                   </option>
                 ))}
               </select>
-              {false && (
-                <button
-                  onClick={() => alert(JSON.stringify(this.state.canvases))}
-                >
-                  Dump
-                </button>
-              )}
             </form>
           </div>
           <div className={classNames("CanvasArea", mode)}>
@@ -183,16 +150,16 @@ class Dashboard extends Component<Props, State> {
   }
 
   private toggleMode() {
-    this.props.dispatch({ type: TOGGLE_MODE });
+    this.props.dispatch(toggleMode());
   }
 
   private handleChangeCanvas(event) {
-    const selectedCanvasIndex = parseInt(event.target.value, 10);
-    this.setState({ selectedCanvasIndex });
+    const id = event.target.value;
+    this.props.dispatch(selectCanvas(id));
   }
 
   private isRootCanvas() {
-    return this.state.selectedCanvasIndex === 0;
+    return this.props.selectedCanvas.id === "0";
   }
 
   private areAllValid() {
@@ -205,7 +172,9 @@ function mapStateToProps(state: RootState) {
   return {
     widgets: getWidgets(state),
     selectedWidget: getSelectedWidget(state),
-    mode: getMode(state)
+    mode: getMode(state),
+    selectedCanvas: getSelectedCanvas(state),
+    canvases: getCanvases(state)
   };
 }
 

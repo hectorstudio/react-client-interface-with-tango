@@ -5,12 +5,16 @@ function getWidgetState(state: RootState) {
   return state.widgets;
 }
 
-function getUState(state: RootState) {
+function getUIState(state: RootState) {
   return state.ui;
 }
 
+function getCanvasState(state: RootState) {
+  return state.canvases;
+}
+
 export const getMode = createSelector(
-  getUState,
+  getUIState,
   ui => ui.mode
 );
 
@@ -22,4 +26,21 @@ export const getWidgets = createSelector(
 export const getSelectedWidget = createSelector(
   getWidgetState,
   ({ selectedId, widgets }) => (selectedId ? widgets[selectedId] : null)
+);
+
+export const getCurrentCanvasWidgets = createSelector(
+  getUIState,
+  getWidgets,
+  (ui, widgets) => widgets.filter(widget => widget.canvas === ui.selectedCanvas)
+);
+
+export const getCanvases = createSelector(
+  getCanvasState,
+  state => Object.keys(state).map(id => state[id])
+);
+
+export const getSelectedCanvas = createSelector(
+  getUIState,
+  getCanvasState,
+  (ui, canvas) => canvas[ui.selectedCanvas]
 );

@@ -7,7 +7,9 @@ import {
   DELETE_INPUT,
   ADD_INPUT,
   SET_INPUT,
-  RESIZE_WIDGET
+  RESIZE_WIDGET,
+  SELECT_CANVAS,
+  TOGGLE_MODE
 } from "./actionTypes";
 import { IndexPath } from "../types";
 
@@ -16,7 +18,7 @@ export interface AddWidgetAction extends Action {
   x: number;
   y: number;
   widgetType: string;
-  canvas: number;
+  canvas: string;
 }
 
 export interface MoveWidgetAction extends Action {
@@ -61,6 +63,15 @@ export interface DeleteInputAction extends Action {
   path: IndexPath;
 }
 
+export interface SelectCanvasAction extends Action {
+  type: typeof SELECT_CANVAS;
+  id: string;
+}
+
+export interface ToggleModeAction extends Action {
+  type: typeof TOGGLE_MODE;
+}
+
 export type DashboardAction =
   | AddWidgetAction
   | MoveWidgetAction
@@ -69,4 +80,6 @@ export type DashboardAction =
   | DeleteWidgetAction
   | SetInputAction
   | AddInputAction
-  | DeleteInputAction;
+  | DeleteInputAction
+  | SelectCanvasAction
+  | ToggleModeAction;
