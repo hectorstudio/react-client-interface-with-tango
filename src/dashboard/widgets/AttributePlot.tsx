@@ -4,6 +4,49 @@ import Plotly from "react-plotly.js";
 import { IWidgetProps } from "./types";
 import { IWidgetDefinition } from "../types";
 
+const definition: IWidgetDefinition = {
+  type: "ATTRIBUTE_PLOT",
+  name: "Attribute Plot",
+  defaultWidth: 30,
+  defaultHeight: 20,
+  inputs: {
+    timeWindow: {
+      type: "number",
+      default: 120,
+      label: "Time Window"
+    },
+    attributes: {
+      label: "Graphs",
+      type: "complex",
+      repeat: true,
+      inputs: {
+        attribute: {
+          label: "",
+          type: "attribute",
+          required: true,
+          dataFormat: "scalar",
+          dataType: "numeric"
+        },
+        yAxis: {
+          type: "select",
+          default: "line",
+          label: "Y Axis",
+          options: [
+            {
+              name: "Left",
+              value: "y1"
+            },
+            {
+              name: "Right",
+              value: "y2"
+            }
+          ]
+        }
+      }
+    }
+  }
+};
+
 interface IState {
   local: { [model: string]: number[] };
 }
@@ -12,6 +55,7 @@ interface IBufferingPlotProps {
   values: number[];
   models: string[];
   params: IParams;
+  axes: string[];
 }
 
 interface IBuffer {
@@ -26,6 +70,7 @@ interface IBufferingPlotState {
 interface IPlotProps {
   values: number[][][];
   models: string[];
+  axes: string[];
   params: IParams;
 }
 
@@ -85,6 +130,7 @@ class BufferingPlot extends Component<
         models={this.props.models}
         values={values}
         params={this.props.params}
+        axes={this.props.axes}
       />
     );
   }
@@ -92,11 +138,11 @@ class BufferingPlot extends Component<
 
 class Plot extends Component<IPlotProps> {
   public render() {
-    const { values, models, params } = this.props;
+    const { values, models, params, axes } = this.props;
     const { staticMode, width, height, timeWindow } = params;
 
     const data = models.map((model, i) => {
-      return { x: values[i][0], y: values[i][1], name: model };
+      return { x: values[i][0], y: values[i][1], name: model, yaxis: axes[i] };
     });
 
     const latestX = data
@@ -112,12 +158,19 @@ class Plot extends Component<IPlotProps> {
       titlefont: { size: 12 }
     };
 
+    const hasLeft = axes.indexOf("y1") !== -1;
+    const hasRight = axes.indexOf("y2") !== -1;
+    const addY1 = hasLeft ? { yaxis: { side: "left", showgrid: false } } : {};
+    const addY2 = hasRight
+      ? { yaxis2: { side: "right", overlaying: "y", showgrid: false } }
+      : {};
+
     const layout = {
       font: { family: "Helvetica, Arial, sans-serif" },
       xaxis,
       margin: {
         l: 30,
-        r: 15,
+        r: 30,
         t: 15,
         b: 35
       },
@@ -127,7 +180,9 @@ class Plot extends Component<IPlotProps> {
       legend: {
         y: 1.2,
         orientation: "h"
-      }
+      },
+      ...addY1,
+      ...addY2
     };
 
     return (
@@ -151,6 +206,7 @@ class AttributePlot extends Component<IWidgetProps, IState> {
     const { mode, inputs, actualWidth, actualHeight } = this.props;
     const { attributes, timeWindow } = inputs;
 
+    const axes = attributes.map(({ yAxis }) => yAxis);
     const singleAttributes = attributes.map(({ attribute }) => attribute);
     const models = singleAttributes.map(
       ({ device, attribute }) => `${device}/${attribute}`
@@ -165,8 +221,14 @@ class AttributePlot extends Component<IWidgetProps, IState> {
 
     if (mode === "run") {
       const values = singleAttributes.map(({ value }) => value);
+
       return (
-        <BufferingPlot params={runParams} values={values} models={models} />
+        <BufferingPlot
+          params={runParams}
+          values={values}
+          models={models}
+          axes={axes}
+        />
       );
     }
 
@@ -182,7 +244,8 @@ class AttributePlot extends Component<IWidgetProps, IState> {
         <Plot
           values={sampleValues}
           models={["attribute 1", "attribute 2"]}
-          params={{...staticParams, height: 200}}
+          params={{ ...staticParams, height: 200 }}
+          axes={["y1", "y1"]}
         />
       );
     } else {
@@ -192,58 +255,15 @@ class AttributePlot extends Component<IWidgetProps, IState> {
       );
 
       return (
-        <Plot values={editValues} models={editModels} params={staticParams} />
+        <Plot
+          values={editValues}
+          models={editModels}
+          axes={axes}
+          params={staticParams}
+        />
       );
     }
   }
 }
-
-const definition: IWidgetDefinition = {
-  type: "ATTRIBUTE_PLOT",
-  name: "Attribute Plot",
-  defaultWidth: 30,
-  defaultHeight: 20,
-  inputs: {
-    timeWindow: {
-      type: "number",
-      default: 120,
-      label: "Time Window"
-    },
-    attributes: {
-      label: "Graphs",
-      type: "complex",
-      repeat: true,
-      inputs: {
-        attribute: {
-          label: "",
-          type: "attribute",
-          required: true,
-          dataFormat: "scalar",
-          dataType: "numeric"
-        },
-        strokeStyle: {
-          type: "select",
-          default: "line",
-          label: "Stroke Style",
-          options: [
-            {
-              name: "Line",
-              value: "line"
-            },
-            {
-              name: "Dashed",
-              value: "dashed"
-            }
-          ]
-        },
-        strokeWidth: {
-          type: "number",
-          default: 1,
-          label: "Stroke Width"
-        }
-      }
-    }
-  }
-};
 
 export default { component: AttributePlot, definition };
