@@ -105,3 +105,9 @@ export interface IWidgetBundle {
 }
 
 export type IndexPath = Array<string | number>;
+
+export interface IAttributeInput<ValueT = any> {
+  device: string;
+  attribute: string;
+  value: ValueT;
+}
