@@ -42,6 +42,7 @@ export interface ISelectWidgetAction extends Action {
 
 export interface IDeleteWidgetAction extends Action {
   type: typeof DELETE_WIDGET;
+  id: string;
 }
 
 export interface ISetInputAction extends Action {

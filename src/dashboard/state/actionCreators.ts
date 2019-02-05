@@ -2,14 +2,16 @@ import {
   ADD_WIDGET,
   MOVE_WIDGET,
   SELECT_WIDGET,
-  RESIZE_WIDGET
+  RESIZE_WIDGET,
+  DELETE_WIDGET
 } from "./actionTypes";
 
 import {
   IAddWidgetAction,
   IMoveWidgetAction,
   ISelectWidgetAction,
-  IResizeWidgetAction
+  IResizeWidgetAction,
+  IDeleteWidgetAction
 } from "./actions";
 
 export function addWidget(
@@ -41,4 +43,8 @@ export function resizeWidget(
 
 export function selectWidget(id: string): ISelectWidgetAction {
   return { type: SELECT_WIDGET, id };
+}
+
+export function deleteWidget(id: string): IDeleteWidgetAction {
+  return { type: DELETE_WIDGET, id };
 }
