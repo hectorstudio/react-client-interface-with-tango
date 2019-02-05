@@ -5,7 +5,8 @@ import {
   IInputDefinitionMapping,
   IInputMapping,
   IWidget,
-  IndexPath
+  IndexPath,
+  IWidgetDefinition
 } from "../../types";
 
 import { bundles } from "../../widgets";
@@ -29,7 +30,7 @@ class InputList extends Component<{
     const { inputDefinitions, inputs, tangoDB } = this.props;
     const inputNames = Object.keys(inputDefinitions);
 
-    const inner = inputNames.map((inputName, i) => {
+    const inner = inputNames.map(inputName => {
       const inputDefinition = inputDefinitions[inputName];
       const definitionLabel = inputDefinition.label;
       const label = definitionLabel == null ? inputName : definitionLabel;
@@ -319,12 +320,7 @@ class InputList extends Component<{
 
 interface IProps {
   tangoDB: string;
-  onDeviceChange: any;
-  onAttributeChange: any;
-  onDeviceRemove: any;
-  onParamChange: any;
   widget: IWidget;
-  widgetDefinitions: any;
   isRootCanvas: boolean;
   onSetInput: (path: IndexPath, value: any) => void;
   onDeleteInput: (path: IndexPath) => void;

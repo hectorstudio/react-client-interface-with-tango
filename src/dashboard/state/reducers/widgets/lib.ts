@@ -9,15 +9,9 @@ import {
 import { defaultInputs } from "src/dashboard/utils";
 import { definitionForWidget } from "src/dashboard/widgets";
 
-// export function replaceAt<T>(obj: { [key: string]: T }, id: string, repl: T) {
-//   const copy = arr.concat();
-//   copy.splice(index, 1, repl);
-//   return copy;
-// }
-
-export function removeAt<T>(arr: T[], index: number) {
-  const copy = arr.concat();
-  copy.splice(index, 1);
+export function removeAt<T>(obj: Record<string, T>, id: string) {
+  const copy = { ...obj };
+  delete copy[id];
   return copy;
 }
 
@@ -181,8 +175,8 @@ export function inputsAreValid(
   return results.reduce((prev, curr) => prev && curr, true);
 }
 
-export function nextId(widgets: { [id: string]: IWidget }): string {
-  const ids = Object.keys(widgets).map(key => parseInt(key));
+export function nextId(widgets: Record<string, IWidget>): string {
+  const ids = Object.keys(widgets).map(key => parseInt(key, 10));
   const highest = ids.reduce((max, id) => Math.max(max, id), 0);
   return String(1 + highest);
 }

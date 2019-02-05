@@ -25,6 +25,9 @@ import {
 
 import "./Dashboard.css";
 import { DeviceProvider } from "./DevicesProvider";
+import { getWidgets, getMode, getSelectedWidget } from "../state/selectors";
+import { IWidget, IWidgetDefinition } from "../types";
+import { RouteComponentProps } from "react-router";
 
 const DEFAULT_CANVASES = [
   {
@@ -49,13 +52,27 @@ const DEFAULT_CANVASES = [
   }
 ];
 
-class Dashboard extends Component {
-  constructor(props) {
+interface IMatch {
+  tangoDB: string;
+}
+
+interface IProps extends RouteComponentProps<IMatch> {
+  dispatch: (action: object) => void;
+  mode: "edit" | "run";
+  widgets: IWidget[];
+  selectedWidget: IWidget;
+}
+
+interface IState {
+  canvases: typeof DEFAULT_CANVASES;
+  selectedCanvasIndex: number;
+}
+
+class Dashboard extends Component<IProps, IState> {
+  public constructor(props) {
     super(props);
 
     this.state = {
-      mode: "edit",
-      sidebar: "library", // Belongs in edit component
       selectedCanvasIndex: 0,
       canvases: DEFAULT_CANVASES
     };
@@ -73,7 +90,6 @@ class Dashboard extends Component {
     this.handleAddWidget = this.handleAddWidget.bind(this);
     this.handleSelectWidget = this.handleSelectWidget.bind(this);
     this.handleDeleteWidget = this.handleDeleteWidget.bind(this);
-    this.handleParamChange = this.handleParamChange.bind(this);
     this.handleChangeCanvas = this.handleChangeCanvas.bind(this);
   }
 
@@ -96,38 +112,10 @@ class Dashboard extends Component {
   //     });
   // }
 
-  toggleMode() {
-    this.props.dispatch({ type: TOGGLE_MODE });
-  }
-
-  handleSelectWidget(index) {
-    this.props.dispatch({ type: SELECT_WIDGET, index });
-  }
-
-  handleDeleteWidget(index) {
-    this.props.dispatch({ type: DELETE_WIDGET, index });
-  }
-
-  handleAddWidget(definition, x, y) {
-    this.props.dispatch({ type: ADD_WIDGET, x, y, definition });
-  }
-
-  handleParamChange(param, value) {
-    this.props.dispatch({ type: SET_WIDGET_PARAM, param, value });
-  }
-
-  handleChangeCanvas(event) {
-    const selectedCanvasIndex = parseInt(event.target.value, 10);
-    this.setState({ selectedCanvasIndex });
-  }
-
-  isRootCanvas() {
-    return this.state.selectedCanvasIndex === 0;
-  }
-
-  render() {
-    const { mode, widgets, areAllValid } = this.props;
+  public render() {
+    const { mode, widgets, selectedWidget } = this.props;
     const { tangoDB } = this.props.match.params;
+    const disabled = !this.areAllValid() || !this.isRootCanvas();
 
     return (
       <div className="Dashboard">
@@ -148,7 +136,7 @@ class Dashboard extends Component {
                   "fa-play": mode === "edit",
                   "fa-pause": mode === "run"
                 })}
-                disabled={!areAllValid || !this.isRootCanvas()}
+                disabled={disabled}
               />
               <select
                 className="form-control"
@@ -176,32 +164,22 @@ class Dashboard extends Component {
           <div className={classNames("CanvasArea", mode)}>
             {mode === "edit" ? (
               <EditCanvas
-                widgetsOld={widgets}
-                onMoveWidget={this.handleMoveWidget}
                 onSelectWidget={this.handleSelectWidget}
                 onDeleteWidget={this.handleDeleteWidget}
-                selectedWidgetIndex={this.state.selectedWidgetIndex}
+                selectedWidget={this.props.selectedWidget}
                 onAddWidget={this.handleAddWidget}
               />
             ) : (
-              <RunCanvas
-                widgets={widgets}
-                tangoDB={tangoDB}
-              />
+              <RunCanvas widgets={widgets} tangoDB={tangoDB} />
             )}
           </div>
           {mode === "edit" && (
             <div className="Sidebar">
-              {this.props.selectedWidgetIndex === -1 ? (
-                <Library showCustom={this.state.selectedCanvasIndex === 0} />
+              {selectedWidget == null ? (
+                <Library />
               ) : (
                 <Inspector
-                  widget={this.props.selectedWidget}
-                  deviceNames={this.state.deviceNames}
-                  onParamChange={this.handleParamChange}
-                  onDeviceChange={this.handleDeviceChange}
-                  onDeviceRemove={this.handleDeviceRemove}
-                  onAttributeChange={this.handleAttributeChange}
+                  widget={selectedWidget}
                   isRootCanvas={this.isRootCanvas()}
                   tangoDB={tangoDB}
                 />
@@ -212,22 +190,43 @@ class Dashboard extends Component {
       </div>
     );
   }
+
+  private toggleMode() {
+    this.props.dispatch({ type: TOGGLE_MODE });
+  }
+
+  private handleSelectWidget(id: string) {
+    this.props.dispatch({ type: SELECT_WIDGET, id });
+  }
+
+  private handleDeleteWidget(id: string) {
+    this.props.dispatch({ type: DELETE_WIDGET, id });
+  }
+
+  private handleAddWidget(definition: IWidgetDefinition, x: number, y: number) {
+    this.props.dispatch({ type: ADD_WIDGET, x, y, definition });
+  }
+
+  private handleChangeCanvas(event) {
+    const selectedCanvasIndex = parseInt(event.target.value, 10);
+    this.setState({ selectedCanvasIndex });
+  }
+
+  private isRootCanvas() {
+    return this.state.selectedCanvasIndex === 0;
+  }
+
+  private areAllValid() {
+    const { widgets } = this.props;
+    return widgets.reduce((prev, widget) => prev && widget.valid, true);
+  }
 }
 
 function mapStateToProps(state) {
-  const { widgets, selectedIndex } = state.widgets;
-  const selectedWidget = widgets[selectedIndex];
-  const areAllValid = widgets.reduce(
-    (prev, widget) => prev && widget.valid,
-    true
-  );
-
   return {
-    widgets,
-    selectedWidget,
-    selectedWidgetIndex: selectedIndex,
-    areAllValid,
-    mode: state.ui.mode
+    widgets: getWidgets(state),
+    selectedWidget: getSelectedWidget(state),
+    mode: getMode(state)
   };
 }
 
