@@ -19,14 +19,11 @@ import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
 
 import {
-  SELECT_WIDGET,
-  DELETE_WIDGET,
-  ADD_WIDGET,
   TOGGLE_MODE
 } from "../state/actionTypes";
 
 import { getWidgets, getMode, getSelectedWidget } from "../state/selectors";
-import { IWidget, IWidgetDefinition } from "../types";
+import { IWidget } from "../types";
 import { IRootState } from "../state/reducers";
 
 import "./Dashboard.css";
@@ -89,9 +86,6 @@ class Dashboard extends Component<IProps, IState> {
     // }
 
     this.toggleMode = this.toggleMode.bind(this);
-    this.handleAddWidget = this.handleAddWidget.bind(this);
-    this.handleSelectWidget = this.handleSelectWidget.bind(this);
-    this.handleDeleteWidget = this.handleDeleteWidget.bind(this);
     this.handleChangeCanvas = this.handleChangeCanvas.bind(this);
   }
 
@@ -165,12 +159,7 @@ class Dashboard extends Component<IProps, IState> {
           </div>
           <div className={classNames("CanvasArea", mode)}>
             {mode === "edit" ? (
-              <EditCanvas
-                onSelectWidget={this.handleSelectWidget}
-                onDeleteWidget={this.handleDeleteWidget}
-                selectedWidget={this.props.selectedWidget}
-                onAddWidget={this.handleAddWidget}
-              />
+              <EditCanvas selectedWidget={this.props.selectedWidget} />
             ) : (
               <RunCanvas widgets={widgets} tangoDB={tangoDB} />
             )}
@@ -195,18 +184,6 @@ class Dashboard extends Component<IProps, IState> {
 
   private toggleMode() {
     this.props.dispatch({ type: TOGGLE_MODE });
-  }
-
-  private handleSelectWidget(id: string) {
-    this.props.dispatch({ type: SELECT_WIDGET, id });
-  }
-
-  private handleDeleteWidget(id: string) {
-    this.props.dispatch({ type: DELETE_WIDGET, id });
-  }
-
-  private handleAddWidget(definition: IWidgetDefinition, x: number, y: number) {
-    this.props.dispatch({ type: ADD_WIDGET, x, y, definition });
   }
 
   private handleChangeCanvas(event) {

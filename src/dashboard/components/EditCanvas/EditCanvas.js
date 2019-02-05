@@ -12,9 +12,10 @@ import {
   moveWidget,
   selectWidget,
   addWidget,
-  resizeWidget
+  resizeWidget,
+  deleteWidget
 } from "src/dashboard/state/actionCreators";
-import { getWidgets } from "src/dashboard/state/selectors";
+import { getWidgets, getSelectedWidget } from "src/dashboard/state/selectors";
 
 const BACKSPACE = 8;
 const DELETE = 46;
@@ -44,7 +45,11 @@ class EditCanvas extends Component {
   }
 
   render() {
-    const { connectMoveDropTarget, connectLibraryDropTarget } = this.props;
+    const {
+      connectMoveDropTarget,
+      connectLibraryDropTarget,
+      selectedWidget
+    } = this.props;
     const hasWidgets = this.props.widgets.length > 0;
 
     return connectLibraryDropTarget(
@@ -79,7 +84,9 @@ class EditCanvas extends Component {
                 <EditWidget
                   id={id}
                   key={id}
-                  isSelected={id === this.props.selectedId}
+                  isSelected={
+                    selectedWidget != null && id === selectedWidget.id
+                  }
                   x={1 + TILE_SIZE * x}
                   y={1 + TILE_SIZE * y}
                   width={actualWidth}
@@ -131,7 +138,7 @@ const addFromLibraryDropTarget = DropTarget(
 function mapStateToProps(state) {
   return {
     widgets: getWidgets(state),
-    selectedId: state.widgets.selectedId
+    selectedWidget: getSelectedWidget(state)
   };
 }
 
@@ -145,7 +152,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(moveWidget(id, toTile(dx), toTile(dy)));
     },
     onSelectWidget: id => dispatch(selectWidget(id)),
-    onDeleteWidget: id => dispatch({ type: "DELETE_WIDGET", id }),
+    onDeleteWidget: id => dispatch(deleteWidget(id)),
     onAddWidget: (type, x, y) => {
       dispatch(addWidget(toTile(x), toTile(y), type, 0));
     },
