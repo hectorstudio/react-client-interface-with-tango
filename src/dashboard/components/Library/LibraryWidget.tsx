@@ -6,12 +6,12 @@ import {
   DragSourceMonitor
 } from "react-dnd";
 
-import { IWidgetBundle } from "../../types";
+import { WidgetBundle } from "../../types";
 import dndTypes from "../../dndTypes";
 import { defaultInputs } from "../../utils";
 
-interface IProps {
-  bundle: IWidgetBundle;
+interface Props {
+  bundle: WidgetBundle;
   connectDragSource: ConnectDragSource;
 }
 
@@ -41,10 +41,10 @@ function libraryWidgetCollect(
   };
 }
 
-class LibraryWidget extends Component<IProps> {
+class LibraryWidget extends Component<Props> {
   private ref: HTMLDivElement;
 
-  public constructor(props: IProps) {
+  public constructor(props: Props) {
     super(props);
     this.state = { hasWidth: false };
   }

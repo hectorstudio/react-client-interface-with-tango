@@ -1,10 +1,10 @@
 import {
-  IWidget,
+  Widget,
   IndexPath,
-  IWidgetDefinition,
-  IInputDefinitionMapping,
-  IInputMapping,
-  IInputDefinition
+  WidgetDefinition,
+  InputDefinitionMapping,
+  InputMapping,
+  InputDefinition
 } from "src/dashboard/types";
 import { defaultInputs } from "src/dashboard/utils";
 import { definitionForWidget } from "src/dashboard/widgets";
@@ -15,7 +15,7 @@ export function removeAt<T>(obj: Record<string, T>, id: string) {
   return copy;
 }
 
-export function move(widget: IWidget, dx: number, dy: number) {
+export function move(widget: Widget, dx: number, dy: number) {
   const { x, y } = widget;
   const targetX = Math.max(0, x + dx);
   const targetY = Math.max(0, y + dy);
@@ -23,7 +23,7 @@ export function move(widget: IWidget, dx: number, dy: number) {
 }
 
 export function resize(
-  widget: IWidget,
+  widget: Widget,
   mx: number,
   my: number,
   dx: number,
@@ -38,25 +38,25 @@ export function resize(
   };
 }
 
-export function validate(widget: IWidget) {
+export function validate(widget: Widget) {
   const definition = definitionForWidget(widget);
   const valid = inputsAreValid(definition!.inputs, widget.inputs);
   return { ...widget, valid };
 }
 
-export function setInput(widget: IWidget, path: IndexPath, value: any) {
+export function setInput(widget: Widget, path: IndexPath, value: any) {
   const oldInputs = widget.inputs;
   const newInputs = setWithIndexPath(oldInputs, path, value, REPLACE);
   return { ...widget, inputs: newInputs };
 }
 
-export function deleteInput(widget: IWidget, path: IndexPath) {
+export function deleteInput(widget: Widget, path: IndexPath) {
   const oldInputs = widget.inputs;
   const newInputs = setWithIndexPath(oldInputs, path, null, DELETE);
   return { ...widget, inputs: newInputs };
 }
 
-export function addInput(widget: IWidget, path: IndexPath, value: any) {
+export function addInput(widget: Widget, path: IndexPath, value: any) {
   const oldInputs = widget.inputs;
   const newInputs = setWithIndexPath(oldInputs, path, value, ADD);
   return { ...widget, inputs: newInputs };
@@ -101,15 +101,15 @@ export function setWithIndexPath(
 }
 
 export function defaultDimensions(
-  definition: IWidgetDefinition
+  definition: WidgetDefinition
 ): { width: number; height: number } {
   const { defaultWidth: width, defaultHeight: height } = definition;
   return { width, height };
 }
 
-export function nestedDefault(definition: IWidgetDefinition, path: IndexPath) {
+export function nestedDefault(definition: WidgetDefinition, path: IndexPath) {
   const leaf = path.reduce((accum, segment): {
-    inputs: IInputDefinitionMapping;
+    inputs: InputDefinitionMapping;
   } => {
     const input = accum.inputs[segment];
     if (typeof segment === "number") {
@@ -124,7 +124,7 @@ export function nestedDefault(definition: IWidgetDefinition, path: IndexPath) {
 }
 
 // TODO: cover more validation cases
-function inputIsValid(definition: IInputDefinition, value: any): boolean {
+function inputIsValid(definition: InputDefinition, value: any): boolean {
   if (definition.type === "complex") {
     if (definition.repeat) {
       return value
@@ -162,8 +162,8 @@ function inputIsValid(definition: IInputDefinition, value: any): boolean {
 }
 
 export function inputsAreValid(
-  definition: IInputDefinitionMapping,
-  inputs: IInputMapping
+  definition: InputDefinitionMapping,
+  inputs: InputMapping
 ): boolean {
   const inputNames = Object.keys(definition);
   const results = inputNames.map(name => {
@@ -175,7 +175,7 @@ export function inputsAreValid(
   return results.reduce((prev, curr) => prev && curr, true);
 }
 
-export function nextId(widgets: Record<string, IWidget>): string {
+export function nextId(widgets: Record<string, Widget>): string {
   const ids = Object.keys(widgets).map(key => parseInt(key, 10));
   const highest = ids.reduce((max, id) => Math.max(max, id), 0);
   return String(1 + highest);

@@ -7,11 +7,11 @@ import {
 } from "./actionTypes";
 
 import {
-  IAddWidgetAction,
-  IMoveWidgetAction,
-  ISelectWidgetAction,
-  IResizeWidgetAction,
-  IDeleteWidgetAction
+  AddWidgetAction,
+  MoveWidgetAction,
+  SelectWidgetAction,
+  ResizeWidgetAction,
+  DeleteWidgetAction
 } from "./actions";
 
 export function addWidget(
@@ -19,7 +19,7 @@ export function addWidget(
   y: number,
   widgetType: string,
   canvas: number
-): IAddWidgetAction {
+): AddWidgetAction {
   return { type: ADD_WIDGET, x, y, widgetType, canvas };
 }
 
@@ -27,7 +27,7 @@ export function moveWidget(
   id: string,
   dx: number,
   dy: number
-): IMoveWidgetAction {
+): MoveWidgetAction {
   return { type: MOVE_WIDGET, dx, dy, id };
 }
 
@@ -37,14 +37,14 @@ export function resizeWidget(
   my: number,
   dx: number,
   dy: number
-): IResizeWidgetAction {
+): ResizeWidgetAction {
   return { type: RESIZE_WIDGET, mx, my, dx, dy, id };
 }
 
-export function selectWidget(id: string): ISelectWidgetAction {
+export function selectWidget(id: string): SelectWidgetAction {
   return { type: SELECT_WIDGET, id };
 }
 
-export function deleteWidget(id: string): IDeleteWidgetAction {
+export function deleteWidget(id: string): DeleteWidgetAction {
   return { type: DELETE_WIDGET, id };
 }

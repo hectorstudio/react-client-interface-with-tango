@@ -1,18 +1,18 @@
 import { SELECT_WIDGET, SELECT_CANVAS, TOGGLE_MODE } from "../actionTypes";
 
-export interface IUIState {
+export interface UIState {
   mode: "edit" | "run";
   selectedWidget: number;
   selectedCanvas: number;
 }
 
-const initialState: IUIState = {
+const initialState: UIState = {
   mode: "edit",
   selectedWidget: -1,
   selectedCanvas: 0
 };
 
-export default function ui(state: IUIState = initialState, action) {
+export default function ui(state: UIState = initialState, action) {
   switch (action.type) {
     case SELECT_WIDGET:
       return { ...state, selectedWidget: action.index };

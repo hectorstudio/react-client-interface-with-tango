@@ -1,7 +1,7 @@
 import AttributePlot from "./AttributePlot";
-import { IWidgetDefinition } from "src/dashboard/types";
+import { WidgetDefinition } from "src/dashboard/types";
 
-const definition: IWidgetDefinition = {
+const definition: WidgetDefinition = {
   type: "ATTRIBUTE_PLOT",
   name: "Attribute Plot",
   defaultWidth: 30,

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { IRootState } from "../../state/reducers";
-import { IWidget } from "../../types";
+import { RootState } from "../../state/reducers";
+import { Widget } from "../../types";
 import { bundleForWidget } from "../../widgets";
 import { TILE_SIZE } from "../constants";
 
@@ -13,17 +13,17 @@ import { extractModelsFromWidgets, enrichedInputs } from "./lib";
 import { executeCommand } from "../api";
 import { getWidgets } from "src/dashboard/state/selectors";
 
-interface IProps {
-  widgets: IWidget[];
+interface Props {
+  widgets: Widget[];
   tangoDB: string;
 }
 
-interface IState {
+interface State {
   attributeValues: { [model: string]: any };
   commandOutputs: { [model: string]: any };
 }
 
-class RunCanvas extends Component<IProps, IState> {
+class RunCanvas extends Component<Props, State> {
   private unsub?: () => void;
 
   public constructor(props) {
@@ -104,7 +104,7 @@ class RunCanvas extends Component<IProps, IState> {
   }
 }
 
-function mapStateToProps(state: IRootState) {
+function mapStateToProps(state: RootState) {
   return {
     widgets: getWidgets(state)
   };

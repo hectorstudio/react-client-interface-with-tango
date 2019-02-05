@@ -4,7 +4,7 @@ import { fetchAttributes } from "../api";
 import { DeviceConsumer } from "../DevicesProvider";
 import DeviceSuggester from "./DeviceSuggester";
 
-interface IProps {
+interface Props {
   tangoDB: string;
   device?: string;
   attribute?: string;
@@ -13,7 +13,7 @@ interface IProps {
   onSelect?: (device: string | null, attribute: string | null) => void;
 }
 
-interface IState {
+interface State {
   fetchingAttributes: boolean;
   attributes: Array<{
     name: string;
@@ -22,8 +22,8 @@ interface IState {
   }>;
 }
 
-export default class AttributeSelect extends Component<IProps, IState> {
-  public constructor(props: IProps) {
+export default class AttributeSelect extends Component<Props, State> {
+  public constructor(props: Props) {
     super(props);
     this.state = { fetchingAttributes: false, attributes: [] };
     this.handleSelectDevice = this.handleSelectDevice.bind(this);

@@ -1,16 +1,16 @@
 import { createSelector } from "reselect";
-import { IRootState } from "../reducers";
+import { RootState } from "../reducers";
 
-function getWidgetState(state: IRootState) {
+function getWidgetState(state: RootState) {
   return state.widgets;
 }
 
-function getUIState(state: IRootState) {
+function getUState(state: RootState) {
   return state.ui;
 }
 
 export const getMode = createSelector(
-  getUIState,
+  getUState,
   ui => ui.mode
 );
 

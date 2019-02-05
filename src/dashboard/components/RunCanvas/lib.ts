@@ -1,14 +1,14 @@
 import {
-  IInputDefinitionMapping,
-  IInputMapping,
-  IWidget,
-  IInputDefinition,
-  IAttributeInputDefinition
+  InputDefinitionMapping,
+  InputMapping,
+  Widget,
+  InputDefinition,
+  AttributeInputDefinition
 } from "src/dashboard/types";
 import { definitionForWidget } from "src/dashboard/widgets";
 
 function resolveDevice(
-  published: IPublishedDevices,
+  published: PublishedDevices,
   inputDevice: string,
   definitionDevice?: string
 ) {
@@ -18,9 +18,9 @@ function resolveDevice(
 }
 
 function* extractModelsFromInputsGen(
-  inputs: IInputMapping,
-  inputDefinitions: IInputDefinitionMapping,
-  published: IPublishedDevices
+  inputs: InputMapping,
+  inputDefinitions: InputDefinitionMapping,
+  published: PublishedDevices
 ) {
   const inputNames = Object.keys(inputs);
   for (const name of inputNames) {
@@ -32,7 +32,7 @@ function* extractModelsFromInputsGen(
       const {
         device: definitionDevice,
         attribute: definitionAttribute
-      } = inputDefinition as IAttributeInputDefinition;
+      } = inputDefinition as AttributeInputDefinition;
 
       const { device: inputDevice, attribute: inputAttribute } = input;
       const attribute = definitionAttribute || inputAttribute;
@@ -69,7 +69,7 @@ function* extractModelsFromInputsGen(
   }
 }
 
-function* extractModelsFromWidgetsGen(widgets: IWidget[]) {
+function* extractModelsFromWidgetsGen(widgets: Widget[]) {
   for (const widget of widgets) {
     const definition = definitionForWidget(widget);
     const inputs = widget.inputs;
@@ -79,13 +79,13 @@ function* extractModelsFromWidgetsGen(widgets: IWidget[]) {
   }
 }
 
-export function extractModelsFromWidgets(widgets: IWidget[]) {
+export function extractModelsFromWidgets(widgets: Widget[]) {
   return Array.from(extractModelsFromWidgetsGen(widgets));
 }
 
 function enrichedInput(
   input: any,
-  definition: IInputDefinition,
+  definition: InputDefinition,
   attributeLookup: object,
   commandLookup: object,
   published: { [variable: string]: string },
@@ -144,14 +144,14 @@ function enrichedInput(
   return input;
 }
 
-interface IPublishedDevices {
+interface PublishedDevices {
   [variable: string]: string;
 }
 
 export function publishedDevices(
-  inputs: IInputMapping,
-  definitions: IInputDefinitionMapping
-): IPublishedDevices {
+  inputs: InputMapping,
+  definitions: InputDefinitionMapping
+): PublishedDevices {
   const inputNames = Object.keys(inputs);
   return inputNames.reduce((accum, name) => {
     const definition = definitions[name];
@@ -167,8 +167,8 @@ export function publishedDevices(
 }
 
 export function enrichedInputs(
-  inputs: IInputMapping,
-  definitions: IInputDefinitionMapping,
+  inputs: InputMapping,
+  definitions: InputDefinitionMapping,
   attributeLookup: object,
   commandLookup: object,
   onExecute: (device: string, command: string) => void

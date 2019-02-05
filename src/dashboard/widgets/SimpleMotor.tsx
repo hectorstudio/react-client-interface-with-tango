@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { IWidgetDefinition } from "../types";
-import { IWidgetProps } from "./types";
+import { WidgetDefinition } from "../types";
+import { WidgetProps } from "./types";
 
-class SimpleMotor extends Component<IWidgetProps> {
+class SimpleMotor extends Component<WidgetProps> {
   public render() {
     const { doubleScalar, ulongScalar } = this.props.inputs;
 
@@ -16,7 +16,7 @@ class SimpleMotor extends Component<IWidgetProps> {
   }
 }
 
-const definition: IWidgetDefinition = {
+const definition: WidgetDefinition = {
   type: "TEST_DEVICE",
   name: "Test Device",
   defaultHeight: 5,

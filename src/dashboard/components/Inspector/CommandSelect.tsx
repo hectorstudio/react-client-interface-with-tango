@@ -3,12 +3,12 @@ import { DeviceConsumer } from "../DevicesProvider";
 import DeviceSuggester from "./DeviceSuggester";
 import { fetchCommands } from "../api";
 
-interface ICommand {
+interface Command {
   name: string;
   intype: string;
 }
 
-interface IProps {
+interface Props {
   tangoDB: string;
   device: string;
   command: string;
@@ -16,13 +16,13 @@ interface IProps {
   onSelect: (device: string, command: string | null) => void;
 }
 
-interface IState {
+interface State {
   fetchingCommands: boolean;
-  commands: ICommand[];
+  commands: Command[];
 }
 
-export default class CommandSelect extends Component<IProps, IState> {
-  public constructor(props: IProps) {
+export default class CommandSelect extends Component<Props, State> {
+  public constructor(props: Props) {
     super(props);
     this.state = { fetchingCommands: false, commands: [] };
     this.handleSelectDevice = this.handleSelectDevice.bind(this);

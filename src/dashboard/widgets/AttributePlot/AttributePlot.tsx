@@ -1,29 +1,29 @@
 import React, { Component } from "react";
 
 import BufferingPlot from "./BufferingPlot";
-import Plot, { ITrace } from "./Plot";
+import Plot, { Trace } from "./Plot";
 
-import { IWidgetProps } from "../types";
-import { IAttributeInput } from "../../types";
+import { WidgetProps } from "../types";
+import { AttributeInput } from "../../types";
 
-interface IState {
+interface State {
   local: Record<string, number[]>;
 }
 
-interface IAttributeComplexInput {
-  attribute: IAttributeInput<number>;
+interface AttributeComplexInput {
+  attribute: AttributeInput<number>;
   yAxis: "left" | "right";
 }
 
-interface IInputProps {
+interface InputProps {
   timeWindow: number;
   showZeroLine: boolean;
-  attributes: IAttributeComplexInput[];
+  attributes: AttributeComplexInput[];
 }
 
-type Props = IWidgetProps<IInputProps>;
+type Props = WidgetProps<InputProps>;
 
-class AttributePlot extends Component<Props, IState> {
+class AttributePlot extends Component<Props, State> {
   public constructor(props) {
     super(props);
     this.state = { local: {} };
@@ -66,7 +66,7 @@ class AttributePlot extends Component<Props, IState> {
         .map((_, i) => i);
       const sample1 = xValues.map(x => 8 * Math.sin(x / 6) * Math.sin(x / 20));
       const sample2 = xValues.map(x => 5 * Math.cos(x / 20) * Math.cos(x / 3));
-      const traces: ITrace[] = [
+      const traces: Trace[] = [
         {
           model: "attribute 1",
           x: xValues,
@@ -86,7 +86,7 @@ class AttributePlot extends Component<Props, IState> {
       const traces = attributes.map(attributeInput => {
         const { device, attribute } = attributeInput.attribute;
         const model = `${device || "?"}/${attribute || "?"}`;
-        const trace: ITrace = { model, axisLocation: attributeInput.yAxis };
+        const trace: Trace = { model, axisLocation: attributeInput.yAxis };
         return trace;
       });
 

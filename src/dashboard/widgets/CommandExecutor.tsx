@@ -1,15 +1,15 @@
 import React, { Component, CSSProperties } from "react";
 
-import { IWidgetProps } from "./types";
-import { IWidgetDefinition, ICommandInput } from "../types";
+import { WidgetProps } from "./types";
+import { WidgetDefinition, CommandInput } from "../types";
 
-interface IInputs {
+interface Inputs {
   title: string;
   requireConfirmation: string;
-  command: ICommandInput;
+  command: CommandInput;
 }
 
-type Props = IWidgetProps<IInputs>;
+type Props = WidgetProps<Inputs>;
 
 class CommandExecutor extends Component<Props> {
   public render() {
@@ -44,7 +44,7 @@ class CommandExecutor extends Component<Props> {
   }
 }
 
-const definition: IWidgetDefinition = {
+const definition: WidgetDefinition = {
   type: "COMMAND_EXECUTOR",
   name: "Command Executor",
   defaultHeight: 2,
