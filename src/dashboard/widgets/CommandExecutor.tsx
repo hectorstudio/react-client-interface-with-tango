@@ -1,9 +1,17 @@
 import React, { Component, CSSProperties } from "react";
 
 import { IWidgetProps } from "./types";
-import { IWidgetDefinition } from "../types";
+import { IWidgetDefinition, ICommandInput } from "../types";
 
-class CommandExecutor extends Component<IWidgetProps> {
+interface IInputs {
+  title: string;
+  requireConfirmation: string;
+  command: ICommandInput;
+}
+
+type Props = IWidgetProps<IInputs>;
+
+class CommandExecutor extends Component<Props> {
   public render() {
     const { mode, inputs } = this.props;
     const { title, requireConfirmation, command } = inputs;

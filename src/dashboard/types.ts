@@ -111,3 +111,10 @@ export interface IAttributeInput<ValueT = any> {
   attribute: string;
   value: ValueT;
 }
+
+export interface ICommandInput<OutputT = any> {
+  device: string;
+  command: string;
+  output: OutputT;
+  execute: () => void;
+}

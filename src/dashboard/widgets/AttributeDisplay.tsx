@@ -1,8 +1,16 @@
 import React, { Component, Fragment, CSSProperties } from "react";
 import { IWidgetProps } from "./types";
-import { IWidgetDefinition } from "../types";
+import { IWidgetDefinition, IAttributeInput } from "../types";
 
-class AttributeReadOnly extends Component<IWidgetProps> {
+interface IInput {
+  showDevice: boolean;
+  precision: number;
+  attribute: IAttributeInput;
+}
+
+type Props = IWidgetProps<IInput>;
+
+class AttributeReadOnly extends Component<Props> {
   public render() {
     const { device, name } = this.deviceAndAttribute();
     const value = this.value();
