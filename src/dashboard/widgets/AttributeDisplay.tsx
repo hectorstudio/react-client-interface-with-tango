@@ -54,7 +54,7 @@ const definition: IWidgetDefinition = {
   inputs: {
     attribute: {
       type: "attribute",
-      label: "Attribute",
+      label: "",
       dataFormat: "scalar",
       required: true
     },
