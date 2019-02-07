@@ -1,3 +1,8 @@
+export const FETCH_DATABASE_INFO = `
+query {
+  info
+}`;
+
 export const FETCH_DEVICE_NAMES = `
 query {
   devices {

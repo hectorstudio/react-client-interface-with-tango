@@ -7,7 +7,8 @@ import {
   SET_DEVICE_PROPERTY,
   DELETE_DEVICE_PROPERTY,
   FETCH_DEVICE,
-  CHANGE_EVENT
+  CHANGE_EVENT,
+  FETCH_DATABASE_INFO
 } from "./operations";
 
 function client(tangoDB) {
@@ -25,6 +26,11 @@ function createSocket(tangoDB) {
 }
 
 export default {
+  async fetchDatabaseInfo(tangoDB) {
+    const data = await client(tangoDB).request(FETCH_DATABASE_INFO);
+    return data.info;
+  },
+
   async fetchDeviceNames(tangoDB) {
     const data = await client(tangoDB).request(FETCH_DEVICE_NAMES);
     return data.devices.map(device => device.name);

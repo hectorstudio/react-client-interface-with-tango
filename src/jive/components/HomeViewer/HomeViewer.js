@@ -1,43 +1,49 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import PropTypes from "prop-types";
 
-import { executeCommand } from '../actions/tango';
-import { getServerSummary } from '../selectors/server';
-import PropTypes from 'prop-types'
+import { fetchDatabaseInfo } from "../../state/actions/tango";
+import { getInfo } from "../../state/selectors/database";
 
-import './HomeViewer.css'
+import "./HomeViewer.css";
 
 class HomeViewer extends Component {
-    componentDidMount() {
-        this.props.onLoad();
-    }
+  componentDidMount() {
+    const { tangoDB } = this.props.match.params;
+    this.props.onLoad(tangoDB);
+  }
 
-    render() {
-        const summary = this.props.summary;
-        return summary ? (
-            <div className="HomeViewer">
-                {summary.map((line, i) => <p key={i}>{line.trim()}</p>)}
-            </div>
-        ) : null;
-    }
+  render() {
+    const { info } = this.props;
+    return info == null ? null : (
+      <div className="HomeViewer">
+        {info.split("\n").map((line, i) => (
+          <p key={i}>{line.trim()}</p>
+        ))}
+      </div>
+    );
+  }
 }
 
 function mapStateToProps(state) {
-    return {
-        summary: getServerSummary(state),
-    };
+  return {
+    info: getInfo(state)
+  };
 }
 
 HomeViewer.propTypes = {
-    summary : PropTypes.arrayOf(PropTypes.string),
-    onLoad :  PropTypes.func,
-}
+  info: PropTypes.string,
+  onLoad: PropTypes.func
+};
 
 function mapDispatchToProps(dispatch) {
-    return {
-        onLoad: () => dispatch(executeCommand("kitslab",'DbInfo', '', 'sys/database/2')),
-    };
+  return {
+    onLoad: tangoDB => dispatch(fetchDatabaseInfo(tangoDB))
+  };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeViewer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeViewer);
