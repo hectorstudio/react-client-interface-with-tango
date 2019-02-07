@@ -7,9 +7,11 @@ import commandOutput, { ICommandOutputState } from "./commandOutput";
 
 import currentDevice from "./currentDevice";
 import devices, { IDevicesState } from "./devices";
+import database, { IDatabaseState } from "./database";
 import attributes, { IAttributesState } from "./attributes";
 import commands, { ICommandsState } from "./commands";
 import properties, { IPropertiesState } from "./properties";
+
 import user, { IUserState } from "../../../shared/user/state/reducer";
 
 import error from "./error";
@@ -25,6 +27,7 @@ export interface IRootState {
   user: IUserState;
 
   // Data state
+  database: IDatabaseState;
   devices: IDevicesState;
   commandOutput: ICommandOutputState;
   currentDevice: string;
@@ -36,6 +39,7 @@ export interface IRootState {
 const rootReducer = combineReducers<IRootState>({
   deviceDetail,
   deviceList,
+  database,
   devices,
   loadingStatus,
   commandOutput,

@@ -3,19 +3,16 @@ import { fork, take, put, call, cancel, cancelled } from "redux-saga/effects";
 
 import {
   FETCH_DEVICE_NAMES,
-  FETCH_DEVICE_NAMES_SUCCESS,
-  FETCH_DEVICE_NAMES_FAILED,
   EXECUTE_COMMAND,
   SET_DEVICE_PROPERTY,
   DELETE_DEVICE_PROPERTY,
   FETCH_DEVICE_SUCCESS,
   FETCH_DEVICE,
-  ATTRIBUTE_CHANGE
+  FETCH_DATABASE_INFO
 } from "../actions/actionTypes";
 
 import TangoAPI from "../api/tango";
 import {
-  fetchDeviceNames as fetchDeviceNamesAction,
   fetchDeviceNamesSuccess,
   fetchDeviceNamesFailed,
   executeCommandSuccess,
@@ -26,10 +23,11 @@ import {
   setDeviceAttributeFailed,
   deleteDevicePropertySuccess,
   deleteDevicePropertyFailed,
-  fetchDevice as fetchDeviceAction,
   fetchDeviceSuccess,
   fetchDeviceFailed,
-  attributeChange
+  attributeChange,
+  fetchDatabaseInfoSuccess,
+  fetchDatabaseInfoFailed
 } from "../actions/tango";
 
 import { displayError } from "../actions/error";
@@ -42,6 +40,7 @@ export default function* tango() {
   yield fork(deleteDeviceProperty);
   yield fork(fetchDevice);
   yield fork(subscribeOnFetchDevice);
+  yield fork(fetchDatabaseInfo);
 }
 
 /* Asynchronous actions */
@@ -135,6 +134,17 @@ function* fetchDevice() {
     const action = device
       ? fetchDeviceSuccess(tangoDB, device)
       : fetchDeviceFailed(tangoDB, name);
+    yield put(action);
+  }
+}
+
+function* fetchDatabaseInfo() {
+  while (true) {
+    const { tangoDB } = yield take(FETCH_DATABASE_INFO);
+    const info = yield TangoAPI.fetchDatabaseInfo(tangoDB);
+    const action = info
+      ? fetchDatabaseInfoSuccess(tangoDB, info)
+      : fetchDatabaseInfoFailed(tangoDB);
     yield put(action);
   }
 }

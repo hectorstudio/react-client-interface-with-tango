@@ -1,4 +1,7 @@
 import {
+  FETCH_DATABASE_INFO,
+  FETCH_DATABASE_INFO_SUCCESS,
+  FETCH_DATABASE_INFO_FAILED,
   FETCH_DEVICE,
   FETCH_DEVICE_SUCCESS,
   FETCH_DEVICE_FAILED,
@@ -7,8 +10,6 @@ import {
   EXECUTE_COMMAND,
   EXECUTE_COMMAND_SUCCESS,
   EXECUTE_COMMAND_FAILED,
-  SELECT_DEVICE,
-  SELECT_DEVICE_SUCCESS,
   DISABLE_DISPLEVEL,
   ENABLE_DISPLEVEL,
   SET_DEVICE_PROPERTY,
@@ -23,6 +24,18 @@ import {
   FETCH_DEVICE_NAMES_FAILED,
   ATTRIBUTE_CHANGE
 } from "./actionTypes";
+
+export function fetchDatabaseInfo(tangoDB) {
+  return { type: FETCH_DATABASE_INFO, tangoDB };
+}
+
+export function fetchDatabaseInfoSuccess(tangoDB, info) {
+  return { type: FETCH_DATABASE_INFO_SUCCESS, tangoDB, info };
+}
+
+export function fetchDatabaseInfoFailed(tangoDB) {
+  return { type: FETCH_DATABASE_INFO_FAILED, tangoDB };
+}
 
 export function fetchDeviceNames(tangoDB) {
   return { type: FETCH_DEVICE_NAMES, tangoDB };

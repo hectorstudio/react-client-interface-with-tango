@@ -4,7 +4,7 @@ import * as qs from "query-string";
 
 import DeviceList from "../DeviceList/DeviceList";
 import DeviceViewer from "../DeviceViewer/DeviceViewer";
-// import HomeViewer from "../HomeViewer/HomeViewer";
+import HomeViewer from "../HomeViewer/HomeViewer";
 import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";
 
 import LogInOut from "../../../shared/user/components/LogInOut/LogInOut";
@@ -41,7 +41,7 @@ const MainView = ({ className }) => (
         );
       }}
     />
-    {/* <Route path="/:tangoDB/" exact={true} component={HomeViewer} /> */}
+    <Route path="/:tangoDB/" exact={true} component={HomeViewer} />
   </div>
 );
 
