@@ -17,7 +17,7 @@ function resolveDevice(
     : inputDevice;
 }
 
-function* extractModelsFromInputsGen(
+function* extractFullNamesFromInputsGen(
   inputs: InputMapping,
   inputDefinitions: InputDefinitionMapping,
   published: PublishedDevices
@@ -49,14 +49,14 @@ function* extractModelsFromInputsGen(
       if (inputDefinition.type === "complex") {
         if (repeat) {
           for (const entry of input) {
-            yield* extractModelsFromInputsGen(
+            yield* extractFullNamesFromInputsGen(
               entry,
               inputDefinition.inputs,
               published
             );
           }
         } else {
-          yield* extractModelsFromInputsGen(
+          yield* extractFullNamesFromInputsGen(
             input.inputs,
             inputDefinition.inputs,
             published
@@ -69,18 +69,18 @@ function* extractModelsFromInputsGen(
   }
 }
 
-function* extractModelsFromWidgetsGen(widgets: Widget[]) {
+function* extractFullNamesFromWidgetsGen(widgets: Widget[]) {
   for (const widget of widgets) {
     const definition = definitionForWidget(widget);
     const inputs = widget.inputs;
     const inputDefinitions = definition!.inputs;
     const published = publishedDevices(inputs, inputDefinitions);
-    yield* extractModelsFromInputsGen(inputs, inputDefinitions, published);
+    yield* extractFullNamesFromInputsGen(inputs, inputDefinitions, published);
   }
 }
 
-export function extractModelsFromWidgets(widgets: Widget[]) {
-  return Array.from(extractModelsFromWidgetsGen(widgets));
+export function extractFullNamesFromWidgets(widgets: Widget[]) {
+  return Array.from(extractFullNamesFromWidgetsGen(widgets));
 }
 
 function enrichedInput(
@@ -110,11 +110,11 @@ function enrichedInput(
       input.device,
       definition.device
     );
-    const model = `${resolvedDevice}/${input.attribute ||
+    const fullName = `${resolvedDevice}/${input.attribute ||
       definition.attribute}`;
 
-    if (attributeLookup.hasOwnProperty(model)) {
-      const value = attributeLookup[model];
+    if (attributeLookup.hasOwnProperty(fullName)) {
+      const value = attributeLookup[fullName];
       return { ...input, value };
     }
   }
@@ -131,8 +131,8 @@ function enrichedInput(
       definition.device
     );
 
-    const model = `${resolvedDevice}/${command}`
-    const output = commandLookup[model];
+    const fullName = `${resolvedDevice}/${command}`
+    const output = commandLookup[fullName];
 
     return {
       ...input,

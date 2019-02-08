@@ -12,7 +12,7 @@ export interface PlotParams {
 export interface Trace {
   x?: number[];
   y?: number[];
-  model: string;
+  fullName: string;
   axisLocation: "left" | "right";
 }
 
@@ -97,7 +97,7 @@ export default class Plot extends Component<PlotProps> {
       return {
         x: trace.x || [null],
         y: trace.y || [null],
-        name: trace.model,
+        name: trace.fullName,
         yaxis
       };
     });

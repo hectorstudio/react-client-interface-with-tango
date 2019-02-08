@@ -9,7 +9,7 @@ import { TILE_SIZE } from "../constants";
 import ErrorBoundary from "../ErrorBoundary";
 
 import { changeEventEmitter } from "./emitter";
-import { extractModelsFromWidgets, enrichedInputs } from "./lib";
+import { extractFullNamesFromWidgets, enrichedInputs } from "./lib";
 import { executeCommand } from "../api";
 import { getWidgets } from "src/dashboard/state/selectors";
 
@@ -19,8 +19,8 @@ interface Props {
 }
 
 interface State {
-  attributeValues: { [model: string]: any };
-  commandOutputs: { [model: string]: any };
+  attributeValues: { [fullName: string]: any };
+  commandOutputs: { [fullName: string]: any };
 }
 
 class RunCanvas extends Component<Props, State> {
@@ -34,12 +34,12 @@ class RunCanvas extends Component<Props, State> {
 
   public componentDidMount() {
     const { widgets, tangoDB } = this.props;
-    const models = extractModelsFromWidgets(widgets);
-    const emit = changeEventEmitter(tangoDB, models);
+    const fullNames = extractFullNamesFromWidgets(widgets);
+    const emit = changeEventEmitter(tangoDB, fullNames);
     this.unsub = emit(frame => {
       const { device, attribute, value } = frame;
-      const model = `${device}/${attribute}`;
-      const attributeValues = { ...this.state.attributeValues, [model]: value };
+      const fullName = `${device}/${attribute}`;
+      const attributeValues = { ...this.state.attributeValues, [fullName]: value };
       this.setState({ attributeValues });
     });
   }
@@ -94,8 +94,8 @@ class RunCanvas extends Component<Props, State> {
 
   private async executeCommand(device: string, command: string) {
     const output = await executeCommand(this.props.tangoDB, device, command);
-    const model = `${device}/${command}`;
-    const commandOutputs = { ...this.state.commandOutputs, [model]: output };
+    const fullName = `${device}/${command}`;
+    const commandOutputs = { ...this.state.commandOutputs, [fullName]: output };
     this.setState({ commandOutputs });
   }
 }
