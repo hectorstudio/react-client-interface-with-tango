@@ -32,7 +32,7 @@ class ResizeArea extends Component {
     const rightStyle = stuckToRight ? { right: 0 } : {};
     const horizontalStyle = { ...leftStyle, ...rightStyle };
 
-    const size = 20;
+    const size = 16;
 
     const horizontalMargin = location === "n" || location === "s" ? size : 0;
     const verticalMargin = location === "e" || location === "w" ? size : 0;
@@ -117,9 +117,8 @@ class EditWidget extends Component {
 
   handleMouseUp() {
     const [diffX, diffY] = this.sizeDifference();
-    const [moveX, moveY] = this.positionAdjustedForOngoingResize();
-    const { x, y } = this.props;
-    this.props.onResize(moveX - x, moveY - y, diffX, diffY);
+    const [adjustX, adjustY] = this.positionAdjustmentForOngoingResize();
+    this.props.onResize(adjustX, adjustY, diffX, diffY);
 
     this.setState({ resizingLocation: null });
     document.removeEventListener("mouseup", this.handleMouseUp);
@@ -139,36 +138,54 @@ class EditWidget extends Component {
     document.addEventListener("mousemove", this.handleMouseMove);
   }
 
-  sizeDifference() {
+  sizeFactors() {
     const { resizingLocation } = this.state;
+
+    if (resizingLocation == null) {
+      return [0, 0];
+    } else if (resizingLocation.length === 2) {
+      const [vertical, horizontal] = resizingLocation;
+      const factorX = horizontal === "w" ? -1 : 1;
+      const factorY = vertical === "n" ? -1 : 1;
+      return [factorX, factorY];
+    } else {
+      return resizingLocation === "e"
+        ? [1, 0]
+        : resizingLocation === "w"
+        ? [-1, 0]
+        : resizingLocation === "s"
+        ? [0, 1]
+        : [0, -1];
+    }
+  }
+
+  sizeDifference() {
+    const [factorX, factorY] = this.sizeFactors();
+    const { currentX, currentY, startX, startY } = this.state;
+    const diffX = factorX * (currentX - startX);
+    const diffY = factorY * (currentY - startY);
+    return [diffX, diffY];
+  }
+
+  positionAdjustmentForOngoingResize() {
+    const { resizingLocation } = this.state;
+
     if (resizingLocation == null) {
       return [0, 0];
     }
 
-    const [vertical, horizontal] = resizingLocation;
-    const factorX = horizontal === "w" ? -1 : 1;
-    const factorY = vertical === "n" ? -1 : 1;
-
-    const { currentX, currentY, startX, startY } = this.state;
-    const diffX = factorX * (currentX - startX);
-    const diffY = factorY * (currentY - startY);
-
-    return [diffX, diffY];
-  }
-
-  positionAdjustedForOngoingResize() {
-    const { x, y } = this.props;
-    const { resizingLocation } = this.state;
-
-    if (resizingLocation == null) {
-      return [x, y];
-    }
-
     const [diffX, diffY] = this.sizeDifference();
-    const [vertical, horizontal] = resizingLocation;
-    const adjustX = horizontal === "w" ? -diffX : 0;
-    const adjustY = vertical === "n" ? -diffY : 0;
-    return [x + adjustX, y + adjustY];
+
+    if (resizingLocation.length === 2) {
+      const [vertical, horizontal] = resizingLocation;
+      const adjustX = horizontal === "w" ? -diffX : 0;
+      const adjustY = vertical === "n" ? -diffY : 0;
+      return [adjustX, adjustY];
+    } else {
+      const adjustX = resizingLocation === "w" ? -diffX : 0;
+      const adjustY = resizingLocation === "n" ? -diffY : 0;
+      return [adjustX, adjustY];
+    }
   }
 
   render() {
@@ -191,7 +208,8 @@ class EditWidget extends Component {
       )
     );
 
-    const [x, y] = this.positionAdjustedForOngoingResize();
+    const { x, y } = this.props;
+    const [adjustX, adjustY] = this.positionAdjustmentForOngoingResize();
     const [diffX, diffY] = this.sizeDifference();
 
     const actualWidth = width + diffX - 1;
@@ -205,8 +223,8 @@ class EditWidget extends Component {
       <div
         className={this.props.isSelected ? "Widget selected" : "Widget"}
         style={{
-          left: x,
-          top: y,
+          left: x + adjustX,
+          top: y + adjustY,
           width: actualWidth,
           height: actualHeight
         }}
