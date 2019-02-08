@@ -46,7 +46,7 @@ class AttributePlot extends Component<Props, State> {
       const axes = attributes.map(({ yAxis }) => yAxis);
       const singleAttributes = attributes.map(({ attribute }) => attribute);
       const values = singleAttributes.map(({ value }) => value);
-      const models = singleAttributes.map(
+      const fullNames = singleAttributes.map(
         ({ device, attribute }) => `${device}/${attribute}`
       );
 
@@ -54,7 +54,7 @@ class AttributePlot extends Component<Props, State> {
         <BufferingPlot
           params={runParams}
           values={values}
-          models={models}
+          fullNames={fullNames}
           axes={axes}
         />
       );
@@ -68,13 +68,13 @@ class AttributePlot extends Component<Props, State> {
       const sample2 = xValues.map(x => 5 * Math.cos(x / 20) * Math.cos(x / 3));
       const traces: Trace[] = [
         {
-          model: "attribute 1",
+          fullName: "attribute 1",
           x: xValues,
           y: sample1,
           axisLocation: "left"
         },
         {
-          model: "attribute 2",
+          fullName: "attribute 2",
           x: xValues,
           y: sample2,
           axisLocation: "left"
@@ -85,8 +85,8 @@ class AttributePlot extends Component<Props, State> {
     } else {
       const traces = attributes.map(attributeInput => {
         const { device, attribute } = attributeInput.attribute;
-        const model = `${device || "?"}/${attribute || "?"}`;
-        const trace: Trace = { model, axisLocation: attributeInput.yAxis };
+        const fullName = `${device || "?"}/${attribute || "?"}`;
+        const trace: Trace = { fullName, axisLocation: attributeInput.yAxis };
         return trace;
       });
 
