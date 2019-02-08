@@ -7,19 +7,49 @@ import WarningBadge from "./WarningBadge";
    an approach using vanilla JavaScript event listeners was used instead. Subject to change
    at a later stage if a better solution is found. */
 
-class ResizeKnob extends Component {
+class ResizeArea extends Component {
   render() {
     const { location } = this.props;
     const cursorPrefix =
-      location === "nw" || location === "se" ? "nwse" : "nesw";
+      location === "nw" || location === "se"
+        ? "nwse"
+        : location === "ne" || location === "sw"
+        ? "nesw"
+        : location === "n" || location === "s"
+        ? "ns"
+        : "ew";
 
-    const isLeft = location === "nw" || location === "sw";
-    const isTop = location === "nw" || location === "ne";
+    const stuckToTop = ["ne", "nw", "w", "n", "e"].indexOf(location) !== -1;
+    const stuckToBottom = ["se", "sw", "w", "s", "e"].indexOf(location) !== -1;
+    const stuckToLeft = ["nw", "sw", "s", "w", "n"].indexOf(location) !== -1;
+    const stuckToRight = ["ne", "se", "s", "e", "n"].indexOf(location) !== -1;
+
+    const topStyle = stuckToTop ? { top: 0 } : {};
+    const bottomStyle = stuckToBottom ? { bottom: 0 } : {};
+    const verticalStyle = { ...topStyle, ...bottomStyle };
+
+    const leftStyle = stuckToLeft ? { left: 0 } : {};
+    const rightStyle = stuckToRight ? { right: 0 } : {};
+    const horizontalStyle = { ...leftStyle, ...rightStyle };
 
     const size = 20;
-    const horizontalStyle = isLeft ? { left: 0 } : { right: 0 };
-    const verticalStyle = isTop ? { top: 0 } : { bottom: 0 };
-    const locationStyle = { ...horizontalStyle, ...verticalStyle };
+
+    const horizontalMargin = location === "n" || location === "s" ? size : 0;
+    const verticalMargin = location === "e" || location === "w" ? size : 0;
+    const locationStyle = {
+      ...horizontalStyle,
+      ...verticalStyle,
+      marginTop: verticalMargin,
+      marginBottom: verticalMargin,
+      marginLeft: horizontalMargin,
+      marginRight: horizontalMargin
+    };
+
+    const cornerLocations = ["ne", "nw", "se", "sw"];
+    const width =
+      [...cornerLocations, "w", "e"].indexOf(location) !== -1 ? size : "auto";
+    const height =
+      [...cornerLocations, "s", "n"].indexOf(location) !== -1 ? size : "auto";
 
     return (
       <div
@@ -34,8 +64,8 @@ class ResizeKnob extends Component {
           ...locationStyle,
           zIndex: 1,
           cursor: `${cursorPrefix}-resize`,
-          width: `${size}px`,
-          height: `${size}px`
+          width,
+          height
         }}
       />
     );
@@ -96,10 +126,10 @@ class EditWidget extends Component {
     document.removeEventListener("mousemove", this.handleMouseMove);
   }
 
-  handleBeginResize(knobLocation, startX, startY) {
+  handleBeginResize(areaLocation, startX, startY) {
     const [currentX, currentY] = [startX, startY];
     this.setState({
-      resizingLocation: knobLocation,
+      resizingLocation: areaLocation,
       startX,
       startY,
       currentX,
@@ -148,16 +178,18 @@ class EditWidget extends Component {
 
     const { width, height, connectDragSource } = this.props;
 
-    const knobs = ["nw", "ne", "sw", "se"].map(knobLocation => (
-      <ResizeKnob
-        key={knobLocation}
-        location={knobLocation}
-        onMouseDown={(knobLocation, x, y) => {
-          this.props.onClick();
-          this.handleBeginResize(knobLocation, x, y);
-        }}
-      />
-    ));
+    const resizeAreas = ["nw", "ne", "sw", "se", "w", "e", "s", "n"].map(
+      areaLocation => (
+        <ResizeArea
+          key={areaLocation}
+          location={areaLocation}
+          onMouseDown={(areaLocation, x, y) => {
+            this.props.onClick();
+            this.handleBeginResize(areaLocation, x, y);
+          }}
+        />
+      )
+    );
 
     const [x, y] = this.positionAdjustedForOngoingResize();
     const [diffX, diffY] = this.sizeDifference();
@@ -183,7 +215,7 @@ class EditWidget extends Component {
           this.props.onClick();
         }}
       >
-        {knobs}
+        {resizeAreas}
         <WarningBadge visible={this.props.warning} />
         {connectDragSource(<div>{render}</div>)}
       </div>
