@@ -34,8 +34,8 @@ class Spectrum extends Component<Props, State> {
     const { value } = this.props.inputs.attribute;
     const { min: currMin, max: currMax } = this.state;
 
-    const propMin = value.reduce((a, b) => Math.min(a, b));
-    const propMax = value.reduce((a, b) => Math.max(a, b));
+    const propMin = value.reduce((a, b) => Math.min(a, b), 0);
+    const propMax = value.reduce((a, b) => Math.max(a, b), 0);
     const min = currMin == null ? propMin : Math.min(currMin, propMin);
     const max = currMax == null ? propMax : Math.max(currMax, propMax);
 
