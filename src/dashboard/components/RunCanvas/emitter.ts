@@ -1,12 +1,9 @@
-const CHANGE_EVENT = `
-subscription ChangeEvent($models: [String]) {
-  changeEvent(models: $models){
-    eventType
+const ATTRIBUTES = `
+subscription Attributes($fullNames: [String]) {
+  attributes(fullNames: $fullNames) {
     device
-    name
-    data {
-      value
-    }
+    attribute
+    value
   }
 }`;
 
@@ -20,15 +17,15 @@ function createSocket(tangoDB) {
   return new WebSocket(socketUrl(tangoDB), "graphql-ws");
 }
 
-export function changeEventEmitter(tangoDB, models) {
+export function changeEventEmitter(tangoDB, fullNames) {
   return emit => {
     const socket = createSocket(tangoDB);
     socket.addEventListener("open", () => {
-      const variables = { models };
+      const variables = { fullNames };
       const startMessage = JSON.stringify({
         type: "start",
         payload: {
-          query: CHANGE_EVENT,
+          query: ATTRIBUTES,
           variables
         }
       });
@@ -39,10 +36,7 @@ export function changeEventEmitter(tangoDB, models) {
     socket.addEventListener("message", msg => {
       const frame = JSON.parse(msg.data);
       if (frame.type === "data" && frame.payload.error == null) {
-        const events = frame.payload.data.changeEvent;
-        for (const event of events) {
-          emit(event);
-        }
+        emit(frame.payload.data.attributes);
       }
     });
 
