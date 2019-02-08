@@ -27,7 +27,8 @@ import {
   fetchDeviceFailed,
   attributeChange,
   fetchDatabaseInfoSuccess,
-  fetchDatabaseInfoFailed
+  fetchDatabaseInfoFailed,
+  attributeFrameReceived
 } from "../actions/tango";
 
 import { displayError } from "../actions/error";
@@ -151,16 +152,16 @@ function* fetchDatabaseInfo() {
 
 /* Subscriptions */
 
-function createChangeEventChannel(tangoDB, models) {
-  const emitter = TangoAPI.changeEventEmitter(tangoDB, models);
+function createChangeEventChannel(tangoDB, fullNames) {
+  const emitter = TangoAPI.changeEventEmitter(tangoDB, fullNames);
   return eventChannel(emitter);
 }
 
 function* handleChangeEvents(channel) {
   try {
     while (true) {
-      const data = yield take(channel);
-      const action = attributeChange(data);
+      const frame = yield take(channel);
+      const action = attributeFrameReceived(frame);
       yield put(action);
     }
   } finally {
@@ -176,8 +177,8 @@ function* subscribeOnFetchDevice() {
   while (true) {
     const { device, tangoDB } = yield take(FETCH_DEVICE_SUCCESS);
     const { name: deviceName, attributes } = device;
-    const models = attributes.map(({ name }) => `${deviceName}/${name}`);
-    const channel = yield call(createChangeEventChannel, tangoDB, models);
+    const fullNames = attributes.map(({ name }) => `${deviceName}/${name}`);
+    const channel = yield call(createChangeEventChannel, tangoDB, fullNames);
     if (handler != null) {
       yield cancel(handler);
     }

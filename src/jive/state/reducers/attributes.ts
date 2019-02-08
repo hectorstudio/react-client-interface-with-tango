@@ -1,44 +1,49 @@
 import {
-    FETCH_DEVICE_SUCCESS, ATTRIBUTE_CHANGE
-} from '../actions/actionTypes';
+  FETCH_DEVICE_SUCCESS,
+  ATTRIBUTE_FRAME_RECEIVED
+} from "../actions/actionTypes";
 
 interface IDeviceAttribute {
-    name: string,
-    value: any,
-    displevel: string,
-    dataformat: string,
+  name: string;
+  value: any;
+  displevel: string;
+  dataformat: string;
 }
 
 export interface IAttributesState {
-    [deviceName: string]: {
-        [attributeName: string]: IDeviceAttribute
-    }
+  [deviceName: string]: {
+    [attributeName: string]: IDeviceAttribute;
+  };
 }
 
 export default function attributes(state: IAttributesState = {}, action) {
-    switch (action.type) {
+  switch (action.type) {
     case FETCH_DEVICE_SUCCESS: {
-        const {name, attributes: attrs} = action.device;
-        const hash = (attrs || []).reduce((accum, attribute) => ({
-            ...accum, [attribute.name]: attribute
-        }), {});
-        return {...state, [name]: hash};
+      const { name, attributes: attrs } = action.device;
+      const hash = (attrs || []).reduce(
+        (accum, attribute) => ({
+          ...accum,
+          [attribute.name]: attribute
+        }),
+        {}
+      );
+      return { ...state, [name]: hash };
     }
 
-    case ATTRIBUTE_CHANGE: {
-        const {data: {value}, name, device} = action.data;
-        const oldDevice = state[device];
-        const oldAttribute = oldDevice[name];
-        return {
-            ...state,
-            [device]: {
-                ...oldDevice,
-                [name]: {...oldAttribute, value}
-            }
-        };
+    case ATTRIBUTE_FRAME_RECEIVED: {
+      const { value, device, attribute } = action.frame;
+      const oldDevice = state[device];
+      const oldAttribute = oldDevice[attribute];
+      return {
+        ...state,
+        [device]: {
+          ...oldDevice,
+          [attribute]: { ...oldAttribute, value }
+        }
+      };
     }
-    
+
     default:
-        return state;
-    }
+      return state;
+  }
 }

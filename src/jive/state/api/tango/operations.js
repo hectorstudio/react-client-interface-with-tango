@@ -87,14 +87,11 @@ query FetchDevice($name: String!) {
 }
 `;
 
-export const CHANGE_EVENT = `
-subscription ChangeEvent($models: [String]) {
-  changeEvent(models: $models){
-    eventType
+export const ATTRIBUTES_SUB = `
+subscription Attributes($fullNames: [String]) {
+  attributes(fullNames: $fullNames) {
     device
-    name
-    data {
-      value
-    }
+    attribute
+    value
   }
 }`;

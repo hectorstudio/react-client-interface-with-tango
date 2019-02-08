@@ -7,7 +7,7 @@ import {
   SET_DEVICE_PROPERTY,
   DELETE_DEVICE_PROPERTY,
   FETCH_DEVICE,
-  CHANGE_EVENT,
+  ATTRIBUTES_SUB,
   FETCH_DATABASE_INFO
 } from "./operations";
 
@@ -81,15 +81,15 @@ export default {
     return { ...device, errors };
   },
 
-  changeEventEmitter(tangoDB, models) {
+  changeEventEmitter(tangoDB, fullNames) {
     const socket = createSocket(tangoDB);
     return emit => {
       socket.addEventListener("open", () => {
-        const variables = { models };
+        const variables = { fullNames };
         const startMessage = JSON.stringify({
           type: "start",
           payload: {
-            query: CHANGE_EVENT,
+            query: ATTRIBUTES_SUB,
             variables
           }
         });
@@ -103,10 +103,7 @@ export default {
       socket.addEventListener("message", msg => {
         const frame = JSON.parse(msg.data);
         if (frame.type === "data" && frame.payload.error == null) {
-          const events = frame.payload.data.changeEvent;
-          for (const event of events) {
-            emit(event);
-          }
+          emit(frame.payload.data.attributes);
         }
       });
   
