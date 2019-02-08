@@ -36,13 +36,9 @@ class RunCanvas extends Component<Props, State> {
     const { widgets, tangoDB } = this.props;
     const models = extractModelsFromWidgets(widgets);
     const emit = changeEventEmitter(tangoDB, models);
-    this.unsub = emit(event => {
-      const {
-        device,
-        name,
-        data: { value }
-      } = event;
-      const model = `${device}/${name}`;
+    this.unsub = emit(frame => {
+      const { device, attribute, value } = frame;
+      const model = `${device}/${attribute}`;
       const attributeValues = { ...this.state.attributeValues, [model]: value };
       this.setState({ attributeValues });
     });
