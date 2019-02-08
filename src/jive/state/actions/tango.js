@@ -22,7 +22,7 @@ import {
   DELETE_DEVICE_PROPERTY_SUCCESS,
   DELETE_DEVICE_PROPERTY_FAILED,
   FETCH_DEVICE_NAMES_FAILED,
-  ATTRIBUTE_CHANGE
+  ATTRIBUTE_FRAME_RECEIVED
 } from "./actionTypes";
 
 export function fetchDatabaseInfo(tangoDB) {
@@ -117,6 +117,6 @@ export function fetchDevice(tangoDB, name) {
   return { type: FETCH_DEVICE, tangoDB, name };
 }
 
-export function attributeChange(data) {
-  return { type: ATTRIBUTE_CHANGE, data };
+export function attributeFrameReceived(frame) {
+  return { type: ATTRIBUTE_FRAME_RECEIVED, frame };
 }

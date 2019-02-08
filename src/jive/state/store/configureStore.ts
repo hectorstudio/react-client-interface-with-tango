@@ -5,17 +5,17 @@ import createSagaMiddleware from "redux-saga";
 import rootReducer from "../reducers/rootReducer";
 import rootSaga from "../sagas";
 
-import { ATTRIBUTE_CHANGE } from "../actions/actionTypes";
+import { ATTRIBUTE_FRAME_RECEIVED } from "../actions/actionTypes";
 import { LOGIN } from "../../../shared/user/state/actionTypes";
 
-function createLoggerMiddleware(supressAttributeChanges?: boolean) {
+function createLoggerMiddleware(supressAttributeFrames?: boolean) {
   return createLogger({
     actionTransformer: action =>
       action.type === LOGIN
         ? { ...action, password: action.password.replace(/./g, "*") }
         : action,
     predicate: (_, action) =>
-      supressAttributeChanges !== true || action.type !== ATTRIBUTE_CHANGE
+      supressAttributeFrames !== true || action.type !== ATTRIBUTE_FRAME_RECEIVED
   });
 }
 

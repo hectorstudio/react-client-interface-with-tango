@@ -1,5 +1,5 @@
 import {
-    FETCH_DEVICE_SUCCESS, ATTRIBUTE_CHANGE
+    FETCH_DEVICE_SUCCESS, ATTRIBUTE_FRAME_RECEIVED
 } from '../actions/actionTypes';
 
 interface IDevice {
@@ -29,11 +29,10 @@ export default function devices(state: IDevicesState = {}, action) {
         return {...state, [name]: {...core, name}};
     }
 
-    case ATTRIBUTE_CHANGE: {
-        const { device: deviceName, name, data } = action.data;
-        if (name === "State") {
-            const deviceState = data.value;
-            const device = { ...state[deviceName], state: deviceState };
+    case ATTRIBUTE_FRAME_RECEIVED: {
+        const { device: deviceName, attribute, value } = action.frame;
+        if (attribute === "State") {
+            const device = { ...state[deviceName], state: value };
             return {...state, [deviceName]: device };
         } else {
             return state;
