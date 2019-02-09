@@ -19,10 +19,10 @@ class ResizeArea extends Component {
         ? "ns"
         : "ew";
 
-    const stuckToTop = ["ne", "nw", "w", "n", "e"].indexOf(location) !== -1;
-    const stuckToBottom = ["se", "sw", "w", "s", "e"].indexOf(location) !== -1;
-    const stuckToLeft = ["nw", "sw", "s", "w", "n"].indexOf(location) !== -1;
-    const stuckToRight = ["ne", "se", "s", "e", "n"].indexOf(location) !== -1;
+    const stuckToTop = !location.includes("s");
+    const stuckToBottom = !location.includes("n");
+    const stuckToLeft = !location.includes("e");
+    const stuckToRight = !location.includes("w");
 
     const topStyle = stuckToTop ? { top: 0 } : {};
     const bottomStyle = stuckToBottom ? { bottom: 0 } : {};
@@ -34,10 +34,13 @@ class ResizeArea extends Component {
 
     const size = 16;
 
-    const horizontalFactor = location === "n" || location === "s" ? 1 : -1;
-    const verticalFactor = location === "e" || location === "w" ? 1 : -1;
-    const horizontalMargin = horizontalFactor * size / 2;
-    const verticalMargin = verticalFactor * size / 2;
+    const isVerticalEdge = location === "n" || location === "s";
+    const isHorizontalEdge = location === "e" || location === "w";
+
+    const horizontalFactor = isVerticalEdge ? 1 : -1;
+    const verticalFactor = isHorizontalEdge ? 1 : -1;
+    const horizontalMargin = (horizontalFactor * size) / 2;
+    const verticalMargin = (verticalFactor * size) / 2;
 
     const locationStyle = {
       ...horizontalStyle,
@@ -48,11 +51,8 @@ class ResizeArea extends Component {
       marginRight: horizontalMargin
     };
 
-    const cornerLocations = ["ne", "nw", "se", "sw"];
-    const width =
-      [...cornerLocations, "w", "e"].indexOf(location) !== -1 ? size : "auto";
-    const height =
-      [...cornerLocations, "s", "n"].indexOf(location) !== -1 ? size : "auto";
+    const width = isVerticalEdge ? "auto" : size;
+    const height = isHorizontalEdge ? "auto" : size;
 
     return (
       <div
