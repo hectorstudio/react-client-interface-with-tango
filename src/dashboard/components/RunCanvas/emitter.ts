@@ -1,5 +1,5 @@
 const ATTRIBUTES = `
-subscription Attributes($fullNames: [String]) {
+subscription Attributes($fullNames: [String]!) {
   attributes(fullNames: $fullNames) {
     device
     attribute
