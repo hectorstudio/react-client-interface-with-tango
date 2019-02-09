@@ -39,7 +39,10 @@ class RunCanvas extends Component<Props, State> {
     this.unsub = emit(frame => {
       const { device, attribute, value } = frame;
       const fullName = `${device}/${attribute}`;
-      const attributeValues = { ...this.state.attributeValues, [fullName]: value };
+      const attributeValues = {
+        ...this.state.attributeValues,
+        [fullName]: value
+      };
       this.setState({ attributeValues });
     });
   }
@@ -81,7 +84,8 @@ class RunCanvas extends Component<Props, State> {
                 left: 1 + x * TILE_SIZE,
                 top: 1 + y * TILE_SIZE,
                 width: actualWidth,
-                height: actualHeight
+                height: actualHeight,
+                overflow: "hidden"
               }}
             >
               <ErrorBoundary>{element}</ErrorBoundary>

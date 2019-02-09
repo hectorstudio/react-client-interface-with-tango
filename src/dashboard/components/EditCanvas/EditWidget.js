@@ -34,8 +34,11 @@ class ResizeArea extends Component {
 
     const size = 16;
 
-    const horizontalMargin = location === "n" || location === "s" ? size : 0;
-    const verticalMargin = location === "e" || location === "w" ? size : 0;
+    const horizontalFactor = location === "n" || location === "s" ? 1 : -1;
+    const verticalFactor = location === "e" || location === "w" ? 1 : -1;
+    const horizontalMargin = horizontalFactor * size / 2;
+    const verticalMargin = verticalFactor * size / 2;
+
     const locationStyle = {
       ...horizontalStyle,
       ...verticalStyle,
@@ -235,7 +238,7 @@ class EditWidget extends Component {
       >
         {resizeAreas}
         <WarningBadge visible={this.props.warning} />
-        {connectDragSource(<div>{render}</div>)}
+        {connectDragSource(<div style={{ overflow: "hidden" }}>{render}</div>)}
       </div>
     );
   }

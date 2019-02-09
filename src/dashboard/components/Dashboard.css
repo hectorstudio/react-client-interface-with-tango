@@ -70,7 +70,6 @@
 .Dashboard .Canvas.run .Widget,
 .Dashboard .Canvas.edit .Widget {
   position: absolute;
-  overflow: hidden;
 }
 
 .Dashboard .Widget {
