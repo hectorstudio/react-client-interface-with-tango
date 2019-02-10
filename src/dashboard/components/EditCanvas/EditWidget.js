@@ -231,7 +231,7 @@ class EditWidget extends Component {
           width: actualWidth,
           height: actualHeight
         }}
-        onClick={event => {
+        onMouseDown={event => {
           event.stopPropagation();
           this.props.onClick();
         }}

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import { DropTarget } from "react-dnd";
 import { connect } from "react-redux";
+import cx from "classnames";
 
 import dndTypes from "../../dndTypes";
 import { componentForWidget } from "../../widgets";
@@ -15,7 +16,11 @@ import {
   resizeWidget,
   deleteWidget
 } from "src/dashboard/state/actionCreators";
-import { getWidgets, getSelectedWidget, getCurrentCanvasWidgets } from "src/dashboard/state/selectors";
+
+import {
+  getSelectedWidget,
+  getCurrentCanvasWidgets
+} from "src/dashboard/state/selectors";
 
 const BACKSPACE = 8;
 const DELETE = 46;
@@ -32,16 +37,75 @@ const editCanvasTarget = {
   }
 };
 
+const SelectionBox = ({ start, current }) => {
+  const [startX, startY] = start;
+  const [currentX, currentY] = current;
+
+  const width = currentX - startX;
+  const height = currentY - startY;
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: startX + (width < 0 ? width : 0),
+        top: startY + (height < 0 ? height : 0),
+        width: Math.abs(width),
+        height: Math.abs(height),
+        border: "2px dashed rgba(0,0,0,0.25)",
+        zIndex: 1000
+      }}
+    />
+  );
+};
+
 class EditCanvas extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      mouseIsDown: false
+      mouseIsDown: false,
+      selectionStartLocation: null,
+      selectionCurrentLocation: null
     };
+
+    this.canvasRef = null;
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
   }
 
   componentForWidget(widget) {
     return this.definitionForWidget(widget).component;
+  }
+
+  handleMouseDown(event) {
+    const { left, top } = this.canvasRef.getBoundingClientRect();
+    const selectionStartLocation = [event.clientX - left, event.clientY - top];
+    this.setState({
+      selectionStartLocation,
+      selectionCurrentLocation: selectionStartLocation
+    });
+
+    document.addEventListener("mousemove", this.handleMouseMove);
+  }
+
+  handleMouseMove(event) {
+    const { left, top } = this.canvasRef.getBoundingClientRect();
+    const selectionCurrentLocation = [
+      event.clientX - left,
+      event.clientY - top
+    ];
+    this.setState({ selectionCurrentLocation });
+  }
+
+  handleMouseUp() {
+    document.removeEventListener("mousemove", this.handleMouseMove);
+    this.props.onSelectWidget(null);
+    this.setState({
+      selectionStartLocation: null,
+      selectionCurrentLocation: null
+    });
   }
 
   render() {
@@ -52,11 +116,21 @@ class EditCanvas extends Component {
     } = this.props;
     const hasWidgets = this.props.widgets.length > 0;
 
+    const isSelecting = this.state.selectionStartLocation != null;
+    const selectionBox = !isSelecting ? null : (
+      <SelectionBox
+        start={this.state.selectionStartLocation}
+        current={this.state.selectionCurrentLocation}
+      />
+    );
+
     return connectLibraryDropTarget(
       connectMoveDropTarget(
         <div
-          className="Canvas edit"
-          onClick={() => this.props.onSelectWidget(null)}
+          ref={ref => (this.canvasRef = ref)}
+          className={cx("Canvas", "edit", { isSelecting })}
+          onMouseDown={this.handleMouseDown}
+          onMouseUp={this.handleMouseUp}
           onKeyDown={event => {
             if ([BACKSPACE, DELETE].indexOf(event.keyCode) !== -1) {
               event.preventDefault();
@@ -65,6 +139,8 @@ class EditCanvas extends Component {
           }}
           tabIndex="0"
         >
+          {selectionBox}
+
           <div className="Placeholder" style={{ opacity: hasWidgets ? 0 : 1 }}>
             Add widgets by dragging them from the library and dropping them on
             the canvas.
