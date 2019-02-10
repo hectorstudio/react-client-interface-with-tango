@@ -102,7 +102,7 @@ export default {
   
       socket.addEventListener("message", msg => {
         const frame = JSON.parse(msg.data);
-        if (frame.type === "data" && frame.payload.error == null) {
+        if (frame.type === "data" && frame.payload.errors == null) {
           emit(frame.payload.data.attributes);
         }
       });
