@@ -236,7 +236,6 @@ class EditWidget extends Component {
           event.stopPropagation();
           this.props.onClick();
         }}
-        onClick={event => event.stopPropagation()}
       >
         {resizeAreas}
         <WarningBadge visible={this.props.warning} />

@@ -83,9 +83,7 @@ class EditCanvas extends Component {
   handleMouseUp() {
     const { selectionStartLocation, selectionCurrentLocation } = this.state;
 
-    if (selectionStartLocation == null) {
-      this.props.onSelectWidgets([]);
-    } else {
+    if (selectionStartLocation != null) {
       const [x1, y1] = selectionStartLocation;
       const [x2, y2] = selectionCurrentLocation;
       const smallX = x1 < x2 ? x1 : x2;
@@ -114,6 +112,19 @@ class EditCanvas extends Component {
     });
   }
 
+  isSelecting() {
+    const {
+      selectionStartLocation: start,
+      selectionCurrentLocation: current
+    } = this.state;
+
+    if (start == null) {
+      return false;
+    } else {
+      return start[0] !== current[0] || start[1] !== current[1];
+    }
+  }
+
   render() {
     const {
       connectMoveDropTarget,
@@ -122,8 +133,8 @@ class EditCanvas extends Component {
     } = this.props;
     const hasWidgets = this.props.widgets.length > 0;
 
-    const isSelecting = this.state.selectionStartLocation != null;
-    const selectionBox = !isSelecting ? null : (
+    const isSelecting = this.isSelecting();
+    const selectionBox = isSelecting && (
       <SelectionBox
         start={this.state.selectionStartLocation}
         current={this.state.selectionCurrentLocation}
@@ -166,9 +177,7 @@ class EditCanvas extends Component {
                 <EditWidget
                   id={id}
                   key={id}
-                  isSelected={
-                    selectedWidgets.indexOf(widget) !== -1
-                  }
+                  isSelected={selectedWidgets.indexOf(widget) !== -1}
                   x={1 + TILE_SIZE * x}
                   y={1 + TILE_SIZE * y}
                   width={actualWidth}
