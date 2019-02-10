@@ -21,9 +21,9 @@ import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
 import {
   getWidgets,
   getMode,
-  getSelectedWidget,
   getCanvases,
-  getSelectedCanvas
+  getSelectedCanvas,
+  getSelectedWidgets
 } from "../state/selectors";
 
 import { selectCanvas, toggleMode } from "../state/actionCreators";
@@ -40,7 +40,7 @@ interface Props extends RouteComponentProps<Match> {
   dispatch: (action: object) => void;
   mode: "edit" | "run";
   widgets: Widget[];
-  selectedWidget: Widget;
+  selectedWidgets: Widget[];
   canvases: Canvas[];
   selectedCanvas: Canvas;
 }
@@ -82,7 +82,7 @@ class Dashboard extends Component<Props> {
   // }
 
   public render() {
-    const { mode, widgets, selectedWidget } = this.props;
+    const { mode, widgets, selectedWidgets } = this.props;
     const { tangoDB } = this.props.match.params;
     const disabled = !this.areAllValid() || !this.isRootCanvas();
 
@@ -126,21 +126,23 @@ class Dashboard extends Component<Props> {
           </div>
           <div className={classNames("CanvasArea", mode)}>
             {mode === "edit" ? (
-              <EditCanvas selectedWidget={this.props.selectedWidget} />
+              <EditCanvas />
             ) : (
               <RunCanvas widgets={widgets} tangoDB={tangoDB} />
             )}
           </div>
           {mode === "edit" && (
             <div className="Sidebar">
-              {selectedWidget == null ? (
+              {selectedWidgets.length === 0 ? (
                 <Library />
-              ) : (
+              ) : selectedWidgets.length === 1 ? (
                 <Inspector
-                  widget={selectedWidget}
+                  widget={selectedWidgets[0]}
                   isRootCanvas={this.isRootCanvas()}
                   tangoDB={tangoDB}
                 />
+              ) : (
+                "Multiple selection"
               )}
             </div>
           )}
@@ -171,7 +173,7 @@ class Dashboard extends Component<Props> {
 function mapStateToProps(state: RootState) {
   return {
     widgets: getWidgets(state),
-    selectedWidget: getSelectedWidget(state),
+    selectedWidgets: getSelectedWidgets(state),
     mode: getMode(state),
     selectedCanvas: getSelectedCanvas(state),
     canvases: getCanvases(state)

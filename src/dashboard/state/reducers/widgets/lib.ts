@@ -9,12 +9,6 @@ import {
 import { defaultInputs } from "src/dashboard/utils";
 import { definitionForWidget } from "src/dashboard/widgets";
 
-export function removeAt<T>(obj: Record<string, T>, id: string) {
-  const copy = { ...obj };
-  delete copy[id];
-  return copy;
-}
-
 export function move(widget: Widget, dx: number, dy: number) {
   const { x, y } = widget;
   const targetX = Math.max(0, x + dx);

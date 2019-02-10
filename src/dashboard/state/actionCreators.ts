@@ -1,21 +1,21 @@
 import {
   ADD_WIDGET,
   MOVE_WIDGET,
-  SELECT_WIDGET,
   RESIZE_WIDGET,
   DELETE_WIDGET,
   SELECT_CANVAS,
-  TOGGLE_MODE
+  TOGGLE_MODE,
+  SELECT_WIDGETS
 } from "./actionTypes";
 
 import {
   AddWidgetAction,
   MoveWidgetAction,
-  SelectWidgetAction,
   ResizeWidgetAction,
   DeleteWidgetAction,
   SelectCanvasAction,
-  ToggleModeAction
+  ToggleModeAction,
+  SelectWidgetsAction
 } from "./actions";
 
 export function addWidget(
@@ -45,8 +45,8 @@ export function resizeWidget(
   return { type: RESIZE_WIDGET, mx, my, dx, dy, id };
 }
 
-export function selectWidget(id: string): SelectWidgetAction {
-  return { type: SELECT_WIDGET, id };
+export function selectWidgets(ids: string[]): SelectWidgetsAction {
+  return { type: SELECT_WIDGETS, ids };
 }
 
 export function deleteWidget(id: string): DeleteWidgetAction {

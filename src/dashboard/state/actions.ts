@@ -2,7 +2,7 @@ import { Action } from "redux";
 import {
   ADD_WIDGET,
   MOVE_WIDGET,
-  SELECT_WIDGET,
+  SELECT_WIDGETS,
   DELETE_WIDGET,
   DELETE_INPUT,
   ADD_INPUT,
@@ -37,9 +37,9 @@ export interface ResizeWidgetAction extends Action {
   id: string;
 }
 
-export interface SelectWidgetAction extends Action {
-  type: typeof SELECT_WIDGET;
-  id: string;
+export interface SelectWidgetsAction extends Action {
+  type: typeof SELECT_WIDGETS;
+  ids: string[];
 }
 
 export interface DeleteWidgetAction extends Action {
@@ -76,7 +76,7 @@ export type DashboardAction =
   | AddWidgetAction
   | MoveWidgetAction
   | ResizeWidgetAction
-  | SelectWidgetAction
+  | SelectWidgetsAction
   | DeleteWidgetAction
   | SetInputAction
   | AddInputAction
