@@ -3,22 +3,25 @@ import { findDOMNode } from "react-dom";
 import { DropTarget } from "react-dnd";
 import { connect } from "react-redux";
 import cx from "classnames";
+import boxIntersect from "box-intersect";
 
 import dndTypes from "../../dndTypes";
 import { componentForWidget } from "../../widgets";
 import { TILE_SIZE } from "../constants";
 
+import SelectionBox from "./SelectionBox";
 import EditWidget from "./EditWidget";
+
 import {
   moveWidget,
-  selectWidget,
   addWidget,
   resizeWidget,
-  deleteWidget
+  deleteWidget,
+  selectWidgets
 } from "src/dashboard/state/actionCreators";
 
 import {
-  getSelectedWidget,
+  getSelectedWidgets,
   getCurrentCanvasWidgets
 } from "src/dashboard/state/selectors";
 
@@ -35,28 +38,6 @@ const editCanvasTarget = {
     // const { id, warning } = monitor.getItem();
     return { dx: x, dy: y };
   }
-};
-
-const SelectionBox = ({ start, current }) => {
-  const [startX, startY] = start;
-  const [currentX, currentY] = current;
-
-  const width = currentX - startX;
-  const height = currentY - startY;
-
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: startX + (width < 0 ? width : 0),
-        top: startY + (height < 0 ? height : 0),
-        width: Math.abs(width),
-        height: Math.abs(height),
-        border: "2px dashed rgba(0,0,0,0.25)",
-        zIndex: 1000
-      }}
-    />
-  );
 };
 
 class EditCanvas extends Component {
@@ -100,8 +81,33 @@ class EditCanvas extends Component {
   }
 
   handleMouseUp() {
+    const { selectionStartLocation, selectionCurrentLocation } = this.state;
+
+    if (selectionStartLocation == null) {
+      this.props.onSelectWidgets([]);
+    } else {
+      const [x1, y1] = selectionStartLocation;
+      const [x2, y2] = selectionCurrentLocation;
+      const smallX = x1 < x2 ? x1 : x2;
+      const largeX = x1 > x2 ? x1 : x2;
+      const smallY = y1 < y2 ? y1 : y2;
+      const largeY = y1 > y2 ? y1 : y2;
+      const selectionBox = [smallX, smallY, largeX, largeY];
+
+      const widgetBoxes = this.props.widgets.map(widget => {
+        const { x, y, width, height } = widget;
+        return [x, y, x + width, y + height].map(val => val * TILE_SIZE);
+      });
+
+      const overlaps = boxIntersect([selectionBox], widgetBoxes);
+      const selectedWidgetIds = overlaps
+        .map(([i, j]) => j)
+        .map(i => this.props.widgets[i])
+        .map(({ id }) => id);
+      this.props.onSelectWidgets(selectedWidgetIds);
+    }
+
     document.removeEventListener("mousemove", this.handleMouseMove);
-    this.props.onSelectWidget(null);
     this.setState({
       selectionStartLocation: null,
       selectionCurrentLocation: null
@@ -112,7 +118,7 @@ class EditCanvas extends Component {
     const {
       connectMoveDropTarget,
       connectLibraryDropTarget,
-      selectedWidget
+      selectedWidgets
     } = this.props;
     const hasWidgets = this.props.widgets.length > 0;
 
@@ -161,14 +167,14 @@ class EditCanvas extends Component {
                   id={id}
                   key={id}
                   isSelected={
-                    selectedWidget != null && id === selectedWidget.id
+                    selectedWidgets.indexOf(widget) !== -1
                   }
                   x={1 + TILE_SIZE * x}
                   y={1 + TILE_SIZE * y}
                   width={actualWidth}
                   height={actualHeight}
                   onDelete={() => this.props.onDeleteWidget(id)}
-                  onClick={() => this.props.onSelectWidget(id)}
+                  onClick={() => this.props.onSelectWidgets([id])}
                   onMove={(dx, dy) => this.props.onMoveWidget(id, dx, dy)}
                   onResize={(moveX, moveY, dx, dy) =>
                     this.props.onResizeWidget(id, moveX, moveY, dx, dy)
@@ -214,7 +220,7 @@ const addFromLibraryDropTarget = DropTarget(
 function mapStateToProps(state) {
   return {
     widgets: getCurrentCanvasWidgets(state),
-    selectedWidget: getSelectedWidget(state)
+    selectedWidgets: getSelectedWidgets(state)
   };
 }
 
@@ -227,7 +233,7 @@ function mapDispatchToProps(dispatch) {
     onMoveWidget: (id, dx, dy) => {
       dispatch(moveWidget(id, toTile(dx), toTile(dy)));
     },
-    onSelectWidget: id => dispatch(selectWidget(id)),
+    onSelectWidgets: ids => dispatch(selectWidgets(ids)),
     onDeleteWidget: id => dispatch(deleteWidget(id)),
     onAddWidget: (type, x, y) => {
       dispatch(addWidget(toTile(x), toTile(y), type, "0"));

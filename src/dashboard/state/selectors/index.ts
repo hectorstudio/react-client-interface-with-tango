@@ -23,9 +23,9 @@ export const getWidgets = createSelector(
   state => Object.keys(state.widgets).map(key => state.widgets[key])
 );
 
-export const getSelectedWidget = createSelector(
+export const getSelectedWidgets = createSelector(
   getWidgetState,
-  ({ selectedId, widgets }) => (selectedId ? widgets[selectedId] : null)
+  ({ selectedIds, widgets }) => selectedIds.map(id => widgets[id])
 );
 
 export const getCurrentCanvasWidgets = createSelector(

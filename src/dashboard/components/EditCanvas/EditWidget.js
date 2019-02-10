@@ -56,6 +56,7 @@ class ResizeArea extends Component {
 
     return (
       <div
+        className="ResizeArea"
         onDrag={
           () => false /* Necessary to prevent default behaviour of dragging */
         }
@@ -235,6 +236,7 @@ class EditWidget extends Component {
           event.stopPropagation();
           this.props.onClick();
         }}
+        onClick={event => event.stopPropagation()}
       >
         {resizeAreas}
         <WarningBadge visible={this.props.warning} />

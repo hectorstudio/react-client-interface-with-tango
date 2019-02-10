@@ -3,18 +3,17 @@ import { Widget } from "../../../types";
 import {
   ADD_WIDGET,
   MOVE_WIDGET,
-  SELECT_WIDGET,
   DELETE_WIDGET,
   SET_INPUT,
   DELETE_INPUT,
   ADD_INPUT,
-  RESIZE_WIDGET
+  RESIZE_WIDGET,
+  SELECT_WIDGETS
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
 import {
   move,
-  removeAt,
   setInput,
   deleteInput,
   addInput,
@@ -26,16 +25,16 @@ import {
 } from "./lib";
 
 import { definitionForType, definitionForWidget } from "src/dashboard/widgets";
-
 import { defaultInputs } from "src/dashboard/utils";
 
 export interface WidgetsState {
-  selectedId: string | null;
+  selectedIds: string[];
   widgets: Record<string, Widget>;
 }
 
 const initialState = {
   selectedId: null,
+  selectedIds: [],
   widgets: {}
 };
 
@@ -66,7 +65,7 @@ export default function canvases(
       return {
         ...state,
         widgets: { ...state.widgets, [id]: widget },
-        selectedId: id
+        selectedIds: [id]
       };
     }
     case MOVE_WIDGET: {
@@ -81,21 +80,21 @@ export default function canvases(
       const widgets = { ...state.widgets, [id]: newWidget };
       return { ...state, widgets };
     }
-    case SELECT_WIDGET: {
-      const { id } = action;
-      return { ...state, selectedId: id };
+    case SELECT_WIDGETS: {
+      const { ids } = action;
+      return { ...state, selectedIds: ids };
     }
     case DELETE_WIDGET: {
-      if (state.selectedId != null) {
-        const widgets = removeAt(state.widgets, state.selectedId);
-        return { ...state, widgets, selectedId: null };
-      } else {
-        return state;
-      }
+      const widgets = Object.keys(state.widgets)
+        .filter(id => state.selectedIds.indexOf(id) === -1)
+        .reduce((accum, id) => {
+          return { ...accum, [id]: state.widgets[id] };
+        }, {});
+      return { ...state, widgets, selectedIds: [] };
     }
     case SET_INPUT: {
       const { path, value } = action;
-      const id = state.selectedId;
+      const id = state.selectedIds[0];
       if (id == null) {
         return state;
       }
@@ -105,7 +104,7 @@ export default function canvases(
     }
     case ADD_INPUT: {
       const { path } = action;
-      const id = state.selectedId;
+      const id = state.selectedIds[0];
       if (id == null) {
         return state;
       }
@@ -120,7 +119,7 @@ export default function canvases(
     }
     case DELETE_INPUT: {
       const { path } = action;
-      const id = state.selectedId;
+      const id = state.selectedIds[0];
       if (id == null) {
         return state;
       }
