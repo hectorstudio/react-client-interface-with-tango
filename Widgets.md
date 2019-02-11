@@ -1,65 +1,153 @@
-### Widgets Definitions
+# How to create a widget
 
-This is a non-final, work-in-progress description of the data structures involved in composing a widget definition.
+A widget is a bundle consisting of two objects: a definition and a component. The bundle is typically exported from a file:
 
-A widget *definition* is the blueprint of a widget (a "class", as opposed to a widget in a dashboard (an "instance".)
+    const definition = ...;
+    class TheComponent extends React.Component ...
 
-A WidgetDefinition[] array is supplied at the top-level of three different components:
-1. In the RunCanvas, in order to instantiate widgets that can be fed values from the corresponding Tango devices.
-2. In the EditCanvas, in order to instantiate widgets that can be moved around and modified in the editor.
-3. In the library sidebar, in order display a list of available widget types and instantiate a preview of each.
+    export default { definition, component: TheComponent };
 
-### WidgetDefinition
+The definition is a declarative object describing the basic characteristics of a widget, and the inputs that it receives. In the React component for the widget, the inputs are made available through a prop named `input`.
 
-| key | type | description
-|-|-|-
-| type | string | Unique identifier for widget, e.g. "ATTRIBUTE_PLOTTER".
-| name | string | Human-readable name of widget, e.g. "Attribute Plotter".
-| component | WidgetComponent | Reference to React component class, e.g. AttributePlotter.
-| fields | WidgetField[] | A list of fields required by the widget in order to connect*. Each field gets an input element in the field section of the widget inspector.
-| params | WidgetParam[] | A list of configurable params exposed by the widget**. Each param gets an input element in the param section of the widget inspector.
+Formal definitions are given below, but we'll start with an example demonstrating the basic idea. Note how the device is set in a single input, which publishes it to a variable that's available to the other inputs.
 
-\* Fields are core attributes of a widget. All widgets expose a subset of a limited number of fields. Currently the only permitted fields are "device" and "attribute".
+    const definition = {
+      type: "MOTOR_CONTROL",
+      name: "Motor Control",
+      defaultWidth: 10,
+      defaultHeight: 20,
+      inputs: {
+        device: {
+          type: "device",
+          publish: "$device",
+        },
+        position: {
+          type: "attribute",
+          device: "$device",
+          attribute: "Position"
+        },
+        turnRight: {
+          type: "command",
+          device: "$device",
+          command: "TurnRight"
+        },
+        turnLeft: {
+          type: "command",
+          device: "$device",
+          command: "TurnLeft"
+        }
+      }
+    }
 
-\** Params are attributes that are particular to each widget and up to the developer to define and use.
+The render method of the component implementation may look something like this:
 
-#### WidgetField
+    render() {
+      const {
+        position,
+        turnRight,
+        turnLeft
+      } = this.props.inputs;
 
-A WidgetField is any of the following types: DeviceField, AttributeField or a plain string.
+      return (
+        <div>
+          Position: {position.value}
+          <button onClick={turnLeft}>Left</button>
+          <button onClick={turnRight}>Right</button>
+        </div>
+      );
+    }
 
-In the event of a plain string, it is equivalent to {type: &lt;the string&gt;}, e.g. "device" == {type: "device"}.
+The widget is then simply bundled:
 
-##### DeviceField
+    const bundle = { definition, component };
 
-| key | type | description
-|-|-|-
-| type | "device" | Identifies a device field
+## Widget Definition
 
-##### AttributeField
+| Key | Type | Description
+|-|-|-|-
+| type | string | Type identifier for the widget. Must be unique (e.g. "ATTRIBUTE_PLOT".)
+| name | string | The name of the widget shown to the user (e.g. "Attribute Plot".)
+| defaultWidth | number | Default width (in number of tiles)
+| defaultHeight | number | Default height (in number of tiles)
+| inputs || An object where the keys are input names and the values are any of the input definitions below.
 
-| key | type | description
-|-|-|-
-| type | "attribute" | Identifies an attribute field.
-| dataformats | ("SCALAR" &#124; "SPECTRUM" &#124; "IMAGE")[] | Permitted dataformats.
-| numericOnly | boolean | If true, then permits only numeric datatypes.
+## Input Definitions
 
-#### Special keys
+A question mark (e.g. `label?`) denotes an optional field.
 
-| key | type | description
-|-|-|-
-| &#95;&#95;canvas&#95;&#95; | number | Injected in widget definitions dynamically generated from subcanvases. Do not use this in widgets.
+### Base Input Definition
+| Key | Type | Description
+|-|-|-|-
+| type | string | The type of input. Can assume the following values: boolean, number, string, complex, select, attribute, color, device, command
+| label? | string | Label shown to the user in the widget inspector. If it's an empty string, no label is shown.
+| default? | - | Default value of the input. The type depends on the type of input.
+| required? | boolean | Whether the input is required for the widget to be valid or not. A dashboard cannot start with invalid widgets.
 
-#### WidgetParam
+The following input types have no fields in addition to the above:
+* "boolean". Manifests itself as a checkbox.
+* "number". Manifests itself as a numeric input field.
+* "string". Manifests itself as a string input field.
+* "color". Manifests itself as a color picker.
 
-| key | type | description
-|-|-|-
-| name | string | Name identifying the param, e.g. "showGrid".
-| type | "boolean" &#124; "string" &#124; "number" | The type of the param, used among other things to determine the input element of the param in the editor inspector. A boolean gets a checkbox etc.
-| default | any | Default value, e.g. false
-| description | string | Human-readable description, e.g. "Show Grid"
+### Select Input Definition
 
-Tentative, non-implemented keys:
+Manifests itself as a drop-down select with a predefined set of options.
 
-| key | type | description
-|-|-|-
-| validation | ? | Could be used to restrict the set of permitted values on configuration level.
+| Key | Type | Description
+|-|-|-|-
+| options | Array of { name: string, value: any } | The available options, where `name` is the value shown to the user for each option.
+
+### Complex Input Definition
+
+An input that consists of muliple other inputs.
+
+| Key | Type | Description
+|-|-|-|-
+| inputs | - | Input mapping with the same structure as the top-level widget definition one.
+| repeat | boolean | If true, the complex input becomes an array of complex inputs. The user can add any number of inputs to this array.
+
+### Device Input Definition
+
+Manifests itself as an input where the user can select any of the devices in the database.
+
+| Key | Type | Description
+|-|-|-|-
+| publish | string | If true, the device name is made available to other inputs as a variable (see example at the top.)
+
+### Attribute Input Definition
+
+An input representing a device attribute. Unless bound to a certain attribute, it manifests itself as an input where the user can select a device attribute.
+
+| Key | Type | Description
+|-|-|-|-
+| dataFormat? | string | Restricts the attributes shown to the users by data format. Permitted values: "scalar" or "spectrum" or "image"
+| dataType? | string | If "numeric", only numeric attributes are shown.
+| device? | string | If set, the input is bound to this device.
+| attribute? | string | If set, the input is bound to this attribute.
+
+In the component, the input is an object with the following structure:
+
+| Key | Type | Description
+|-|-|-|-
+| device | string | The device name
+| attribute | string | The attribute name
+| value | | The current value of the attribute
+| write | function | A function which writes a value to the attribute when executed (NOT IMPLEMENTED.)
+
+### Command Input Definition
+
+An input representing a device command. Unless bound to a certain command, it manifests itself as an input where the user can select a device command.
+
+| Key | Type | Description
+|-|-|-|-
+| device? | string | If set, the input is bound to this device.
+| command? | string | If set, the input is bound to this command.
+| intype? | string | If set, only commands with this intype are shown to the user.
+
+In the component, the input is an object with the following structure:
+
+| Key | Type | Description
+|-|-|-|-
+| device | string | The device name
+| command | string | The command name
+| execute | function | A function which executes the command when executed.
