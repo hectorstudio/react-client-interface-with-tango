@@ -42,7 +42,7 @@ class AttributeReadOnly extends Component<Props> {
     if (Number(parseFloat(value)) === value) {
       return value.toFixed(precision);
     } else {
-      return value;
+      return value === undefined ? null : String(value);
     }
   }
 
