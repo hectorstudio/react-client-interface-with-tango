@@ -1,6 +1,6 @@
 import {
   ADD_WIDGET,
-  MOVE_WIDGET,
+  MOVE_WIDGETS,
   RESIZE_WIDGET,
   DELETE_WIDGET,
   SELECT_CANVAS,
@@ -10,7 +10,7 @@ import {
 
 import {
   AddWidgetAction,
-  MoveWidgetAction,
+  MoveWidgetsAction,
   ResizeWidgetAction,
   DeleteWidgetAction,
   SelectCanvasAction,
@@ -27,12 +27,12 @@ export function addWidget(
   return { type: ADD_WIDGET, x, y, widgetType, canvas };
 }
 
-export function moveWidget(
-  id: string,
+export function moveWidgets(
+  ids: string[],
   dx: number,
   dy: number
-): MoveWidgetAction {
-  return { type: MOVE_WIDGET, dx, dy, id };
+): MoveWidgetsAction {
+  return { type: MOVE_WIDGETS, dx, dy, ids };
 }
 
 export function resizeWidget(

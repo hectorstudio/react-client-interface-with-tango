@@ -13,7 +13,7 @@ import SelectionBox from "./SelectionBox";
 import EditWidget from "./EditWidget";
 
 import {
-  moveWidget,
+  moveWidgets,
   addWidget,
   resizeWidget,
   deleteWidget,
@@ -109,6 +109,10 @@ class EditCanvas extends Component {
           .map(({ id }) => id);
         this.props.onSelectWidgets(selectedWidgetIds);
       }
+    } else if (mouseActionType === MOVE) {
+      const [dx, dy] = this.moveDelta();
+      const ids = this.props.selectedWidgets.map(({ id }) => id);
+      this.props.onMoveWidgets(ids, dx, dy);
     }
 
     document.removeEventListener("mousemove", this.handleMouseMove);
@@ -153,6 +157,7 @@ class EditCanvas extends Component {
     const { connectLibraryDropTarget, selectedWidgets } = this.props;
     const hasWidgets = this.props.widgets.length > 0;
 
+    const isMoving = this.state.mouseActionType === MOVE;
     const isSelecting = this.isSelecting();
     const selectionBox = isSelecting && (
       <SelectionBox
@@ -164,7 +169,7 @@ class EditCanvas extends Component {
     return connectLibraryDropTarget(
       <div
         ref={ref => (this.canvasRef = ref)}
-        className={cx("Canvas", "edit", { isSelecting })}
+        className={cx("Canvas", "edit", { isSelecting, isMoving })}
         onMouseDown={this.handleMouseDown}
         onMouseUp={this.handleMouseUp}
         onKeyDown={event => {
@@ -176,7 +181,6 @@ class EditCanvas extends Component {
         tabIndex="0"
       >
         {selectionBox}
-        {this.state.mouseActionType}
 
         <div className="Placeholder" style={{ opacity: hasWidgets ? 0 : 1 }}>
           Add widgets by dragging them from the library and dropping them on the
@@ -207,7 +211,9 @@ class EditCanvas extends Component {
                 height={actualHeight}
                 onDelete={() => this.props.onDeleteWidget(id)}
                 onMouseDown={event => {
-                  this.props.onSelectWidgets([id]);
+                  if (!isSelected) {
+                    this.props.onSelectWidgets([id]);
+                  }
                   this.initiateMouseEvent(MOVE, event);
                 }}
                 onResize={(moveX, moveY, dx, dy) =>
@@ -255,8 +261,8 @@ function toTile(value) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onMoveWidget: (id, dx, dy) => {
-      dispatch(moveWidget(id, toTile(dx), toTile(dy)));
+    onMoveWidgets: (ids, dx, dy) => {
+      dispatch(moveWidgets(ids, toTile(dx), toTile(dy)));
     },
     onSelectWidgets: ids => dispatch(selectWidgets(ids)),
     onDeleteWidget: id => dispatch(deleteWidget(id)),
