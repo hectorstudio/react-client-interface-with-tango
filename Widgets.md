@@ -1,3 +1,25 @@
+# Description
+
+With this device explorer built on TangoGQL, you can:
+
+1. View a list of all Tango devices
+2. View and modify device properties
+3. View and modify device attributes
+4. View and execute device commands
+
+# Usage
+
+1. Clone the repository.
+2. Run `npm install`.
+3. Modify the `proxy` setting in `package.json` to reflect the location of the TangoGQL instance.
+4. Type `npm start`.
+
+# Authors
+
+WebJive was written by the KITS Group at MAX IV Laboratory.
+
+---
+
 # How to create a widget
 
 A widget is a bundle consisting of two objects: a definition and a React component. The bundle is typically exported from a file:
@@ -64,7 +86,7 @@ The widget is then simply bundled:
 ## Widget Definition
 
 | Key | Type | Description
-|-|-|-|-
+|-|-|-
 | type | string | Type identifier for the widget. Must be unique (e.g. "ATTRIBUTE_PLOT".)
 | name | string | The name of the widget shown to the user (e.g. "Attribute Plot".)
 | defaultWidth | number | Default width (in number of tiles)
@@ -77,7 +99,7 @@ A question mark (e.g. `label?`) denotes an optional field.
 
 ### Base Input Definition
 | Key | Type | Description
-|-|-|-|-
+|-|-|-
 | type | string | The type of input. Can assume the following values: boolean, number, string, complex, select, attribute, color, device, command
 | label? | string | Label shown to the user in the widget inspector. If it's an empty string, no label is shown.
 | default? | - | Default value of the input. The type depends on the type of input.
@@ -94,7 +116,7 @@ The following input types have no fields in addition to the above:
 Manifests itself as a drop-down select with a predefined set of options.
 
 | Key | Type | Description
-|-|-|-|-
+|-|-|-
 | options | Array of { name: string, value: any } | The available options, where `name` is the value shown to the user for each option.
 
 ### Complex Input Definition
@@ -102,7 +124,7 @@ Manifests itself as a drop-down select with a predefined set of options.
 An input that consists of muliple other inputs.
 
 | Key | Type | Description
-|-|-|-|-
+|-|-|-
 | inputs | - | Input mapping with the same structure as the top-level widget definition one.
 | repeat | boolean | If true, the complex input becomes an array of complex inputs. The user can add any number of inputs to this array.
 
@@ -111,7 +133,7 @@ An input that consists of muliple other inputs.
 Manifests itself as an input where the user can select any of the devices in the database.
 
 | Key | Type | Description
-|-|-|-|-
+|-|-|-
 | publish | string | If true, the device name is made available to other inputs as a variable (see example at the top.)
 
 ### Attribute Input Definition
@@ -119,7 +141,7 @@ Manifests itself as an input where the user can select any of the devices in the
 An input representing a device attribute. Unless bound to a certain attribute, it manifests itself as an input where the user can select a device attribute.
 
 | Key | Type | Description
-|-|-|-|-
+|-|-|-
 | dataFormat? | string | Restricts the attributes shown to the users by data format. Permitted values: "scalar" or "spectrum" or "image"
 | dataType? | string | If "numeric", only numeric attributes are shown.
 | device? | string | If set, the input is bound to this device.
@@ -128,7 +150,7 @@ An input representing a device attribute. Unless bound to a certain attribute, i
 In the component, the input is an object with the following structure:
 
 | Key | Type | Description
-|-|-|-|-
+|-|-|-
 | device | string | The device name
 | attribute | string | The attribute name
 | value | | The current value of the attribute
@@ -139,7 +161,7 @@ In the component, the input is an object with the following structure:
 An input representing a device command. Unless bound to a certain command, it manifests itself as an input where the user can select a device command.
 
 | Key | Type | Description
-|-|-|-|-
+|-|-|-
 | device? | string | If set, the input is bound to this device.
 | command? | string | If set, the input is bound to this command.
 | intype? | string | If set, only commands with this intype are shown to the user.
@@ -147,7 +169,7 @@ An input representing a device command. Unless bound to a certain command, it ma
 In the component, the input is an object with the following structure:
 
 | Key | Type | Description
-|-|-|-|-
+|-|-|-
 | device | string | The device name
 | command | string | The command name
 | execute | function | A function which executes the command when executed.
