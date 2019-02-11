@@ -68,7 +68,8 @@ class EditCanvas extends Component {
   }
 
   handleMouseDown(event) {
-    if (event.button === 0) { // Left click
+    if (event.button === 0) {
+      // Left click
       this.initiateMouseEvent(SELECT, event);
     }
   }
@@ -190,6 +191,19 @@ class EditCanvas extends Component {
           Add widgets by dragging them from the library and dropping them on the
           canvas.
         </div>
+
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            boxShadow: "inset -1em 0 1em -1em rgba(0, 0, 0, 0.2)",
+            width: "100%",
+            height: "100%",
+            zIndex: 1000,
+            pointerEvents: "none"
+          }}
+        />
 
         <div className="grid">
           {this.props.widgets.map(widget => {
