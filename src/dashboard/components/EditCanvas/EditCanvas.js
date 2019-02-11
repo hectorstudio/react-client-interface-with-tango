@@ -28,26 +28,17 @@ import {
 const BACKSPACE = 8;
 const DELETE = 46;
 
-const editCanvasTarget = {
-  canDrop(props, monitor) {
-    return true;
-  },
-
-  drop(props, monitor, component) {
-    const { x, y } = monitor.getDifferenceFromInitialOffset();
-    // const { id, warning } = monitor.getItem();
-    return { dx: x, dy: y };
-  }
-};
+const MOVE = "MOVE";
+const SELECT = "SELECT";
 
 class EditCanvas extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      mouseIsDown: false,
-      selectionStartLocation: null,
-      selectionCurrentLocation: null
+      mouseActionType: null,
+      mouseActionStartLocation: null,
+      mouseActionCurrentLocation: null
     };
 
     this.canvasRef = null;
@@ -60,153 +51,178 @@ class EditCanvas extends Component {
     return this.definitionForWidget(widget).component;
   }
 
-  handleMouseDown(event) {
+  initiateMouseEvent(type, event) {
     const { left, top } = this.canvasRef.getBoundingClientRect();
-    const selectionStartLocation = [event.clientX - left, event.clientY - top];
+    const mouseActionStartLocation = [
+      event.clientX - left,
+      event.clientY - top
+    ];
+
     this.setState({
-      selectionStartLocation,
-      selectionCurrentLocation: selectionStartLocation
+      mouseActionType: type,
+      mouseActionStartLocation,
+      mouseActionCurrentLocation: mouseActionStartLocation
     });
 
     document.addEventListener("mousemove", this.handleMouseMove);
   }
 
+  handleMouseDown(event) {
+    this.initiateMouseEvent(SELECT, event);
+  }
+
   handleMouseMove(event) {
     const { left, top } = this.canvasRef.getBoundingClientRect();
-    const selectionCurrentLocation = [
+    const mouseActionCurrentLocation = [
       event.clientX - left,
       event.clientY - top
     ];
-    this.setState({ selectionCurrentLocation });
+    this.setState({ mouseActionCurrentLocation });
   }
 
   handleMouseUp() {
-    const { selectionStartLocation, selectionCurrentLocation } = this.state;
+    const {
+      mouseActionType,
+      mouseActionStartLocation,
+      mouseActionCurrentLocation
+    } = this.state;
 
-    if (selectionStartLocation != null) {
-      const [x1, y1] = selectionStartLocation;
-      const [x2, y2] = selectionCurrentLocation;
-      const smallX = x1 < x2 ? x1 : x2;
-      const largeX = x1 > x2 ? x1 : x2;
-      const smallY = y1 < y2 ? y1 : y2;
-      const largeY = y1 > y2 ? y1 : y2;
-      const selectionBox = [smallX, smallY, largeX, largeY];
+    if (mouseActionType === SELECT) {
+      if (mouseActionStartLocation != null) {
+        const [x1, y1] = mouseActionStartLocation;
+        const [x2, y2] = mouseActionCurrentLocation;
+        const smallX = x1 < x2 ? x1 : x2;
+        const largeX = x1 > x2 ? x1 : x2;
+        const smallY = y1 < y2 ? y1 : y2;
+        const largeY = y1 > y2 ? y1 : y2;
+        const selectionBox = [smallX, smallY, largeX, largeY];
 
-      const widgetBoxes = this.props.widgets.map(widget => {
-        const { x, y, width, height } = widget;
-        return [x, y, x + width, y + height].map(val => val * TILE_SIZE);
-      });
+        const widgetBoxes = this.props.widgets.map(widget => {
+          const { x, y, width, height } = widget;
+          return [x, y, x + width, y + height].map(val => val * TILE_SIZE);
+        });
 
-      const overlaps = boxIntersect([selectionBox], widgetBoxes);
-      const selectedWidgetIds = overlaps
-        .map(([i, j]) => j)
-        .map(i => this.props.widgets[i])
-        .map(({ id }) => id);
-      this.props.onSelectWidgets(selectedWidgetIds);
+        const overlaps = boxIntersect([selectionBox], widgetBoxes);
+        const selectedWidgetIds = overlaps
+          .map(([i, j]) => j)
+          .map(i => this.props.widgets[i])
+          .map(({ id }) => id);
+        this.props.onSelectWidgets(selectedWidgetIds);
+      }
     }
 
     document.removeEventListener("mousemove", this.handleMouseMove);
     this.setState({
-      selectionStartLocation: null,
-      selectionCurrentLocation: null
+      mouseActionType: null,
+      mouseActionStartLocation: null,
+      mouseActionCurrentLocation: null
     });
   }
 
   isSelecting() {
     const {
-      selectionStartLocation: start,
-      selectionCurrentLocation: current
+      mouseActionType,
+      mouseActionStartLocation: start,
+      mouseActionCurrentLocation: current
     } = this.state;
 
-    if (start == null) {
+    if (mouseActionType !== SELECT) {
       return false;
-    } else {
-      return start[0] !== current[0] || start[1] !== current[1];
     }
+
+    return start[0] !== current[0] || start[1] !== current[1];
+  }
+
+  moveDelta() {
+    const {
+      mouseActionStartLocation: start,
+      mouseActionCurrentLocation: current,
+      mouseActionType
+    } = this.state;
+
+    if (mouseActionType !== MOVE || start == null || current == null) {
+      return [0, 0];
+    }
+
+    const [x1, y1] = start;
+    const [x2, y2] = current;
+    return [x2 - x1, y2 - y1];
   }
 
   render() {
-    const {
-      connectMoveDropTarget,
-      connectLibraryDropTarget,
-      selectedWidgets
-    } = this.props;
+    const { connectLibraryDropTarget, selectedWidgets } = this.props;
     const hasWidgets = this.props.widgets.length > 0;
 
     const isSelecting = this.isSelecting();
     const selectionBox = isSelecting && (
       <SelectionBox
-        start={this.state.selectionStartLocation}
-        current={this.state.selectionCurrentLocation}
+        start={this.state.mouseActionStartLocation}
+        current={this.state.mouseActionCurrentLocation}
       />
     );
 
     return connectLibraryDropTarget(
-      connectMoveDropTarget(
-        <div
-          ref={ref => (this.canvasRef = ref)}
-          className={cx("Canvas", "edit", { isSelecting })}
-          onMouseDown={this.handleMouseDown}
-          onMouseUp={this.handleMouseUp}
-          onKeyDown={event => {
-            if ([BACKSPACE, DELETE].indexOf(event.keyCode) !== -1) {
-              event.preventDefault();
-              this.props.onDeleteWidget();
-            }
-          }}
-          tabIndex="0"
-        >
-          {selectionBox}
+      <div
+        ref={ref => (this.canvasRef = ref)}
+        className={cx("Canvas", "edit", { isSelecting })}
+        onMouseDown={this.handleMouseDown}
+        onMouseUp={this.handleMouseUp}
+        onKeyDown={event => {
+          if ([BACKSPACE, DELETE].indexOf(event.keyCode) !== -1) {
+            event.preventDefault();
+            this.props.onDeleteWidget();
+          }
+        }}
+        tabIndex="0"
+      >
+        {selectionBox}
+        {this.state.mouseActionType}
 
-          <div className="Placeholder" style={{ opacity: hasWidgets ? 0 : 1 }}>
-            Add widgets by dragging them from the library and dropping them on
-            the canvas.
-          </div>
-
-          <div className="grid">
-            {this.props.widgets.map(widget => {
-              const { x, y, id, width, height, inputs, valid } = widget;
-              const actualWidth = TILE_SIZE * width;
-              const actualHeight = TILE_SIZE * height;
-              const props = { inputs, mode: "edit", actualWidth, actualHeight };
-
-              const component = componentForWidget(widget);
-              const element = React.createElement(component, props);
-
-              return (
-                <EditWidget
-                  id={id}
-                  key={id}
-                  isSelected={selectedWidgets.indexOf(widget) !== -1}
-                  x={1 + TILE_SIZE * x}
-                  y={1 + TILE_SIZE * y}
-                  width={actualWidth}
-                  height={actualHeight}
-                  onDelete={() => this.props.onDeleteWidget(id)}
-                  onClick={() => this.props.onSelectWidgets([id])}
-                  onMove={(dx, dy) => this.props.onMoveWidget(id, dx, dy)}
-                  onResize={(moveX, moveY, dx, dy) =>
-                    this.props.onResizeWidget(id, moveX, moveY, dx, dy)
-                  }
-                  warning={!valid}
-                  render={element}
-                />
-              );
-            })}
-          </div>
+        <div className="Placeholder" style={{ opacity: hasWidgets ? 0 : 1 }}>
+          Add widgets by dragging them from the library and dropping them on the
+          canvas.
         </div>
-      )
+
+        <div className="grid">
+          {this.props.widgets.map(widget => {
+            const { x, y, id, width, height, inputs, valid } = widget;
+            const actualWidth = TILE_SIZE * width;
+            const actualHeight = TILE_SIZE * height;
+            const props = { inputs, mode: "edit", actualWidth, actualHeight };
+
+            const isSelected = selectedWidgets.indexOf(widget) !== -1;
+            const [moveX, moveY] = isSelected ? this.moveDelta() : [0, 0];
+
+            const component = componentForWidget(widget);
+            const element = React.createElement(component, props);
+
+            return (
+              <EditWidget
+                id={id}
+                key={id}
+                isSelected={isSelected}
+                x={1 + TILE_SIZE * x + moveX}
+                y={1 + TILE_SIZE * y + moveY}
+                width={actualWidth}
+                height={actualHeight}
+                onDelete={() => this.props.onDeleteWidget(id)}
+                onMouseDown={event => {
+                  this.props.onSelectWidgets([id]);
+                  this.initiateMouseEvent(MOVE, event);
+                }}
+                onResize={(moveX, moveY, dx, dy) =>
+                  this.props.onResizeWidget(id, moveX, moveY, dx, dy)
+                }
+                warning={!valid}
+                render={element}
+              />
+            );
+          })}
+        </div>
+      </div>
     );
   }
 }
-
-const moveDropTarget = DropTarget(
-  dndTypes.EDIT_WIDGET,
-  editCanvasTarget,
-  (connect, monitor) => ({
-    connectMoveDropTarget: connect.dropTarget()
-  })
-);
 
 const addFromLibraryDropTarget = DropTarget(
   dndTypes.LIBRARY_WIDGET,
@@ -260,8 +276,7 @@ const connectWithState = connect(
   mapDispatchToProps
 );
 
-export default [
-  moveDropTarget,
-  addFromLibraryDropTarget,
-  connectWithState
-].reduce((cls, decorator) => decorator(cls), EditCanvas);
+export default [addFromLibraryDropTarget, connectWithState].reduce(
+  (cls, decorator) => decorator(cls),
+  EditCanvas
+);

@@ -56,6 +56,7 @@
 .Dashboard .Canvas.edit.isSelecting,
 .Dashboard .Canvas.edit.isSelecting .Widget,
 .Dashboard .Canvas.edit.isSelecting .Widget .ResizeArea {
+  user-select: none;
   cursor: default !important;
 }
 

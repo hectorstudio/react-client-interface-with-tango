@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { DragSource } from "react-dnd";
 
 import WarningBadge from "./WarningBadge";
 
@@ -76,31 +75,7 @@ class ResizeArea extends Component {
   }
 }
 
-const editWidgetSource = {
-  beginDrag(props) {
-    return {
-      id: props.id,
-      warning: props.warning
-    };
-  },
-
-  endDrag(props, monitor) {
-    const result = monitor.getDropResult();
-    if (result) {
-      const { dx, dy } = monitor.getDropResult();
-      props.onMove(dx, dy);
-    }
-  }
-};
-
-function editWidgetCollect(connect, monitor) {
-  return {
-    connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging()
-  };
-}
-
-class EditWidget extends Component {
+export default class EditWidget extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -197,7 +172,7 @@ class EditWidget extends Component {
       return null;
     }
 
-    const { width, height, connectDragSource } = this.props;
+    const { width, height } = this.props;
 
     const resizeAreas = ["nw", "ne", "sw", "se", "w", "e", "s", "n"].map(
       areaLocation => (
@@ -205,7 +180,6 @@ class EditWidget extends Component {
           key={areaLocation}
           location={areaLocation}
           onMouseDown={(areaLocation, x, y) => {
-            this.props.onClick();
             this.handleBeginResize(areaLocation, x, y);
           }}
         />
@@ -234,17 +208,13 @@ class EditWidget extends Component {
         }}
         onMouseDown={event => {
           event.stopPropagation();
-          this.props.onClick();
+          this.props.onMouseDown(event);
         }}
       >
         {resizeAreas}
         <WarningBadge visible={this.props.warning} />
-        {connectDragSource(<div style={{ overflow: "hidden" }}>{render}</div>)}
+        <div style={{ overflow: "hidden" }}>{render}</div>
       </div>
     );
   }
 }
-
-export default DragSource("EDIT_WIDGET", editWidgetSource, editWidgetCollect)(
-  EditWidget
-);
