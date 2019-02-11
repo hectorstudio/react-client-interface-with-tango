@@ -54,7 +54,7 @@ const definition: WidgetDefinition = {
       label: "",
       type: "command",
       required: true,
-      intype: "void"
+      intype: "DevVoid"
     },
     title: {
       type: "string",

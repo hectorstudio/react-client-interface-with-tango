@@ -112,8 +112,8 @@ export default class CommandSelect extends Component<Props, State> {
     const { commands } = this.state;
     const { inputType } = this.props;
 
-    if (inputType === "void") {
-      return commands.filter(({ intype }) => intype === "DevVoid");
+    if (inputType != null) {
+      return commands.filter(({ intype }) => intype === inputType);
     }
     
     return commands;
