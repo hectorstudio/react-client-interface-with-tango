@@ -68,7 +68,9 @@ class EditCanvas extends Component {
   }
 
   handleMouseDown(event) {
-    this.initiateMouseEvent(SELECT, event);
+    if (event.button === 0) { // Left click
+      this.initiateMouseEvent(SELECT, event);
+    }
   }
 
   handleMouseMove(event) {
@@ -80,7 +82,7 @@ class EditCanvas extends Component {
     this.setState({ mouseActionCurrentLocation });
   }
 
-  handleMouseUp() {
+  handleMouseUp(event) {
     const {
       mouseActionType,
       mouseActionStartLocation,
@@ -111,8 +113,10 @@ class EditCanvas extends Component {
       }
     } else if (mouseActionType === MOVE) {
       const [dx, dy] = this.moveDelta();
-      const ids = this.props.selectedWidgets.map(({ id }) => id);
-      this.props.onMoveWidgets(ids, dx, dy);
+      if (dx !== 0 || dy !== 0) {
+        const ids = this.props.selectedWidgets.map(({ id }) => id);
+        this.props.onMoveWidgets(ids, dx, dy);
+      }
     }
 
     document.removeEventListener("mousemove", this.handleMouseMove);
