@@ -1,25 +1,3 @@
-# Description
-
-With this device explorer built on TangoGQL, you can:
-
-1. View a list of all Tango devices
-2. View and modify device properties
-3. View and modify device attributes
-4. View and execute device commands
-
-# Usage
-
-1. Clone the repository.
-2. Run `npm install`.
-3. Modify the `proxy` setting in `package.json` to reflect the location of the TangoGQL instance.
-4. Type `npm start`.
-
-# Authors
-
-WebJive was written by the KITS Group at MAX IV Laboratory.
-
----
-
 # How to create a widget
 
 A widget is a bundle consisting of two objects: a definition and a React component. The bundle is typically exported from a file:
