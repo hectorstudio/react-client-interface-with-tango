@@ -59,9 +59,9 @@ class ResizeArea extends Component {
         onDrag={
           () => false /* Necessary to prevent default behaviour of dragging */
         }
-        onMouseDown={event =>{
+        onMouseDown={event => {
           event.stopPropagation();
-          this.props.onBeginResize(location, event.screenX, event.screenY)
+          this.props.onBeginResize(location, event.screenX, event.screenY);
         }}
         style={{
           position: "absolute",
@@ -187,7 +187,7 @@ export default class EditWidget extends Component {
       )
     );
 
-    const { x, y } = this.props;
+    const { x, y, isSelected } = this.props;
     const [adjustX, adjustY] = this.positionAdjustmentForOngoingResize();
     const [diffX, diffY] = this.sizeDifference();
 
@@ -200,7 +200,7 @@ export default class EditWidget extends Component {
 
     return (
       <div
-        className={this.props.isSelected ? "Widget selected" : "Widget"}
+        className={isSelected ? "Widget selected" : "Widget"}
         style={{
           left: x + adjustX,
           top: y + adjustY,
@@ -214,7 +214,17 @@ export default class EditWidget extends Component {
       >
         {resizeAreas}
         <WarningBadge visible={this.props.warning} />
-        <div style={{ overflow: "hidden" }}>{render}</div>
+        <div
+          style={{
+            overflow: "hidden",
+            height: "inherit",
+            width: "inherit",
+            outline: isSelected ? "2px solid lightskyblue" : "1px solid #ccc",
+            backgroundColor: "white"
+          }}
+        >
+          {render}
+        </div>
       </div>
     );
   }
