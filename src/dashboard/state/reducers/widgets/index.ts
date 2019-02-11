@@ -2,13 +2,13 @@ import { Widget } from "../../../types";
 
 import {
   ADD_WIDGET,
-  MOVE_WIDGET,
   DELETE_WIDGET,
   SET_INPUT,
   DELETE_INPUT,
   ADD_INPUT,
   RESIZE_WIDGET,
-  SELECT_WIDGETS
+  SELECT_WIDGETS,
+  MOVE_WIDGETS
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
@@ -68,10 +68,17 @@ export default function canvases(
         selectedIds: [id]
       };
     }
-    case MOVE_WIDGET: {
-      const { dx, dy, id } = action;
-      const newWidget = move(state.widgets[id], dx, dy);
-      const widgets = { ...state.widgets, [id]: newWidget };
+    case MOVE_WIDGETS: {
+      const { dx, dy, ids } = action;
+
+      const moved = ids
+        .map(id => state.widgets[id])
+        .map(widget => move(widget, dx, dy))
+        .reduce((accum, widget) => {
+          return { ...accum, [widget.id]: widget };
+        }, {});
+
+      const widgets = { ...state.widgets, ...moved };
       return { ...state, widgets };
     }
     case RESIZE_WIDGET: {

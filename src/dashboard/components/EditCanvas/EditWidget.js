@@ -59,9 +59,10 @@ class ResizeArea extends Component {
         onDrag={
           () => false /* Necessary to prevent default behaviour of dragging */
         }
-        onMouseDown={e =>
-          this.props.onMouseDown(location, e.screenX, e.screenY)
-        }
+        onMouseDown={event =>{
+          event.stopPropagation();
+          this.props.onBeginResize(location, event.screenX, event.screenY)
+        }}
         style={{
           position: "absolute",
           ...locationStyle,
@@ -179,7 +180,7 @@ export default class EditWidget extends Component {
         <ResizeArea
           key={areaLocation}
           location={areaLocation}
-          onMouseDown={(areaLocation, x, y) => {
+          onBeginResize={(areaLocation, x, y) => {
             this.handleBeginResize(areaLocation, x, y);
           }}
         />

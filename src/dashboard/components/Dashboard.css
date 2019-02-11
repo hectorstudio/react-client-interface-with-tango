@@ -60,6 +60,10 @@
   cursor: default !important;
 }
 
+.Dashboard .Canvas.edit.isMoving .Widget {
+  user-select: none;
+}
+
 .Dashboard .Canvas.run .Widget,
 .Dashboard .Canvas.edit .Widget {
   position: absolute;

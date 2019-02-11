@@ -1,7 +1,7 @@
 export const SELECT_WIDGETS = "SELECT_WIDGETS";
 export const DELETE_WIDGET = "DELETE_WIDGET";
 export const ADD_WIDGET = "ADD_WIDGET";
-export const MOVE_WIDGET = "MOVE_WIDGET";
+export const MOVE_WIDGETS = "MOVE_WIDGET";
 export const RESIZE_WIDGET = "RESIZE_WIDGET";
 
 export const SET_INPUT = "SET_INPUT";
