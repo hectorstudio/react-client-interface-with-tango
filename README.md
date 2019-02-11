@@ -22,14 +22,14 @@ WebJive was written by the KITS Group at MAX IV Laboratory.
 
 # How to create a widget
 
-A widget is a bundle consisting of two objects: a definition and a component. The bundle is typically exported from a file:
+A widget is a bundle consisting of two objects: a definition and a React component. The bundle is typically exported from a file:
 
     const definition = ...;
     class TheComponent extends React.Component ...
 
     export default { definition, component: TheComponent };
 
-The definition is a declarative object describing the basic characteristics of a widget, and the inputs that it receives. In the React component for the widget, the inputs are made available through a prop named `input`.
+The definition is a declarative object describing the basic characteristics of a widget, and the inputs that it receives. In the component for the widget, the inputs are made available through a prop named `input`.
 
 Formal definitions are given below, but we'll start with an example demonstrating the basic idea. Note how the device is set in a single input, which publishes it to a variable that's available to the other inputs.
 
