@@ -107,7 +107,7 @@ class Dashboard extends Component<Props> {
                 })}
                 disabled={disabled}
               />
-              <select
+              {false && <select
                 className="form-control"
                 style={{
                   marginLeft: "0.5em",
@@ -121,7 +121,7 @@ class Dashboard extends Component<Props> {
                     {i === 0 ? "Root" : canvas.name}
                   </option>
                 ))}
-              </select>
+              </select>}
             </form>
           </div>
           <div className={classNames("CanvasArea", mode)}>
