@@ -17,8 +17,8 @@ interface Props {
 
 const libraryWidgetSource = {
   beginDrag(props, monitor) {
-    const c1 = monitor.getInitialSourceClientOffset()
-    const c2 = monitor.getInitialClientOffset()
+    const c1 = monitor.getInitialSourceClientOffset();
+    const c2 = monitor.getInitialClientOffset();
     const dragOffset = {
       x: c2.x - c1.x,
       y: c2.y - c1.y
@@ -76,8 +76,15 @@ class LibraryWidget extends Component<Props> {
           }
         }}
         className="LibraryWidget"
+        style={{ border: "1px solid #eee", borderRadius: "0.5em" }}
       >
-        <span style={{ fontSize: "12px", fontWeight: "bold" }}>
+        <span
+          style={{
+            borderRadius: "0.5em 0 0.5em 0",
+            padding: "0.25em",
+            backgroundColor: "#eee"
+          }}
+        >
           {definition.name}
         </span>
         {this.props.connectDragSource(<div className="Widget">{widget}</div>)}
