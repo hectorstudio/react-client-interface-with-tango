@@ -27,8 +27,8 @@ export function resize(
   const { width, height } = moved;
   return {
     ...moved,
-    width: width + dx,
-    height: height + dy
+    width: Math.max(2, width + dx),
+    height: Math.max(2, height + dy)
   };
 }
 
