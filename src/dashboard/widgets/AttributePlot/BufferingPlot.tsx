@@ -19,6 +19,9 @@ interface BufferingPlotState {
   buffer: Buffer;
 }
 
+// A new value will be buffered if there have been no new values in IDLE_TIMEOUT seconds
+const IDLE_TIMEOUT = 10;
+
 export default class BufferingPlot extends Component<
   BufferingPlotProps,
   BufferingPlotState
@@ -39,11 +42,10 @@ export default class BufferingPlot extends Component<
   public componentDidUpdate(prevProps) {
     const buffer = this.props.fullNames.reduce((accum, fullName, i) => {
       const value = this.props.values[i];
-      const oldValue = prevProps.values[i];
-
-      if (value !== oldValue) {
-        const oldSequence = accum[fullName];
-        const time = new Date().getTime() / 1000 - this.state.t0;
+      const time = new Date().getTime() / 1000 - this.state.t0;
+      const oldSequence = accum[fullName] || [];
+      
+      if (this.shouldBuffer(oldSequence, time, value)) {  
         const newCoord: Coord = [time, value];
         const newSequence = [...oldSequence, newCoord ];
         return { ...accum, [fullName]: newSequence };
@@ -77,5 +79,19 @@ export default class BufferingPlot extends Component<
         params={this.props.params}
       />
     );
+  }
+
+  private shouldBuffer(sequence: Coord[], time: number, value: number) {
+    if (sequence.length === 0) {
+      return true;
+    }
+
+    const [latestTime, latestValue] = sequence.slice(-1)[0];
+    const deltaT = time - latestTime;
+    if (deltaT > IDLE_TIMEOUT) {
+      return true;
+    }
+
+    return latestValue !== value;
   }
 }
