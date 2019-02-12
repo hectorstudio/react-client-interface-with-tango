@@ -5,7 +5,7 @@ export default function WarningBadge({ visible }) {
     <div
       className="WarningBadge"
       style={{
-        position: "fixed",
+        position: "absolute",
         marginLeft: "-10px",
         marginTop: "-10px",
         backgroundColor: "red",
