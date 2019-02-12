@@ -7,7 +7,7 @@ export default class Library extends Component {
   public render() {
     return (
       <div className="Library">
-        <h1>Built-In</h1>
+        {/*<h1>Built-In</h1>*/}
         {bundles.map((bundle, i) => {
           return <LibraryWidget key={i} bundle={bundle} />;
         })}
