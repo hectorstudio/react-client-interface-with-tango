@@ -75,7 +75,7 @@ class Dashboard extends Component<Props> {
 
     const id = this.parseId();
     const res = await saveToRepo(id, this.props.widgets);
-    if (res.created) {
+    if (res && res.created) {
       this.props.history.replace("?id=" + res.id);
     }
   }
@@ -171,7 +171,7 @@ class Dashboard extends Component<Props> {
   }
 
   private parseId() {
-    const search = this.props.location.search;
+    const search = location.search;
     const parsed = queryString.parse(search);
     return parsed.id || "";
   }
