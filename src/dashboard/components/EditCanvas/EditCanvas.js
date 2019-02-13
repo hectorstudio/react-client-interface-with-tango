@@ -27,6 +27,7 @@ import {
 
 const BACKSPACE = 8;
 const DELETE = 46;
+const SHIFT = 16;
 
 const MOVE = "MOVE";
 const SELECT = "SELECT";
@@ -38,7 +39,8 @@ class EditCanvas extends Component {
     this.state = {
       mouseActionType: null,
       mouseActionStartLocation: null,
-      mouseActionCurrentLocation: null
+      mouseActionCurrentLocation: null,
+      isShiftDown: false
     };
 
     this.canvasRef = null;
@@ -178,9 +180,17 @@ class EditCanvas extends Component {
         onMouseDown={this.handleMouseDown}
         onMouseUp={this.handleMouseUp}
         onKeyDown={event => {
-          if ([BACKSPACE, DELETE].indexOf(event.keyCode) !== -1) {
+          const { keyCode } = event;
+          if ([BACKSPACE, DELETE].indexOf(keyCode) !== -1) {
             event.preventDefault();
             this.props.onDeleteWidget();
+          } else if (keyCode === SHIFT) {
+            this.setState({ isShiftDown: true });
+          }
+        }}
+        onKeyUp={event => {
+          if (event.keyCode === SHIFT) {
+            this.setState({ isShiftDown: false });
           }
         }}
         tabIndex="0"
@@ -229,7 +239,16 @@ class EditCanvas extends Component {
                 height={actualHeight}
                 onDelete={() => this.props.onDeleteWidget(id)}
                 onMouseDown={event => {
-                  if (!isSelected) {
+                  if (this.state.isShiftDown) {
+                    const selectedIds = selectedWidgets.map(({ id }) => id);
+                    const updatedSelectedWidgets = isSelected
+                      ? selectedWidgets
+                          .map(widget => widget.id)
+                          .filter(id2 => id2 !== id)
+                      : [...selectedIds, id];
+
+                    this.props.onSelectWidgets(updatedSelectedWidgets);
+                  } else if (!isSelected) {
                     this.props.onSelectWidgets([id]);
                   }
                   this.initiateMouseEvent(MOVE, event);
