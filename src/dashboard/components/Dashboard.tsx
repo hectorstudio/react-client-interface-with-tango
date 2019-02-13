@@ -4,6 +4,7 @@ import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
+import queryString from "query-string";
 
 import EditCanvas from "./EditCanvas/EditCanvas";
 import Library from "./Library/Library";
@@ -11,9 +12,8 @@ import RunCanvas from "./RunCanvas/RunCanvas";
 import Inspector from "./Inspector/Inspector";
 import { DeviceProvider } from "./DevicesProvider";
 
-// import queryString from "query-string";
-// import { save as saveToRepo } from "../dashboardRepo";
-// import { load as loadFromRepo } from "../dashboardRepo";
+import { save as saveToRepo } from "../dashboardRepo";
+import { load as loadFromRepo } from "../dashboardRepo";
 
 import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
@@ -26,7 +26,11 @@ import {
   getSelectedWidgets
 } from "../state/selectors";
 
-import { selectCanvas, toggleMode } from "../state/actionCreators";
+import {
+  selectCanvas,
+  toggleMode,
+  preloadDashboard
+} from "../state/actionCreators";
 import { Widget, Canvas } from "../types";
 import { RootState } from "../state/reducers";
 
@@ -48,38 +52,33 @@ interface Props extends RouteComponentProps<Match> {
 class Dashboard extends Component<Props> {
   public constructor(props) {
     super(props);
-
-    // const id = this.parseId();
-    // if (id) {
-    //   loadFromRepo(id).then(res => {
-    //     if (res) {
-    //       this.setState({ canvases: res.canvases });
-    //     }
-    //   });
-    // }
-
     this.toggleMode = this.toggleMode.bind(this);
     this.handleChangeCanvas = this.handleChangeCanvas.bind(this);
   }
 
-  // parseId() {
-  //   const search = this.props.location.search;
-  //   const parsed = queryString.parse(search);
-  //   return parsed.id || "";
-  // }
+  public async componentDidMount() {
+    const id = this.parseId();
+    if (id) {
+      try {
+        const { widgets } = await loadFromRepo(id);
+        this.props.dispatch(preloadDashboard(id, widgets));
+      } catch (err) {
+        // console.error(`Failed loading dashboard ${id}: ${err}`);
+      }
+    }
+  }
 
-  // componentDidUpdate() {
-  //   var id = this.parseId();
-  //   saveToRepo(id, this.state.canvases)
-  //     .then(res => {
-  //       if (res.created) {
-  //         this.props.history.replace("?id=" + res.id);
-  //       }
-  //     })
-  //     .catch(function() {
-  //       console.log("Couldn't reach dashboard repo");
-  //     });
-  // }
+  public async componentDidUpdate(prevProps) {
+    if (prevProps.widgets === this.props.widgets) {
+      return;
+    }
+
+    const id = this.parseId();
+    const res = await saveToRepo(id, this.props.widgets);
+    if (res.created) {
+      this.props.history.replace("?id=" + res.id);
+    }
+  }
 
   public render() {
     const { mode, widgets, selectedWidgets } = this.props;
@@ -107,21 +106,23 @@ class Dashboard extends Component<Props> {
                 })}
                 disabled={disabled}
               />
-              {false && <select
-                className="form-control"
-                style={{
-                  marginLeft: "0.5em",
-                  height: "2em"
-                }}
-                value={this.props.selectedCanvas.id}
-                onChange={this.handleChangeCanvas}
-              >
-                {this.props.canvases.map((canvas, i) => (
-                  <option key={i} value={i}>
-                    {i === 0 ? "Root" : canvas.name}
-                  </option>
-                ))}
-              </select>}
+              {false && (
+                <select
+                  className="form-control"
+                  style={{
+                    marginLeft: "0.5em",
+                    height: "2em"
+                  }}
+                  value={this.props.selectedCanvas.id}
+                  onChange={this.handleChangeCanvas}
+                >
+                  {this.props.canvases.map((canvas, i) => (
+                    <option key={i} value={i}>
+                      {i === 0 ? "Root" : canvas.name}
+                    </option>
+                  ))}
+                </select>
+              )}
             </form>
           </div>
           <div className={classNames("CanvasArea", mode)}>
@@ -167,6 +168,12 @@ class Dashboard extends Component<Props> {
   private areAllValid() {
     const { widgets } = this.props;
     return widgets.reduce((prev, widget) => prev && widget.valid, true);
+  }
+
+  private parseId() {
+    const search = this.props.location.search;
+    const parsed = queryString.parse(search);
+    return parsed.id || "";
   }
 }
 

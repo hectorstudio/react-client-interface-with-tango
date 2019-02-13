@@ -9,9 +9,10 @@ import {
   SET_INPUT,
   RESIZE_WIDGET,
   SELECT_CANVAS,
-  TOGGLE_MODE
+  TOGGLE_MODE,
+  PRELOAD_DASHBOARD
 } from "./actionTypes";
-import { IndexPath } from "../types";
+import { IndexPath, Widget } from "../types";
 
 export interface AddWidgetAction extends Action {
   type: typeof ADD_WIDGET;
@@ -72,6 +73,12 @@ export interface ToggleModeAction extends Action {
   type: typeof TOGGLE_MODE;
 }
 
+export interface PreloadDashboardAction extends Action {
+  type: typeof PRELOAD_DASHBOARD;
+  id: string;
+  widgets: Widget[];
+}
+
 export type DashboardAction =
   | AddWidgetAction
   | MoveWidgetsAction
@@ -82,4 +89,5 @@ export type DashboardAction =
   | AddInputAction
   | DeleteInputAction
   | SelectCanvasAction
-  | ToggleModeAction;
+  | ToggleModeAction
+  | PreloadDashboardAction;
