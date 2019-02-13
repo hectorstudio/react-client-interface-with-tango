@@ -8,7 +8,8 @@ import {
   ADD_INPUT,
   RESIZE_WIDGET,
   SELECT_WIDGETS,
-  MOVE_WIDGETS
+  MOVE_WIDGETS,
+  PRELOAD_DASHBOARD
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
@@ -133,6 +134,13 @@ export default function canvases(
       const newWidget = validate(deleteInput(state.widgets[id], path));
       const widgets = { ...state.widgets, [id]: newWidget };
       return { ...state, widgets };
+    }
+    case PRELOAD_DASHBOARD: {
+      const { widgets } = action;
+      const newWidgets = widgets.reduce((accum, widget) => {
+        return { ...accum, [widget.id]: validate(widget) };
+      }, {});
+      return { ...state, widgets: newWidgets };
     }
     default:
       return state;

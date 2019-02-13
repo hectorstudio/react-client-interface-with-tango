@@ -1,22 +1,25 @@
-// export const save = (id, canvases) => {
-//   return fetch("/dashboards/", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json; charset=utf-8"
-//     },
-//     body: JSON.stringify({ id: id, canvases: canvases })
-//   }).then(res => (res.ok ? res.json() : null));
-// };
+const headers = {
+  "Content-Type": "application/json; charset=utf-8"
+};
 
-// export const load = id => {
-//   return fetch("/dashboards/" + id, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json; charset=utf-8"
-//     }
-//   }).then(res => res.json());
-// }; 
+export async function save(id, widgets) {
+  const withoutValid = widgets.map(widget => {
+    const { valid, ...theRest } = widget;
+    return theRest;
+  });
 
+  const res = await fetch("/dashboards/", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ id, widgets: withoutValid })
+  });
+  return res.ok ? res.json() : null;
+}
 
-export const save = (id, canvases) => new Promise((res, rej) => res());
-export const load = (id, canvases) => new Promise((res, rej) => res());
+export async function load(id) {
+  const res = await fetch("/dashboards/" + id, {
+    method: "GET",
+    headers
+  });
+  return res.json();
+}

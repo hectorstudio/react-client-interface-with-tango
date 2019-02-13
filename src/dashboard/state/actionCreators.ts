@@ -5,7 +5,8 @@ import {
   DELETE_WIDGET,
   SELECT_CANVAS,
   TOGGLE_MODE,
-  SELECT_WIDGETS
+  SELECT_WIDGETS,
+  PRELOAD_DASHBOARD
 } from "./actionTypes";
 
 import {
@@ -15,8 +16,10 @@ import {
   DeleteWidgetAction,
   SelectCanvasAction,
   ToggleModeAction,
-  SelectWidgetsAction
+  SelectWidgetsAction,
+  PreloadDashboardAction
 } from "./actions";
+import { Widget } from "../types";
 
 export function addWidget(
   x: number,
@@ -59,4 +62,11 @@ export function selectCanvas(id: string): SelectCanvasAction {
 
 export function toggleMode(): ToggleModeAction {
   return { type: TOGGLE_MODE };
+}
+
+export function preloadDashboard(
+  id: string,
+  widgets: Widget[]
+): PreloadDashboardAction {
+  return { type: PRELOAD_DASHBOARD, id, widgets };
 }
