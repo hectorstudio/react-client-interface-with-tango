@@ -132,10 +132,6 @@ function inputIsValid(definition: InputDefinition, value: any): boolean {
     }
   }
 
-  if (definition.required !== true) {
-    return true;
-  }
-
   if (definition.type === "attribute") {
     const { device, attribute } = value;
     return device != null && attribute != null;
@@ -149,6 +145,10 @@ function inputIsValid(definition: InputDefinition, value: any): boolean {
   if (definition.type === "number") {
     if (isNaN(value)) {
       return false;
+    }
+
+    if (definition.nonNegative) {
+      return value >= 0;
     }
   }
 
