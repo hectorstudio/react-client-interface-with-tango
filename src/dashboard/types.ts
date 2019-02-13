@@ -14,6 +14,7 @@ export interface BooleanInputDefinition extends BaseInputDefinition<boolean> {
 
 export interface NumberInputDefinition extends BaseInputDefinition<number> {
   type: "number";
+  nonNegative?: boolean;
 }
 
 export interface StringInputDefinition extends BaseInputDefinition<string> {
