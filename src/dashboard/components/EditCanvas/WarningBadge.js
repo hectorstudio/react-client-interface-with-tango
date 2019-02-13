@@ -1,17 +1,18 @@
 import React from "react";
 
 export default function WarningBadge({ visible }) {
+  const radius = 10;
   return (
     <div
       className="WarningBadge"
       style={{
         position: "absolute",
-        marginLeft: "-10px",
-        marginTop: "-10px",
+        marginLeft: -radius,
+        marginTop: -radius,
         backgroundColor: "red",
-        borderRadius: "10px",
-        width: "20px",
-        height: "20px",
+        borderRadius: radius,
+        width: 2 * radius,
+        height: 2 * radius,
         color: "white",
         textAlign: "center",
         zIndex: 1000,
