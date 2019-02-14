@@ -45,6 +45,7 @@ export default class AttributeInput extends React.Component {
         this.setState({ edited: false });
         this.props.save(e.target.valueAsNumber);
         this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
+        this.refs.motorTargetValue.blur();
       } else if (this.props.state === this.state.MOVING) {
         this.setState({ edited: false });
         this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
@@ -53,8 +54,10 @@ export default class AttributeInput extends React.Component {
   }
 
   render() {
-    const { value, motorName, decimalPoints, minvalue, maxvalue } = this.props;
+    const { value, motorName, decimalPoints, minvalue, maxvalue, writevalue } = this.props;
     const valueCropped = value.toFixed(decimalPoints);
+    const writeValueCropped = writevalue ? writevalue.toFixed(decimalPoints) : '';
+    
 
     let inputCSS = cx('form-control rw-input', {
       'input-bg-edited': this.state.edited && !this.state.badEntry,
@@ -68,16 +71,27 @@ export default class AttributeInput extends React.Component {
           <form className="form-group" onSubmit={this.handleKey} noValidate>
             <div
               className="rw-widget rw-numberpicker rw-widget-no-right-border"
-              style={ { width: '90px', display: 'inline-block' } }
+              style={ { width: '100%', display: 'inline-block' } }
             >
               <input
-                ref="motorValue"
+                disabled
                 className={inputCSS}
-                onKeyUp={this.handleKey}
+                ref="motorValue"
                 type="number"
                 defaultValue={valueCropped}
                 name={motorName}
+                style={{width: '90px', display: 'inline-block'}}
+              ></input>
+              <input
+
+                className={inputCSS}
+                onKeyUp={this.handleKey}
+                type="number"
+                ref="motorTargetValue"
+                placeholder="Set target"
+                defaultValue={writeValueCropped}
                 disabled={this.props.state !== 2 || this.props.disabled}
+                style={{width: '95px', display: 'inline-block', marginLeft: '10px'}}
               />
             </div>
           </form>
