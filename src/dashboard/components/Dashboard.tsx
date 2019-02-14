@@ -35,6 +35,7 @@ import { Widget, Canvas } from "../types";
 import { RootState } from "../state/reducers";
 
 import "./Dashboard.css";
+import ModeToggleButton from "./ModeToggleButton";
 
 interface Match {
   tangoDB: string;
@@ -85,6 +86,29 @@ class Dashboard extends Component<Props> {
     const { tangoDB } = this.props.match.params;
     const disabled = !this.areAllValid() || !this.isRootCanvas();
 
+    const sidebarContents = mode === "edit" && (
+      <div className="Sidebar">
+        {selectedWidgets.length === 0 ? (
+          <Library />
+        ) : selectedWidgets.length === 1 ? (
+          <Inspector
+            widget={selectedWidgets[0]}
+            isRootCanvas={this.isRootCanvas()}
+            tangoDB={tangoDB}
+          />
+        ) : (
+          "Multiple selection"
+        )}
+      </div>
+    );
+
+    const canvasContents =
+      mode === "edit" ? (
+        <EditCanvas />
+      ) : (
+        <RunCanvas widgets={widgets} tangoDB={tangoDB} />
+      );
+
     return (
       <div className="Dashboard">
         <DeviceProvider tangoDB={tangoDB}>
@@ -92,19 +116,10 @@ class Dashboard extends Component<Props> {
           <LoginDialog />
           <div className="TopBar">
             <form className="form-inline">
-              <button
-                type="button"
+              <ModeToggleButton
                 onClick={this.toggleMode}
-                style={{
-                  fontSize: "small",
-                  width: "2.5em",
-                  textAlign: "center"
-                }}
-                className={classNames("form-control fa", {
-                  "fa-play": mode === "edit",
-                  "fa-pause": mode === "run"
-                })}
                 disabled={disabled}
+                mode={mode}
               />
               {false && (
                 <select
@@ -125,28 +140,8 @@ class Dashboard extends Component<Props> {
               )}
             </form>
           </div>
-          <div className={classNames("CanvasArea", mode)}>
-            {mode === "edit" ? (
-              <EditCanvas />
-            ) : (
-              <RunCanvas widgets={widgets} tangoDB={tangoDB} />
-            )}
-          </div>
-          {mode === "edit" && (
-            <div className="Sidebar">
-              {selectedWidgets.length === 0 ? (
-                <Library />
-              ) : selectedWidgets.length === 1 ? (
-                <Inspector
-                  widget={selectedWidgets[0]}
-                  isRootCanvas={this.isRootCanvas()}
-                  tangoDB={tangoDB}
-                />
-              ) : (
-                "Multiple selection"
-              )}
-            </div>
-          )}
+          <div className={classNames("CanvasArea", mode)}>{canvasContents}</div>
+          {sidebarContents}
         </DeviceProvider>
       </div>
     );
