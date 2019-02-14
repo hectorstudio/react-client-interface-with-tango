@@ -63,6 +63,7 @@ query FetchDevice($name: String!) {
       dataformat
       datatype
       value
+      writevalue
       quality
       writable
       description

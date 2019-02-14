@@ -76,6 +76,7 @@ const AttributeTableRow = ({
   const {
     name,
     value,
+    writevalue,
     datatype,
     dataformat,
     writable,
@@ -95,6 +96,7 @@ const AttributeTableRow = ({
         <ValueDisplay
           name={name}
           value={value}
+          writevalue={writevalue}
           datatype={datatype}
           dataformat={dataformat}
           writable={writable}
@@ -174,6 +176,7 @@ AttributeTable.propTypes = {
       name: PropTypes.string,
       quality: PropTypes.string,
       value: PropTypes.any, //possibly PropTypes.oneOfType(...)
+      writevalue: PropTypes.any,
       writable: PropTypes.string
     })
   ),
@@ -187,7 +190,7 @@ AttributeTable.propTypes = {
 function mapStateToProps(state) {
   return {
     selectedFormat: getActiveDataFormat(state),
-    disabledDisplevels: getDisabledDisplevels(state)
+    disabledDisplevels: getDisabledDisplevels(state),
   };
 }
 
