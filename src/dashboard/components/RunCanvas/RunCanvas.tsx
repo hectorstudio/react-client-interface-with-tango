@@ -29,6 +29,7 @@ class RunCanvas extends Component<Props, State> {
   public constructor(props) {
     super(props);
     this.state = { attributeValues: {}, commandOutputs: {} };
+    this.writeAttribute = this.writeAttribute.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
   }
 
@@ -67,7 +68,8 @@ class RunCanvas extends Component<Props, State> {
             definition.inputs,
             this.state.attributeValues,
             this.state.commandOutputs,
-            (device, command) => this.executeCommand(device, command)
+            this.writeAttribute,
+            this.executeCommand
           );
 
           const actualWidth = width * TILE_SIZE;
@@ -101,6 +103,10 @@ class RunCanvas extends Component<Props, State> {
     const fullName = `${device}/${command}`;
     const commandOutputs = { ...this.state.commandOutputs, [fullName]: output };
     this.setState({ commandOutputs });
+  }
+
+  private async writeAttribute(device: string, attribute: string, value: any) {
+    return;
   }
 }
 

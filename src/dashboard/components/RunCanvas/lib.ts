@@ -17,6 +17,9 @@ function resolveDevice(
     : inputDevice;
 }
 
+type OnWrite = (device: string, attribute: string, value: any) => Promise<void>;
+type OnExecute = (device: string, command: string) => Promise<void>;
+
 function* extractFullNamesFromInputsGen(
   inputs: InputMapping,
   inputDefinitions: InputDefinitionMapping,
@@ -89,7 +92,8 @@ function enrichedInput(
   attributeLookup: object,
   commandLookup: object,
   published: { [variable: string]: string },
-  onExecute: (device: string, command: string) => void
+  onWrite: OnWrite,
+  onExecute: OnExecute
 ) {
   if (definition.repeat) {
     return input.map(entry =>
@@ -99,6 +103,7 @@ function enrichedInput(
         attributeLookup,
         commandLookup,
         published,
+        onWrite,
         onExecute
       )
     );
@@ -110,17 +115,28 @@ function enrichedInput(
       input.device,
       definition.device
     );
-    const fullName = `${resolvedDevice}/${input.attribute ||
-      definition.attribute}`;
+    const attribute = input.attribute || definition.attribute;
+    const fullName = `${resolvedDevice}/${attribute}`;
 
     if (attributeLookup.hasOwnProperty(fullName)) {
       const value = attributeLookup[fullName];
-      return { ...input, value };
+      return {
+        ...input,
+        value,
+        write: (param: any) => onWrite(resolvedDevice, attribute, param)
+      };
     }
   }
 
   if (definition.type === "complex") {
-    return enrichedInputs(input, definition.inputs, attributeLookup, commandLookup, onExecute);
+    return enrichedInputs(
+      input,
+      definition.inputs,
+      attributeLookup,
+      commandLookup,
+      onWrite,
+      onExecute
+    );
   }
 
   if (definition.type === "command") {
@@ -131,7 +147,7 @@ function enrichedInput(
       definition.device
     );
 
-    const fullName = `${resolvedDevice}/${command}`
+    const fullName = `${resolvedDevice}/${command}`;
     const output = commandLookup[fullName];
 
     return {
@@ -171,7 +187,8 @@ export function enrichedInputs(
   definitions: InputDefinitionMapping,
   attributeLookup: object,
   commandLookup: object,
-  onExecute: (device: string, command: string) => void
+  onWrite: (device: string, attribute: string, value: any) => Promise<void>,
+  onExecute: (device: string, command: string) => Promise<void>
 ) {
   const published = publishedDevices(inputs, definitions);
   const names = Object.keys(inputs);
@@ -185,6 +202,7 @@ export function enrichedInputs(
       attributeLookup,
       commandLookup,
       published,
+      onWrite,
       onExecute
     );
     return { ...accum, [name]: value };
