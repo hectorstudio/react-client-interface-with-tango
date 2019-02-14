@@ -248,7 +248,7 @@ class EditCanvas extends Component {
                       : [...selectedIds, id];
 
                     this.props.onSelectWidgets(updatedSelectedWidgets);
-                  } else if (!isSelected) {
+                  } else if (!isSelected || selectedWidgets.length > 1) {
                     this.props.onSelectWidgets([id]);
                   }
                   this.initiateMouseEvent(MOVE, event);
