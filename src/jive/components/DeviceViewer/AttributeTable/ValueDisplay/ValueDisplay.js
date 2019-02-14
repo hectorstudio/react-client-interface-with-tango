@@ -44,7 +44,7 @@ DevStringValueDisplay.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
 }
 
-const ScalarValueDisplay = ({value, datatype, name, writable, setDeviceAttribute, minvalue, maxvalue}) => {
+const ScalarValueDisplay = ({value, writevalue, datatype, name, writable, setDeviceAttribute, minvalue, maxvalue}) => {
   if (datatype === 'DevString') {
     return <DevStringValueDisplay value={value}/>;
   } else if (datatype === 'DevEncoded') {
@@ -63,6 +63,7 @@ const ScalarValueDisplay = ({value, datatype, name, writable, setDeviceAttribute
       save={setDeviceAttribute.bind(this, name)}
       value={Number(value)}
       motorName={name}
+      writevalue={writevalue}
       decimalPoints="2"
       state={2}
       disabled={false}
@@ -80,6 +81,7 @@ ScalarValueDisplay.propTypes = {
   name: PropTypes.string,
   setDeviceAttribute: PropTypes.func,
   value: PropTypes.any,
+  writevalue: PropTypes.any,
   writable: PropTypes.string,
 }
 
@@ -181,7 +183,7 @@ ImageValueDisplay.propTypes = {
   writable: PropTypes.string,
 }
 
-const ValueDisplay = ({value, writable, setDeviceAttribute,  datatype, dataformat, name, minvalue, maxvalue}) => {
+const ValueDisplay = ({value, writevalue, writable, setDeviceAttribute,  datatype, dataformat, name, minvalue, maxvalue}) => {
   if (value === null) {
     return <span className="ValueDisplay no-value">No value</span>;
   }
@@ -198,6 +200,7 @@ const ValueDisplay = ({value, writable, setDeviceAttribute,  datatype, dataforma
     <div className={className}>
       <InnerDisplay
         value={value}
+        writevalue={writevalue}
         datatype={datatype}
         name={name}
         writable={writable}
