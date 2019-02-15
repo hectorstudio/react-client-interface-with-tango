@@ -8,7 +8,7 @@ import { TILE_SIZE } from "../constants";
 
 import ErrorBoundary from "../ErrorBoundary";
 
-import { changeEventEmitter, END } from "./emitter";
+import { attributeEmitter, END } from "./emitter";
 import { extractFullNamesFromWidgets, enrichedInputs } from "./lib";
 import * as TangoAPI from "../api";
 import { getWidgets } from "src/dashboard/state/selectors";
@@ -39,7 +39,7 @@ interface State {
 }
 
 class RunCanvas extends Component<Props, State> {
-  private unsub?: () => void;
+  private unsubscribe?: () => void;
 
   public constructor(props) {
     super(props);
@@ -55,8 +55,8 @@ class RunCanvas extends Component<Props, State> {
   public componentDidMount() {
     const { widgets, tangoDB } = this.props;
     const fullNames = extractFullNamesFromWidgets(widgets);
-    const startEmission = changeEventEmitter(tangoDB, fullNames);
-    this.unsub = startEmission(frame => {
+    const startEmission = attributeEmitter(tangoDB, fullNames);
+    this.unsubscribe = startEmission(frame => {
       if (frame === END) {
         this.setState({ connectionLost: true });
         return;
@@ -73,8 +73,8 @@ class RunCanvas extends Component<Props, State> {
   }
 
   public componentWillUnmount() {
-    if (this.unsub) {
-      this.unsub();
+    if (this.unsubscribe) {
+      this.unsubscribe();
     }
   }
 

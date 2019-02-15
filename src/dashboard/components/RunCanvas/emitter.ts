@@ -29,7 +29,7 @@ function createSocket(tangoDB: string) {
   return new WebSocket(socketUrl(tangoDB), "graphql-ws");
 }
 
-export function changeEventEmitter(
+export function attributeEmitter(
   tangoDB: string,
   fullNames: string[]
 ): EmissionStarter {
