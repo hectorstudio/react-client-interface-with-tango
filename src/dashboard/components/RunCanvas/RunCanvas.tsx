@@ -19,7 +19,8 @@ const ConnectionLost = () => (
       position: "absolute",
       padding: "1em",
       color: "red",
-      fontWeight: "bold"
+      fontWeight: "bold",
+      zIndex: 1
     }}
   >
     Connection lost. Please refresh your browser.
@@ -123,15 +124,24 @@ class RunCanvas extends Component<Props, State> {
   }
 
   private async executeCommand(device: string, command: string) {
-    const output = await TangoAPI.executeCommand(this.props.tangoDB, device, command);
+    const output = await TangoAPI.executeCommand(
+      this.props.tangoDB,
+      device,
+      command
+    );
     const fullName = `${device}/${command}`;
     const commandOutputs = { ...this.state.commandOutputs, [fullName]: output };
     this.setState({ commandOutputs });
     return output;
-  } 
+  }
 
   private async writeAttribute(device: string, attribute: string, value: any) {
-    return await TangoAPI.writeAttribute(this.props.tangoDB, device, attribute, value);
+    return await TangoAPI.writeAttribute(
+      this.props.tangoDB,
+      device,
+      attribute,
+      value
+    );
   }
 }
 
