@@ -31,11 +31,14 @@ class CommandExecutor extends Component<Props, State> {
   }
 
   public render() {
-    const { inputs } = this.props;
+    const { mode, inputs } = this.props;
     const { title, command } = inputs;
     const actualTitle = title || command.command || "command";
 
-    const containerStyle: CSSProperties = { padding: "0.25em" };
+    const containerStyle: CSSProperties = {
+      padding: mode === "library" ? "0.5em" : "0.25em"
+    };
+
     const [output, outputStyle] = this.outputAndStyle();
     const fullOutputStyle: CSSProperties = {
       marginLeft: "0.5em",
@@ -44,10 +47,7 @@ class CommandExecutor extends Component<Props, State> {
 
     return (
       <div style={containerStyle}>
-        <button
-          disabled={this.state.cooldown}
-          onClick={this.handleExecute}
-        >
+        <button disabled={this.state.cooldown} onClick={this.handleExecute}>
           {actualTitle}
         </button>
         <span style={fullOutputStyle}>{output}</span>
