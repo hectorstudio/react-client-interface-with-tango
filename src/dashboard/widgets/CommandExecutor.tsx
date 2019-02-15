@@ -35,8 +35,10 @@ class CommandExecutor extends Component<Props, State> {
     const { title, command } = inputs;
     const actualTitle = title || command.command || "command";
 
+    const extraStyle = mode === "library" ? { margin: "0.25em" } : {};
     const containerStyle: CSSProperties = {
-      padding: mode === "library" ? "0.5em" : "0.25em"
+      padding: "0.25em",
+      ...extraStyle
     };
 
     const [output, outputStyle] = this.outputAndStyle();
