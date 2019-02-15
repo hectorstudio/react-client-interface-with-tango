@@ -8,10 +8,23 @@ import { TILE_SIZE } from "../constants";
 
 import ErrorBoundary from "../ErrorBoundary";
 
-import { changeEventEmitter } from "./emitter";
+import { changeEventEmitter, END } from "./emitter";
 import { extractFullNamesFromWidgets, enrichedInputs } from "./lib";
-import { executeCommand } from "../api";
+import * as TangoAPI from "../api";
 import { getWidgets } from "src/dashboard/state/selectors";
+
+const ConnectionLost = () => (
+  <div
+    style={{
+      position: "absolute",
+      padding: "1em",
+      color: "red",
+      fontWeight: "bold"
+    }}
+  >
+    Connection lost. Please refresh your browser.
+  </div>
+);
 
 interface Props {
   widgets: Widget[];
@@ -19,6 +32,7 @@ interface Props {
 }
 
 interface State {
+  connectionLost: boolean;
   attributeValues: { [fullName: string]: any };
   commandOutputs: { [fullName: string]: any };
 }
@@ -28,7 +42,11 @@ class RunCanvas extends Component<Props, State> {
 
   public constructor(props) {
     super(props);
-    this.state = { attributeValues: {}, commandOutputs: {} };
+    this.state = {
+      connectionLost: false,
+      attributeValues: {},
+      commandOutputs: {}
+    };
     this.writeAttribute = this.writeAttribute.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
   }
@@ -36,8 +54,13 @@ class RunCanvas extends Component<Props, State> {
   public componentDidMount() {
     const { widgets, tangoDB } = this.props;
     const fullNames = extractFullNamesFromWidgets(widgets);
-    const emit = changeEventEmitter(tangoDB, fullNames);
-    this.unsub = emit(frame => {
+    const startEmission = changeEventEmitter(tangoDB, fullNames);
+    this.unsub = startEmission(frame => {
+      if (frame === END) {
+        this.setState({ connectionLost: true });
+        return;
+      }
+
       const { device, attribute, value } = frame;
       const fullName = `${device}/${attribute}`;
       const attributeValues = {
@@ -59,6 +82,7 @@ class RunCanvas extends Component<Props, State> {
 
     return (
       <div className="Canvas run">
+        {this.state.connectionLost && <ConnectionLost />}
         {widgets.map(widget => {
           const { component, definition } = bundleForWidget(widget)!;
           const { x, y, id, width, height } = widget;
@@ -99,14 +123,15 @@ class RunCanvas extends Component<Props, State> {
   }
 
   private async executeCommand(device: string, command: string) {
-    const output = await executeCommand(this.props.tangoDB, device, command);
+    const output = await TangoAPI.executeCommand(this.props.tangoDB, device, command);
     const fullName = `${device}/${command}`;
     const commandOutputs = { ...this.state.commandOutputs, [fullName]: output };
     this.setState({ commandOutputs });
-  }
+    return output;
+  } 
 
   private async writeAttribute(device: string, attribute: string, value: any) {
-    return;
+    return await TangoAPI.writeAttribute(this.props.tangoDB, device, attribute, value);
   }
 }
 

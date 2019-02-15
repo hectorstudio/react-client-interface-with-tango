@@ -17,8 +17,8 @@ function resolveDevice(
     : inputDevice;
 }
 
-type OnWrite = (device: string, attribute: string, value: any) => Promise<void>;
-type OnExecute = (device: string, command: string) => Promise<void>;
+type OnWrite = (device: string, attribute: string, value: any) => Promise<boolean>;
+type OnExecute = (device: string, command: string) => Promise<any>;
 
 function* extractFullNamesFromInputsGen(
   inputs: InputMapping,
@@ -187,8 +187,8 @@ export function enrichedInputs(
   definitions: InputDefinitionMapping,
   attributeLookup: object,
   commandLookup: object,
-  onWrite: (device: string, attribute: string, value: any) => Promise<void>,
-  onExecute: (device: string, command: string) => Promise<void>
+  onWrite: OnWrite,
+  onExecute: OnExecute
 ) {
   const published = publishedDevices(inputs, definitions);
   const names = Object.keys(inputs);
