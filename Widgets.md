@@ -57,10 +57,6 @@ The render method of the component implementation may look something like this:
       );
     }
 
-The widget is then simply bundled:
-
-    const bundle = { definition, component };
-
 ## Widget Definition
 
 | Key | Type | Description
@@ -76,6 +72,9 @@ The widget is then simply bundled:
 A question mark (e.g. `label?`) denotes an optional field.
 
 ### Base Input Definition
+
+All input definitions derive from a base definition, which means that the below fields are available in all input types.
+
 | Key | Type | Description
 |-|-|-
 | type | string | The type of input. Can assume the following values: boolean, number, string, complex, select, attribute, color, device, command
@@ -85,9 +84,16 @@ A question mark (e.g. `label?`) denotes an optional field.
 
 The following input types have no fields in addition to the above:
 * "boolean". Manifests itself as a checkbox.
-* "number". Manifests itself as a numeric input field.
 * "string". Manifests itself as a string input field.
 * "color". Manifests itself as a color picker.
+
+### Number Input Definition
+
+Manifests itself as an input field where the user can enter a numeric value.
+
+| Key | Type | Description
+|-|-|-
+| nonNumeric? | boolean | If true, the user can't enter negative values.
 
 ### Select Input Definition
 
@@ -132,7 +138,7 @@ In the component, the input is an object with the following structure:
 | device | string | The device name
 | attribute | string | The attribute name
 | value | | The current value of the attribute
-| write | function | A function which writes a value to the attribute when executed (NOT IMPLEMENTED.)
+| write | function | A function which writes a value to the attribute when executed. Signature:<br>`(value: any) => Promise<boolean>`
 
 ### Command Input Definition
 
@@ -150,4 +156,4 @@ In the component, the input is an object with the following structure:
 |-|-|-
 | device | string | The device name
 | command | string | The command name
-| execute | function | A function which executes the command when executed.
+| execute | function | A function which executes the command when executed. Currently doesn't take input parameters. Signature:<br>`() => Promise<any>`
