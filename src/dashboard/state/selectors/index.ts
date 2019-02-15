@@ -13,14 +13,19 @@ function getCanvasState(state: RootState) {
   return state.canvases;
 }
 
+const getWidgetsObject = createSelector(
+  getWidgetState,
+  state => state.widgets
+);
+
 export const getMode = createSelector(
   getUIState,
   ui => ui.mode
 );
 
 export const getWidgets = createSelector(
-  getWidgetState,
-  state => Object.keys(state.widgets).map(key => state.widgets[key])
+  getWidgetsObject,
+  widgetsObject => Object.keys(widgetsObject).map(key => widgetsObject[key])
 );
 
 export const getSelectedWidgets = createSelector(
