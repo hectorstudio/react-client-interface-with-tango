@@ -220,7 +220,8 @@ export default class EditWidget extends Component {
             height: "inherit",
             width: "inherit",
             outline: isSelected ? "2px solid lightskyblue" : "1px solid #ccc",
-            backgroundColor: "white"
+            backgroundColor: "white",
+            pointerEvents: "none"
           }}
         >
           {render}
