@@ -39,6 +39,13 @@ mutation ExecuteCommand($device: String!, $command: String!) {
   }
 }`;
 
+const WRITE_ATTRIBUTE = `
+mutation WriteAttribute($device: String!, $attribute: String!, $value: ScalarTypes!) {
+  setAttributeValue(device: $device, name: $attribute, value: $value) {
+    ok
+  }
+}`;
+
 function createClient(tangoDB) {
   return createGQLClient({ url: "/" + tangoDB + "/db" });
 }
@@ -77,5 +84,15 @@ export async function executeCommand(tangoDB, device, command) {
     return res.data.executeCommand.output;
   } catch (err) {
     return null;
+  }
+}
+
+export async function writeAttribute(tangoDB, device, attribute, value) {
+  try {
+    const args = { device, attribute, value };
+    const res = await createClient(tangoDB).query(WRITE_ATTRIBUTE, args);
+    return res.data.setAttributeValue.ok === true;
+  } catch (err) {
+    return false;
   }
 }
