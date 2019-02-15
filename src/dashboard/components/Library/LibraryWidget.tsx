@@ -89,7 +89,7 @@ class LibraryWidget extends Component<Props> {
         </span>
         {this.props.connectDragSource(
           <div className="Widget" style={{ cursor: "grab" }}>
-            {widget}
+            <div style={{ pointerEvents: "none" }}>{widget}</div>
           </div>
         )}
       </div>
