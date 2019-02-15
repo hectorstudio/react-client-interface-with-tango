@@ -6,142 +6,52 @@ interface Input {
   attribute: AttributeInput;
   min: number;
   max: number;
+  label: string;
 }
 
 type Props = WidgetProps<Input>;
 
-function normalize(value: number, min: number, max: number) {
+function normalize(value: number, min: number, max: number): [number, boolean] {
   const normed = (value - min) / (max - min);
   if (normed > 1) {
-    return 1;
+    return [1, true];
   } else if (normed < 0) {
-    return 0;
+    return [0, true];
   } else {
-    return normed;
+    return [normed, false];
   }
 }
 
 function normalizedValueToAngle(value: number) {
-  return -255 + value * 270;
+  return -225 + value * 270;
 }
 
 class AttributeDial extends Component<Props> {
   public render() {
     const { mode, inputs, actualWidth, actualHeight } = this.props;
-    const { min, max, attribute } = inputs;
+    const { min, max, attribute, label } = inputs;
 
     const radius =
       mode === "library" ? 40 : Math.min(actualHeight, actualWidth) / 2;
     const libraryProps =
       mode === "library" ? { marginLeft: "0.5em", marginTop: "0.5em" } : {};
 
-    const style = {
-      width: 2 * radius,
-      height: 2 * radius,
-      backgroundColor: "lightgray",
-      borderRadius: radius,
-      border: `${0.05 * radius}px solid gray`
-    };
-
     const value = attribute.value || 0;
-    const normalized = normalize(value, min, max);
+    const [normalized, overflow] = normalize(value, min, max);
     const angle = normalizedValueToAngle(normalized);
-    const transform = `rotate(${angle}deg) scaleX(0.7)`;
 
-    const handWidth = 0.2 * radius;
+    const handWidth = 0.05 * radius;
+    const handCenterRadius = 0.075 * radius;
+    const handColor = overflow ? "red" : "gray";
+    const innerRadius = 0.9 * radius;
+    const handBackLength = 0.25 * innerRadius;
 
-    const hand = (
-      <div
-        style={{
-          position: "absolute",
-          top: radius - handWidth / 2,
-          left: radius,
-          width: radius, // Hand length
-          height: handWidth, // Hand width
-          backgroundColor: "black",
-          clipPath: "polygon(0 0, 100% 40%, 100% 60%, 0 100%)",
-          transformOrigin: "0 50%",
-          transition: "transform 2s ease-in-out",
-          transform
-        }}
-      />
-    );
+    const numBigTickMarks = 10;
+    const numSmallPerBig = 5;
+    const totalNumTickMarks = numBigTickMarks * numSmallPerBig + 1;
+    const tickSectorAngle = 270 / (totalNumTickMarks - 1);
 
-    const minLabel = (
-      <div
-        style={{
-          fontSize: 0.2 * radius,
-          position: "absolute",
-          left: 0,
-          bottom: 0,
-          transform: "rotateZ(45deg)"
-        }}
-      >
-        {min}
-      </div>
-    );
-
-    const maxLabel = (
-      <div
-        style={{
-          fontSize: 0.2 * radius,
-          position: "absolute",
-          right: 0,
-          bottom: 0,
-          transform: "rotateZ(-45deg)"
-        }}
-      >
-        {max}
-      </div>
-    );
-
-    const numTicks = 10;
-    const ticks = Array(numTicks)
-      .fill(0)
-      .map((_, tick) => {
-        const angle2 = -225 + (tick / (numTicks - 1)) * 270;
-        const lastOrFirst = tick === 0 || tick === numTicks - 1;
-        const transform2 = `rotate(${angle2}deg) translateX(${
-          lastOrFirst ? 78 : 87
-        }%) scaleX(${lastOrFirst ? 0.15 : 0.1})`;
-
-        return (
-          <div
-            key={tick}
-            style={{
-              position: "absolute",
-              top: radius,
-              left: radius,
-              width: radius,
-              height: (lastOrFirst ? 0.06 : 0.02) * radius,
-              backgroundColor: "black",
-              transformOrigin: "0 50%",
-              transition: "transform 1s ease-in-out",
-              transform: transform2
-            }}
-          />
-        );
-      });
-
-    const knob = (
-      <div
-        style={{
-          width: 0.25 * radius,
-          height: 0.25 * radius,
-          borderRadius: 0.25 * radius,
-          position: "absolute",
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
-          marginLeft: "auto",
-          marginRight: "auto",
-          marginTop: "auto",
-          marginBottom: "auto",
-          backgroundColor: "gray"
-        }}
-      />
-    );
+    const labelShown = attribute[label] || label;
 
     return (
       <div
@@ -149,16 +59,90 @@ class AttributeDial extends Component<Props> {
           position: "relative",
           width: 2 * radius,
           height: 2 * radius,
+          userSelect: "none",
           ...libraryProps
         }}
       >
-        <div style={style}>
-          {minLabel}
-          {maxLabel}
-          {hand}
-          {ticks}
-          {knob}
-        </div>
+        <svg width={2 * radius} height={2 * radius}>
+          <defs>
+            <radialGradient id="rim" cx="50%" cy="50%" r="50%">
+              <stop offset="90%" style={{ stopColor: "#666" }} />
+              <stop offset="91%" style={{ stopColor: "#888" }} />
+              <stop offset="96%" style={{ stopColor: "#ddd" }} />
+              <stop offset="99%" style={{ stopColor: "#888" }} />
+              <stop offset="100%" style={{ stopColor: "#666" }} />
+            </radialGradient>
+          </defs>
+
+          <circle r={radius} cx={radius} cy={radius} fill="url(#rim)" />
+          <circle r={innerRadius} cx={radius} cy={radius} fill="white" />
+
+          {Array(totalNumTickMarks)
+            .fill(0)
+            .map((_, i) => {
+              const isBig = i % numSmallPerBig === 0;
+              const tickAngle = 45 - i * tickSectorAngle;
+              const textRotation =
+                90 + (tickAngle < -180 || tickAngle > 0 ? 180 : 0);
+              const tickValue =
+                min + (max - min) * (1 - i / numBigTickMarks / numSmallPerBig);
+
+              return (
+                <g
+                  key={i}
+                  transform={`translate(${radius} ${radius}) rotate(${tickAngle})`}
+                >
+                  {isBig && (
+                    <text
+                      style={{ fontSize: 0.1 * radius }}
+                      textAnchor="middle"
+                      alignmentBaseline="middle"
+                      x={0}
+                      y={0}
+                      transform={`translate(${0.8 *
+                        innerRadius} 0) rotate(${textRotation}) `}
+                    >
+                      {Math.round(tickValue * 100) / 100}
+                    </text>
+                  )}
+                  <line
+                    x1={(isBig ? 0.9 : 0.95) * innerRadius}
+                    y1={0}
+                    x2={innerRadius}
+                    y2={0}
+                    stroke="black"
+                    strokeWidth={0.01 * radius * (isBig ? 2 : 1)}
+                  />
+                </g>
+              );
+            })}
+
+          <g transform={`translate(${radius} ${radius})`}>
+            <path
+              transform={`rotate(${angle})`}
+              d={`
+                M0 ${handWidth}
+                L${innerRadius} 0
+                L0 -${handWidth}
+                L-${handBackLength} 0
+                Z`}
+              style={{ transition: "transform 2s ease-in-out" }}
+              fill={handColor}
+            />
+            <circle r={handCenterRadius} cx={0} cy={0} fill={handColor} />
+          </g>
+
+          <text
+            textAnchor="middle"
+            x={radius}
+            y={1.6 * radius}
+            style={{ fontSize: 0.1 * radius }}
+            textLength={radius * Math.min(0.05 * labelShown.length, 1)}
+            lengthAdjust="spacing"
+          >
+            {labelShown}
+          </text>
+        </svg>
       </div>
     );
   }
@@ -179,11 +163,22 @@ const definition: WidgetDefinition = {
     },
     min: {
       type: "number",
+      label: "Minimum",
       default: 0
     },
     max: {
       type: "number",
+      label: "Maximum",
       default: 10
+    },
+    label: {
+      type: "select",
+      label: "Label",
+      options: [
+        { name: "Attribute", value: "attribute" },
+        { name: "Device", value: "device" }
+      ],
+      default: "attribute"
     }
   }
 };
