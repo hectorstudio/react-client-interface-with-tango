@@ -151,8 +151,8 @@ class AttributeDial extends Component<Props> {
 const definition: WidgetDefinition = {
   type: "ATTRIBUTE_DIAL",
   name: "Attribute Dial",
-  defaultWidth: 5,
-  defaultHeight: 5,
+  defaultWidth: 10,
+  defaultHeight: 10,
   inputs: {
     attribute: {
       type: "attribute",
