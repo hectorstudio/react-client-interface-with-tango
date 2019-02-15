@@ -30,7 +30,7 @@ class InputList extends Component<{
     const { inputDefinitions, inputs, tangoDB } = this.props;
     const inputNames = Object.keys(inputDefinitions);
 
-    const inner = inputNames.map(inputName => {
+    const inputControls = inputNames.map(inputName => {
       const inputDefinition = inputDefinitions[inputName];
       const definitionLabel = inputDefinition.label;
       const label = definitionLabel == null ? inputName : definitionLabel;
@@ -309,6 +309,13 @@ class InputList extends Component<{
         </tr>
       );
     });
+
+    const hasInputs = !!inputControls.find(control => control !== null);
+    const inner = hasInputs ? (
+      inputControls
+    ) : (
+      <div>There are no configurable inputs for this widget.</div>
+    );
 
     return (
       <table style={{ width: "100%" }}>
