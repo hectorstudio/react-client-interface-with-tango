@@ -86,8 +86,13 @@ class AttributeDial extends Component<Props> {
               const tickAngle = 45 - i * tickSectorAngle;
               const textRotation =
                 90 + (tickAngle < -180 || tickAngle > 0 ? 180 : 0);
+              const delta = max - min;
               const tickValue =
-                min + (max - min) * (1 - i / numBigTickMarks / numSmallPerBig);
+                min + delta * (1 - i / numBigTickMarks / numSmallPerBig);
+              const tickLabel =
+                Math.abs(delta) > 1000
+                  ? tickValue.toExponential(0).replace("+", "")
+                  : Math.round(tickValue * 100) / 100;
 
               return (
                 <g
@@ -104,7 +109,7 @@ class AttributeDial extends Component<Props> {
                       transform={`translate(${0.8 *
                         innerRadius} 0) rotate(${textRotation}) `}
                     >
-                      {Math.round(tickValue * 100) / 100}
+                      {tickLabel}
                     </text>
                   )}
                   <line
@@ -119,26 +124,28 @@ class AttributeDial extends Component<Props> {
               );
             })}
 
-          {min !== max && <g transform={`translate(${radius} ${radius})`}>
-            <path
-              transform={`rotate(${angle})`}
-              d={`
+          {min !== max && (
+            <g transform={`translate(${radius} ${radius})`}>
+              <path
+                transform={`rotate(${angle})`}
+                d={`
                 M0 ${handWidth}
                 L${innerRadius} 0
                 L0 -${handWidth}
                 L-${handBackLength} {handBackLength*}
                 Z`}
-              style={handTransition}
-              fill={handColor}
-            />
-            <circle
-              r={handCenterRadius}
-              cx={0}
-              cy={0}
-              fill={handColor}
-              style={handTransition}
-            />
-          </g>}
+                style={handTransition}
+                fill={handColor}
+              />
+              <circle
+                r={handCenterRadius}
+                cx={0}
+                cy={0}
+                fill={handColor}
+                style={handTransition}
+              />
+            </g>
+          )}
 
           <text
             textAnchor="middle"
