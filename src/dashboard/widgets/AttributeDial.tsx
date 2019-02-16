@@ -32,9 +32,8 @@ class AttributeDial extends Component<Props> {
     const { min, max, attribute, label } = inputs;
 
     const radius =
-      mode === "library" ? 40 : Math.min(actualHeight, actualWidth) / 2;
-    const libraryProps =
-      mode === "library" ? { marginLeft: "0.5em", marginTop: "0.5em" } : {};
+      mode === "library" ? 60 : Math.min(actualHeight, actualWidth) / 2;
+    const libraryProps = mode === "library" ? { margin: "0.5em" } : {};
 
     const value = attribute.value || 0;
     const [normalized, overflow] = normalize(value, min, max);
@@ -45,6 +44,9 @@ class AttributeDial extends Component<Props> {
     const handColor = overflow ? "red" : "gray";
     const innerRadius = 0.9 * radius;
     const handBackLength = 0.25 * innerRadius;
+    const handTransition = {
+      transition: "transform 2s ease-in-out, fill 2s ease-in-out"
+    };
 
     const numBigTickMarks = 10;
     const numSmallPerBig = 5;
@@ -117,7 +119,7 @@ class AttributeDial extends Component<Props> {
               );
             })}
 
-          <g transform={`translate(${radius} ${radius})`}>
+          <g transform={`translate(${radius} ${radius})`} fill="green">
             <path
               transform={`rotate(${angle})`}
               d={`
@@ -126,10 +128,16 @@ class AttributeDial extends Component<Props> {
                 L0 -${handWidth}
                 L-${handBackLength} 0
                 Z`}
-              style={{ transition: "transform 2s ease-in-out" }}
+              style={handTransition}
               fill={handColor}
             />
-            <circle r={handCenterRadius} cx={0} cy={0} fill={handColor} />
+            <circle
+              r={handCenterRadius}
+              cx={0}
+              cy={0}
+              fill={handColor}
+              style={handTransition}
+            />
           </g>
 
           <text
