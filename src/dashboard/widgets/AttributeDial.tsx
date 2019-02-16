@@ -134,18 +134,13 @@ class AttributeDial extends Component<Props> {
                 l0 ${-0.3 * handWidth}
                 L0 -${handWidth}
                 l-${handBackLength} 0
-                l0 ${2*handWidth}
+                l0 ${2 * handWidth}
                 Z`}
                 style={handTransition}
                 fill={handColor}
               />
-              <circle
-                r={handCenterRadius}
-                cx={0}
-                cy={0}
-                fill={handColor}
-                style={handTransition}
-              />
+              <circle r={handCenterRadius} cx={0} cy={0} fill={handColor} />
+              <circle r={0.5 * handCenterRadius} cx={0} cy={0} fill="darkgray" />
             </g>
           )}
 
