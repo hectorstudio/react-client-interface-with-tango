@@ -55,24 +55,24 @@
     "typescript": "^2.9.2"
   },
   "proxy": {
-    "/kitslab/socket": {
-      "target": "https://webjive-test.maxiv.lu.se",
+    "/test/socket": {
+      "target": "http://localhost:8080",
       "secure": false,
       "changeOrigin": true,
       "ws": true
     },
-    "/kitslab/db": {
-      "target": "https://webjive-test.maxiv.lu.se",
+    "/test/db": {
+      "target": "http://localhost:8080",
       "secure": false,
       "changeOrigin": true
     },
     "/auth": {
-      "target": "https://webjive-test.maxiv.lu.se",
+      "target": "http://localhost:8080",
       "secure": false,
       "changeOrigin": true
     },
     "/dashboards": {
-      "target": "https://webjive-test.maxiv.lu.se",
+      "target": "http://localhost:8080",
       "secure": false,
       "changeOrigin": true
     }
