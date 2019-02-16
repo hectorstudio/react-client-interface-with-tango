@@ -248,10 +248,16 @@ class EditCanvas extends Component {
                       : [...selectedIds, id];
 
                     this.props.onSelectWidgets(updatedSelectedWidgets);
-                  } else if (!isSelected || selectedWidgets.length > 1) {
+                  } else {
+                    this.initiateMouseEvent(MOVE, event);
+                  }
+                }}
+                onMouseUp={event => {
+                  // Why isn't this triggered?
+                  // Is this the right place to do this?
+                  if (!isSelected || selectedWidgets.length > 1) {
                     this.props.onSelectWidgets([id]);
                   }
-                  this.initiateMouseEvent(MOVE, event);
                 }}
                 onResize={(moveX, moveY, dx, dy) =>
                   this.props.onResizeWidget(id, moveX, moveY, dx, dy)
