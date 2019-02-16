@@ -41,7 +41,7 @@ class AttributeDial extends Component<Props> {
 
     const handWidth = 0.05 * radius;
     const handCenterRadius = 0.075 * radius;
-    const handColor = overflow ? "red" : "gray";
+    const handColor = overflow ? "red" : "darkgray";
     const innerRadius = 0.9 * radius;
     const handBackLength = 0.25 * innerRadius;
     const handTransition = {
@@ -119,14 +119,14 @@ class AttributeDial extends Component<Props> {
               );
             })}
 
-          <g transform={`translate(${radius} ${radius})`} fill="green">
+          {min !== max && <g transform={`translate(${radius} ${radius})`}>
             <path
               transform={`rotate(${angle})`}
               d={`
                 M0 ${handWidth}
                 L${innerRadius} 0
                 L0 -${handWidth}
-                L-${handBackLength} 0
+                L-${handBackLength} {handBackLength*}
                 Z`}
               style={handTransition}
               fill={handColor}
@@ -138,7 +138,7 @@ class AttributeDial extends Component<Props> {
               fill={handColor}
               style={handTransition}
             />
-          </g>
+          </g>}
 
           <text
             textAnchor="middle"
