@@ -76,7 +76,7 @@ class AttributeDial extends Component<Props> {
             </radialGradient>
           </defs>
 
-          <circle r={radius} cx={radius} cy={radius} fill="url(#rim)" />
+          <circle r={radius} cx={radius} cy={radius} fill="darkgray" />
           <circle r={innerRadius} cx={radius} cy={radius} fill="white" />
 
           {Array(totalNumTickMarks)
