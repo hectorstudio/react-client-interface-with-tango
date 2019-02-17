@@ -49,9 +49,6 @@ class AttributeDial extends Component<Props> {
     const handColor = "red";
     const innerRadius = 0.9 * radius;
     const handBackLength = 0.25 * innerRadius;
-    const handTransition = {
-      transition: "transform 2s ease-in-out"
-    };
 
     const numBigTickMarks = 10;
     const numSmallPerBig = 5;
@@ -71,16 +68,6 @@ class AttributeDial extends Component<Props> {
         }}
       >
         <svg width={2 * radius} height={2 * radius}>
-          <defs>
-            <radialGradient id="rim" cx="50%" cy="50%" r="50%">
-              <stop offset="90%" style={{ stopColor: "#666" }} />
-              <stop offset="91%" style={{ stopColor: "#888" }} />
-              <stop offset="96%" style={{ stopColor: "#ddd" }} />
-              <stop offset="99%" style={{ stopColor: "#888" }} />
-              <stop offset="100%" style={{ stopColor: "#666" }} />
-            </radialGradient>
-          </defs>
-
           <circle r={radius} cx={radius} cy={radius} fill="darkgray" />
           <circle r={innerRadius} cx={radius} cy={radius} fill="white" />
 
@@ -132,7 +119,10 @@ class AttributeDial extends Component<Props> {
           {min !== max && (
             <g transform={`translate(${radius} ${radius})`}>
               <path
-                transform={`rotate(${angle})`}
+                style={{
+                  transform: `rotate(${angle}deg)`,
+                  transition: "transform 2s ease-in-out"
+                }}
                 d={`
                 M0 ${handWidth}
                 L${0.95 * innerRadius} ${0.15 * handWidth}
@@ -141,16 +131,9 @@ class AttributeDial extends Component<Props> {
                 l-${handBackLength} 0
                 l0 ${2 * handWidth}
                 Z`}
-                style={handTransition}
                 fill={handColor}
               />
-              <circle
-                r={handCenterRadius}
-                cx={0}
-                cy={0}
-                fill={handColor}
-                style={handTransition}
-              />
+              <circle r={handCenterRadius} cx={0} cy={0} fill={handColor} />
               <circle
                 r={0.5 * handCenterRadius}
                 cx={0}
