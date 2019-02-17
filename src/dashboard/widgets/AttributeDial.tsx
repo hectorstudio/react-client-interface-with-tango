@@ -138,7 +138,7 @@ class AttributeDial extends Component<Props> {
                 r={0.5 * handCenterRadius}
                 cx={0}
                 cy={0}
-                fill="darkgray"
+                fill="darkred"
               />
             </g>
           )}
