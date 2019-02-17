@@ -259,6 +259,14 @@ class EditCanvas extends Component {
                       : [...selectedIds, id];
 
                     this.props.onSelectWidgets(updatedSelectedWidgets);
+                  } else {
+                    if (
+                      selectedIds.indexOf(id) !== -1 &&
+                      moveX === 0 &&
+                      moveY === 0
+                    ) {
+                      this.props.onSelectWidgets([id]);
+                    }
                   }
                 }}
                 onResize={(moveX, moveY, dx, dy) =>
