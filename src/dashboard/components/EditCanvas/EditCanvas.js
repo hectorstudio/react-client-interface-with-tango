@@ -227,6 +227,7 @@ class EditCanvas extends Component {
 
             const component = componentForWidget(widget);
             const element = React.createElement(component, props);
+            const selectedIds = selectedWidgets.map(({ id }) => id);
 
             return (
               <EditWidget
@@ -239,7 +240,17 @@ class EditCanvas extends Component {
                 height={actualHeight}
                 onDelete={() => this.props.onDeleteWidget(id)}
                 onMouseDown={event => {
-                  const selectedIds = selectedWidgets.map(({ id }) => id);
+                  if (this.state.isShiftDown) {
+                    return;
+                  }
+
+                  if (!isSelected) {
+                    this.props.onSelectWidgets([id]);
+                  }
+
+                  this.initiateMouseEvent(MOVE, event);
+                }}
+                onMouseUp={() => {
                   if (this.state.isShiftDown) {
                     const updatedSelectedWidgets = isSelected
                       ? selectedWidgets
@@ -248,16 +259,6 @@ class EditCanvas extends Component {
                       : [...selectedIds, id];
 
                     this.props.onSelectWidgets(updatedSelectedWidgets);
-                  } else if (selectedIds.length > 0) {
-                    this.initiateMouseEvent(MOVE, event);
-                  } else {
-                    this.props.onSelectWidgets([id]);
-                    this.initiateMouseEvent(MOVE, event);
-                  }
-                }}
-                onMouseUp={() => {
-                  if (isSelected && moveX === 0 && moveY === 0) {
-                    this.props.onSelectWidgets([id]);
                   }
                 }}
                 onResize={(moveX, moveY, dx, dy) =>
