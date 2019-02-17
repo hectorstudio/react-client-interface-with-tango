@@ -16,6 +16,7 @@ import DeviceSelect from "./DeviceSelect";
 
 import { DELETE_INPUT, ADD_INPUT, SET_INPUT } from "../../state/actionTypes";
 import CommandSelect from "./CommandSelect";
+import NumericInput from "./NumericInput";
 
 class InputList extends Component<{
   tangoDB: string;
@@ -41,12 +42,11 @@ class InputList extends Component<{
           <tr key={inputName}>
             <td>{label}</td>
             <td>
-              <input
+              <NumericInput
                 className="form-control"
-                type="text"
                 value={value}
-                onChange={e =>
-                  this.props.onChange([inputName], Number(e.target.value) || 0)
+                onChange={inputValue =>
+                  this.props.onChange([inputName], inputValue)
                 }
               />
             </td>
