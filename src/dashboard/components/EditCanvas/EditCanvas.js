@@ -269,6 +269,7 @@ class EditCanvas extends Component {
                     }
                   }
                 }}
+                canResize={selectedIds.length < 2}
                 onResize={(moveX, moveY, dx, dy) =>
                   this.props.onResizeWidget(id, moveX, moveY, dx, dy)
                 }
