@@ -211,6 +211,7 @@ export default class EditWidget extends Component {
           event.stopPropagation();
           this.props.onMouseDown(event);
         }}
+        onMouseUp={event => void this.props.onMouseUp(event)}
       >
         {resizeAreas}
         <WarningBadge visible={this.props.warning} />
