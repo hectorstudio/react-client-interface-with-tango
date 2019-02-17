@@ -239,8 +239,8 @@ class EditCanvas extends Component {
                 height={actualHeight}
                 onDelete={() => this.props.onDeleteWidget(id)}
                 onMouseDown={event => {
+                  const selectedIds = selectedWidgets.map(({ id }) => id);
                   if (this.state.isShiftDown) {
-                    const selectedIds = selectedWidgets.map(({ id }) => id);
                     const updatedSelectedWidgets = isSelected
                       ? selectedWidgets
                           .map(widget => widget.id)
@@ -248,14 +248,15 @@ class EditCanvas extends Component {
                       : [...selectedIds, id];
 
                     this.props.onSelectWidgets(updatedSelectedWidgets);
+                  } else if (selectedIds.length > 0) {
+                    this.initiateMouseEvent(MOVE, event);
                   } else {
+                    this.props.onSelectWidgets([id]);
                     this.initiateMouseEvent(MOVE, event);
                   }
                 }}
-                onMouseUp={event => {
-                  // Why isn't this triggered?
-                  // Is this the right place to do this?
-                  if (!isSelected || selectedWidgets.length > 1) {
+                onMouseUp={() => {
+                  if (isSelected && moveX === 0 && moveY === 0) {
                     this.props.onSelectWidgets([id]);
                   }
                 }}
