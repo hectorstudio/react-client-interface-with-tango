@@ -11,12 +11,17 @@ interface Input {
 
 type Props = WidgetProps<Input>;
 
-function normalize(value: number, min: number, max: number): [number, boolean] {
+function normalizeWithFlex(
+  value: number,
+  min: number,
+  max: number,
+  flex: number = 0
+): [number, boolean] {
   const normed = (value - min) / (max - min);
-  if (normed > 1) {
-    return [1, true];
-  } else if (normed < 0) {
-    return [0, true];
+  if (normed > 1 + flex) {
+    return [Math.min(normed, 1 + flex), normed > 1];
+  } else if (normed < 0 - flex) {
+    return [Math.max(normed, 0 - flex), normed < 0];
   } else {
     return [normed, false];
   }
@@ -36,7 +41,7 @@ class AttributeDial extends Component<Props> {
     const libraryProps = mode === "library" ? { margin: "0.5em" } : {};
 
     const value = attribute.value || 0;
-    const [normalized, overflow] = normalize(value, min, max);
+    const [normalized, overflow] = normalizeWithFlex(value, min, max, 0.02);
     const angle = normalizedValueToAngle(normalized);
 
     const handWidth = 0.05 * radius;
