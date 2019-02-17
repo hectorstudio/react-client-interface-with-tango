@@ -16,14 +16,14 @@ function normalizeWithFlex(
   min: number,
   max: number,
   flex: number = 0
-): [number, boolean] {
+): number {
   const normed = (value - min) / (max - min);
   if (normed > 1 + flex) {
-    return [Math.min(normed, 1 + flex), normed > 1];
+    return Math.min(normed, 1 + flex);
   } else if (normed < 0 - flex) {
-    return [Math.max(normed, 0 - flex), normed < 0];
+    return Math.max(normed, 0 - flex);
   } else {
-    return [normed, false];
+    return normed;
   }
 }
 
@@ -41,16 +41,16 @@ class AttributeDial extends Component<Props> {
     const libraryProps = mode === "library" ? { margin: "0.5em" } : {};
 
     const value = attribute.value || 0;
-    const [normalized, overflow] = normalizeWithFlex(value, min, max, 0.02);
+    const normalized = normalizeWithFlex(value, min, max, 0.02);
     const angle = normalizedValueToAngle(normalized);
 
     const handWidth = 0.05 * radius;
     const handCenterRadius = 0.075 * radius;
-    const handColor = overflow ? "red" : "darkred";
+    const handColor = "red";
     const innerRadius = 0.9 * radius;
     const handBackLength = 0.25 * innerRadius;
     const handTransition = {
-      transition: "transform 2s ease-in-out, fill 2s ease-in-out"
+      transition: "transform 2s ease-in-out"
     };
 
     const numBigTickMarks = 10;
