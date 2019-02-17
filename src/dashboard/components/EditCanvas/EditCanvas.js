@@ -28,6 +28,7 @@ import {
 const BACKSPACE = 8;
 const DELETE = 46;
 const SHIFT = 16;
+const LEFT_MOUSE_BUTTON = 0;
 
 const MOVE = "MOVE";
 const SELECT = "SELECT";
@@ -70,8 +71,7 @@ class EditCanvas extends Component {
   }
 
   handleMouseDown(event) {
-    if (event.button === 0) {
-      // Left click
+    if (event.button === LEFT_MOUSE_BUTTON) {
       this.initiateMouseEvent(SELECT, event);
     }
   }
@@ -260,11 +260,7 @@ class EditCanvas extends Component {
 
                     this.props.onSelectWidgets(updatedSelectedWidgets);
                   } else {
-                    if (
-                      selectedIds.indexOf(id) !== -1 &&
-                      moveX === 0 &&
-                      moveY === 0
-                    ) {
+                    if (isSelected && moveX === 0 && moveY === 0) {
                       this.props.onSelectWidgets([id]);
                     }
                   }
