@@ -193,6 +193,9 @@ class EditCanvas extends Component {
             this.setState({ isShiftDown: false });
           }
         }}
+        onBlur={() => {
+          this.handleMouseUp();
+        }}
         tabIndex="0"
       >
         {selectionBox}
