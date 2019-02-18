@@ -3,6 +3,7 @@ import attributePlot from "./AttributePlot";
 import label from "./Label";
 import spectrum from "./Spectrum";
 import commandExecutor from "./CommandExecutor";
+import attributeDial from "./AttributeDial";
 
 import {
   Widget,
@@ -14,7 +15,8 @@ export const bundles = [
   attributeDisplayWidget,
   attributePlot,
   spectrum,
-  commandExecutor
+  commandExecutor,
+  attributeDial
 ];
 
 function bundleForType(type: string) {

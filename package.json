@@ -55,24 +55,24 @@
     "typescript": "^2.9.2"
   },
   "proxy": {
-    "/kitslab/socket": {
-      "target": "https://webjive-test.maxiv.lu.se",
+    "/demodb/socket": {
+      "target": "https://webjive-demo.maxiv.lu.se",
       "secure": false,
       "changeOrigin": true,
       "ws": true
     },
-    "/kitslab/db": {
-      "target": "https://webjive-test.maxiv.lu.se",
+    "/demodb/db": {
+      "target": "https://webjive-demo.maxiv.lu.se",
       "secure": false,
       "changeOrigin": true
     },
     "/auth": {
-      "target": "https://webjive-test.maxiv.lu.se",
+      "target": "https://webjive-demo.maxiv.lu.se",
       "secure": false,
       "changeOrigin": true
     },
     "/dashboards": {
-      "target": "https://webjive-test.maxiv.lu.se",
+      "target": "https://webjive-demo.maxiv.lu.se",
       "secure": false,
       "changeOrigin": true
     }
