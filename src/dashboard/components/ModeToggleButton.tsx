@@ -17,7 +17,11 @@ export default class ModeToggleButton extends Component<Props> {
         type="button"
         onClick={onClick}
         disabled={disabled}
-        style={{ padding: "0.25em 0.5em", borderRadius: "0.25em" }}
+        style={{
+          padding: "0.25em 0.5em",
+          borderRadius: "0.25em",
+          cursor: disabled ? "not-allowed" : ""
+        }}
         tabIndex={-1}
       >
         <span className={`fa fa-${icon}`} /> {label}
