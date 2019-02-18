@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import cx from "classnames";
 
 interface Props {
   onClick: () => void;
@@ -10,22 +9,19 @@ interface Props {
 export default class ModeToggleButton extends Component<Props> {
   public render() {
     const { onClick, mode, disabled } = this.props;
+    const [label, icon] =
+      mode === "run" ? ["Edit", "pencil"] : ["Start", "play"];
 
     return (
       <button
         type="button"
         onClick={onClick}
-        style={{
-          fontSize: "small",
-          width: "2.5em",
-          textAlign: "center"
-        }}
-        className={cx("form-control fa", {
-          "fa-play": mode === "edit",
-          "fa-pause": mode === "run"
-        })}
         disabled={disabled}
-      />
+        style={{ padding: "0.25em 0.5em", borderRadius: "0.25em" }}
+        tabIndex={-1}
+      >
+        <span className={`fa fa-${icon}`} /> {label}
+      </button>
     );
   }
 }
