@@ -36,6 +36,8 @@ import { RootState } from "../state/reducers";
 
 import "./Dashboard.css";
 import ModeToggleButton from "./ModeToggleButton";
+import Sidebar from "./Sidebar";
+import tango from "src/jive/state/sagas/tango";
 
 interface Match {
   tangoDB: string;
@@ -86,22 +88,6 @@ class Dashboard extends Component<Props> {
     const { tangoDB } = this.props.match.params;
     const disabled = !this.areAllValid() || !this.isRootCanvas();
 
-    const sidebarContents = mode === "edit" && (
-      <div className="Sidebar">
-        {selectedWidgets.length === 0 ? (
-          <Library />
-        ) : selectedWidgets.length === 1 ? (
-          <Inspector
-            widget={selectedWidgets[0]}
-            isRootCanvas={this.isRootCanvas()}
-            tangoDB={tangoDB}
-          />
-        ) : (
-          "Multiple selection"
-        )}
-      </div>
-    );
-
     const canvasContents =
       mode === "edit" ? (
         <EditCanvas />
@@ -141,7 +127,11 @@ class Dashboard extends Component<Props> {
             </form>
           </div>
           <div className={classNames("CanvasArea", mode)}>{canvasContents}</div>
-          {sidebarContents}
+          <Sidebar
+            mode={mode}
+            tangoDB={tangoDB}
+            selectedWidgets={selectedWidgets}
+          />
         </DeviceProvider>
       </div>
     );

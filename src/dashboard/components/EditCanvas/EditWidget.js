@@ -173,19 +173,20 @@ export default class EditWidget extends Component {
       return null;
     }
 
-    const { width, height } = this.props;
+    const { width, height, canResize } = this.props;
 
-    const resizeAreas = ["nw", "ne", "sw", "se", "w", "e", "s", "n"].map(
-      areaLocation => (
-        <ResizeArea
-          key={areaLocation}
-          location={areaLocation}
-          onBeginResize={(areaLocation, x, y) => {
-            this.handleBeginResize(areaLocation, x, y);
-          }}
-        />
-      )
-    );
+    const resizeAreas =
+      canResize === false
+        ? []
+        : ["nw", "ne", "sw", "se", "w", "e", "s", "n"].map(areaLocation => (
+            <ResizeArea
+              key={areaLocation}
+              location={areaLocation}
+              onBeginResize={(areaLocation, x, y) => {
+                this.handleBeginResize(areaLocation, x, y);
+              }}
+            />
+          ));
 
     const { x, y, isSelected } = this.props;
     const [adjustX, adjustY] = this.positionAdjustmentForOngoingResize();
@@ -211,6 +212,7 @@ export default class EditWidget extends Component {
           event.stopPropagation();
           this.props.onMouseDown(event);
         }}
+        onMouseUp={event => void this.props.onMouseUp(event)}
       >
         {resizeAreas}
         <WarningBadge visible={this.props.warning} />

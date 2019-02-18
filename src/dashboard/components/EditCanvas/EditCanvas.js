@@ -28,6 +28,7 @@ import {
 const BACKSPACE = 8;
 const DELETE = 46;
 const SHIFT = 16;
+const LEFT_MOUSE_BUTTON = 0;
 
 const MOVE = "MOVE";
 const SELECT = "SELECT";
@@ -70,8 +71,7 @@ class EditCanvas extends Component {
   }
 
   handleMouseDown(event) {
-    if (event.button === 0) {
-      // Left click
+    if (event.button === LEFT_MOUSE_BUTTON) {
       this.initiateMouseEvent(SELECT, event);
     }
   }
@@ -227,6 +227,7 @@ class EditCanvas extends Component {
 
             const component = componentForWidget(widget);
             const element = React.createElement(component, props);
+            const selectedIds = selectedWidgets.map(({ id }) => id);
 
             return (
               <EditWidget
@@ -240,7 +241,17 @@ class EditCanvas extends Component {
                 onDelete={() => this.props.onDeleteWidget(id)}
                 onMouseDown={event => {
                   if (this.state.isShiftDown) {
-                    const selectedIds = selectedWidgets.map(({ id }) => id);
+                    return;
+                  }
+
+                  if (!isSelected) {
+                    this.props.onSelectWidgets([id]);
+                  }
+
+                  this.initiateMouseEvent(MOVE, event);
+                }}
+                onMouseUp={() => {
+                  if (this.state.isShiftDown) {
                     const updatedSelectedWidgets = isSelected
                       ? selectedWidgets
                           .map(widget => widget.id)
@@ -248,11 +259,13 @@ class EditCanvas extends Component {
                       : [...selectedIds, id];
 
                     this.props.onSelectWidgets(updatedSelectedWidgets);
-                  } else if (!isSelected || selectedWidgets.length > 1) {
-                    this.props.onSelectWidgets([id]);
+                  } else {
+                    if (isSelected && moveX === 0 && moveY === 0) {
+                      this.props.onSelectWidgets([id]);
+                    }
                   }
-                  this.initiateMouseEvent(MOVE, event);
                 }}
+                canResize={selectedIds.length < 2}
                 onResize={(moveX, moveY, dx, dy) =>
                   this.props.onResizeWidget(id, moveX, moveY, dx, dy)
                 }
