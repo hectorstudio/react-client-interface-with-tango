@@ -22,7 +22,10 @@ import {
   DELETE_DEVICE_PROPERTY_SUCCESS,
   DELETE_DEVICE_PROPERTY_FAILED,
   FETCH_DEVICE_NAMES_FAILED,
-  ATTRIBUTE_FRAME_RECEIVED
+  ATTRIBUTE_FRAME_RECEIVED,
+  FETCH_LOGGED_ACTIONS,
+  FETCH_LOGGED_ACTIONS_SUCCESS,
+  FETCH_LOGGED_ACTIONS_FAILED
 } from "./actionTypes";
 
 export function fetchDatabaseInfo(tangoDB) {
@@ -119,4 +122,15 @@ export function fetchDevice(tangoDB, name) {
 
 export function attributeFrameReceived(frame) {
   return { type: ATTRIBUTE_FRAME_RECEIVED, frame };
+}
+
+export function fetchLoggedActions(tangoDB, deviceName, fromDate, toDate, username, category) {
+  return { type: FETCH_LOGGED_ACTIONS, tangoDB, deviceName, fromDate, toDate, username, category };
+}
+
+export function fetchLoggedActionsSuccess(logs){
+  return { type: FETCH_LOGGED_ACTIONS_SUCCESS, logs };
+}
+export function fetchLoggedActionsFailed(reason) {
+  return { type: FETCH_LOGGED_ACTIONS_FAILED, reason };
 }

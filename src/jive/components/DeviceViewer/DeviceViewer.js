@@ -11,6 +11,7 @@ import PropertyTable from "./PropertyTable/PropertyTable";
 import ServerInfo from "./ServerInfo/ServerInfo";
 import DisplevelChooser from "./DisplevelChooser/DisplevelChooser";
 import ErrorTable from "./ErrorTable/ErrorTable";
+import Logs from "./Logs/Logs";
 import Spinner from "../Spinner/Spinner";
 
 import { getDevice } from "../../state/selectors/devices";
@@ -36,13 +37,14 @@ class DeviceMenu extends Component {
     const hasCommands = commands.length > 0;
     const hasErrors = errors.length > 0;
 
-    const mask = [true, hasErrors, hasProperties, hasAttributes, hasCommands];
+    const mask = [true, hasErrors, hasProperties, hasAttributes, hasCommands, true];
     const tabTitles = [
       "Server",
       "Errors",
       "Properties",
       "Attributes",
-      "Commands"
+      "Commands",
+      "Logs"
     ];
 
     const tabs = tabTitles.map((title, i) => {
@@ -123,7 +125,14 @@ class DeviceViewer extends Component {
           attributes={device.attributes}
         />
       );
-    } else {
+    } else if(tab === "logs"){
+      return (
+        <Logs
+          tangoDB={tangoDB}
+          deviceName={device.name}
+        />
+      )
+    }else {
       return <ServerInfo device={device} server={device.server} />;
     }
   }

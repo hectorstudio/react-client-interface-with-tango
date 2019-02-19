@@ -10,7 +10,7 @@
     "no-string-literal": false
   },
   "rules": {
-    "no-console": true,
+    "no-console": false,
     "no-debugger": false,
     "ordered-imports": false,
     "object-literal-sort-keys": false,
