@@ -20,7 +20,9 @@ export default class ModeToggleButton extends Component<Props> {
         style={{
           padding: "0.25em 0.5em",
           borderRadius: "0.25em",
-          cursor: disabled ? "not-allowed" : ""
+          cursor: disabled ? "not-allowed" : "",
+          backgroundColor: "white",
+          border: "1px solid rgba(0, 0, 0, 0.2)"
         }}
         tabIndex={-1}
       >
