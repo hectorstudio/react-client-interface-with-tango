@@ -163,11 +163,13 @@ class InputField extends Component {
           <option value="false">False</option>
         </select>
       );
+    } else if (intype.toLowerCase().includes("array")){
+      inner = <input className="form-control" disabled="disabled" placeholder="Disabled"/>;
     } else if (intype.includes("U")) {
       inner = <input type="number" min="0" className="form-control" value={this.state.value} onChange={this.handleChange} placeholder={intype}/>;
     } else if (intype === 'DevString') {
       inner = <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange} placeholder={intype}/>;
-    } else {
+    }else {
       inner = <input type="number" className="form-control" value={this.state.value} onChange={this.handleChange} placeholder={intype}/>;
     }
 
