@@ -11,6 +11,16 @@ query {
 }
 `;
 
+export const FETCH_LOGGED_ACTIONS = `
+query {
+  loggedActions{
+    username
+    timestamp
+    device
+  }
+}
+`;
+
 export const EXECUTE_COMMAND = `
 mutation ExecuteCommand($command: String!, $device: String!, $argin: ScalarTypes) {
   executeCommand(command: $command, device: $device, argin: $argin) {
