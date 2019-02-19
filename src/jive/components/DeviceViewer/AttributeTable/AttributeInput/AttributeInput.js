@@ -23,8 +23,8 @@ export default class AttributeInput extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.value !== this.props.value) {
-      this.refs.motorValue.value = nextProps.value.toFixed(this.props.decimalPoints);
-      this.refs.motorValue.defaultValue = nextProps.value.toFixed(this.props.decimalPoints);
+      this.refs.motorValue.value = nextProps.value;
+      this.refs.motorValue.defaultValue = nextProps.value;
       this.setState({ edited: false });
     }
   }
@@ -44,19 +44,19 @@ export default class AttributeInput extends React.Component {
       if ([ENTER_KEY].includes(e.keyCode) && this.props.state === READY) {
         this.setState({ edited: false });
         this.props.save(e.target.valueAsNumber);
-        this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
+        this.refs.motorValue.value = this.props.value;
         this.refs.motorTargetValue.blur();
       } else if (this.props.state === this.state.MOVING) {
         this.setState({ edited: false });
-        this.refs.motorValue.value = this.props.value.toFixed(this.props.decimalPoints);
+        this.refs.motorValue.value = this.props.value;
       }
     }
   }
 
   render() {
-    const { value, motorName, decimalPoints, minvalue, maxvalue, writevalue } = this.props;
-    const valueCropped = value.toFixed(decimalPoints);
-    const writeValueCropped = writevalue ? writevalue.toFixed(decimalPoints) : '';
+    const { value, motorName,  minvalue, maxvalue, writevalue } = this.props;
+    const valueCropped = value;
+    const writeValueCropped = writevalue ? writevalue : '';
     
 
     let inputCSS = cx('form-control rw-input', {
@@ -80,7 +80,7 @@ export default class AttributeInput extends React.Component {
                 type="number"
                 defaultValue={valueCropped}
                 name={motorName}
-                style={{width: '90px', display: 'inline-block'}}
+                style={{width: '200px', display: 'inline-block'}}
               ></input>
               <input
 
@@ -91,7 +91,7 @@ export default class AttributeInput extends React.Component {
                 placeholder="Set target"
                 defaultValue={writeValueCropped}
                 disabled={this.props.state !== 2 || this.props.disabled}
-                style={{width: '95px', display: 'inline-block', marginLeft: '10px'}}
+                style={{width: '200px', display: 'inline-block', marginLeft: '10px'}}
               />
             </div>
           </form>
@@ -101,7 +101,6 @@ export default class AttributeInput extends React.Component {
 }
 
 AttributeInput.propTypes = {
-  decimalPoints: PropTypes.string,
   disabled: PropTypes.bool,
   maxvalue: PropTypes.any,
   minvalue: PropTypes.any,
