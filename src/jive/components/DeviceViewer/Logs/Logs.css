@@ -16,20 +16,16 @@ input[type="text"]{
 .log-table{
   margin-top: 1em;
   width: 100%;
-  border: 1px solid rgba(0,0,0,0.1)
 }
-.log-table tr:nth-child(odd){
-  background: #f5f5f5;
+.log-table tr:nth-child(even){
+  background: #fafafa;
 }
-.log-table tr{
-  border-top: 1px solid rgba(0,0,0,0.1);
-}
+
 .log-table td{
   padding: 4px 0px 2px 6px;
 }
 
 .log-table th{
-  border-bottom: 1px solid rgba(0,0,0,0.2);
   padding: 4px 0px 2px 6px;
 }
 /* Date picker css below*/
