@@ -7,9 +7,7 @@ import { RouteComponentProps } from "react-router";
 import queryString from "query-string";
 
 import EditCanvas from "./EditCanvas/EditCanvas";
-import Library from "./Library/Library";
 import RunCanvas from "./RunCanvas/RunCanvas";
-import Inspector from "./Inspector/Inspector";
 import { DeviceProvider } from "./DevicesProvider";
 
 import { save as saveToRepo } from "../dashboardRepo";
@@ -37,7 +35,6 @@ import { RootState } from "../state/reducers";
 import "./Dashboard.css";
 import ModeToggleButton from "./ModeToggleButton";
 import Sidebar from "./Sidebar";
-import tango from "src/jive/state/sagas/tango";
 
 interface Match {
   tangoDB: string;
