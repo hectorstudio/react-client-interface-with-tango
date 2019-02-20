@@ -47,6 +47,7 @@ class AttributeDial extends Component<Props> {
     const handWidth = 0.05 * radius;
     const handCenterRadius = 0.075 * radius;
     const handColor = "red";
+    const boltColor = "darkred";
     const innerRadius = 0.9 * radius;
     const handBackLength = 0.25 * innerRadius;
 
@@ -138,7 +139,7 @@ class AttributeDial extends Component<Props> {
                 r={0.5 * handCenterRadius}
                 cx={0}
                 cy={0}
-                fill="darkred"
+                fill={boltColor}
               />
             </g>
           )}

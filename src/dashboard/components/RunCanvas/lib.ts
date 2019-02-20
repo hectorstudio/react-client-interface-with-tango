@@ -17,6 +17,14 @@ function resolveDevice(
     : inputDevice;
 }
 
+interface AttributeValues {
+  value: any;
+  writeValue: any;
+}
+
+export type AttributeLookup = Record<string, AttributeValues>;
+export type CommandLookup = Record<string, any>;
+
 type OnWrite = (device: string, attribute: string, value: any) => Promise<boolean>;
 type OnExecute = (device: string, command: string) => Promise<any>;
 
@@ -89,8 +97,8 @@ export function extractFullNamesFromWidgets(widgets: Widget[]) {
 function enrichedInput(
   input: any,
   definition: InputDefinition,
-  attributeLookup: object,
-  commandLookup: object,
+  attributeLookup: AttributeLookup,
+  commandLookup: CommandLookup,
   published: { [variable: string]: string },
   onWrite: OnWrite,
   onExecute: OnExecute
@@ -119,10 +127,11 @@ function enrichedInput(
     const fullName = `${resolvedDevice}/${attribute}`;
 
     if (attributeLookup.hasOwnProperty(fullName)) {
-      const value = attributeLookup[fullName];
+      const { value, writeValue } = attributeLookup[fullName];
       return {
         ...input,
         value,
+        writeValue,
         write: (param: any) => onWrite(resolvedDevice, attribute, param)
       };
     }
@@ -185,8 +194,8 @@ export function publishedDevices(
 export function enrichedInputs(
   inputs: InputMapping,
   definitions: InputDefinitionMapping,
-  attributeLookup: object,
-  commandLookup: object,
+  attributeLookup: AttributeLookup,
+  commandLookup: CommandLookup,
   onWrite: OnWrite,
   onExecute: OnExecute
 ) {
