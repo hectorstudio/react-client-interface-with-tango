@@ -44,10 +44,10 @@ interface State {
   commandOutputs: CommandLookup;
 }
 
-class RunCanvas extends Component<Props, State> {
+export default class RunCanvas extends Component<Props, State> {
   private unsubscribe?: () => void;
 
-  public constructor(props) {
+  public constructor(props: Props) {
     super(props);
     this.state = {
       connectionLost: false,
@@ -150,11 +150,3 @@ class RunCanvas extends Component<Props, State> {
     );
   }
 }
-
-function mapStateToProps(state: RootState) {
-  return {
-    widgets: getWidgets(state)
-  };
-}
-
-export default connect(mapStateToProps)(RunCanvas);
