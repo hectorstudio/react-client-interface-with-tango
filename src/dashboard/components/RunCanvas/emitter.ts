@@ -4,6 +4,7 @@ subscription Attributes($fullNames: [String]!) {
     device
     attribute
     value
+    writeValue
   }
 }`;
 
@@ -13,6 +14,7 @@ interface Frame {
   device: string;
   attribute: string;
   value: any;
+  writeValue: any;
 }
 
 type EmitHandler = (frame: Frame | typeof END) => void;

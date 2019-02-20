@@ -9,7 +9,13 @@ import { TILE_SIZE } from "../constants";
 import ErrorBoundary from "../ErrorBoundary";
 
 import { attributeEmitter, END } from "./emitter";
-import { extractFullNamesFromWidgets, enrichedInputs } from "./lib";
+import {
+  extractFullNamesFromWidgets,
+  enrichedInputs,
+  AttributeLookup,
+  CommandLookup
+} from "./lib";
+
 import * as TangoAPI from "../api";
 import { getWidgets } from "src/dashboard/state/selectors";
 
@@ -34,8 +40,8 @@ interface Props {
 
 interface State {
   connectionLost: boolean;
-  attributeValues: { [fullName: string]: any };
-  commandOutputs: { [fullName: string]: any };
+  attributeValues: AttributeLookup;
+  commandOutputs: CommandLookup;
 }
 
 class RunCanvas extends Component<Props, State> {
@@ -62,11 +68,11 @@ class RunCanvas extends Component<Props, State> {
         return;
       }
 
-      const { device, attribute, value } = frame;
+      const { device, attribute, value, writeValue } = frame;
       const fullName = `${device}/${attribute}`;
       const attributeValues = {
         ...this.state.attributeValues,
-        [fullName]: value
+        [fullName]: { value, writeValue }
       };
       this.setState({ attributeValues });
     });

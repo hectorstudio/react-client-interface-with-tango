@@ -112,6 +112,7 @@ export interface AttributeInput<ValueT = any> {
   device: string;
   attribute: string;
   value: ValueT;
+  writeValue: ValueT;
 }
 
 export interface CommandInput<OutputT = any> {
