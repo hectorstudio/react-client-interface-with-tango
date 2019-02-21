@@ -27,7 +27,7 @@ class AttributeWriter extends Component<Props, State> {
   }
 
   public render() {
-    const { inputs } = this.props;
+    const { mode, inputs } = this.props;
     const { attribute, showDevice, showAttribute } = inputs;
 
     const deviceLabel = attribute.device || "device";
@@ -39,22 +39,13 @@ class AttributeWriter extends Component<Props, State> {
     ].join("/");
 
     const dataType = this.dataType();
-    const input =
-      dataType === "boolean" ? (
-        <span style={{ backgroundColor: "red" }}>
-          DevBoolan not implemented
-        </span>
-      ) : (
-        <input
-          type="text"
-          style={{
-            flexGrow: 1,
-            minWidth: "3em"
-          }}
-          value={this.state.input}
-          onChange={e => this.setState({ input: e.target.value })}
-        />
+    if (mode === "run" && dataType !== "numeric" && dataType !== "string") {
+      return (
+        <div style={{ backgroundColor: "red", padding: "0.5em" }}>
+          {attribute.dataType} not implemented
+        </div>
       );
+    }
 
     return (
       <form
@@ -68,16 +59,31 @@ class AttributeWriter extends Component<Props, State> {
         {label && (
           <span style={{ flexGrow: 0, marginRight: "0.5em" }}>{label}:</span>
         )}
-        {input}
+        <input
+          type="text"
+          style={{
+            flexGrow: 1,
+            minWidth: "3em"
+          }}
+          value={this.state.input}
+          onChange={e => this.setState({ input: e.target.value })}
+        />
       </form>
     );
   }
 
-  private dataType(): "numeric" | "boolean" | "string" {
+  private dataType(): "numeric" | "boolean" | "string" | "other" {
     const { attribute } = this.props.inputs;
     const { dataType, isNumeric } = attribute;
     const isBoolean = dataType === "DevBoolean";
-    return isNumeric ? "numeric" : isBoolean ? "boolean" : "string";
+    const isString = dataType === "DevString";
+    return isNumeric
+      ? "numeric"
+      : isBoolean
+      ? "boolean"
+      : isString
+      ? "string"
+      : "other";
   }
 
   private async handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -90,7 +96,7 @@ class AttributeWriter extends Component<Props, State> {
     const { isNumeric } = attribute;
     // const isBoolean = attribute.dataType === "DevBoolean";
     const { input } = this.state;
-    
+
     const value = isNumeric ? Number(input) : input;
     if (typeof value === "number" && isNaN(value)) {
       return;
