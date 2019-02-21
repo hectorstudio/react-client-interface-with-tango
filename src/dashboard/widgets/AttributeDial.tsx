@@ -7,6 +7,7 @@ interface Input {
   min: number;
   max: number;
   label: string;
+  showWriteValue: boolean;
 }
 
 type Props = WidgetProps<Input>;
@@ -17,39 +18,88 @@ function normalizeWithFlex(
   max: number,
   flex: number = 0
 ): number {
-  const normed = (value - min) / (max - min);
-  if (normed > 1 + flex) {
-    return Math.min(normed, 1 + flex);
-  } else if (normed < 0 - flex) {
-    return Math.max(normed, 0 - flex);
-  } else {
-    return normed;
-  }
+  let result = (value - min) / (max - min);
+  result = Math.min(result, 1 + flex);
+  result = Math.max(result, 0 - flex);
+  return result;
 }
 
 function normalizedValueToAngle(value: number) {
   return -225 + value * 270;
 }
 
+interface HandProps {
+  radius: number;
+  innerRadius: number;
+  width: number;
+  angle: number;
+  color: string;
+  boltColor?: string;
+  animationDuration: number;
+}
+
+function Hand(props: HandProps) {
+  const {
+    radius,
+    innerRadius,
+    width,
+    angle,
+    color,
+    boltColor,
+    animationDuration
+  } = props;
+
+  const handBackLength = 0.25 * innerRadius;
+  const handCenterRadius = 0.075 * radius;
+  const transition = `transform ${animationDuration}s ease-in-out`;
+
+  return (
+    <g transform={`translate(${radius} ${radius})`}>
+      <path
+        style={{
+          transform: `rotate(${angle}deg)`,
+          transition
+        }}
+        d={`
+    M0 ${width}
+    L${0.95 * innerRadius} ${0.15 * width}
+    l0 ${-0.3 * width}
+    L0 -${width}
+    l-${handBackLength} 0
+    l0 ${2 * width}
+    Z`}
+        fill={color}
+      />
+      <circle r={handCenterRadius} cx={0} cy={0} fill={color} />
+      <circle
+        r={0.5 * handCenterRadius}
+        cx={0}
+        cy={0}
+        fill={boltColor || color}
+      />
+    </g>
+  );
+}
+
 class AttributeDial extends Component<Props> {
   public render() {
     const { mode, inputs, actualWidth, actualHeight } = this.props;
-    const { min, max, attribute, label } = inputs;
+    const { min, max, attribute, label, showWriteValue } = inputs;
 
     const radius =
       mode === "library" ? 60 : Math.min(actualHeight, actualWidth) / 2;
     const libraryProps = mode === "library" ? { margin: "0.5em" } : {};
 
     const value = attribute.value || 0;
+    const writeValue = mode === "run" ? attribute.writeValue : (min + max) / 2;
+
     const normalized = normalizeWithFlex(value, min, max, 0.02);
     const angle = normalizedValueToAngle(normalized);
 
     const handWidth = 0.05 * radius;
-    const handCenterRadius = 0.075 * radius;
     const handColor = "red";
     const boltColor = "darkred";
     const innerRadius = 0.9 * radius;
-    const handBackLength = 0.25 * innerRadius;
 
     const numBigTickMarks = 10;
     const numSmallPerBig = 5;
@@ -71,6 +121,19 @@ class AttributeDial extends Component<Props> {
         <svg width={2 * radius} height={2 * radius}>
           <circle r={radius} cx={radius} cy={radius} fill="darkgray" />
           <circle r={innerRadius} cx={radius} cy={radius} fill="white" />
+
+          {showWriteValue && (
+            <Hand
+              radius={radius}
+              innerRadius={innerRadius}
+              width={0.9 * handWidth}
+              angle={normalizedValueToAngle(
+                normalizeWithFlex(writeValue, min, max, 0.02)
+              )}
+              color={"lightgray"}
+              animationDuration={0.2}
+            />
+          )}
 
           {Array(totalNumTickMarks)
             .fill(0)
@@ -118,30 +181,15 @@ class AttributeDial extends Component<Props> {
             })}
 
           {min !== max && (
-            <g transform={`translate(${radius} ${radius})`}>
-              <path
-                style={{
-                  transform: `rotate(${angle}deg)`,
-                  transition: "transform 2s ease-in-out"
-                }}
-                d={`
-                M0 ${handWidth}
-                L${0.95 * innerRadius} ${0.15 * handWidth}
-                l0 ${-0.3 * handWidth}
-                L0 -${handWidth}
-                l-${handBackLength} 0
-                l0 ${2 * handWidth}
-                Z`}
-                fill={handColor}
-              />
-              <circle r={handCenterRadius} cx={0} cy={0} fill={handColor} />
-              <circle
-                r={0.5 * handCenterRadius}
-                cx={0}
-                cy={0}
-                fill={boltColor}
-              />
-            </g>
+            <Hand
+              radius={radius}
+              innerRadius={innerRadius}
+              width={handWidth}
+              angle={angle}
+              color={handColor}
+              boltColor={boltColor}
+              animationDuration={2}
+            />
           )}
 
           <text
@@ -191,6 +239,11 @@ const definition: WidgetDefinition = {
         { name: "Device", value: "device" }
       ],
       default: "attribute"
+    },
+    showWriteValue: {
+      type: "boolean",
+      label: "Show Write Value",
+      default: false
     }
   }
 };
