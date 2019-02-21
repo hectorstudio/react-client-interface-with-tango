@@ -130,10 +130,12 @@ export async function fetchAttributeMetadata(tangoDB, fullNames) {
         deviceName
       });
 
-      alert(JSON.stringify(res, null, 2));
-
       for (const attribute of res.data.device.attributes) {
-        const { name, dataformat: dataFormat, datatype: dataType } = attribute;
+        const { name, dataformat, datatype } = attribute;
+        
+        const dataFormat = dataformat.toLowerCase();
+        const dataType = datatype;
+
         const fullName = `${deviceName}/${name}`;
         result[fullName] = { dataFormat, dataType };
       }

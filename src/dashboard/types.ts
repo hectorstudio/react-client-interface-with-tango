@@ -115,6 +115,8 @@ export interface AttributeInput<ValueT = any> {
   writeValue: ValueT;
   dataType: string;
   dataFormat: string;
+  isNumeric: boolean;
+  write: (value: ValueT) => void;
 }
 
 export interface CommandInput<OutputT = any> {

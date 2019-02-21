@@ -7,6 +7,18 @@ import {
 } from "src/dashboard/types";
 import { definitionForWidget } from "src/dashboard/widgets";
 
+const numericTypes = [
+  "DevDouble",
+  "DevFloat",
+  "DevLong",
+  "DevLong64",
+  "DevShort",
+  "DevUChar",
+  "DevULong",
+  "DevULong64",
+  "DevUShort"
+];
+
 function resolveDevice(
   published: PublishedDevices,
   inputDevice: string,
@@ -25,6 +37,7 @@ interface AttributeValues {
 interface AttributeMetadata {
   dataFormat: string;
   dataType: string;
+  isNumeric: boolean;
 }
 
 export type AttributeMetadataLookup = Record<string, AttributeMetadata>;
@@ -135,10 +148,11 @@ function enrichedInput(
       input.device,
       definition.device
     );
-    
+
     const attribute = input.attribute || definition.attribute;
     const fullName = `${resolvedDevice}/${attribute}`;
     const { dataType, dataFormat } = attributeMetadata[fullName];
+    const isNumeric = numericTypes.indexOf(dataType) !== -1;
 
     const values = attributeValues.hasOwnProperty(fullName)
       ? attributeValues[fullName]
@@ -149,6 +163,7 @@ function enrichedInput(
       ...values,
       dataType,
       dataFormat,
+      isNumeric,
       write: (param: any) => onWrite(resolvedDevice, attribute, param)
     };
   }

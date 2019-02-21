@@ -1,18 +1,17 @@
-import attributeDisplayWidget from "./AttributeDisplay";
+import attributeDisplay from "./AttributeDisplay";
+import attributeWriter from "./AttributeWriter";
 import attributePlot from "./AttributePlot";
 import label from "./Label";
 import spectrum from "./Spectrum";
 import commandExecutor from "./CommandExecutor";
 import attributeDial from "./AttributeDial";
 
-import {
-  Widget,
-  WidgetDefinition,
-} from "../types";
+import { Widget, WidgetDefinition } from "../types";
 
 export const bundles = [
   label,
-  attributeDisplayWidget,
+  attributeDisplay,
+  attributeWriter,
   attributePlot,
   spectrum,
   commandExecutor,
