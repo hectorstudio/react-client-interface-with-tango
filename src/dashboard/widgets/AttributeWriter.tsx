@@ -47,6 +47,9 @@ class AttributeWriter extends Component<Props, State> {
       );
     }
 
+    const isInvalid = dataType === "numeric" && isNaN(Number(this.state.input));
+    const invalidStyle = isInvalid ? { outline: "1px solid red" } : {};
+
     return (
       <form
         style={{
@@ -63,7 +66,8 @@ class AttributeWriter extends Component<Props, State> {
           type="text"
           style={{
             flexGrow: 1,
-            minWidth: "3em"
+            minWidth: "3em",
+            ...invalidStyle
           }}
           value={this.state.input}
           onChange={e => this.setState({ input: e.target.value })}
@@ -72,7 +76,7 @@ class AttributeWriter extends Component<Props, State> {
     );
   }
 
-  private dataType(): "numeric" | "boolean" | "string" | "other" {
+  private dataType(): "numeric" | "boolean" | "string" | "other" {
     const { attribute } = this.props.inputs;
     const { dataType, isNumeric } = attribute;
     const isBoolean = dataType === "DevBoolean";
