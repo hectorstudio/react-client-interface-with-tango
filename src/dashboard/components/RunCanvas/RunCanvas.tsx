@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 
-import { RootState } from "../../state/reducers";
 import { Widget } from "../../types";
 import { bundleForWidget } from "../../widgets";
 import { TILE_SIZE } from "../constants";
@@ -12,12 +10,12 @@ import { attributeEmitter, END } from "./emitter";
 import {
   extractFullNamesFromWidgets,
   enrichedInputs,
-  AttributeLookup,
-  CommandLookup
+  AttributeValueLookup,
+  CommandOutputLookup,
+  AttributeMetadataLookup
 } from "./lib";
 
 import * as TangoAPI from "../api";
-import { getWidgets } from "src/dashboard/state/selectors";
 
 const ConnectionLost = () => (
   <div
@@ -40,8 +38,9 @@ interface Props {
 
 interface State {
   connectionLost: boolean;
-  attributeValues: AttributeLookup;
-  commandOutputs: CommandLookup;
+  attributeValues: AttributeValueLookup;
+  commandOutputs: CommandOutputLookup;
+  attributeMetadata: AttributeMetadataLookup | null;
 }
 
 export default class RunCanvas extends Component<Props, State> {
@@ -52,15 +51,23 @@ export default class RunCanvas extends Component<Props, State> {
     this.state = {
       connectionLost: false,
       attributeValues: {},
-      commandOutputs: {}
+      commandOutputs: {},
+      attributeMetadata: null
     };
     this.writeAttribute = this.writeAttribute.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
   }
 
-  public componentDidMount() {
+  public async componentDidMount() {
     const { widgets, tangoDB } = this.props;
     const fullNames = extractFullNamesFromWidgets(widgets);
+
+    const attributeMetadata = (await TangoAPI.fetchAttributeMetadata(
+      tangoDB,
+      fullNames
+    )) as AttributeMetadataLookup | null;
+    this.setState({ attributeMetadata });
+
     const startEmission = attributeEmitter(tangoDB, fullNames);
     this.unsubscribe = startEmission(frame => {
       if (frame === END) {
@@ -87,6 +94,12 @@ export default class RunCanvas extends Component<Props, State> {
   public render() {
     const { widgets } = this.props;
 
+    const { attributeMetadata, attributeValues, commandOutputs } = this.state;
+
+    if (attributeMetadata == null) {
+      return null;
+    }
+
     return (
       <div className="Canvas run">
         {this.state.connectionLost && <ConnectionLost />}
@@ -97,8 +110,9 @@ export default class RunCanvas extends Component<Props, State> {
           const inputs = enrichedInputs(
             widget.inputs,
             definition.inputs,
-            this.state.attributeValues,
-            this.state.commandOutputs,
+            attributeMetadata,
+            attributeValues,
+            commandOutputs,
             this.writeAttribute,
             this.executeCommand
           );

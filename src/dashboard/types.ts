@@ -113,6 +113,8 @@ export interface AttributeInput<ValueT = any> {
   attribute: string;
   value: ValueT;
   writeValue: ValueT;
+  dataType: string;
+  dataFormat: string;
 }
 
 export interface CommandInput<OutputT = any> {

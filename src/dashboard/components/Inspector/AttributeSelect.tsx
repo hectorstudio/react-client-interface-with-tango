@@ -1,6 +1,6 @@
 import React, { Component, FormEvent } from "react";
 
-import { fetchAttributes } from "../api";
+import { fetchDeviceAttributes } from "../api";
 import { DeviceConsumer } from "../DevicesProvider";
 import DeviceSuggester from "./DeviceSuggester";
 
@@ -146,7 +146,7 @@ export default class AttributeSelect extends Component<Props, State> {
     const { device, tangoDB } = this.props;
     if (device) {
       this.setState({ attributes: [], fetchingAttributes: true });
-      const attributes = await fetchAttributes(tangoDB, device);
+      const attributes = await fetchDeviceAttributes(tangoDB, device);
       this.setState({ attributes, fetchingAttributes: false });
     }
   }

@@ -22,10 +22,20 @@ interface AttributeValues {
   writeValue: any;
 }
 
-export type AttributeLookup = Record<string, AttributeValues>;
-export type CommandLookup = Record<string, any>;
+interface AttributeMetadata {
+  dataFormat: string;
+  dataType: string;
+}
 
-type OnWrite = (device: string, attribute: string, value: any) => Promise<boolean>;
+export type AttributeMetadataLookup = Record<string, AttributeMetadata>;
+export type AttributeValueLookup = Record<string, AttributeValues>;
+export type CommandOutputLookup = Record<string, any>;
+
+type OnWrite = (
+  device: string,
+  attribute: string,
+  value: any
+) => Promise<boolean>;
 type OnExecute = (device: string, command: string) => Promise<any>;
 
 function* extractFullNamesFromInputsGen(
@@ -97,8 +107,9 @@ export function extractFullNamesFromWidgets(widgets: Widget[]) {
 function enrichedInput(
   input: any,
   definition: InputDefinition,
-  attributeLookup: AttributeLookup,
-  commandLookup: CommandLookup,
+  attributeMetadata: AttributeMetadataLookup,
+  attributeValues: AttributeValueLookup,
+  commandOutputs: CommandOutputLookup,
   published: { [variable: string]: string },
   onWrite: OnWrite,
   onExecute: OnExecute
@@ -108,8 +119,9 @@ function enrichedInput(
       enrichedInput(
         entry,
         { ...definition, repeat: false },
-        attributeLookup,
-        commandLookup,
+        attributeMetadata,
+        attributeValues,
+        commandOutputs,
         published,
         onWrite,
         onExecute
@@ -123,26 +135,31 @@ function enrichedInput(
       input.device,
       definition.device
     );
+    
     const attribute = input.attribute || definition.attribute;
     const fullName = `${resolvedDevice}/${attribute}`;
+    const { dataType, dataFormat } = attributeMetadata[fullName];
 
-    if (attributeLookup.hasOwnProperty(fullName)) {
-      const { value, writeValue } = attributeLookup[fullName];
-      return {
-        ...input,
-        value,
-        writeValue,
-        write: (param: any) => onWrite(resolvedDevice, attribute, param)
-      };
-    }
+    const values = attributeValues.hasOwnProperty(fullName)
+      ? attributeValues[fullName]
+      : {};
+
+    return {
+      ...input,
+      ...values,
+      dataType,
+      dataFormat,
+      write: (param: any) => onWrite(resolvedDevice, attribute, param)
+    };
   }
 
   if (definition.type === "complex") {
     return enrichedInputs(
       input,
       definition.inputs,
-      attributeLookup,
-      commandLookup,
+      attributeMetadata,
+      attributeValues,
+      commandOutputs,
       onWrite,
       onExecute
     );
@@ -157,7 +174,7 @@ function enrichedInput(
     );
 
     const fullName = `${resolvedDevice}/${command}`;
-    const output = commandLookup[fullName];
+    const output = commandOutputs[fullName];
 
     return {
       ...input,
@@ -194,8 +211,9 @@ export function publishedDevices(
 export function enrichedInputs(
   inputs: InputMapping,
   definitions: InputDefinitionMapping,
-  attributeLookup: AttributeLookup,
-  commandLookup: CommandLookup,
+  attributeMetadata: AttributeMetadataLookup,
+  attributeLookup: AttributeValueLookup,
+  commandLookup: CommandOutputLookup,
   onWrite: OnWrite,
   onExecute: OnExecute
 ) {
@@ -208,6 +226,7 @@ export function enrichedInputs(
     const value = enrichedInput(
       subInput,
       subDefinition,
+      attributeMetadata,
       attributeLookup,
       commandLookup,
       published,
