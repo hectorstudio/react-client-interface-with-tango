@@ -8,7 +8,8 @@ import {
   DELETE_DEVICE_PROPERTY,
   FETCH_DEVICE,
   ATTRIBUTES_SUB,
-  FETCH_DATABASE_INFO
+  FETCH_DATABASE_INFO,
+  FETCH_LOGGED_ACTIONS
 } from "./operations";
 
 function client(tangoDB) {
@@ -34,6 +35,12 @@ export default {
   async fetchDeviceNames(tangoDB) {
     const data = await client(tangoDB).request(FETCH_DEVICE_NAMES);
     return data.devices.map(device => device.name);
+  },
+
+  async fetchLoggedActions(tangoDB, deviceName, limit){
+    const params = {deviceName, limit}
+    const data = await client(tangoDB).request(FETCH_LOGGED_ACTIONS, params);
+    return {name: data.device.name, userActions: data.device.userActions};
   },
 
   async executeCommand(tangoDB, command, argin, device) {

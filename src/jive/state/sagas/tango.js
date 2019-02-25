@@ -8,7 +8,8 @@ import {
   DELETE_DEVICE_PROPERTY,
   FETCH_DEVICE_SUCCESS,
   FETCH_DEVICE,
-  FETCH_DATABASE_INFO
+  FETCH_DATABASE_INFO,
+  FETCH_LOGGED_ACTIONS
 } from "../actions/actionTypes";
 
 import TangoAPI from "../api/tango";
@@ -28,13 +29,16 @@ import {
   attributeChange,
   fetchDatabaseInfoSuccess,
   fetchDatabaseInfoFailed,
-  attributeFrameReceived
+  attributeFrameReceived,
+  fetchLoggedActionsFailed,
+  fetchLoggedActionsSuccess,
 } from "../actions/tango";
 
 import { displayError } from "../actions/error";
 
 export default function* tango() {
   yield fork(fetchDeviceNames);
+  yield fork (fetchLoggedActions);
   yield fork(executeCommand);
   yield fork(setDeviceAttribute);
   yield fork(setDeviceProperty);
@@ -58,6 +62,17 @@ function* fetchDeviceNames() {
   }
 }
 
+function* fetchLoggedActions() {
+  while (true){
+    const {tangoDB, deviceName, limit} = yield take(FETCH_LOGGED_ACTIONS);
+    try{
+      const logs = yield call(TangoAPI.fetchLoggedActions, tangoDB, deviceName, limit)
+      yield put(fetchLoggedActionsSuccess(logs));
+    }catch(err){
+      yield put(fetchLoggedActionsFailed(err.toString()));
+    }
+  }
+}
 function* executeCommand() {
   while (true) {
     const { tangoDB, command, argin, device } = yield take(EXECUTE_COMMAND);
