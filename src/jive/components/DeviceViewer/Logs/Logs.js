@@ -1,17 +1,9 @@
 import React, { Component, Fragment } from "react";
-import classNames from "classnames";
 import { connect } from "react-redux";
-import * as Datetime from "react-datetime";
 
 import { fetchLoggedActions } from "../../../state/actions/tango";
 import * as moment from 'moment'
 import { getLoggedActions } from "../../../state/selectors/loggedActions";
-import {
-  ILoggedActionState,
-  IExecuteCommandState,
-  ISetAttributeStateState,
-  IPutDevicePropertyState
-} from "../../../state/reducers/loggedActions";
 
 import "./Logs.css";
 
@@ -29,7 +21,7 @@ class Logs extends Component {
   }
 
   render() {
-    let { logs, deviceName } = this.props;
+    const { logs, deviceName } = this.props;
     const { limit } = this.state;
     return (
       <div>
