@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import * as Datetime from "react-datetime";
 
 import { fetchLoggedActions } from "../../../state/actions/tango";
-
+import * as moment from 'moment'
 import { getLoggedActions } from "../../../state/selectors/loggedActions";
 import {
   ILoggedActionState,
@@ -44,7 +44,7 @@ class Logs extends Component {
             />{" "}
             entries
             <button
-              style={{ width: "100px", height: "35px", marginLeft: "10px" }}
+              style={{ height: "2.2em", marginLeft: "1em" }}
               className={"btn btn-outline-secondary"}
               type="button"
               onClick={() => {
@@ -69,7 +69,7 @@ class Logs extends Component {
                 logs.map((value, key) => (
                   <Fragment key={key}>
                     <tr>
-                      <td>{value.timestamp}</td>
+                      <td>{moment(new Date(value.timestamp)).format('YYYY-MM-DD HH:mm:ss.SSS')}</td>
                       <td>{value.user}</td>
                       <td>{value.name}</td>
                       <td>{getActionDescription(value)}</td>

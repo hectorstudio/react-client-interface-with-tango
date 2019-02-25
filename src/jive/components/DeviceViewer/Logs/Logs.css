@@ -31,12 +31,9 @@ input[type="text"]{
 
 .title{
   display: inline-block;
-  font-size: 1.0em;
-  font-weight: bold;
-  margin-top: 0.3em;
+  font-size: 1.25em;
 }
 .reload-panel{
-  display: inline-block;
   float: right;
 }
 
