@@ -6,106 +6,74 @@ import * as Datetime from "react-datetime";
 import { fetchLoggedActions } from "../../../state/actions/tango";
 
 import { getLoggedActions } from "../../../state/selectors/loggedActions";
+import {
+  ILoggedActionState,
+  IExecuteCommandState,
+  ISetAttributeStateState,
+  IPutDevicePropertyState
+} from "../../../state/reducers/loggedActions";
 
 import "./Logs.css";
+
+const ENTER_KEY = 13;
 
 class Logs extends Component {
   constructor(props) {
     super(props);
-    const today = new Date();
-    let yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
     this.state = {
-      logs: LOGS,
-      fromDate: yesterday,
-      toDate: today,
-      username: "",
-      category: "Attribute"
+      limit: 100
     };
-
     this.reload = this.reload.bind(this);
-    this.onChangeFromDate = this.onChangeFromDate.bind(this);
-    this.onChangeToDate = this.onChangeToDate.bind(this);
-    this.onUserChange = this.onUserChange.bind(this);
-    this.onCategoryChange = this.onCategoryChange.bind(this);
+    this.onLimitChange = this.onLimitChange.bind(this);
+    this.reload();
   }
 
   render() {
-    const { tangoDB, deviceName } = this.props;
-    const { logs, fromDate, toDate } = this.state;
+    let { logs, deviceName } = this.props;
+    const { limit } = this.state;
     return (
       <div>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <Datetime
-                  dateFormat="YYYY-MM-DD"
-                  timeFormat="HH:mm"
-                  value={fromDate}
-                  inputProps={{ placeholder: "From date" }}
-                  onChange={moment => this.onChangeFromDate(moment)}
-                />
-              </td>
-              <td>
-                <Datetime
-                  dateFormat="YYYY-MM-DD"
-                  timeFormat="HH:mm"
-                  value={toDate}
-                  inputProps={{ placeholder: "To date" }}
-                  onChange={moment => this.onChangeToDate(moment)}
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  placeholder="User"
-                  onKeyUp={event => this.onUserChange(event)}
-                />
-              </td>
-              <td>
-                <select
-                  onChange={event => this.onCategoryChange(event)}
-                >
-                  <option value="attributes">Attributes</option>
-                  <option value="commands">Commands</option>
-                  <option value="both">Both</option>
-                </select>
-              </td>
-              <td>
-                <button
-                  style={{ width: "100px", height: "35px" }}
-                  className={"btn btn-outline-secondary"}
-                  type="button"
-                  onClick={() => {
-                    this.reload();
-                  }}
-                >
-                  Reload
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div>
+          <div className={"title"}>Recent user actions on {deviceName}</div>
+          <div className={"reload-panel"}>
+            Showing the latest{" "}
+            <input
+              className={"nbr-entry-input"}
+              defaultValue={limit}
+              onKeyUp={event => this.onLimitChange(event)}
+            />{" "}
+            entries
+            <button
+              style={{ width: "100px", height: "35px", marginLeft: "10px" }}
+              className={"btn btn-outline-secondary"}
+              type="button"
+              onClick={() => {
+                this.reload();
+              }}
+            >
+              Reload
+            </button>
+          </div>
+        </div>
         <div>
           <table className={"log-table"}>
             <tbody>
               <tr>
                 <th>Time</th>
                 <th>User</th>
-                <th>Type</th>
-                <th>Target</th>
+                <th>Name</th>
                 <th>Action</th>
+                <th>Addtional info</th>
               </tr>
-              {this.state.logs &&
-                this.state.logs.data.loggedActions.map((value, key) => (
+              {logs &&
+                logs.map((value, key) => (
                   <Fragment key={key}>
                     <tr>
                       <td>{value.timestamp}</td>
-                      <td>{value.username}</td>
-                      <td>{value.category}</td>
-                      <td>{value.target}</td>
-                      <td>{value.action}</td>
+                      <td>{value.user}</td>
+                      <td>{value.name}</td>
+                      <td>{getActionDescription(value)}</td>
+                      <td>{getAdditionalInfo(value)}</td>
                     </tr>
                   </Fragment>
                 ))}
@@ -115,36 +83,31 @@ class Logs extends Component {
       </div>
     );
   }
-
-  onChangeFromDate(moment) {
-    this.setState({ fromDate: moment.toDate() });
-  }
-  onChangeToDate(moment) {
-    this.setState({ toDate: moment.toDate() });
-  }
   reload() {
-    const {fromDate, toDate, username, category} = this.state;
-    this.props.onFetchLoggedActions(fromDate, toDate, username, category);
+    const { limit } = this.state;
+    this.props.onFetchLoggedActions(limit);
   }
-  onUserChange(event) {
-    this.setState({username: event.target.value});
-  }
-  onCategoryChange(event){
-    this.setState({category: event.target.value});
+  onLimitChange(event) {
+    if ([ENTER_KEY].includes(event.keyCode)){
+      this.reload();
+    }else{
+      this.setState({ limit: event.target.value });
+    }
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
-    logs: getLoggedActions(state)
+    logs: getLoggedActions(state, ownProps.deviceName)
   };
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
   const { tangoDB, deviceName } = ownProps;
-    return {
-      onFetchLoggedActions: (fromDate, toDate, username, category) =>
-      dispatch(fetchLoggedActions(tangoDB, deviceName, fromDate, toDate, username, category))}
+  return {
+    onFetchLoggedActions: limit =>
+      dispatch(fetchLoggedActions(tangoDB, deviceName, limit))
+  };
 }
 
 export default connect(
@@ -152,49 +115,92 @@ export default connect(
   mapDispatchToProps
 )(Logs);
 
-const LOGS = {
-  data: {
-    loggedActions: [
-      {
-        username: "jonros",
-        timestamp: "2019-01-01T11:00:47Z",
-        device: "tg_test",
-        category: "Attribute",
-        target: "double_scalar_w",
-        action: "50.00"
-      },
-      {
-        username: "abdamj",
-        timestamp: "2019-01-01T11:00:47Z",
-        device: "tg_test",
-        category: "Command",
-        target: "DevBoolean",
-        action: "execute XYZ"
-      },
-      {
-        username: "emiros",
-        timestamp: "2019-01-01T11:00:47Z",
-        device: "tg_test",
-        category: "Command",
-        target: "DevFloat",
-        action: "execute ABC"
-      },
-      {
-        username: "nilhak",
-        timestamp: "2019-01-01T11:00:47Z",
-        device: "tg_test",
-        category: "Property",
-        target: "polled_prop",
-        action: "Add"
-      },
-      {
-        username: "jarink",
-        timestamp: "2019-01-01T11:00:47Z",
-        device: "tg_test",
-        category: "Property",
-        target: "h2",
-        action: "Edit"
-      }
-    ]
+const getAdditionalInfo = log => {
+  switch (log.__typename) {
+    case "DeleteDevicePropertyUserAction":
+      return "-";
+    case "PutDevicePropertyUserAction":
+      return "Value: " + log.value;
+    case "SetAttributeValueUserAction":
+      return (
+        "Value before: " +
+        log.valueBefore +
+        ". Value after: " +
+        log.valueAfter +
+        ". Current value: " +
+        log.value
+      );
+    case "ExcuteCommandUserAction":
+      return "Command: " + log.argin;
+    default:
+      return "-";
   }
 };
+const getActionDescription = log => {
+  switch (log.__typename) {
+    case "DeleteDevicePropertyUserAction":
+      return "Property deleted";
+    case "PutDevicePropertyUserAction":
+      return "Property changed";
+    case "SetAttributeValueUserAction":
+      return "Attribute value changed";
+    case "ExcuteCommandUserAction":
+      return "Command Executed";
+    default:
+      return "Unknown (" + log.__typename + ")";
+  }
+};
+const LOGS = [
+  {
+    __typename: "ExcuteCommandUserAction",
+    timestamp: "2019-02-25T07:27:04.241608",
+    user: "TEST_LOGS",
+    device: "TEST_LOGS",
+    name: "TEST_LOGS",
+    argin: "TEST_LOGS"
+  },
+  {
+    __typename: "ExcuteCommandUserAction",
+    timestamp: "2019-02-25T07:27:04.241608",
+    user: "jonros",
+    device: "sys/tg_test/1",
+    name: "DevBoolean",
+    argin: "true"
+  },
+  {
+    __typename: "ExcuteCommandUserAction",
+    timestamp: "2019-02-25T07:27:02.475127",
+    user: "jonros",
+    device: "sys/tg_test/1",
+    name: "DevDouble",
+    argin: 11
+  },
+  {
+    __typename: "SetAttributeValueUserAction",
+    timestamp: "2019-02-25T07:26:52.023204",
+    user: "jonros",
+    device: "sys/tg_test/1",
+    name: "long_scalar_w",
+    value: 12,
+    valueBefore: 120,
+    valueAfter: 12
+  },
+  {
+    __typename: "SetAttributeValueUserAction",
+    timestamp: "2019-02-25T07:23:57.319367",
+    user: "jonros",
+    device: "sys/tg_test/1",
+    name: "long_scalar_w",
+    value: 120,
+    valueBefore: 0,
+    valueAfter: 120
+  },
+  {
+    __typename: "ExcuteCommandUserAction",
+    timestamp: "2019-02-25T07:23:49.405816",
+    user: "jonros",
+    device: "sys/tg_test/1",
+    name: "DevBoolean",
+    argin: "true"
+  }
+];

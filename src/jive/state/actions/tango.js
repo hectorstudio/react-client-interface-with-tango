@@ -124,8 +124,8 @@ export function attributeFrameReceived(frame) {
   return { type: ATTRIBUTE_FRAME_RECEIVED, frame };
 }
 
-export function fetchLoggedActions(tangoDB, deviceName, fromDate, toDate, username, category) {
-  return { type: FETCH_LOGGED_ACTIONS, tangoDB, deviceName, fromDate, toDate, username, category };
+export function fetchLoggedActions(tangoDB, deviceName, limit) {
+  return { type: FETCH_LOGGED_ACTIONS, tangoDB, deviceName, limit};
 }
 
 export function fetchLoggedActionsSuccess(logs){
