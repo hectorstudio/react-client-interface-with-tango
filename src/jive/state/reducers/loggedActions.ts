@@ -5,22 +5,24 @@ import {
 } from '../actions/actionTypes';
 
 export interface ILoggedActionState{
-    timestamp: Date;
-    username: string;
-    category: string;
-    target: string;
-    action: string;
+    __typename: string;
+    timestamp: string;
+    user: string;
+    device: string;
+    name: string;
 }
+
 export interface ILoggedActionsState{
-    loggedActions: ILoggedActionState[];
+    [deviceName: string]: {
+        ILoggedActionState
+    }
 }
 
 export default function loggedActions(state: ILoggedActionsState = {
-    loggedActions:[]
 }, action) {
     switch (action.type) {
     case FETCH_LOGGED_ACTIONS_SUCCESS: {
-        return {...state, loggedActions: action.logs};
+        return {...state, [action.logs.name]: action.logs.userActions};
     }
     default:
         return state;

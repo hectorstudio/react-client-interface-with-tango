@@ -37,10 +37,10 @@ export default {
     return data.devices.map(device => device.name);
   },
 
-  async fetchLoggedActions(tangoDB, deviceName, fromDate, toDate, username, category){
-    const params = {deviceName, fromDate, toDate, username, category}
+  async fetchLoggedActions(tangoDB, deviceName, limit){
+    const params = {deviceName, limit}
     const data = await client(tangoDB).request(FETCH_LOGGED_ACTIONS, params);
-    return data.loggedActions;
+    return {name: data.device.name, userActions: data.device.userActions};
   },
 
   async executeCommand(tangoDB, command, argin, device) {

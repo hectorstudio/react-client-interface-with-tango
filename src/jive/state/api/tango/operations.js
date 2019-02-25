@@ -11,16 +11,6 @@ query {
 }
 `;
 
-export const FETCH_LOGGED_ACTIONS = `
-query {
-  loggedActions{
-    username
-    timestamp
-    device
-  }
-}
-`;
-
 export const EXECUTE_COMMAND = `
 mutation ExecuteCommand($command: String!, $device: String!, $argin: ScalarTypes) {
   executeCommand(command: $command, device: $device, argin: $argin) {
@@ -55,6 +45,33 @@ mutation DeleteDeviceProperty($device: String!, $name: String!) {
     ok
     message
   }
+}
+`;
+
+
+export const FETCH_LOGGED_ACTIONS = `
+query FetchDevice($deviceName: String!, $limit: Int){
+    device(name: $deviceName){
+      name
+      userActions(first: $limit) {
+        __typename
+        timestamp
+        user
+        device
+        name
+        ...on SetAttributeValueUserAction{
+          value
+          valueBefore
+          valueAfter
+        }
+        ...on ExcuteCommandUserAction{
+          argin
+        }
+        ...on PutDevicePropertyUserAction{
+          value
+         }  
+      }
+    }
 }
 `;
 

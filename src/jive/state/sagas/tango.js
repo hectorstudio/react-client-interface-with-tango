@@ -64,9 +64,9 @@ function* fetchDeviceNames() {
 
 function* fetchLoggedActions() {
   while (true){
-    const {tangoDB, deviceName, fromDate, toDate, username, category} = yield take(FETCH_LOGGED_ACTIONS);
+    const {tangoDB, deviceName, limit} = yield take(FETCH_LOGGED_ACTIONS);
     try{
-      const logs = yield call(TangoAPI.fetchLoggedActions, tangoDB, deviceName, fromDate, toDate, username, category)
+      const logs = yield call(TangoAPI.fetchLoggedActions, tangoDB, deviceName, limit)
       yield put(fetchLoggedActionsSuccess(logs));
     }catch(err){
       yield put(fetchLoggedActionsFailed(err.toString()));
