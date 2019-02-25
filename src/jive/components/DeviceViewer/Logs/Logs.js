@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
 import { fetchLoggedActions } from "../../../state/actions/tango";
-import * as moment from 'moment'
+import * as moment from "moment";
 import { getLoggedActions } from "../../../state/selectors/loggedActions";
 
 import "./Logs.css";
@@ -48,20 +48,24 @@ class Logs extends Component {
           </div>
         </div>
         <div>
-          <table className={"log-table"}>
-            <tbody>
-              <tr>
-                <th>Time</th>
-                <th>User</th>
-                <th>Name</th>
-                <th>Action</th>
-                <th>Addtional info</th>
-              </tr>
-              {logs &&
-                logs.map((value, key) => (
+          {logs && logs.length > 0 ? (
+            <table className={"log-table"}>
+              <tbody>
+                <tr>
+                  <th>Time</th>
+                  <th>User</th>
+                  <th>Name</th>
+                  <th>Action</th>
+                  <th>Addtional info</th>
+                </tr>
+                {logs.map((value, key) => (
                   <Fragment key={key}>
                     <tr>
-                      <td>{moment(new Date(value.timestamp)).format('YYYY-MM-DD HH:mm:ss.SSS')}</td>
+                      <td>
+                        {moment(new Date(value.timestamp)).format(
+                          "YYYY-MM-DD HH:mm:ss.SSS"
+                        )}
+                      </td>
                       <td>{value.user}</td>
                       <td>{value.name}</td>
                       <td>{getActionDescription(value)}</td>
@@ -69,8 +73,11 @@ class Logs extends Component {
                     </tr>
                   </Fragment>
                 ))}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          ) : (
+            <div className={"no-logs-message"}>No logs available</div>
+          )}
         </div>
       </div>
     );
@@ -80,9 +87,9 @@ class Logs extends Component {
     this.props.onFetchLoggedActions(limit);
   }
   onLimitChange(event) {
-    if ([ENTER_KEY].includes(event.keyCode)){
+    if ([ENTER_KEY].includes(event.keyCode)) {
       this.reload();
-    }else{
+    } else {
       this.setState({ limit: event.target.value });
     }
   }

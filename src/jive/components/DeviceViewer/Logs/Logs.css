@@ -6,6 +6,11 @@ select{
     background: white;
     height: 35px;
 }
+.no-logs-message{
+  font-style: italic;
+  font-size: 1.1em;
+  padding: 1em;
+}
 
 input[type="text"]{
     outline: none;
