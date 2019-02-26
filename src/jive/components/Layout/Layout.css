@@ -9,7 +9,11 @@
 
   font-family: Helvetica, Arial, sans-serif;
 }
-
+.layout-navbar{
+  background: #fafafa;
+  padding: 0.1em 0.5em;
+  border-bottom: 1px solid #eee;
+}
 .Layout header {
   background-color: #222;
   padding: 20px;

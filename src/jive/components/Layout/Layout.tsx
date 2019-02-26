@@ -9,6 +9,8 @@ import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";
 
 import LogInOut from "../../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../../shared/user/components/LoginDialog/LoginDialog";
+import ShowLogs from "../DeviceViewer/Logs/ShowLogs"
+import Logs from "../DeviceViewer/Logs/Logs"
 
 import "./Layout.css";
 
@@ -23,8 +25,11 @@ const BaseLayout = ({ children }) => <div className="Layout">{children}</div>;
 
 const MainView = ({ className }) => (
   <div className={className}>
-    <LogInOut />
-    <LoginDialog />
+    <div className="layout-navbar">
+      <LogInOut />
+      <LoginDialog />
+      <ShowLogs />
+    </div>
     <ErrorDisplay />
     <Route
       path={"/:tangoDB/devices/:device*"}

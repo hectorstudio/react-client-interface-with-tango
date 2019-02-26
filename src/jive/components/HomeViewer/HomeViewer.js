@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 import { fetchDatabaseInfo } from "../../state/actions/tango";
 import { getInfo } from "../../state/selectors/database";
-
+import Logs from "../DeviceViewer/Logs/Logs";
 import "./HomeViewer.css";
 
 class HomeViewer extends Component {
@@ -16,11 +16,16 @@ class HomeViewer extends Component {
 
   render() {
     const { info } = this.props;
+    const { tangoDB } = this.props.match.params;
     return info == null ? null : (
       <div className="HomeViewer">
-        {info.split("\n").map((line, i) => (
-          <p key={i}>{line.trim()}</p>
-        ))}
+        <div>
+          {info.split("\n").map((line, i) => (
+            <p key={i}>{line.trim()}</p>
+          ))}
+        </div>
+        <hr />
+        <Logs deviceName="" tangoDB={tangoDB} />
       </div>
     );
   }

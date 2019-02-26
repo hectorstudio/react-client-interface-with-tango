@@ -26,7 +26,7 @@ class Logs extends Component {
     return (
       <div>
         <div>
-          <div className={"title"}>Recent user actions on {deviceName}</div>
+          <div className={"title"}>Recent user actions  {deviceName ? "on" + deviceName : ""}</div>
           <div className={"reload-panel"}>
             Showing the latest{" "}
             <input
@@ -54,6 +54,7 @@ class Logs extends Component {
                 <tr>
                   <th>Time</th>
                   <th>User</th>
+                  {deviceName ? "" : <th>Device</th>}
                   <th>Name</th>
                   <th>Action</th>
                   <th>Addtional info</th>
@@ -67,6 +68,7 @@ class Logs extends Component {
                         )}
                       </td>
                       <td>{value.user}</td>
+                      {deviceName ? "" : <td>{value.device}</td>}
                       <td>{value.name}</td>
                       <td>{getActionDescription(value)}</td>
                       <td>{getAdditionalInfo(value)}</td>
@@ -84,6 +86,7 @@ class Logs extends Component {
   }
   reload() {
     const { limit } = this.state;
+    const { device } = this.props;
     this.props.onFetchLoggedActions(limit);
   }
   onLimitChange(event) {
