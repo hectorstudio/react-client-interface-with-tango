@@ -9,7 +9,8 @@ import {
   FETCH_DEVICE,
   ATTRIBUTES_SUB,
   FETCH_DATABASE_INFO,
-  FETCH_LOGGED_ACTIONS
+  FETCH_LOGGED_ACTIONS,
+  FETCH_ALL_LOGGED_ACTIONS
 } from "./operations";
 
 function client(tangoDB) {
@@ -39,8 +40,16 @@ export default {
 
   async fetchLoggedActions(tangoDB, deviceName, limit){
     const params = {deviceName, limit}
-    const data = await client(tangoDB).request(FETCH_LOGGED_ACTIONS, params);
-    return {name: data.device.name, userActions: data.device.userActions};
+    const isGlobal = deviceName === "";
+    const query = isGlobal ? FETCH_ALL_LOGGED_ACTIONS : FETCH_LOGGED_ACTIONS
+    const data = await client(tangoDB).request(query, params);
+    if (isGlobal){
+      return {name: "", userActions: data.userActions};
+    }else{
+
+      return {name: data.device.name, userActions: data.device.userActions};
+    }
+   
   },
 
   async executeCommand(tangoDB, command, argin, device) {
