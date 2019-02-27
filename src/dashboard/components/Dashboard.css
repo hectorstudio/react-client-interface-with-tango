@@ -68,7 +68,8 @@
   position: absolute;
 }
 
-.Dashboard .Canvas.edit .Widget {
+/* In order to align nicely with the edit grid */
+.Dashboard .Canvas .Widget {
   margin-left: -1px;
   margin-top: -1px;
 }
