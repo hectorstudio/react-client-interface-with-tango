@@ -210,7 +210,7 @@ class EditCanvas extends Component {
             position: "absolute",
             top: 0,
             left: 0,
-            boxShadow: "inset -1em 0 1em -1em rgba(0, 0, 0, 0.2)",
+            boxShadow: "inset -1em 0.9em 1em -1em rgba(0, 0, 0, 0.1)",
             width: "100%",
             height: "100%",
             zIndex: 1000,
