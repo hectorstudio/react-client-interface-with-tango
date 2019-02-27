@@ -48,7 +48,28 @@ mutation DeleteDeviceProperty($device: String!, $name: String!) {
 }
 `;
 
-
+export const FETCH_ALL_LOGGED_ACTIONS = `
+query FetchUserActions($limit: Int){
+  userActions(first: $limit) {
+    __typename
+    timestamp
+    user
+    device
+    name
+    ...on SetAttributeValueUserAction{
+      value
+      valueBefore
+      valueAfter
+    }
+    ...on ExcuteCommandUserAction{
+      argin
+    }
+    ...on PutDevicePropertyUserAction{
+      value
+     }  
+  }
+}
+`;
 export const FETCH_LOGGED_ACTIONS = `
 query FetchDevice($deviceName: String!, $limit: Int){
     device(name: $deviceName){
