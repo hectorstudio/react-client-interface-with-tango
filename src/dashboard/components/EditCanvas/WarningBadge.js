@@ -15,7 +15,6 @@ export default function WarningBadge({ visible }) {
         height: 2 * radius,
         color: "white",
         textAlign: "center",
-        zIndex: 1000,
         opacity: visible ? 1 : 0,
         pointerEvents: "none"
       }}
