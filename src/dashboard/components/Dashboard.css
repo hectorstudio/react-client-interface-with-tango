@@ -76,16 +76,10 @@
 .Dashboard .TopBar {
   padding: 0.5em;
 
-  background-color: #eee;
-  border-bottom: 1px solid #bbb;
+  background-image: linear-gradient(to bottom, #eee, #ccc);
 
   grid-row: 1;
   grid-column: -1 / 1;
-
-  /*
-  The 3d effect is a little 2006, isn't it?
-  background-image: linear-gradient(to bottom, #eee, #ccc);
-  */
 }
 
 .Dashboard .Sidebar {
