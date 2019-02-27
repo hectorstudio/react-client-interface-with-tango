@@ -1,48 +1,49 @@
-select{
-    outline: none;
-    padding: 5px;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
-    background: white;
-    height: 35px;
+select {
+  outline: none;
+  padding: 5px;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  background: white;
+  height: 35px;
 }
-.no-logs-message{
+.no-logs-message {
   font-style: italic;
   font-size: 1.1em;
   padding: 1em;
 }
 
-input[type="text"]{
-    outline: none;
-    padding: 5px;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
+input[type="text"] {
+  outline: none;
+  padding: 5px;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
 }
-.log-table{
+.log-table {
   margin-top: 1em;
   width: 100%;
 }
-.log-table tr:nth-child(even){
+.log-table tr:nth-child(even) {
   background: #fafafa;
 }
 
-.log-table td{
+.log-table td {
   padding: 4px 0px 2px 6px;
 }
 
-.log-table th{
+.log-table th {
   padding: 4px 0px 2px 6px;
 }
 
-.title{
+.title {
   display: inline-block;
   font-size: 1.25em;
+  font-weight: bold;
 }
-.reload-panel{
+.reload-panel {
   float: right;
 }
 
-.nbr-entry-input{
+.nbr-entry-input {
   width: 50px;
   border: none;
   text-align: center;
