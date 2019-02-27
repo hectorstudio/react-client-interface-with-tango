@@ -76,7 +76,11 @@ class LibraryWidget extends Component<Props> {
           }
         }}
         className="LibraryWidget"
-        style={{ border: "1px solid #eee", borderRadius: "0.5em" }}
+        style={{
+          border: "1px solid #eee",
+          borderRadius: "0.5em",
+          boxShadow: "0 0 0.5em rgba(0, 0, 0, 0.05)"
+        }}
       >
         <span
           style={{
