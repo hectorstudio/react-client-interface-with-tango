@@ -26,7 +26,7 @@ export default function SelectionBox({ start, current }) {
         width,
         height,
         border: "2px dashed rgba(0,0,0,0.25)",
-        zIndex: 1000
+        zIndex: 100000
       }}
     />
   );
