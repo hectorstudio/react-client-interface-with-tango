@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, CSSProperties } from "react";
 import { connect } from "react-redux";
 
 import {
@@ -50,6 +50,7 @@ interface IProps {
   loginFailure: boolean;
   isLoggedIn: boolean;
   awaitingResponse: boolean;
+  style?: CSSProperties;
   onPressLogin: () => void;
   onPressLogout: () => void;
 }
@@ -76,11 +77,12 @@ class LogInOut extends React.Component<IProps, IState> {
       isLoggedIn,
       awaitingResponse,
       onPressLogout,
-      onPressLogin
+      onPressLogin,
+      style
     } = this.props;
 
     return awaitingResponse ? null : (
-      <div className="LogInOut">
+      <div className="LogInOut" style={style || {}}>
         {isLoggedIn ? (
           <WhenLoggedIn username={username} onPressLogout={onPressLogout} />
         ) : (
