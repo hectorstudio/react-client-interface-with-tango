@@ -76,7 +76,8 @@
 .Dashboard .TopBar {
   padding: 0.5em;
 
-  background-image: linear-gradient(to bottom, #eee, #ccc);
+  background-color: #eee;
+  border-bottom: 1px solid #bbb;
 
   grid-row: 1;
   grid-column: -1 / 1;
