@@ -206,7 +206,9 @@ export default class EditWidget extends Component {
           left: x + adjustX,
           top: y + adjustY,
           width: actualWidth,
-          height: actualHeight
+          height: actualHeight,
+          outline: isSelected ? "2px solid lightskyblue" : "1px solid #ccc",
+          zIndex: (isSelected ? 20000 : 10000) + y
         }}
         onMouseDown={event => {
           event.stopPropagation();
@@ -221,7 +223,6 @@ export default class EditWidget extends Component {
             overflow: "hidden",
             height: "inherit",
             width: "inherit",
-            outline: isSelected ? "2px solid lightskyblue" : "1px solid #ccc",
             backgroundColor: "white",
             pointerEvents: "none"
           }}
