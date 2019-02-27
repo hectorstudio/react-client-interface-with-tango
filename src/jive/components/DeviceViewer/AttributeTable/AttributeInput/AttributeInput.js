@@ -54,9 +54,9 @@ export default class AttributeInput extends React.Component {
   }
 
   render() {
-    const { value, motorName,  minvalue, maxvalue, writevalue } = this.props;
+    const { value, motorName,  minvalue, maxvalue, writeValue } = this.props;
     const valueCropped = value;
-    const writeValueCropped = writevalue ? writevalue : '';
+    const writeValueCropped = writeValue ? writeValue : '';
     
 
     let inputCSS = cx('form-control rw-input', {
@@ -88,7 +88,7 @@ export default class AttributeInput extends React.Component {
                 onKeyUp={this.handleKey}
                 type="number"
                 ref="motorTargetValue"
-                placeholder="Set target"
+                placeholder={`Set target`}
                 defaultValue={writeValueCropped}
                 disabled={this.props.state !== 2 || this.props.disabled}
                 style={{width: '200px', display: 'inline-block', marginLeft: '10px'}}

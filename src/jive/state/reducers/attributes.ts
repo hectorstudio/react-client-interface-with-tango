@@ -31,14 +31,14 @@ export default function attributes(state: IAttributesState = {}, action) {
     }
 
     case ATTRIBUTE_FRAME_RECEIVED: {
-      const { value, device, attribute } = action.frame;
+      const { value, writeValue, device, attribute } = action.frame;
       const oldDevice = state[device];
       const oldAttribute = oldDevice[attribute];
       return {
         ...state,
         [device]: {
           ...oldDevice,
-          [attribute]: { ...oldAttribute, value }
+          [attribute]: { ...oldAttribute, value, writeValue }
         }
       };
     }

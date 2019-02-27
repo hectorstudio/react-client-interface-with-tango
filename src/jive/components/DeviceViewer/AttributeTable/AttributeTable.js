@@ -70,13 +70,12 @@ const QualityIndicator = ({ quality }) => {
 
 const AttributeTableRow = ({
   attribute,
-  deviceName, // Make obsolete
   onSetDeviceAttribute
 }) => {
   const {
     name,
     value,
-    writevalue,
+    writeValue,
     datatype,
     dataformat,
     writable,
@@ -96,7 +95,7 @@ const AttributeTableRow = ({
         <ValueDisplay
           name={name}
           value={value}
-          writevalue={writevalue}
+          writeValue={writeValue}
           datatype={datatype}
           dataformat={dataformat}
           writable={writable}
@@ -176,7 +175,7 @@ AttributeTable.propTypes = {
       name: PropTypes.string,
       quality: PropTypes.string,
       value: PropTypes.any, //possibly PropTypes.oneOfType(...)
-      writevalue: PropTypes.any,
+      writeValue: PropTypes.any,
       writable: PropTypes.string
     })
   ),
