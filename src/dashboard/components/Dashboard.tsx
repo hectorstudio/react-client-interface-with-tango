@@ -95,7 +95,7 @@ class Dashboard extends Component<Props> {
     return (
       <div className="Dashboard">
         <DeviceProvider tangoDB={tangoDB}>
-          <LogInOut />
+          <LogInOut style={{ position: "absolute", top: "0.75em", right: "0.75em" }} />
           <LoginDialog />
           <div className="TopBar">
             <form className="form-inline">
