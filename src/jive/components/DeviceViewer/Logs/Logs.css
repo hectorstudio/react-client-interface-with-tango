@@ -1,4 +1,4 @@
-select {
+.Logs select {
   outline: none;
   padding: 5px;
   border: 1px solid #ced4da;
@@ -6,44 +6,44 @@ select {
   background: white;
   height: 35px;
 }
-.no-logs-message {
+.Logs .no-logs-message {
   font-style: italic;
   font-size: 1.1em;
   padding: 1em;
 }
 
-input[type="text"] {
+.Logs input[type="text"] {
   outline: none;
   padding: 5px;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
 }
-.log-table {
+.Logs .log-table {
   margin-top: 1em;
   width: 100%;
 }
-.log-table tr:nth-child(even) {
+.Logs .log-table tr:nth-child(even) {
   background: #fafafa;
 }
 
-.log-table td {
+.Logs .log-table td {
   padding: 4px 0px 2px 6px;
 }
 
-.log-table th {
+.Logs .log-table th {
   padding: 4px 0px 2px 6px;
 }
 
-.title {
+.Logs .title {
   display: inline-block;
   font-size: 1.25em;
   font-weight: bold;
 }
-.reload-panel {
+.Logs .reload-panel {
   float: right;
 }
 
-.nbr-entry-input {
+.Logs .nbr-entry-input {
   width: 50px;
   border: none;
   text-align: center;
