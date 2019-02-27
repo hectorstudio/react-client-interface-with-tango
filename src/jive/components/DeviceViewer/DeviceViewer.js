@@ -106,7 +106,7 @@ class DeviceViewer extends Component {
     const { device, tangoDB } = this.props;
 
     if (tab === "properties") {
-      return <PropertyTable tangoDB={tangoDB} properties={device.properties} />;
+      return <PropertyTable tangoDB={tangoDB} deviceName={device.name} properties={device.properties} />;
     } else if (tab === "commands") {
       return (
         <CommandTable
