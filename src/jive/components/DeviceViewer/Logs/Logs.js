@@ -24,7 +24,7 @@ class Logs extends Component {
     const { logs, deviceName } = this.props;
     const { limit } = this.state;
     return (
-      <div>
+      <div className="Logs">
         <div>
           <div className={"title"}>
             Recent user actions {deviceName ? "on " + deviceName : ""}
