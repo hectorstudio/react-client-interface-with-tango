@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import * as qs from "query-string";
 
 import DeviceList from "../DeviceList/DeviceList";
@@ -10,16 +10,8 @@ import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";
 import LogInOut from "../../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../../shared/user/components/LoginDialog/LoginDialog";
 import ShowLogs from "../DeviceViewer/Logs/ShowLogs";
-import Logs from "../DeviceViewer/Logs/Logs";
 
 import "./Layout.css";
-
-function extractRouteParams(match, history) {
-  const { tangoDB, device: deviceName } = match.params;
-  const { hash } = history.location;
-  const selectedTab = hash.substr(1) || null;
-  return { tangoDB, deviceName, selectedTab };
-}
 
 const BaseLayout = ({ children }) => <div className="Layout">{children}</div>;
 
@@ -32,16 +24,27 @@ const MainView = ({ className }) => (
     </div>
     <ErrorDisplay />
     <Route
-      path={"/:tangoDB/devices/:device*"}
+      exact={true}
+      path={"/:tangoDB/devices/:domain/:family/:member"}
+      render={({ match, location }) => {
+        // Is there no simpler way to append /server than to reconstruct the whole URL?
+        const { tangoDB, domain, family, member } = match.params;
+        const pathname = `/${tangoDB}/devices/${domain}/${family}/${member}/server`;
+        const to = { ...location, pathname };
+        return <Redirect to={to} />;
+      }}
+    />
+    <Route
+      path={"/:tangoDB/devices/:domain/:family/:member/:tab"}
       render={props => {
-        const { match, history } = props;
-        const params = extractRouteParams(match, history);
-        const { tangoDB, deviceName, selectedTab } = params;
+        const { tangoDB, domain, family, member, tab } = props.match.params;
+        const deviceName = `${domain}/${family}/${member}`;
+
         return (
           <DeviceViewer
             tangoDB={tangoDB}
             deviceName={deviceName}
-            selectedTab={selectedTab}
+            selectedTab={tab}
           />
         );
       }}
@@ -55,9 +58,11 @@ const DefaultLayout = () => (
     <div className="left-column">
       <Switch>
         <Route
-          path={"/:tangoDB/devices/:device*"}
+          path={"/:tangoDB/devices/:domain/:family/:member"}
           render={({ match, location }) => {
-            const { tangoDB, device } = match.params;
+            const { tangoDB, domain, family, member } = match.params;
+            const device = `${domain}/${family}/${member}`;
+
             return (
               <DeviceList
                 location={location}

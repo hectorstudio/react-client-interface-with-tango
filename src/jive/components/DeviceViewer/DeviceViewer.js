@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import classNames from "classnames";
 import { Helmet } from "react-helmet";
 
@@ -21,7 +20,6 @@ import { getDisabledDisplevels } from "../../state/selectors/deviceDetail";
 import {
   enableDisplevel,
   disableDisplevel,
-  requireDevice,
   fetchDevice
 } from "../../state/actions/tango";
 
@@ -37,7 +35,15 @@ class DeviceMenu extends Component {
     const hasCommands = commands.length > 0;
     const hasErrors = errors.length > 0;
 
-    const mask = [true, hasErrors, hasProperties, hasAttributes, hasCommands, true];
+    const mask = [
+      true,
+      hasErrors,
+      hasProperties,
+      hasAttributes,
+      hasCommands,
+      true
+    ];
+
     const tabTitles = [
       "Server",
       "Errors",
@@ -45,15 +51,19 @@ class DeviceMenu extends Component {
       "Attributes",
       "Commands",
       "Logs"
-    ];
+    ].filter((_, i) => mask[i]);
 
-    const tabs = tabTitles.map((title, i) => {
-      const name = title.toLowerCase();
-      return !mask[i] ? null : (
-        <li className={"nav-item"} key={name}>
+    const tabs = tabTitles.map(title => {
+      // Not quite happy about having to pass the location as a prop to this component, but it appeared to be the easiest way to have links preseve the query string
+      const location = this.props.location || {};
+      const tab = title.toLowerCase();
+      const to = { ...location, pathname: tab };
+
+      return (
+        <li className={"nav-item"} key={tab}>
           <Link
-            to={`#${name}`}
-            className={classNames("nav-link", { active: name === selectedTab })}
+            to={to}
+            className={classNames("nav-link", { active: tab === selectedTab })}
           >
             {title}
           </Link>
@@ -106,7 +116,13 @@ class DeviceViewer extends Component {
     const { device, tangoDB } = this.props;
 
     if (tab === "properties") {
-      return <PropertyTable tangoDB={tangoDB} deviceName={device.name} properties={device.properties} />;
+      return (
+        <PropertyTable
+          tangoDB={tangoDB}
+          deviceName={device.name}
+          properties={device.properties}
+        />
+      );
     } else if (tab === "commands") {
       return (
         <CommandTable
@@ -125,14 +141,9 @@ class DeviceViewer extends Component {
           attributes={device.attributes}
         />
       );
-    } else if(tab === "logs"){
-      return (
-        <Logs
-          tangoDB={tangoDB}
-          deviceName={device.name}
-        />
-      )
-    }else {
+    } else if (tab === "logs") {
+      return <Logs tangoDB={tangoDB} deviceName={device.name} />;
+    } else {
       return <ServerInfo device={device} server={device.server} />;
     }
   }
@@ -155,7 +166,8 @@ class DeviceViewer extends Component {
       device,
       displevels,
       disabledDisplevels,
-      onDisplevelChange
+      onDisplevelChange,
+      location
     } = this.props;
 
     // Disable the displevel chooser until its role in the user interface has been worked out properly. Currently it doesn't add much except distraction
@@ -177,7 +189,11 @@ class DeviceViewer extends Component {
           )}
         </div>
         <div className="device-body">
-          <DeviceMenu device={device} selectedTab={selectedTab} />
+          <DeviceMenu
+            device={device}
+            selectedTab={selectedTab}
+            location={location}
+          />
           <div className="device-view">{this.innerView(selectedTab)}</div>
         </div>
       </div>
@@ -211,7 +227,9 @@ function mapDispatchToProps(dispatch, ownProps) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DeviceViewer);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(DeviceViewer)
+);
