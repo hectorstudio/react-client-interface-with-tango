@@ -6,11 +6,13 @@ class ShowLogs extends React.Component {
   render() {
     return (
       <Route
-        path="/:tangoDB/*"
-        render={({ match }) => {
+        path="/:tangoDB/"
+        render={({ match, location }) => {
           const tangoDB = match.params.tangoDB;
+          const to = { ...location, pathname: `/${tangoDB}` };
+
           return (
-            <Link to={"/" + tangoDB + "/"} style={{ fontSize: "0.75em" }}>
+            <Link to={to} style={{ fontSize: "0.75em" }}>
               Overview
             </Link>
           );
