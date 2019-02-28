@@ -33,7 +33,7 @@ interface IDeviceEntryProps {
   family: string;
   member: string;
   isSelected: boolean;
-  filter?: string;
+  filter?: string | null
 }
 
 const DeviceEntry: StatelessComponent<IDeviceEntryProps> = ({
@@ -76,7 +76,7 @@ function extractNameComponents(name?: string) {
     if (domain == null || family == null || member == null) {
       throw new Error(`Invalid device name "${name}"`);
     }
-    
+
     return [domain, family, member];
   }
 }
@@ -117,8 +117,10 @@ class DeviceList extends Component<IProps> {
   public componentDidMount() {
     const filter = this.parseFilter();
     this.props.onSetFilter(filter || "");
-    
-    const [domain, family] = extractNameComponents(this.props.currentDeviceName);
+
+    const [domain, family] = extractNameComponents(
+      this.props.currentDeviceName
+    );
     if (domain != null && family != null) {
       this.props.onToggleDomain(domain);
       this.props.onToggleFamily(domain, family);
@@ -127,8 +129,8 @@ class DeviceList extends Component<IProps> {
 
   public componentDidUpdate(prevProps) {
     const filter = this.parseFilter();
-    if (filter !== this.parseFilter(prevProps)) {
-      this.props.onSetFilter(filter || "");
+    if (filter != null && filter !== this.parseFilter(prevProps)) {
+      this.props.onSetFilter(filter);
     }
   }
 
@@ -186,8 +188,7 @@ class DeviceList extends Component<IProps> {
 
         const key = `${domain}/${family}`;
         const innerIsExpanded =
-          filter.length > 0 ||
-          expandedFamilies.indexOf(key) !== -1;
+          filter.length > 0 || expandedFamilies.indexOf(key) !== -1;
 
         return (
           <li
@@ -202,8 +203,7 @@ class DeviceList extends Component<IProps> {
       });
 
       const isExpanded =
-        filter.length > 0 ||
-        expandedDomains.indexOf(domain!) !== -1;
+        filter.length > 0 || expandedDomains.indexOf(domain!) !== -1;
 
       return (
         <li key={domain} onClick={this.handleToggleDomain.bind(null, domain)}>
@@ -261,9 +261,20 @@ class DeviceList extends Component<IProps> {
     this.props.onToggleFamily(domain, family);
   }
 
-  private parseFilter(props?) {
+  // There must be an easier way to do this. What's the point of queryString.parse returning string | string[]?
+  private parseFilter(props?): string | null {
     const search = (props || this.props).location.search;
-    return queryString.parse(search).filter;
+    const { filter } = queryString.parse(search);
+
+    if (filter == null) {
+      return null;
+    }
+
+    if (Array.isArray(filter)) {
+      return filter.join("");
+    }
+
+    return filter;
   }
 }
 

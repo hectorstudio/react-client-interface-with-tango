@@ -95,7 +95,9 @@ class Dashboard extends Component<Props> {
     return (
       <div className="Dashboard">
         <DeviceProvider tangoDB={tangoDB}>
-          <LogInOut style={{ position: "absolute", top: "0.75em", right: "0.75em" }} />
+          <LogInOut
+            style={{ position: "absolute", top: "0.75em", right: "0.75em" }}
+          />
           <LoginDialog />
           <div className="TopBar">
             <form className="form-inline">
@@ -152,10 +154,10 @@ class Dashboard extends Component<Props> {
     return widgets.reduce((prev, widget) => prev && widget.valid, true);
   }
 
-  private parseId() {
+  private parseId(): string {
     const search = location.search;
     const parsed = queryString.parse(search);
-    return parsed.id || "";
+    return String(parsed.id) || "";
   }
 }
 

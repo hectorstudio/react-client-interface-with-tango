@@ -14,6 +14,7 @@ import {
 } from "../../../../shared/user/state/selectors";
 
 import "./LogInOut.css";
+import { Dispatch } from "redux";
 
 const WhenLoggedIn = ({ username, onPressLogout }) => (
   <Fragment>
@@ -45,23 +46,19 @@ const WhenLoggedOut = ({ onPressLogin }) => (
   </Fragment>
 );
 
-interface IProps {
-  username?: string;
-  loginFailure: boolean;
-  isLoggedIn: boolean;
-  awaitingResponse: boolean;
+interface OwnProps {
   style?: CSSProperties;
-  onPressLogin: () => void;
-  onPressLogout: () => void;
 }
 
-interface IState {
+interface State {
   showingModal: boolean;
   username: string;
   password: string;
 }
 
-class LogInOut extends React.Component<IProps, IState> {
+type Props = OwnProps & StateProps & DispatchProps;
+
+class LogInOut extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
@@ -93,7 +90,19 @@ class LogInOut extends React.Component<IProps, IState> {
   }
 }
 
-function mapStateToProps(state) {
+interface StateProps {
+  isLoggedIn: boolean;
+  username?: string;
+  awaitingResponse: boolean;
+  loginFailure: boolean;
+}
+
+interface DispatchProps {
+  onPressLogin: () => void;
+  onPressLogout: () => void;
+}
+
+function mapStateToProps(state): StateProps {
   return {
     isLoggedIn: getIsLoggedIn(state),
     username: getUsername(state),
@@ -102,14 +111,14 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch): DispatchProps {
   return {
     onPressLogin: () => dispatch(openLoginDialog()),
     onPressLogout: () => dispatch(logout())
   };
 }
 
-export default connect(
+export default connect<StateProps, DispatchProps, OwnProps>(
   mapStateToProps,
   mapDispatchToProps
 )(LogInOut);
