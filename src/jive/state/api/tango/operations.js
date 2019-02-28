@@ -110,7 +110,6 @@ query FetchDevice($name: String!) {
       name
       dataformat
       datatype
-      quality
       writable
       description
       displevel
@@ -141,5 +140,6 @@ subscription Attributes($fullNames: [String]!) {
     attribute
     value
     writeValue
+    quality
   }
 }`;
