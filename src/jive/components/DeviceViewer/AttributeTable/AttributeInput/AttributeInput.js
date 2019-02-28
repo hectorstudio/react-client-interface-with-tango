@@ -1,17 +1,17 @@
 import React from 'react';
 import cx from 'classnames';
-import { Button } from 'react-bootstrap';
-import './AttributeInput.css';
 import PropTypes from 'prop-types';
+
+import './AttributeInput.css';
+import { connect } from 'react-redux';
+import { getIsLoggedIn } from 'src/shared/user/state/selectors';
 
 const ENTER_KEY = 13;
 const MOVING = 3;
 const READY = 2;
 const ISSUE = 1;
 
-
-export default class AttributeInput extends React.Component {
-
+class AttributeInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
@@ -54,10 +54,10 @@ export default class AttributeInput extends React.Component {
   }
 
   render() {
-    const { value, motorName,  minvalue, maxvalue, writeValue } = this.props;
+    const { value, motorName, writeValue, isLoggedIn } = this.props;
+
     const valueCropped = value;
     const writeValueCropped = writeValue ? writeValue : '';
-    
 
     let inputCSS = cx('form-control rw-input', {
       'input-bg-edited': this.state.edited && !this.state.badEntry,
@@ -81,9 +81,9 @@ export default class AttributeInput extends React.Component {
                 defaultValue={valueCropped}
                 name={motorName}
                 style={{width: '200px', display: 'inline-block'}}
-              ></input>
-              <input
+              />
 
+              {isLoggedIn && <input
                 className={inputCSS}
                 onKeyUp={this.handleKey}
                 type="number"
@@ -92,7 +92,7 @@ export default class AttributeInput extends React.Component {
                 defaultValue={writeValueCropped}
                 disabled={this.props.state !== 2 || this.props.disabled}
                 style={{width: '200px', display: 'inline-block', marginLeft: '10px'}}
-              />
+              />}
             </div>
           </form>
         </div>
@@ -108,4 +108,13 @@ AttributeInput.propTypes = {
   save: PropTypes.func,
   state: PropTypes.number,
   value: PropTypes.number,
+  isLoggedIn: PropTypes.bool
 }
+
+function mapStateToProps(state) {
+  return {
+    isLoggedIn: getIsLoggedIn(state)
+  };
+}
+
+export default connect(mapStateToProps)(AttributeInput);
