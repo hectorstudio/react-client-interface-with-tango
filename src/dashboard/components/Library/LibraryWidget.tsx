@@ -14,9 +14,9 @@ function Outline3D() {
   return (
     <div
       style={{
-        border: "1px solid #eee",
+        border: "1px solid #e8e8e8",
         borderRadius: "0.5em",
-        boxShadow: "0 0 0.5em rgba(0, 0, 0, 0.05)",
+        boxShadow: "rgba(0,0,0,0.05) 0 0 0.2em 0.1em",
         position: "absolute",
         width: "100%",
         height: "100%",

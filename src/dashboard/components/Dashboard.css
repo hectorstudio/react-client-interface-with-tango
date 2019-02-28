@@ -75,7 +75,7 @@
 }
 
 .Dashboard .TopBar {
-  padding: 0.5em;
+  padding: 0.25em;
 
   background-color: #eee;
   border-bottom: 1px solid #ccc;
@@ -85,7 +85,7 @@
 }
 
 .Dashboard .Sidebar {
-  padding: 1em;
+  padding: 0.75em;
   user-select: none;
   grid-row: 2;
   grid-column: 2;
@@ -102,7 +102,7 @@
 }
 
 .Dashboard .Library .LibraryWidget {
-  margin-bottom: 1.5em;
+  margin-bottom: 1em;
 }
 
 .Dashboard .Canvas.edit .Placeholder {
