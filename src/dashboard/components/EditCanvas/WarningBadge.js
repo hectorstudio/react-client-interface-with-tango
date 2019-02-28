@@ -16,7 +16,8 @@ export default function WarningBadge({ visible }) {
         color: "white",
         textAlign: "center",
         opacity: visible ? 1 : 0,
-        pointerEvents: "none"
+        pointerEvents: "none",
+        zIndex: 1
       }}
     >
       <span className="fa fa-exclamation" />
