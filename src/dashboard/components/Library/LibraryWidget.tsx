@@ -10,6 +10,38 @@ import { WidgetBundle } from "../../types";
 import dndTypes from "../../dndTypes";
 import { defaultInputs } from "../../utils";
 
+function Outline3D() {
+  return (
+    <div
+      style={{
+        border: "1px solid #eee",
+        borderRadius: "0.5em",
+        boxShadow: "0 0 0.5em rgba(0, 0, 0, 0.05)",
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        margin: -1,
+        pointerEvents: "none",
+        zIndex: 1
+      }}
+    />
+  );
+}
+
+function NameLabel({ name }: { name: string }) {
+  return (
+    <span
+      style={{
+        borderRadius: "0.5em 0 0.5em 0",
+        padding: "0.25em",
+        backgroundColor: "#eee"
+      }}
+    >
+      {name}
+    </span>
+  );
+}
+
 interface Props {
   bundle: WidgetBundle;
   connectDragSource: ConnectDragSource;
@@ -76,24 +108,14 @@ class LibraryWidget extends Component<Props> {
           }
         }}
         className="LibraryWidget"
-        style={{
-          border: "1px solid #eee",
-          borderRadius: "0.5em",
-          boxShadow: "0 0 0.5em rgba(0, 0, 0, 0.05)"
-        }}
+        style={{ position: "relative", padding: "0.1em" }}
       >
-        <span
-          style={{
-            borderRadius: "0.5em 0 0.5em 0",
-            padding: "0.25em",
-            backgroundColor: "#eee"
-          }}
-        >
-          {definition.name}
-        </span>
+        <Outline3D />
+        <NameLabel name={definition.name} />
+
         {this.props.connectDragSource(
           <div className="Widget" style={{ cursor: "grab" }}>
-            <div style={{ pointerEvents: "none" }}>{widget}</div>
+            {widget}
           </div>
         )}
       </div>
