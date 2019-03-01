@@ -1,0 +1,36 @@
+.AttributeInput .input-bg-moving{
+    background-color: #FFFF9940;
+    color: transparent;
+    text-shadow: 0 0 0 black;
+    transition: background-color 100ms ease-in;
+}
+
+.AttributeInput .input-bg-ready{
+    background-color: #9BCE7B40;
+    transition: background-color 100ms ease-in;
+}
+
+
+.AttributeInput .input-bg-fault{
+    background-color: #FF999940;
+    color: #000;
+    transition: background-color 100ms ease-in;
+}
+
+.AttributeInput .input-bg-edited{
+    background-color: #EC971F40;
+}
+
+.AttributeInput .input-bg-onlimit{
+    background-color: #FF990040;
+    transition: background-color 100ms ease-in;
+}
+
+.AttributeInput .input-bg-default{
+    background-color: #FFF;
+    transition: background-color 100ms ease-in;
+}
+
+.AttributeInput .form-group {
+    margin-bottom: 0rem;
+}

@@ -1,0 +1,180 @@
+.Dashboard {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: grid;
+  grid-template-rows: min-content auto;
+  grid-template-columns: auto 22em;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.Dashboard .CanvasArea {
+  grid-row: 2;
+  overflow: hidden;
+}
+
+.Dashboard .CanvasArea.edit {
+  grid-column: 1;
+}
+
+.Dashboard .CanvasArea.run {
+  grid-column: -1 / 1;
+}
+
+.Dashboard .Canvas {
+  position: relative;
+}
+
+.Dashboard .Canvas.edit {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  user-select: none;
+}
+
+.Dashboard .Canvas.edit .grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(./EditCanvas/grid.png);
+  background-position-x: -1px;
+  background-position-y: -1px;
+}
+
+.Dashboard .Canvas.edit .Widget {
+  cursor: pointer;
+}
+
+.Dashboard .Canvas.edit .Widget.selected {
+  cursor: grab;
+  box-sizing: border-box;
+}
+
+.Dashboard .Canvas.edit.isSelecting,
+.Dashboard .Canvas.edit.isSelecting .Widget,
+.Dashboard .Canvas.edit.isSelecting .Widget .ResizeArea {
+  user-select: none;
+  cursor: default !important;
+}
+
+.Dashboard .Canvas.edit.isMoving .Widget {
+  user-select: none;
+}
+
+.Dashboard .Canvas.run .Widget,
+.Dashboard .Canvas.edit .Widget {
+  position: absolute;
+}
+
+/* In order to align nicely with the edit grid */
+.Dashboard .Canvas .Widget {
+  margin-left: -1px;
+  margin-top: -1px;
+}
+
+.Dashboard .TopBar {
+  padding: 0.33em;
+
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+
+  grid-row: 1;
+  grid-column: -1 / 1;
+
+  display: flex;
+  justify-content: space-between;
+  place-items: center;
+}
+
+.Dashboard .TopBar .LogInOut {
+  margin-right: 0.25em;
+}
+
+.Dashboard .Sidebar {
+  padding: 0.75em;
+  user-select: none;
+  grid-row: 2;
+  grid-column: 2;
+  overflow-y: scroll;
+  border-left: 1px solid #ddd;
+}
+
+.Dashboard .Sidebar h1 {
+  font-size: 1em;
+  font-weight: bold;
+  color: #999;
+  margin-bottom: 1em;
+  border-bottom: 1px solid #ddd;
+}
+
+.Dashboard .Library .LibraryWidget {
+  margin-bottom: 1em;
+  overflow: hidden;
+  border: 1px solid #e8e8e8;
+  border-radius: 0.5em;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 0.1em 0.3em 0;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.Dashboard .Library .LibraryWidget:hover {
+  transform: scale(1.025);
+  box-shadow: rgba(0, 0, 0, 0.02) 0 0.4em 0.2em;
+}
+
+.Dashboard .Canvas.edit .Placeholder {
+  position: relative;
+  width: 15em;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.075);
+  border-radius: 1em;
+  padding: 0.5em;
+  color: gray;
+  transition: opacity 0.1s linear;
+  user-select: none;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.Dashboard .LogInOut {
+  box-shadow: unset;
+  background-color: unset;
+}
+
+.Dashboard .Inspector table td {
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+}
+
+.Dashboard .Inspector table td:first-child {
+  padding-right: 0.5em;
+}
+
+.Dashboard .Inspector .ComplexInput {
+  padding: 0.5em;
+  background-color: #f4f4f4;
+  border-radius: 0.25em;
+  margin-bottom: 0.5em;
+  position: relative;
+}
+
+.Dashboard .Inspector .AttributeSelect input::placeholder,
+.Dashboard .Inspector .AttributeSelect select:disabled,
+.Dashboard .Inspector .CommandSelect input::placeholder,
+.Dashboard .Inspector .CommandSelect select:disabled {
+  color: #888;
+}
+
+.Dashboard .Inspector .AttributeSelect select:disabled,
+.Dashboard .Inspector .CommandSelect select:disabled {
+  background-color: white;
+  opacity: 0.5;
+}
+
+.Dashboard .WarningBadge {
+  transition: opacity 0.1s linear;
+}

@@ -1,0 +1,42 @@
+.Layout {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  display: grid;
+  grid-template-rows: 0em auto;
+  grid-template-columns: 22em auto;
+
+  font-family: Helvetica, Arial, sans-serif;
+}
+.layout-navbar {
+  background: #fafafa;
+  padding: 0.1em 0.5em;
+  border-bottom: 1px solid #eee;
+}
+.Layout header {
+  background-color: #222;
+  padding: 20px;
+  color: white;
+  text-align: center;
+
+  grid-row: 1;
+  grid-column: 1 / -1;
+}
+
+.Layout .left-column {
+  grid-row: 2;
+  grid-column: 1;
+  overflow-y: auto;
+}
+
+.Layout .right-column {
+  grid-row: 2;
+  grid-column: 2;
+  overflow-y: auto;
+}
+
+.Layout .double-column {
+  grid-row: 2;
+  grid-column: 1 / -1;
+}

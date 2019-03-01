@@ -1,0 +1,109 @@
+.DeviceViewer .device-view {
+    margin: 1em;
+}
+
+.DeviceViewer h1 {
+    font-weight: lighter;
+    font-size: 2em;
+}
+
+.DeviceViewer h2 {
+    font-weight: lighter;
+    font-size: 1.5em;
+    margin-top: 1em;
+    border-bottom: 1px solid gray;
+}
+
+.DeviceViewer .device-header {
+    font-size: 1.25em;
+    padding: 1em;
+}
+
+.DeviceViewer table.separated tr {
+    border-bottom: 1px solid lightgray;
+}
+
+.DeviceViewer table.separated tr:last-child {
+    border-bottom: none;
+}
+
+.DeviceViewer .state {
+    margin-right: 0.25em;
+    color: white;
+    font-size: 0.75em;
+    vertical-align: middle;
+    padding: 0.25em;
+    border-radius: 0.35em;
+}
+
+.DeviceViewer .state-on,
+.DeviceViewer .state-open,
+.DeviceViewer .state-extract {
+	background-color: #5c5;
+}
+
+.DeviceViewer .state-off,
+.DeviceViewer .state-close,
+.DeviceViewer .state-insert {
+    background-color: white;
+    border: 1px solid lightgray;
+    color: black;
+}
+
+.DeviceViewer .state-invalid {
+    background-color: lightgray;
+}
+
+.DeviceViewer .state-moving {
+    background-color: lightblue;
+    color: darkblue;
+}
+
+.DeviceViewer .state-standby {
+    background-color: yellow;
+    color: black;
+}
+
+.DeviceViewer .state-fault {
+    background-color: red;
+    color: text;
+}
+
+.DeviceViewer .state-init {
+    background-color: beige;
+    border: 1px solid orange;
+}
+
+.DeviceViewer .state-running {
+    background-color: darkgreen;
+    color: white;
+}
+
+.DeviceViewer .state-alarm {
+    background-color: orange;
+    color: white;
+}
+
+.DeviceViewer .state-disabled {
+    background-color: magenta;
+    color: white;
+}
+
+.DeviceViewer .state-unknown {
+    background-color: gray;
+    color: white;
+}
+
+.DeviceViewer .format-chooser {
+    margin: 1em 0em 0em 1em;
+}
+
+.section-chooser .nav-item {
+    margin-left: 0.5em;
+}
+
+.DeviceViewer .spinner {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2em;
+}
