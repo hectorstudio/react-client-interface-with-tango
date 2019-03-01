@@ -1,0 +1,68 @@
+.device-list {
+	border-right: 1px solid lightgray;
+	padding: 0;
+	
+	height: 100%;
+	overflow-y: scroll;
+}
+
+.device-list .entry {
+	padding: 0.1em 1em;
+}
+
+.device-list .entry.selected {
+	background-color: #007bff;
+	color: white;
+	width: fit-content;
+	border-radius: 1em;
+}
+
+.device-list .search {
+	position: sticky;
+	top: 0;
+	padding: 1em;
+	padding-bottom: 0;
+	background-color: rgba(255, 255, 255); /*, 0.8);*/
+	margin-bottom: 0.5em;
+	z-index: 1;
+	box-shadow: 0 0.5em 0.75em white;
+}
+
+.device-list .search input {
+	width: 100%;
+}
+
+.device-list a:hover {
+	text-decoration: none;
+}
+
+.device-list ul {
+	list-style-type: none;
+	padding-left: 1em;
+	user-select: none;
+}
+
+.device-list .expander-arrow {
+	display: inline-block;
+	margin-right: 0.25em;
+	color: gray;
+	transition: all 0.2s;
+	text-align: center;
+}
+
+.device-list .expander-arrow:before {
+	content: "\025B6";
+}
+
+.device-list .expander-arrow.expanded {
+	transform: rotate(90deg);
+	z-index: -1;
+}
+
+.device-list.has-search .expander-arrow {
+	display: none;
+}
+
+.device-list ul li {
+	cursor: pointer;
+}

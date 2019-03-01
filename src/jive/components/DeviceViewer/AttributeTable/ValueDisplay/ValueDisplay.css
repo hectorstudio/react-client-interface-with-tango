@@ -1,0 +1,21 @@
+.ValueDisplay.no-value {
+    color: lightgray;
+}
+
+.ValueDisplay canvas {
+    max-width: 100%;
+}
+
+.ValueDisplay.DevString p,
+.ValueDisplay.DevEncoded p {
+    margin: 0;
+    word-break: break-all;
+    white-space: pre-wrap;
+}
+
+.ValueDisplay p.monospace {
+    font-family: monospace;
+    white-space: pre;
+    overflow: scroll;
+    text-indent: unset;
+}
