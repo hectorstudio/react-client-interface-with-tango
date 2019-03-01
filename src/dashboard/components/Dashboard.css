@@ -75,13 +75,21 @@
 }
 
 .Dashboard .TopBar {
-  padding: 0.25em;
+  padding: 0.33em;
 
   background-color: #eee;
   border-bottom: 1px solid #ccc;
 
   grid-row: 1;
   grid-column: -1 / 1;
+
+  display: flex;
+  justify-content: space-between;
+  place-items: center;
+}
+
+.Dashboard .TopBar .LogInOut {
+  margin-right: 0.25em;
 }
 
 .Dashboard .Sidebar {

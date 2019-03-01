@@ -94,11 +94,8 @@ class Dashboard extends Component<Props> {
 
     return (
       <div className="Dashboard">
+        <LoginDialog />
         <DeviceProvider tangoDB={tangoDB}>
-          <LogInOut
-            style={{ position: "absolute", top: "0.75em", right: "0.75em" }}
-          />
-          <LoginDialog />
           <div className="TopBar">
             <form className="form-inline">
               <ModeToggleButton
@@ -124,6 +121,7 @@ class Dashboard extends Component<Props> {
                 </select>
               )}
             </form>
+            <LogInOut />
           </div>
           <div className={classNames("CanvasArea", mode)}>{canvasContents}</div>
           <Sidebar
