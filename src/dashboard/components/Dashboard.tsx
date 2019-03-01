@@ -155,7 +155,7 @@ class Dashboard extends Component<Props> {
   private parseId(): string {
     const search = location.search;
     const parsed = queryString.parse(search);
-    return String(parsed.id) || "";
+    return String(parsed.id || "") || ""; // TODO: improve handling of id parameter
   }
 }
 
