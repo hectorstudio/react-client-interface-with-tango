@@ -25,4 +25,4 @@ https://webjive-demo.maxiv.lu.se/demodb (log in with demo/demo)
 
 # Authors
 
-WebJive was written by the KITS Group at MAX IV Laboratory.
+WebJive was written by the KITS Group at MAX IV Laboratory .
