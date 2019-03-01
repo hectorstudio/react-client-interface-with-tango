@@ -114,13 +114,13 @@
   overflow: hidden;
   border: 1px solid #e8e8e8;
   border-radius: 0.5em;
-  box-shadow: rgba(0, 0, 0, 0.05) 0 0 0.2em 0.1em;
-  transition: transform 0.1s;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 0.1em 0.3em 0;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
 
 .Dashboard .Library .LibraryWidget:hover {
   transform: scale(1.025);
-  box-shadow: rgba(0, 0, 0, 0.025) 0 0.4em 0.2em;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 0.4em 0.2em;
 }
 
 .Dashboard .Canvas.edit .Placeholder {
