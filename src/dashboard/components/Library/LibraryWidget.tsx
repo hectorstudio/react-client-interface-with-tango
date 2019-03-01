@@ -10,31 +10,14 @@ import { WidgetBundle } from "../../types";
 import dndTypes from "../../dndTypes";
 import { defaultInputs } from "../../utils";
 
-function Outline3D() {
-  return (
-    <div
-      style={{
-        border: "1px solid #e8e8e8",
-        borderRadius: "0.5em",
-        boxShadow: "rgba(0,0,0,0.05) 0 0 0.2em 0.1em",
-        position: "absolute",
-        width: "100%",
-        height: "100%",
-        margin: -1,
-        pointerEvents: "none",
-        zIndex: 1
-      }}
-    />
-  );
-}
-
 function NameLabel({ name }: { name: string }) {
   return (
     <span
       style={{
-        borderRadius: "0.5em 0 0.5em 0",
-        padding: "0.25em",
-        backgroundColor: "#eee"
+        borderRadius: "0.45em 0 0.45em 0",
+        padding: "0 0.25em",
+        backgroundColor: "#eee",
+        display: "inline-block"
       }}
     >
       {name}
@@ -108,9 +91,8 @@ class LibraryWidget extends Component<Props> {
           }
         }}
         className="LibraryWidget"
-        style={{ position: "relative", padding: "0.1em" }}
+        style={{ position: "relative" }}
       >
-        <Outline3D />
         <NameLabel name={definition.name} />
 
         {this.props.connectDragSource(

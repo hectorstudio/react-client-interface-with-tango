@@ -111,6 +111,10 @@
 
 .Dashboard .Library .LibraryWidget {
   margin-bottom: 1em;
+  overflow: hidden;
+  border: 1px solid #e8e8e8;
+  border-radius: 0.5em;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 0 0.2em 0.1em;
 }
 
 .Dashboard .Canvas.edit .Placeholder {
