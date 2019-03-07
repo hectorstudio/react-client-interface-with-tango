@@ -9,7 +9,6 @@ import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";
 
 import LogInOut from "../../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../../shared/user/components/LoginDialog/LoginDialog";
-import ShowLogs from "../DeviceViewer/Logs/ShowLogs";
 
 import "./Layout.css";
 
