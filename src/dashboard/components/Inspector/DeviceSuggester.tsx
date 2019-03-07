@@ -31,8 +31,8 @@ export default class DeviceSuggester extends Component<Props, State> {
 
   public componentDidUpdate(prevProps: Props) {
     const { deviceName } = this.props;
-    if (deviceName != null && deviceName !== prevProps.deviceName) {
-      this.setState({ value: deviceName });
+    if (deviceName !== prevProps.deviceName) {
+      this.setState({ value: deviceName || "" });
     }
   }
 
