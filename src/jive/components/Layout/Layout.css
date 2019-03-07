@@ -11,8 +11,10 @@
 }
 .layout-navbar {
   background: #fafafa;
-  padding: 0.1em 0.5em;
   border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25em 0.5em;
 }
 .Layout header {
   background-color: #222;

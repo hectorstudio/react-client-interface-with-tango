@@ -18,9 +18,9 @@ const BaseLayout = ({ children }) => <div className="Layout">{children}</div>;
 const MainView = ({ className }) => (
   <div className={className}>
     <div className="layout-navbar">
-      <LogInOut />
       <LoginDialog />
       <ShowLogs />
+      <LogInOut />
     </div>
     <ErrorDisplay />
     <Route
