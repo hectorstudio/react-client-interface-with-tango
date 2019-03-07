@@ -29,6 +29,13 @@ export default class DeviceSuggester extends Component<Props, State> {
     this.storeInputReference = this.storeInputReference.bind(this);
   }
 
+  public componentDidUpdate(prevProps: Props) {
+    const { deviceName } = this.props;
+    if (deviceName != null && deviceName !== prevProps.deviceName) {
+      this.setState({ value: deviceName });
+    }
+  }
+
   public renderSuggestion = (suggestion: string) => {
     // deal with highlighting of matching texts
 
