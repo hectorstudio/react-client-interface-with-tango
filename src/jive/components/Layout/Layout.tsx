@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect, Link } from "react-router-dom";
 import * as qs from "query-string";
 
 import DeviceList from "../DeviceList/DeviceList";
@@ -9,7 +9,6 @@ import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";
 
 import LogInOut from "../../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../../shared/user/components/LoginDialog/LoginDialog";
-import ShowLogs from "../DeviceViewer/Logs/ShowLogs";
 
 import "./Layout.css";
 
@@ -17,9 +16,22 @@ const BaseLayout = ({ children }) => <div className="Layout">{children}</div>;
 
 const MainView = ({ className }) => (
   <div className={className}>
+    <LoginDialog />
     <div className="layout-navbar">
-      <LoginDialog />
-      <ShowLogs />
+      <Route
+        path="/:tangoDB/"
+        render={({ match, location }) => {
+          const tangoDB = match.params.tangoDB;
+          return (
+            <div className="page-links" style={{ fontSize: "0.75em" }}>
+              <Link to={{ ...location, pathname: `/${tangoDB}` }}>
+                Overview
+              </Link>
+              <a href={`/${tangoDB}/dashboard`}>Dashboard</a>
+            </div>
+          );
+        }}
+      />
       <LogInOut />
     </div>
     <ErrorDisplay />

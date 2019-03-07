@@ -9,12 +9,15 @@
 
   font-family: Helvetica, Arial, sans-serif;
 }
-.layout-navbar {
+.Layout .layout-navbar {
   background: #fafafa;
   border-bottom: 1px solid #eee;
   display: flex;
   justify-content: space-between;
   padding: 0.25em 0.5em;
+}
+.Layout .layout-navbar a {
+  margin-right: 0.5em;
 }
 .Layout header {
   background-color: #222;
