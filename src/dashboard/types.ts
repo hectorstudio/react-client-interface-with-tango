@@ -51,7 +51,7 @@ export interface ColorInputDefinition extends BaseInputDefinition<string> {
 }
 
 export interface DeviceInputDefinition extends BaseInputDefinition<null> {
-  type: "device",
+  type: "device";
   publish?: string;
 }
 
@@ -108,11 +108,16 @@ export interface WidgetBundle {
 
 export type IndexPath = Array<string | number>;
 
-export interface AttributeInput<ValueT = any> {
-  device: string;
-  attribute: string;
+interface AttributeValue<ValueT> {
   value: ValueT;
   writeValue: ValueT;
+  timestamp: number;
+}
+
+export interface AttributeInput<ValueT = any> extends AttributeValue<ValueT> {
+  device: string;
+  attribute: string;
+  history: Array<AttributeValue<ValueT>>;
   dataType: string;
   dataFormat: string;
   isNumeric: boolean;
