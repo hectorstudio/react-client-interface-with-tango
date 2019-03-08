@@ -45,6 +45,7 @@ interface State {
   attributeHistories: AttributeHistoryLookup;
   commandOutputs: CommandOutputLookup;
   attributeMetadata: AttributeMetadataLookup | null;
+  t0: number;
 }
 
 export default class RunCanvas extends Component<Props, State> {
@@ -52,13 +53,16 @@ export default class RunCanvas extends Component<Props, State> {
 
   public constructor(props: Props) {
     super(props);
+
     this.state = {
       connectionLost: false,
       attributeValues: {},
       attributeHistories: {},
       commandOutputs: {},
-      attributeMetadata: null
+      attributeMetadata: null,
+      t0: Date.now() / 1000
     };
+
     this.writeAttribute = this.writeAttribute.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
     this.handleNewFrame = this.handleNewFrame.bind(this);
@@ -96,7 +100,8 @@ export default class RunCanvas extends Component<Props, State> {
       attributeMetadata,
       attributeValues,
       attributeHistories,
-      commandOutputs
+      commandOutputs,
+      t0
     } = this.state;
 
     if (attributeMetadata == null) {
@@ -124,7 +129,7 @@ export default class RunCanvas extends Component<Props, State> {
           const actualWidth = width * TILE_SIZE;
           const actualHeight = height * TILE_SIZE;
 
-          const props = { mode: "run", inputs, actualWidth, actualHeight };
+          const props = { mode: "run", inputs, actualWidth, actualHeight, t0 };
           const element = React.createElement(component as any, props); // How to avoid the cast?
 
           return (
@@ -174,26 +179,32 @@ export default class RunCanvas extends Component<Props, State> {
       return;
     }
 
+    const { attributeValues, attributeHistories, t0 } = this.state;
     const { device, attribute, value, writeValue, timestamp } = frame;
-    const valueRecord = { value, writeValue, timestamp };
+    const valueRecord = { value, writeValue, timestamp, t0 };
 
     const fullName = `${device}/${attribute}`;
-    const attributeValues = {
-      ...this.state.attributeValues,
+    const newAttributeValues = {
+      ...attributeValues,
       [fullName]: valueRecord
     };
 
-    const attributeHistory = this.state.attributeHistories[fullName];
+    const attributeHistory = attributeHistories[fullName];
     const newHistory = [...attributeHistory, valueRecord];
+
     const shortenedHistory =
       newHistory.length > HISTORY_LIMIT
         ? newHistory.slice(-HISTORY_LIMIT)
         : newHistory;
-    const attributeHistories = {
-      ...this.state.attributeHistories,
+
+    const newAttributeHistories = {
+      ...attributeHistories,
       [fullName]: shortenedHistory
     };
 
-    this.setState({ attributeValues, attributeHistories });
+    this.setState({
+      attributeValues: newAttributeValues,
+      attributeHistories: newAttributeHistories
+    });
   }
 }
