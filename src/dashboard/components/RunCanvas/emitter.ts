@@ -5,12 +5,14 @@ subscription Attributes($fullNames: [String]!) {
     attribute
     value
     writeValue
+    timestamp
   }
 }`;
 
 export interface AttributeFrame {
   device: string;
   attribute: string;
+  timestamp: string;
   value: any;
   writeValue: any;
 }
