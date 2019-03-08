@@ -174,8 +174,8 @@ export default class RunCanvas extends Component<Props, State> {
       return;
     }
 
-    const { device, attribute, value, writeValue } = frame;
-    const valueRecord = { value, writeValue };
+    const { device, attribute, value, writeValue, timestamp } = frame;
+    const valueRecord = { value, writeValue, timestamp };
 
     const fullName = `${device}/${attribute}`;
     const attributeValues = {
