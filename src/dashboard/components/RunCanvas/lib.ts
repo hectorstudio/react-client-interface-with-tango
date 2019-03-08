@@ -29,7 +29,7 @@ function resolveDevice(
     : inputDevice;
 }
 
-interface AttributeValues {
+interface AttributeValue {
   value: any;
   writeValue: any;
 }
@@ -41,7 +41,8 @@ interface AttributeMetadata {
 }
 
 export type AttributeMetadataLookup = Record<string, AttributeMetadata>;
-export type AttributeValueLookup = Record<string, AttributeValues>;
+export type AttributeValueLookup = Record<string, AttributeValue>;
+export type AttributeHistoryLookup = Record<string, AttributeValue[]>;
 export type CommandOutputLookup = Record<string, any>;
 
 type OnWrite = (
@@ -122,6 +123,7 @@ function enrichedInput(
   definition: InputDefinition,
   attributeMetadata: AttributeMetadataLookup,
   attributeValues: AttributeValueLookup,
+  attributeHistory: AttributeHistoryLookup,
   commandOutputs: CommandOutputLookup,
   published: { [variable: string]: string },
   onWrite: OnWrite,
@@ -134,6 +136,7 @@ function enrichedInput(
         { ...definition, repeat: false },
         attributeMetadata,
         attributeValues,
+        attributeHistory,
         commandOutputs,
         published,
         onWrite,
@@ -154,6 +157,9 @@ function enrichedInput(
     const { dataType, dataFormat } = attributeMetadata[fullName];
     const isNumeric = numericTypes.indexOf(dataType) !== -1;
 
+    const history = attributeHistory.hasOwnProperty(fullName)
+      ? attributeHistory[fullName]
+      : [];
     const values = attributeValues.hasOwnProperty(fullName)
       ? attributeValues[fullName]
       : {};
@@ -161,6 +167,7 @@ function enrichedInput(
     return {
       ...input,
       ...values,
+      history,
       dataType,
       dataFormat,
       isNumeric,
@@ -174,6 +181,7 @@ function enrichedInput(
       definition.inputs,
       attributeMetadata,
       attributeValues,
+      attributeHistory,
       commandOutputs,
       onWrite,
       onExecute
@@ -227,7 +235,8 @@ export function enrichedInputs(
   inputs: InputMapping,
   definitions: InputDefinitionMapping,
   attributeMetadata: AttributeMetadataLookup,
-  attributeLookup: AttributeValueLookup,
+  attributeValuesLookup: AttributeValueLookup,
+  attributeHistoryLookup: AttributeHistoryLookup,
   commandLookup: CommandOutputLookup,
   onWrite: OnWrite,
   onExecute: OnExecute
@@ -242,7 +251,8 @@ export function enrichedInputs(
       subInput,
       subDefinition,
       attributeMetadata,
-      attributeLookup,
+      attributeValuesLookup,
+      attributeHistoryLookup,
       commandLookup,
       published,
       onWrite,
