@@ -179,27 +179,32 @@ export default class RunCanvas extends Component<Props, State> {
       return;
     }
 
+    const { attributeValues, attributeHistories, t0 } = this.state;
     const { device, attribute, value, writeValue, timestamp } = frame;
-    const t0 = this.state.t0 || timestamp;
     const valueRecord = { value, writeValue, timestamp, t0 };
 
     const fullName = `${device}/${attribute}`;
-    const attributeValues = {
-      ...this.state.attributeValues,
+    const newAttributeValues = {
+      ...attributeValues,
       [fullName]: valueRecord
     };
 
-    const attributeHistory = this.state.attributeHistories[fullName];
+    const attributeHistory = attributeHistories[fullName];
     const newHistory = [...attributeHistory, valueRecord];
+
     const shortenedHistory =
       newHistory.length > HISTORY_LIMIT
         ? newHistory.slice(-HISTORY_LIMIT)
         : newHistory;
-    const attributeHistories = {
-      ...this.state.attributeHistories,
+
+    const newAttributeHistories = {
+      ...attributeHistories,
       [fullName]: shortenedHistory
     };
 
-    this.setState({ attributeValues, attributeHistories });
+    this.setState({
+      attributeValues: newAttributeValues,
+      attributeHistories: newAttributeHistories
+    });
   }
 }
