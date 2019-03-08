@@ -43,21 +43,34 @@ class AttributePlot extends Component<Props, State> {
     const staticParams = { ...runParams, staticMode: true };
 
     if (mode === "run") {
-      const axes = attributes.map(({ yAxis }) => yAxis);
-      const singleAttributes = attributes.map(({ attribute }) => attribute);
-      const values = singleAttributes.map(({ value }) => value);
-      const fullNames = singleAttributes.map(
-        ({ device, attribute }) => `${device}/${attribute}`
-      );
+      const actualAttributes = attributes.map(({ attribute }) => attribute);
+      const nonEmptyHistories = actualAttributes
+        .map(({ history }) => history)
+        .filter(history => history.length > 0);
 
-      return (
-        <BufferingPlot
-          params={runParams}
-          values={values}
-          fullNames={fullNames}
-          axes={axes}
-        />
-      );
+      const t0 =
+        nonEmptyHistories.length === 0
+          ? 0
+          : nonEmptyHistories
+              .map(history => history[0].timestamp)
+              .reduce((t1, t2) => Math.min(t1, t2));
+
+      const traces = attributes.map(attributeInput => {
+        const { history, device, attribute } = attributeInput.attribute;
+        const fullName = `${device}/${attribute}`;
+
+        let x: number[] = [];
+        let y: number[] = [];
+
+        if (history.length > 0) {
+          x = history.map(({ timestamp }) => timestamp - t0);
+          y = history.map(({ value }) => value);
+        }
+
+        return { fullName, x, y, axisLocation: attributeInput.yAxis };
+      });
+      
+      return <Plot traces={traces} params={runParams} />;
     }
 
     if (mode === "library") {
