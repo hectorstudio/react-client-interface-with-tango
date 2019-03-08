@@ -32,7 +32,7 @@ function resolveDevice(
 interface AttributeValue {
   value: any;
   writeValue: any;
-  timestamp: string;
+  timestamp: number;
 }
 
 interface AttributeMetadata {

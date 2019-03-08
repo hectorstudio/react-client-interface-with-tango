@@ -12,7 +12,7 @@ subscription Attributes($fullNames: [String]!) {
 export interface AttributeFrame {
   device: string;
   attribute: string;
-  timestamp: string;
+  timestamp: number;
   value: any;
   writeValue: any;
 }
