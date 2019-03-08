@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 
-import BufferingPlot from "./BufferingPlot";
 import Plot, { Trace } from "./Plot";
-
 import { WidgetProps } from "../types";
 import { AttributeInput } from "../../types";
 
@@ -69,7 +67,7 @@ class AttributePlot extends Component<Props, State> {
 
         return { fullName, x, y, axisLocation: attributeInput.yAxis };
       });
-      
+
       return <Plot traces={traces} params={runParams} />;
     }
 
