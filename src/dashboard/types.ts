@@ -113,6 +113,7 @@ export interface AttributeInput<ValueT = any> {
   attribute: string;
   value: ValueT;
   writeValue: ValueT;
+  history: ValueT[];
   dataType: string;
   dataFormat: string;
   isNumeric: boolean;
