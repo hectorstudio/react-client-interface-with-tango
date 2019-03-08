@@ -6,16 +6,19 @@ import { TILE_SIZE } from "../constants";
 
 import ErrorBoundary from "../ErrorBoundary";
 
-import { attributeEmitter, END } from "./emitter";
+import { attributeEmitter, END, EmittedFrame } from "./emitter";
 import {
   extractFullNamesFromWidgets,
   enrichedInputs,
   AttributeValueLookup,
   CommandOutputLookup,
-  AttributeMetadataLookup
+  AttributeMetadataLookup,
+  AttributeHistoryLookup
 } from "./lib";
 
 import * as TangoAPI from "../api";
+
+const HISTORY_LIMIT = 1000;
 
 const ConnectionLost = () => (
   <div
@@ -39,6 +42,7 @@ interface Props {
 interface State {
   connectionLost: boolean;
   attributeValues: AttributeValueLookup;
+  attributeHistories: AttributeHistoryLookup;
   commandOutputs: CommandOutputLookup;
   attributeMetadata: AttributeMetadataLookup | null;
 }
@@ -51,11 +55,13 @@ export default class RunCanvas extends Component<Props, State> {
     this.state = {
       connectionLost: false,
       attributeValues: {},
+      attributeHistories: {},
       commandOutputs: {},
       attributeMetadata: null
     };
     this.writeAttribute = this.writeAttribute.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
+    this.handleNewFrame = this.handleNewFrame.bind(this);
   }
 
   public async componentDidMount() {
@@ -66,23 +72,15 @@ export default class RunCanvas extends Component<Props, State> {
       tangoDB,
       fullNames
     )) as AttributeMetadataLookup | null;
-    this.setState({ attributeMetadata });
+
+    const attributeHistories = fullNames.reduce((accum, name) => {
+      return { ...accum, [name]: [] };
+    }, {});
+
+    this.setState({ attributeMetadata, attributeHistories });
 
     const startEmission = attributeEmitter(tangoDB, fullNames);
-    this.unsubscribe = startEmission(frame => {
-      if (frame === END) {
-        this.setState({ connectionLost: true });
-        return;
-      }
-
-      const { device, attribute, value, writeValue } = frame;
-      const fullName = `${device}/${attribute}`;
-      const attributeValues = {
-        ...this.state.attributeValues,
-        [fullName]: { value, writeValue }
-      };
-      this.setState({ attributeValues });
-    });
+    this.unsubscribe = startEmission(this.handleNewFrame);
   }
 
   public componentWillUnmount() {
@@ -94,7 +92,12 @@ export default class RunCanvas extends Component<Props, State> {
   public render() {
     const { widgets } = this.props;
 
-    const { attributeMetadata, attributeValues, commandOutputs } = this.state;
+    const {
+      attributeMetadata,
+      attributeValues,
+      attributeHistories,
+      commandOutputs
+    } = this.state;
 
     if (attributeMetadata == null) {
       return null;
@@ -112,6 +115,7 @@ export default class RunCanvas extends Component<Props, State> {
             definition.inputs,
             attributeMetadata,
             attributeValues,
+            attributeHistories,
             commandOutputs,
             this.writeAttribute,
             this.executeCommand
@@ -162,5 +166,34 @@ export default class RunCanvas extends Component<Props, State> {
       attribute,
       value
     );
+  }
+
+  private handleNewFrame(frame: EmittedFrame) {
+    if (frame === END) {
+      this.setState({ connectionLost: true });
+      return;
+    }
+
+    const { device, attribute, value, writeValue, timestamp } = frame;
+    const valueRecord = { value, writeValue, timestamp };
+
+    const fullName = `${device}/${attribute}`;
+    const attributeValues = {
+      ...this.state.attributeValues,
+      [fullName]: valueRecord
+    };
+
+    const attributeHistory = this.state.attributeHistories[fullName];
+    const newHistory = [...attributeHistory, valueRecord];
+    const shortenedHistory =
+      newHistory.length > HISTORY_LIMIT
+        ? newHistory.slice(-HISTORY_LIMIT)
+        : newHistory;
+    const attributeHistories = {
+      ...this.state.attributeHistories,
+      [fullName]: shortenedHistory
+    };
+
+    this.setState({ attributeValues, attributeHistories });
   }
 }
