@@ -192,7 +192,9 @@ function* subscribeOnFetchDevice() {
   while (true) {
     const { device, tangoDB } = yield take(FETCH_DEVICE_SUCCESS);
     const { name: deviceName, attributes } = device;
-    const fullNames = attributes.map(({ name }) => `${deviceName}/${name}`);
+    // Only subscribe to scalar attributes. Spectrums and images may be too data-heavy and crash the app.
+    const scalarAttributes = attributes.filter(({ dataformat }) => dataformat === "SCALAR");
+    const fullNames = scalarAttributes.map(({ name }) => `${deviceName}/${name}`);
     const channel = yield call(createChangeEventChannel, tangoDB, fullNames);
     if (handler != null) {
       yield cancel(handler);
