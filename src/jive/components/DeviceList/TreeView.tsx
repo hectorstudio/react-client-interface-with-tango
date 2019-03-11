@@ -7,7 +7,7 @@ function sort(items: string[]): string[] {
   return alphanumSort(items);
 }
 
-interface TreeData {
+export interface TreeData {
   [key: string]: TreeData;
 }
 
