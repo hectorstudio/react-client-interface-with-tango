@@ -1,4 +1,4 @@
-.device-list {
+.DeviceList {
 	border-right: 1px solid lightgray;
 	padding: 0;
 	
@@ -6,18 +6,19 @@
 	overflow-y: scroll;
 }
 
-.device-list .entry {
+.DeviceList .entry {
 	padding: 0.1em 1em;
+	display: block;
 }
 
-.device-list .entry.selected {
+.DeviceList .entry.selected {
 	background-color: #007bff;
 	color: white;
 	width: fit-content;
 	border-radius: 1em;
 }
 
-.device-list .search {
+.DeviceList .search {
 	position: sticky;
 	top: 0;
 	padding: 1em;
@@ -28,21 +29,21 @@
 	box-shadow: 0 0.5em 0.75em white;
 }
 
-.device-list .search input {
+.DeviceList .search input {
 	width: 100%;
 }
 
-.device-list a:hover {
+.DeviceList a:hover {
 	text-decoration: none;
 }
 
-.device-list ul {
+.DeviceList ul {
 	list-style-type: none;
 	padding-left: 1em;
 	user-select: none;
 }
 
-.device-list .expander-arrow {
+.DeviceList .expander-arrow {
 	display: inline-block;
 	margin-right: 0.25em;
 	color: gray;
@@ -50,19 +51,19 @@
 	text-align: center;
 }
 
-.device-list .expander-arrow:before {
+.DeviceList .expander-arrow:before {
 	content: "\025B6";
 }
 
-.device-list .expander-arrow.expanded {
+.DeviceList .expander-arrow.expanded {
 	transform: rotate(90deg);
 	z-index: -1;
 }
 
-.device-list.has-search .expander-arrow {
+.DeviceList.has-search .expander-arrow {
 	display: none;
 }
 
-.device-list ul li {
+.DeviceList ul li {
 	cursor: pointer;
 }
