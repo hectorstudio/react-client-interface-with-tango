@@ -65,7 +65,13 @@ function createClient(tangoDB) {
 export async function fetchDeviceAttributes(tangoDB, device) {
   try {
     const res = await createClient(tangoDB).query(FETCH_ATTRIBUTES, { device });
-    return res.data.device.attributes;
+    const { attributes } = res.data.device;
+    if (attributes != null) {
+      return attributes;
+    } else {
+      // Some kind of error reporting could go here. This should only happen when the attributes resolver in the backend fails for some unexpected reason. For now, just return an empty list.
+      return [];
+    }
   } catch (err) {
     return [];
   }
