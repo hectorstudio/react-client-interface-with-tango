@@ -33,7 +33,6 @@ interface AttributeValue {
   value: any;
   writeValue: any;
   timestamp: number;
-  t0: number;
 }
 
 interface AttributeMetadata {
