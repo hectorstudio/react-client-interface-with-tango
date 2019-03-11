@@ -14,12 +14,12 @@ import {
 import { fetchDeviceNames } from "../../state/actions/tango";
 import { getDeviceNamesAreLoading } from "../../state/selectors/loadingStatus";
 
-import TreeView, { ExpansionState } from "./TreeView";
+import TreeView, { ExpansionState, TreeData } from "./TreeView";
 import ScrollIntoViewIfNeeded from "./ScrollIntoView";
 
 import "./DeviceList.css";
 
-function namesToTreeData(names: string[]) {
+function namesToTreeData(names: string[]): TreeData {
   const tree = {};
   for (const name of names) {
     const components = name.split("/");
@@ -34,7 +34,7 @@ function namesToTreeData(names: string[]) {
   return tree;
 }
 
-function initialExpansionState(deviceName?: string) {
+function initialExpansionState(deviceName?: string): ExpansionState {
   if (deviceName == null) {
     return {};
   }
