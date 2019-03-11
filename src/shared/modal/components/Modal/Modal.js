@@ -30,7 +30,7 @@ export default class Modal extends Component {
     const { title, children } = this.props;
     return (
       <ModalPortal>
-        <BootstrapModal.Dialog>
+        <BootstrapModal.Dialog style={{zIndex: 100000}}>
           {title && (
             <BootstrapModal.Header>
               <BootstrapModal.Title>{title}</BootstrapModal.Title>
