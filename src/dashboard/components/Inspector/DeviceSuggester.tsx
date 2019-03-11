@@ -23,7 +23,7 @@ export default class DeviceSuggester extends Component<Props, State> {
       value: deviceName || "",
       suggestions: devices || []
     };
-    this.getSuggestions = this.getSuggestions.bind(this);
+
     this.onSuggestionSelected = this.onSuggestionSelected.bind(this);
     this.onChange = this.onChange.bind(this);
     this.storeInputReference = this.storeInputReference.bind(this);
@@ -149,6 +149,11 @@ export default class DeviceSuggester extends Component<Props, State> {
     return res;
   }
 
+  // The suggester is unusably slow and resource-demanding if the list is not truncated. This is just a quickfix; there's probably a more sophisticated way such as using react-window
+  public getTruncatedSuggestions(value: string): string[] {
+    return this.getSuggestions(value).slice(0, 100);
+  }
+
   public onSuggestionSelected(event, { suggestion, suggestionValue }): void {
     this.props.onSelection(suggestionValue);
   }
@@ -161,7 +166,7 @@ export default class DeviceSuggester extends Component<Props, State> {
 
   public onSuggestionsFetchRequested = ({ value }): void => {
     this.setState({
-      suggestions: alphanumSort(this.getSuggestions(value))
+      suggestions: alphanumSort(this.getTruncatedSuggestions(value))
     });
   };
 
