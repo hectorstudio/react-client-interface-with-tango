@@ -5,19 +5,22 @@ subscription Attributes($fullNames: [String]!) {
     attribute
     value
     writeValue
+    timestamp
   }
 }`;
 
-export const END = Symbol("END");
-
-interface Frame {
+export interface AttributeFrame {
   device: string;
   attribute: string;
+  timestamp: number;
   value: any;
   writeValue: any;
 }
 
-type EmitHandler = (frame: Frame | typeof END) => void;
+export const END = Symbol("END");
+export type EmittedFrame = AttributeFrame | typeof END;
+
+type EmitHandler = (frame: EmittedFrame) => void;
 type Unsub = () => void;
 type EmissionStarter = (emit: EmitHandler) => Unsub;
 
@@ -53,7 +56,7 @@ export function attributeEmitter(
     socket.addEventListener("message", msg => {
       const frame = JSON.parse(msg.data);
       if (frame.type === "data" && frame.payload.error == null) {
-        emitHandler(frame.payload.data.attributes as Frame);
+        emitHandler(frame.payload.data.attributes as AttributeFrame);
       }
     });
 
