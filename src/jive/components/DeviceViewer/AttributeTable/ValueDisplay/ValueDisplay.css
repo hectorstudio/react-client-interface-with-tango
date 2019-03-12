@@ -19,3 +19,7 @@
     overflow: scroll;
     text-indent: unset;
 }
+
+.ValueDisplay.DevEncoded .invalid-json {
+    color: red;
+}
