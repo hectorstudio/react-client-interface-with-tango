@@ -67,3 +67,14 @@
 .DeviceList ul li {
 	cursor: pointer;
 }
+
+.DeviceList .loading {
+	color: gray;
+	margin: 0.5em;
+	animation: DeviceList_loading 1s ease-in;
+}
+
+@keyframes DeviceList_loading {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
