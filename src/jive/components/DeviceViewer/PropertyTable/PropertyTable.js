@@ -2,7 +2,10 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { isMobile } from "react-device-detect";
 
-import { setDeviceProperty, deleteDeviceProperty } from "../../../state/actions/tango";
+import {
+  setDeviceProperty,
+  deleteDeviceProperty
+} from "../../../state/actions/tango";
 import { getIsLoggedIn } from "../../../../shared/user/state/selectors";
 
 import AddPropertyModal from "./AddPropertyModal";
@@ -51,11 +54,13 @@ class PropertyTable extends Component {
   render() {
     const { properties, isLoggedIn } = this.props;
     const { addProperty, deleteProperty, editProperty } = this.state;
+    const hasNoProperties = properties.length === 0;
 
     return (
       <div className="PropertyTable">
         <NotLoggedIn>
-          You are currently not logged in and cannot create, edit or delete properties.
+          You are currently not logged in and cannot create, edit or delete
+          properties.
         </NotLoggedIn>
         {addProperty && (
           <AddPropertyModal
@@ -63,10 +68,12 @@ class PropertyTable extends Component {
             onAdd={this.handleAddProperty}
           />
         )}
-        <table className="separated">
-          <tbody>
-            {properties &&
-              properties.map(({ name, value }, i) => (
+        {hasNoProperties ? (
+          <div>There are no properties defined for this device.</div>
+        ) : (
+          <table className="separated">
+            <tbody>
+              {properties.map(({ name, value }, i) => (
                 <Fragment key={i}>
                   {editProperty === name && (
                     <EditPropertyModal
@@ -101,13 +108,16 @@ class PropertyTable extends Component {
                   </tr>
                 </Fragment>
               ))}
-          </tbody>
-        </table>
-        {isLoggedIn && <button
-          className="btn btn-outline-secondary fa fa-plus"
-          type="button"
-          onClick={() => this.setState({ addProperty: true })}
-        />}
+            </tbody>
+          </table>
+        )}
+        {isLoggedIn && (
+          <button
+            className="btn btn-outline-secondary fa fa-plus"
+            type="button"
+            onClick={() => this.setState({ addProperty: true })}
+          />
+        )}
       </div>
     );
   }
