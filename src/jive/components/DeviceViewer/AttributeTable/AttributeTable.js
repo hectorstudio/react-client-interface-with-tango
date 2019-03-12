@@ -5,19 +5,16 @@ import PropTypes from "prop-types";
 
 import ValueDisplay from "./ValueDisplay/ValueDisplay";
 import DescriptionDisplay from "../DescriptionDisplay/DescriptionDisplay";
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
 
-import { setDeviceAttribute } from "../../../state/actions/tango";
-
-import "./AttributeTable.css";
+import { setDeviceAttribute, setDataFormat } from "../../../state/actions/tango";
 
 import {
-  getFilteredCurrentDeviceAttributes,
   getActiveDataFormat,
   getDisabledDisplevels
 } from "../../../state/selectors/deviceDetail";
 
-import { setDataFormat } from "../../../state/actions/deviceList";
-import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
+import "./AttributeTable.css";
 
 const DataFormatChooser = ({ dataFormats, selected, onSelect }) => {
   const order = ["SCALAR", "SPECTRUM", "IMAGE"];
