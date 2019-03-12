@@ -25,7 +25,8 @@ import {
   ATTRIBUTE_FRAME_RECEIVED,
   FETCH_LOGGED_ACTIONS,
   FETCH_LOGGED_ACTIONS_SUCCESS,
-  FETCH_LOGGED_ACTIONS_FAILED
+  FETCH_LOGGED_ACTIONS_FAILED,
+  SET_DATA_FORMAT
 } from "./actionTypes";
 
 export function fetchDatabaseInfo(tangoDB) {
@@ -108,6 +109,10 @@ export function disableDisplevel(displevel) {
   return { type: DISABLE_DISPLEVEL, displevel };
 }
 
+export function setDataFormat(format) {
+  return { type: SET_DATA_FORMAT, format };
+}
+
 export function fetchDeviceSuccess(tangoDB, device) {
   return { type: FETCH_DEVICE_SUCCESS, tangoDB, device };
 }
@@ -125,10 +130,10 @@ export function attributeFrameReceived(frame) {
 }
 
 export function fetchLoggedActions(tangoDB, deviceName, limit) {
-  return { type: FETCH_LOGGED_ACTIONS, tangoDB, deviceName, limit};
+  return { type: FETCH_LOGGED_ACTIONS, tangoDB, deviceName, limit };
 }
 
-export function fetchLoggedActionsSuccess(logs){
+export function fetchLoggedActionsSuccess(logs) {
   return { type: FETCH_LOGGED_ACTIONS_SUCCESS, logs };
 }
 export function fetchLoggedActionsFailed(reason) {

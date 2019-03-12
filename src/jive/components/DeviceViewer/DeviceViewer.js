@@ -28,9 +28,8 @@ import "./DeviceViewer.css";
 class DeviceMenu extends Component {
   render() {
     const { selectedTab, device } = this.props;
-    const { properties, attributes, commands, errors } = device;
+    const { attributes, commands, errors } = device;
 
-    const hasProperties = properties.length > 0;
     const hasAttributes = attributes.length > 0;
     const hasCommands = commands.length > 0;
     const hasErrors = errors.length > 0;
@@ -38,7 +37,7 @@ class DeviceMenu extends Component {
     const mask = [
       true,
       hasErrors,
-      hasProperties,
+      true,
       hasAttributes,
       hasCommands,
       true
