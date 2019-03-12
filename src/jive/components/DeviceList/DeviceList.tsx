@@ -92,8 +92,22 @@ class DeviceList extends Component<Props, State> {
   }
 
   public render() {
-    const { deviceNames, currentDeviceName, filter, tangoDB } = this.props;
+    const {
+      loading,
+      deviceNames,
+      currentDeviceName,
+      filter,
+      tangoDB
+    } = this.props;
     const treeData = namesToTreeData(deviceNames);
+
+    if (true) {
+      return (
+        <div className="DeviceList">
+          <div className="loading">Loading devices…</div>
+        </div>
+      );
+    }
 
     return (
       <div className={cx("DeviceList", { "has-search": filter.length > 0 })}>
@@ -113,34 +127,32 @@ class DeviceList extends Component<Props, State> {
             />
           </form>
         </div>
-        <div className="list">
-          <TreeView
-            data={treeData}
-            renderLeaf={path => {
-              const instance = path.slice(-1)[0];
-              const deviceName = path.join("/");
-              const selected = deviceName === currentDeviceName;
+        <TreeView
+          data={treeData}
+          renderLeaf={path => {
+            const instance = path.slice(-1)[0];
+            const deviceName = path.join("/");
+            const selected = deviceName === currentDeviceName;
 
-              const pathname = `/${tangoDB}/devices/${deviceName}`;
-              const extra =
-                filter.length > 0 ? { search: `?filter=${filter}` } : {};
-              const to = { pathname, ...extra };
+            const pathname = `/${tangoDB}/devices/${deviceName}`;
+            const extra =
+              filter.length > 0 ? { search: `?filter=${filter}` } : {};
+            const to = { pathname, ...extra };
 
-              return (
-                <ScrollIntoViewIfNeeded isSelected={selected}>
-                  <Link className={cx("entry", { selected })} to={to}>
-                    {instance}
-                  </Link>
-                </ScrollIntoViewIfNeeded>
-              );
-            }}
-            expansion={this.state.expansionState}
-            onChangeExpansion={expansionState =>
-              this.setState({ expansionState })
-            }
-            expandAll={filter.length > 0}
-          />
-        </div>
+            return (
+              <ScrollIntoViewIfNeeded isSelected={selected}>
+                <Link className={cx("entry", { selected })} to={to}>
+                  {instance}
+                </Link>
+              </ScrollIntoViewIfNeeded>
+            );
+          }}
+          expansion={this.state.expansionState}
+          onChangeExpansion={expansionState =>
+            this.setState({ expansionState })
+          }
+          expandAll={filter.length > 0}
+        />
       </div>
     );
   }
