@@ -101,7 +101,7 @@ class DeviceList extends Component<Props, State> {
     } = this.props;
     const treeData = namesToTreeData(deviceNames);
 
-    if (true) {
+    if (loading) {
       return (
         <div className="DeviceList">
           <div className="loading">Loading devices…</div>
