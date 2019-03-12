@@ -7,17 +7,17 @@
     border-top-style: solid;
     border-top-color: #007bff;
     border-radius: 50%;
-    animation: spin 2s linear infinite, fadein 1s ease-in;
+    animation: Spinner_spin 2s linear infinite, Spinner_fadein 1s ease-in;
     margin-left: 1em;
     margin-top: 1em;
 }
 
-@keyframes spin {
+@keyframes Spinner_spin {
     0%   { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-@keyframes fadein {
+@keyframes Spinner_fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
 }
