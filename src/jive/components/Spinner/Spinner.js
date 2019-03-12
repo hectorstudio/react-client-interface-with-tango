@@ -10,7 +10,7 @@ export default class Spinner extends Component {
             width: size + 'em', 
             height: size + 'em'
         }
-        return <div className="spinner" style={style}/>;
+        return <div className="Spinner" style={style}/>;
     }
 }
 
