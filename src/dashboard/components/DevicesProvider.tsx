@@ -1,30 +1,42 @@
 import React, { Component } from "react";
 import { fetchDeviceNames } from "./api";
 
-const deviceContext = React.createContext<{ devices: string[] }>({
-  devices: []
-});
-
 interface Props {
   tangoDB: string;
 }
 
 interface State {
   fetching: boolean;
+  error: boolean;
   devices: string[];
+  tangoDB: string;
 }
 
+const initialState: Readonly<State> = {
+  fetching: false,
+  error: false,
+  devices: [],
+  tangoDB: "",
+};
+
+const deviceContext = React.createContext<State>({ ...initialState });
+
 export class DeviceProvider extends Component<Props, State> {
-  public constructor(props) {
+  public constructor(props: Props) {
     super(props);
-    this.state = { fetching: false, devices: [] };
+    this.state = { ...initialState, tangoDB: props.tangoDB };
   }
 
   public async componentDidMount() {
     this.setState({ fetching: true });
     const { tangoDB } = this.props;
-    const devices = await fetchDeviceNames(tangoDB);
-    this.setState({ devices, fetching: false });
+    try {
+      const devices = await fetchDeviceNames(tangoDB);
+      const error = devices.length === 0;
+      this.setState({ devices, fetching: false, error });
+    } catch (err) {
+      this.setState({ fetching: false, error: true });
+    }
   }
 
   public render() {

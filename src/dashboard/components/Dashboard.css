@@ -92,6 +92,11 @@
   margin-right: 0.25em;
 }
 
+.Dashboard .TopBar .FetchInfo {
+  margin-left: 0.5em;
+  color: #666;
+}
+
 .Dashboard .Sidebar {
   padding: 0.75em;
   user-select: none;
