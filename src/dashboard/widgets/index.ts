@@ -1,6 +1,7 @@
 import attributeDisplay from "./AttributeDisplay";
 import attributeWriter from "./AttributeWriter";
 import attributePlot from "./AttributePlot";
+import AttributeScatter from "./AttributeScatter";
 import label from "./Label";
 import spectrum from "./Spectrum";
 import commandExecutor from "./CommandExecutor";
@@ -13,6 +14,7 @@ export const bundles = [
   attributeDisplay,
   attributeWriter,
   attributePlot,
+  AttributeScatter,
   spectrum,
   commandExecutor,
   attributeDial
