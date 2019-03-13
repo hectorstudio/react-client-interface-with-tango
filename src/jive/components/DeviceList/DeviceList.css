@@ -74,7 +74,20 @@
 	animation: DeviceList_loading 1s ease-in;
 }
 
+.DeviceList .limited {
+	margin-top: 0.5em;
+	margin-left: 1em;
+	margin: 0.5em 1.25em; 
+	font-size: small;
+	animation: DeviceList_limited 1s cubic-bezier(1, 0, 0.5,1); /* This adds a small delay, so that the text doesn't blink when typing quickly */
+}
+
 @keyframes DeviceList_loading {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes DeviceList_limited {
     from { opacity: 0; }
     to   { opacity: 1; }
 }

@@ -53,9 +53,15 @@ const ScalarValueDisplay = ({value, writeValue, datatype, name, writable, setDev
       return `Unsupported encoding '${type}'`;
     }
 
-    const json = JSON.stringify(JSON.parse(payload), 4);
-    const lines = json.split('\n');
-    return <DevStringValueDisplay value={lines}/>;
+    if (parseJSONObject(payload) == null) {
+      return (
+        <span className="invalid-json">
+          Invalid JSON
+        </span>
+      );
+    }
+
+    return <DevStringValueDisplay value={payload}/>;
 
   }else if(writable === "WRITE" || writable === "READ_WITH_WRITE" && datatype === 'DevDouble' || datatype === 'DevShort'
   || datatype === 'DevFloat' || datatype === 'DevLong' || datatype === 'DevULong' || datatype === 'DevULong64' || datatype === 'DevUShort' || datatype === 'DevLong64' || datatype === 'DevUChar'){
