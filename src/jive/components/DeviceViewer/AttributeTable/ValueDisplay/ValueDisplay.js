@@ -30,7 +30,7 @@ const DevStringValueDisplay = ({ value }) => {
     return valuesAsObjects.map((obj, i) => <JSONTree key={i} data={obj} />);
   }
 
-  const anyLooksLikeMonospace = !allAreObjects && null != values.find(looksLikeMonospace);
+  const anyLooksLikeMonospace = null != values.find(looksLikeMonospace);
   const extraClass = anyLooksLikeMonospace ? "monospace" : "";
 
   return values.map((val, i) => (
