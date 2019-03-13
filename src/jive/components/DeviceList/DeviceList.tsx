@@ -99,7 +99,6 @@ class DeviceList extends Component<Props, State> {
       filter,
       tangoDB
     } = this.props;
-    const treeData = namesToTreeData(deviceNames);
 
     if (loading) {
       return (
@@ -108,6 +107,14 @@ class DeviceList extends Component<Props, State> {
         </div>
       );
     }
+
+    const limit = 250;
+    const isFiltering = filter !== "";
+    const limitedDeviceNames = isFiltering
+      ? deviceNames.slice(0, limit)
+      : deviceNames;
+    const didLimit = limitedDeviceNames.length !== deviceNames.length;
+    const treeData = namesToTreeData(limitedDeviceNames);
 
     return (
       <div className={cx("DeviceList", { "has-search": filter.length > 0 })}>
@@ -122,11 +129,17 @@ class DeviceList extends Component<Props, State> {
               onChange={this.handleTextChange}
               autoCapitalize="off"
               autoCorrect="off"
+              autoComplete="off"
               spellCheck={false}
               title={`Filter on multiple terms, or prefix the query with 'glob:' to perform globbing, e.g. glob:sys/tg_test/+(1|2|3) or glob:sys/**`}
             />
           </form>
         </div>
+        {didLimit && (
+          <div className="limited">
+            ⚠️ <span>Only displaying the first {limit} matching devices.</span>
+          </div>
+        )}
         <TreeView
           data={treeData}
           renderLeaf={path => {
