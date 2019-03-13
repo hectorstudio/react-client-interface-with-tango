@@ -35,6 +35,7 @@ import { RootState } from "../state/reducers";
 import "./Dashboard.css";
 import ModeToggleButton from "./ModeToggleButton";
 import Sidebar from "./Sidebar";
+import TopBar from "./TopBar";
 
 interface Match {
   tangoDB: string;
@@ -96,33 +97,11 @@ class Dashboard extends Component<Props> {
       <div className="Dashboard">
         <LoginDialog />
         <DeviceProvider tangoDB={tangoDB}>
-          <div className="TopBar">
-            <form className="form-inline">
-              <ModeToggleButton
-                onClick={this.toggleMode}
-                disabled={disabled}
-                mode={mode}
-              />
-              {false && (
-                <select
-                  className="form-control"
-                  style={{
-                    marginLeft: "0.5em",
-                    height: "2em"
-                  }}
-                  value={this.props.selectedCanvas.id}
-                  onChange={this.handleChangeCanvas}
-                >
-                  {this.props.canvases.map((canvas, i) => (
-                    <option key={i} value={i}>
-                      {i === 0 ? "Root" : canvas.name}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </form>
-            <LogInOut />
-          </div>
+          <TopBar
+            mode={mode}
+            onToggleMode={this.toggleMode}
+            modeToggleDisabled={disabled}
+          />
           <div className={classNames("CanvasArea", mode)}>{canvasContents}</div>
           <Sidebar
             mode={mode}
