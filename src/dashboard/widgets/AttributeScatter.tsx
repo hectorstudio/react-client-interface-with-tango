@@ -34,6 +34,7 @@ interface Inputs {
 
 type Props = WidgetProps<Inputs>;
 
+// Naive lerp implementation, with fallback to first/last value of unknown is ouside range
 function interpolated(xs: number[], ys: number[]) {
   return (input: number) => {
     if (input < xs[0]) {
