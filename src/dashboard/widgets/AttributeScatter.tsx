@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Plotly from "react-plotly.js";
 
 import { WidgetDefinition, AttributeInput } from "src/dashboard/types";
@@ -64,68 +64,70 @@ function fullName(attribute: AttributeInput) {
   return `${attribute.device || "?"}/${attribute.attribute || "?"}`;
 }
 
-class AttributeScatter extends Component<Props> {
-  public render() {
-    const { mode, inputs } = this.props;
-    const staticMode = mode !== "run";
-    const height = mode === "library" ? 200 : this.props.actualHeight;
+function AttributeScatter(props: Props) {
+  const { mode, inputs, actualWidth, actualHeight } = props;
+  const staticMode = mode !== "run";
+  const height = mode === "library" ? 200 : actualHeight;
 
-    const { dependent, independent } = inputs;
-    const independentName =
-      mode === "library" ? "attribute 1" : fullName(independent);
-    const dependentName =
-      mode === "library" ? "attribute 2" : fullName(dependent);
+  const { dependent, independent } = inputs;
+  const independentName =
+    mode === "library" ? "attribute 1" : fullName(independent);
+  const dependentName =
+    mode === "library" ? "attribute 2" : fullName(dependent);
 
-    const layout = {
-      font: { family: "Helvetica, Arial, sans-serif" },
-      width: this.props.actualWidth,
-      height,
-      margin: {
-        l: 45,
-        r: 15,
-        t: 15,
-        b: 35
-      },
-      hovermode: "closest",
-      xaxis: {
-        title: independentName,
-        titlefont: { size: 12 }
-      },
-      yaxis: {
-        title: dependentName,
-        titlefont: { size: 12 }
-      }
-    };
+  const defaultRange = mode !== "run" ? { range: [0, 100] } : {};
 
-    const dependentHistory = dependent.history || [];
-    const independentHistory = independent.history || [];
+  const layout = {
+    font: { family: "Helvetica, Arial, sans-serif" },
+    width: actualWidth,
+    height,
+    margin: {
+      l: 45,
+      r: 15,
+      t: 15,
+      b: 35
+    },
+    hovermode: "closest",
+    xaxis: {
+      title: independentName,
+      titlefont: { size: 12 },
+      ...defaultRange
+    },
+    yaxis: {
+      title: dependentName,
+      titlefont: { size: 12 },
+      ...defaultRange
+    }
+  };
 
-    const fun = interpolated(
-      dependentHistory.map(attr => attr.timestamp),
-      dependentHistory.map(attr => attr.value)
-    );
+  const dependentHistory = dependent.history || [];
+  const independentHistory = independent.history || [];
 
-    const x = independentHistory.map(attr => attr.value);
-    const y = independentHistory.map(attr => fun(attr.timestamp));
+  const fun = interpolated(
+    dependentHistory.map(attr => attr.timestamp),
+    dependentHistory.map(attr => attr.value)
+  );
 
-    const data = [
-      {
-        type: "scatter",
-        mode: "markers",
-        x,
-        y
-      }
-    ];
+  const x = independentHistory.map(attr => attr.value);
+  const y = independentHistory.map(attr => fun(attr.timestamp));
 
-    return (
-      <Plotly
-        data={data}
-        layout={layout}
-        config={{ staticPlot: staticMode === true }}
-        responsive={true}
-      />
-    );
-  }
+  const data = [
+    {
+      type: "scatter",
+      mode: "markers",
+      x,
+      y
+    }
+  ];
+
+  return (
+    <Plotly
+      data={data}
+      layout={layout}
+      config={{ staticPlot: staticMode === true }}
+      responsive={true}
+    />
+  );
 }
 
 export default { definition, component: AttributeScatter };
