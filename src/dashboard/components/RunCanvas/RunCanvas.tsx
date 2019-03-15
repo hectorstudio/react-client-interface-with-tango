@@ -152,7 +152,10 @@ export default class RunCanvas extends Component<Props, State> {
     );
   }
 
-  private async executeCommand(device: string, command: string) {
+  private async executeCommand(
+    device: string,
+    command: string
+  ): Promise<boolean> {
     const output = await TangoAPI.executeCommand(
       this.props.tangoDB,
       device,
@@ -164,24 +167,38 @@ export default class RunCanvas extends Component<Props, State> {
     return output;
   }
 
-  private async writeAttribute(device: string, attribute: string, value: any) {
-    return await TangoAPI.writeAttribute(
+  private async writeAttribute(
+    device: string,
+    attribute: string,
+    value: any
+  ): Promise<boolean> {
+    const { ok, attribute: attributeAfter } = await TangoAPI.writeAttribute(
       this.props.tangoDB,
       device,
       attribute,
       value
     );
+
+    this.recordAttribute(
+      device,
+      attribute,
+      attributeAfter.value,
+      attributeAfter.writevalue,
+      attributeAfter.timestamp
+    );
+
+    return ok;
   }
 
-  private handleNewFrame(frame: EmittedFrame) {
-    if (frame === END) {
-      this.setState({ connectionLost: true });
-      return;
-    }
-
-    const { attributeValues, attributeHistories, t0 } = this.state;
-    const { device, attribute, value, writeValue, timestamp } = frame;
-    const valueRecord = { value, writeValue, timestamp, t0 };
+  private recordAttribute(
+    device: string,
+    attribute: string,
+    value: any,
+    writeValue: any,
+    timestamp: number
+  ): void {
+    const { attributeValues, attributeHistories } = this.state;
+    const valueRecord = { value, writeValue, timestamp };
 
     const fullName = `${device}/${attribute}`;
     const newAttributeValues = {
@@ -191,6 +208,13 @@ export default class RunCanvas extends Component<Props, State> {
 
     const attributeHistory = attributeHistories[fullName];
     const newHistory = [...attributeHistory, valueRecord];
+
+    if (attributeHistory.length > 0) {
+      const lastFrame = attributeHistory.slice(-1)[0];
+      if (lastFrame.timestamp >= timestamp) {
+        return;
+      }
+    }
 
     const shortenedHistory =
       newHistory.length > HISTORY_LIMIT
@@ -206,5 +230,15 @@ export default class RunCanvas extends Component<Props, State> {
       attributeValues: newAttributeValues,
       attributeHistories: newAttributeHistories
     });
+  }
+
+  private handleNewFrame(frame: EmittedFrame): void {
+    if (frame === END) {
+      this.setState({ connectionLost: true });
+      return;
+    }
+
+    const { device, attribute, value, writeValue, timestamp } = frame;
+    this.recordAttribute(device, attribute, value, writeValue, timestamp);
   }
 }
