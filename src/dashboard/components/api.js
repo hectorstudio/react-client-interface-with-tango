@@ -65,7 +65,7 @@ function createClient(tangoDB) {
 export async function fetchDeviceAttributes(tangoDB, device) {
   try {
     const res = await createClient(tangoDB).query(FETCH_ATTRIBUTES, { device });
-    const { attributes } = res.data.device;
+    const { attributes } = res.data.device;
     if (attributes != null) {
       return attributes;
     } else {
@@ -138,7 +138,7 @@ export async function fetchAttributeMetadata(tangoDB, fullNames) {
 
       for (const attribute of res.data.device.attributes) {
         const { name, dataformat, datatype } = attribute;
-        
+
         const dataFormat = dataformat.toLowerCase();
         const dataType = datatype;
 
