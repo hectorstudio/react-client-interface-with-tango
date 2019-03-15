@@ -43,6 +43,11 @@ const WRITE_ATTRIBUTE = `
 mutation WriteAttribute($device: String!, $attribute: String!, $value: ScalarTypes!) {
   setAttributeValue(device: $device, name: $attribute, value: $value) {
     ok
+    attribute {
+      value
+      writevalue
+      timestamp
+    }
   }
 }`;
 
@@ -109,9 +114,9 @@ export async function writeAttribute(tangoDB, device, attribute, value) {
   try {
     const args = { device, attribute, value };
     const res = await createClient(tangoDB).query(WRITE_ATTRIBUTE, args);
-    return res.data.setAttributeValue.ok === true;
+    return res.data.setAttributeValue;
   } catch (err) {
-    return false;
+    return { ok: false, attribute: null };
   }
 }
 

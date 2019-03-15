@@ -172,12 +172,22 @@ export default class RunCanvas extends Component<Props, State> {
     attribute: string,
     value: any
   ): Promise<boolean> {
-    return await TangoAPI.writeAttribute(
+    const { ok, attribute: attributeAfter } = await TangoAPI.writeAttribute(
       this.props.tangoDB,
       device,
       attribute,
       value
     );
+
+    this.recordAttribute(
+      device,
+      attribute,
+      attributeAfter.value,
+      attributeAfter.writevalue,
+      attributeAfter.timestamp
+    );
+
+    return ok;
   }
 
   private recordAttribute(
