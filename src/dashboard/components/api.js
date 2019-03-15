@@ -43,6 +43,11 @@ const WRITE_ATTRIBUTE = `
 mutation WriteAttribute($device: String!, $attribute: String!, $value: ScalarTypes!) {
   setAttributeValue(device: $device, name: $attribute, value: $value) {
     ok
+    attribute {
+      value
+      writevalue
+      timestamp
+    }
   }
 }`;
 
@@ -65,7 +70,7 @@ function createClient(tangoDB) {
 export async function fetchDeviceAttributes(tangoDB, device) {
   try {
     const res = await createClient(tangoDB).query(FETCH_ATTRIBUTES, { device });
-    const { attributes } = res.data.device;
+    const { attributes } = res.data.device;
     if (attributes != null) {
       return attributes;
     } else {
@@ -109,9 +114,9 @@ export async function writeAttribute(tangoDB, device, attribute, value) {
   try {
     const args = { device, attribute, value };
     const res = await createClient(tangoDB).query(WRITE_ATTRIBUTE, args);
-    return res.data.setAttributeValue.ok === true;
+    return res.data.setAttributeValue;
   } catch (err) {
-    return false;
+    return { ok: false, attribute: null };
   }
 }
 
@@ -138,7 +143,7 @@ export async function fetchAttributeMetadata(tangoDB, fullNames) {
 
       for (const attribute of res.data.device.attributes) {
         const { name, dataformat, datatype } = attribute;
-        
+
         const dataFormat = dataformat.toLowerCase();
         const dataType = datatype;
 
