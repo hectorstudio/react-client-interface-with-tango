@@ -4,7 +4,7 @@ import cx from "classnames";
 import alphanumSort from "alphanum-sort";
 
 function sort(items: string[]): string[] {
-  return alphanumSort(items);
+  return alphanumSort(items, { insensitive: true });
 }
 
 export interface TreeData {
@@ -27,8 +27,9 @@ interface Props {
 
 export default function TreeView(props: Props) {
   const { data, expansion, renderLeaf, expandAll } = props;
+  const sortedNames = sort(Object.keys(data));
 
-  const items = sort(Object.keys(data)).map(key => {
+  const items = sortedNames.map(key => {
     const subData = data[key];
     const subExpansion = expansion[key];
 
