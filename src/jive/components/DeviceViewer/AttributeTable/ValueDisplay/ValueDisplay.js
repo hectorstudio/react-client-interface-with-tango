@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 import PropTypes from 'prop-types'
 
@@ -18,6 +18,25 @@ function parseJSONObject(str) {
 
 function looksLikeMonospace(str) {
   return str.match(/(\n  )|\t|    /);
+}
+
+function isNumeric(datatype) {
+  const numericTypes = [
+    "DevDouble",
+    "DevShort",
+    "DevFloat",
+    "DevLong",
+    "DevULong",
+    "DevULong64",
+    "DevUShort",
+    "DevLong64",
+    "DevUChar"
+  ];
+  return numericTypes.indexOf(datatype) !== -1;
+}
+
+function isWritable(writable) {
+  return ["READ_WRITE", "WRITE", "READ_WITH_WRITE"].indexOf(writable) !== -1;
 }
 
 const DevStringValueDisplay = ({ value }) => {
@@ -45,11 +64,11 @@ DevStringValueDisplay.propTypes = {
 }
 
 const ScalarValueDisplay = ({value, writeValue, datatype, name, writable, setDeviceAttribute, minvalue, maxvalue}) => {
-  if (datatype === 'DevString') {
+  if (datatype === "DevString") {
     return <DevStringValueDisplay value={value}/>;
-  } else if (datatype === 'DevEncoded') {
+  } else if (datatype === "DevEncoded") {
     const [type, payload] = value;
-    if (type !== 'json') {
+    if (type !== "json") {
       return `Unsupported encoding '${type}'`;
     }
 
@@ -62,21 +81,21 @@ const ScalarValueDisplay = ({value, writeValue, datatype, name, writable, setDev
     }
 
     return <DevStringValueDisplay value={payload}/>;
-
-  }else if(writable === "WRITE" || writable === "READ_WITH_WRITE" && datatype === 'DevDouble' || datatype === 'DevShort'
-  || datatype === 'DevFloat' || datatype === 'DevLong' || datatype === 'DevULong' || datatype === 'DevULong64' || datatype === 'DevUShort' || datatype === 'DevLong64' || datatype === 'DevUChar'){
-    return<AttributeInput
-      save={setDeviceAttribute.bind(this, name)}
-      value={Number(value)}
-      motorName={name}
-      writeValue={writeValue}
-      decimalPoints="24"
-      state={2}
-      disabled={false}
-      maxvalue={maxvalue}
-      minvalue={minvalue} 
-    />
-  }else{
+  } else if (isWritable(writable) && isNumeric(datatype)) {
+    return (
+      <AttributeInput
+        save={setDeviceAttribute.bind(this, name)}
+        value={Number(value)}
+        motorName={name}
+        writeValue={writeValue}
+        decimalPoints="24"
+        state={2}
+        disabled={false}
+        maxvalue={maxvalue}
+        minvalue={minvalue}
+      />
+    );
+  } else {
     return String(value);
   }
 }
@@ -139,7 +158,7 @@ class ImageValueDisplay extends React.Component {
   }
 
   updateCanvas(){
-    const canvas = document.getElementById(this.props.name);
+    const canvas = document.getElementById(this.props.name); // TODO: use ref instead
     const context = canvas.getContext('2d');
 
     const image = this.props.value;
