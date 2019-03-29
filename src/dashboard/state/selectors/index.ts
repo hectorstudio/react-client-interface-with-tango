@@ -13,6 +13,14 @@ function getCanvasState(state: RootState) {
   return state.canvases;
 }
 
+function getDashboardsState(state: RootState) {
+  return state.dashboards;
+}
+
+export const getDashboards = createSelector(
+  getDashboardsState,
+  state => state.dashboards
+);
 const getWidgetsObject = createSelector(
   getWidgetState,
   state => state.widgets

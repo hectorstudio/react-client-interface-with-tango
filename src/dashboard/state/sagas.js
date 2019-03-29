@@ -1,5 +1,9 @@
-import {take, takeLatest, fork} from "redux-saga/effects";
+import {take, fork, put, call} from "redux-saga/effects";
 import createUserSaga from "../../shared/user/state/saga"
+import {loadUserDashboards} from "../dashboardRepo";
+import {
+    dashboardsLoaded
+  } from "./actionCreators";
 import { PRELOAD_USER, PRELOAD_USER_SUCCESS, LOGIN_SUCCESS, LOGOUT_SUCCESS, LOGOUT } from "../../shared/user/state/actionTypes";
 export default function* sagas(){
     yield fork(createUserSaga());
@@ -8,17 +12,12 @@ export default function* sagas(){
 
 function* loadDashboards(){
     while(true){
-        // const {username} =yield takeLatest(PRELOAD_USER_SUCCESS, LOGIN_SUCCESS, LOGOUT);
         const {type} =yield take([PRELOAD_USER_SUCCESS, LOGIN_SUCCESS, LOGOUT_SUCCESS]);
-        console.log("TYPE: " + type);
         if (type === "LOGOUT_SUCCESS"){
             // delete dashboards
         }else{
-            // load dashboards
+            const result = yield call(loadUserDashboards);
+            yield put(dashboardsLoaded(result));
         }
-
-        // yield call(UserAPI.extendLogin);
-        // const result = yield call(UserAPI.extendLogin);
-        //const  dashboards  = await loadUserDashboards("jonros")
     }
 }

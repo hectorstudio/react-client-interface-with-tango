@@ -88,7 +88,9 @@ export interface Widget {
   height: number;
   inputs: InputMapping;
 }
-
+export interface Dashboards{
+  [index: number]: {id: string, name: string}
+}
 export interface InputMapping {
   [name: string]: any;
 }

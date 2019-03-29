@@ -33,7 +33,6 @@ export default class Library extends Component<Props> {
         </div>
         :
         <DashboardSettings
-          dashboards={[]}
         />}
       </div>
     );
