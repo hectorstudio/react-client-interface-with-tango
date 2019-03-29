@@ -98,7 +98,7 @@ function* setDeviceAttribute() {
   while (true) {
     const { tangoDB, device, name, value } = yield take("SET_DEVICE_ATTRIBUTE");
     try {
-      const ok = yield call(
+      const { ok, attribute } = yield call(
         TangoAPI.setDeviceAttribute,
         tangoDB,
         device,
@@ -106,7 +106,7 @@ function* setDeviceAttribute() {
         value
       );
       const action = ok
-        ? setDeviceAttributeSuccess(tangoDB, device, name, value)
+        ? setDeviceAttributeSuccess(tangoDB, attribute)
         : setDeviceAttributeFailed(tangoDB, device, name, value);
       yield put(action);
     } catch (err) {

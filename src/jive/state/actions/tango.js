@@ -69,8 +69,8 @@ export function setDeviceAttribute(tangoDB, device, name, value) {
   return { type: SET_DEVICE_ATTRIBUTE, tangoDB, device, name, value };
 }
 
-export function setDeviceAttributeSuccess(tangoDB, device, name, value) {
-  return { type: SET_DEVICE_ATTRIBUTE_SUCCESS, tangoDB, device, name, value };
+export function setDeviceAttributeSuccess(tangoDB, attribute) {
+  return { type: SET_DEVICE_ATTRIBUTE_SUCCESS, tangoDB, attribute };
 }
 
 export function setDeviceAttributeFailed(tangoDB, device, name, value) {

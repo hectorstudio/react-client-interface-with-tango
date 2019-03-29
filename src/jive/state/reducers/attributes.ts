@@ -1,6 +1,7 @@
 import {
   FETCH_DEVICE_SUCCESS,
-  ATTRIBUTE_FRAME_RECEIVED
+  ATTRIBUTE_FRAME_RECEIVED,
+  SET_DEVICE_ATTRIBUTE_SUCCESS
 } from "../actions/actionTypes";
 
 interface IDeviceAttribute {
@@ -13,6 +14,25 @@ interface IDeviceAttribute {
 export interface IAttributesState {
   [deviceName: string]: {
     [attributeName: string]: IDeviceAttribute;
+  };
+}
+
+function updateAttribute(
+  state: IAttributesState,
+  device: string,
+  name: string,
+  quality: string,
+  value: any,
+  writeValue: any
+) {
+  const oldDevice = state[device];
+  const oldAttribute = oldDevice[name];
+  return {
+    ...state,
+    [device]: {
+      ...oldDevice,
+      [name]: { ...oldAttribute, value, writeValue, quality }
+    }
   };
 }
 
@@ -30,17 +50,21 @@ export default function attributes(state: IAttributesState = {}, action) {
       return { ...state, [name]: hash };
     }
 
+    case SET_DEVICE_ATTRIBUTE_SUCCESS: {
+      const { device, name, quality, value, writevalue } = action.attribute;
+      return updateAttribute(state, device, name, quality, value, writevalue);
+    }
+
     case ATTRIBUTE_FRAME_RECEIVED: {
       const { value, writeValue, quality, device, attribute } = action.frame;
-      const oldDevice = state[device];
-      const oldAttribute = oldDevice[attribute];
-      return {
-        ...state,
-        [device]: {
-          ...oldDevice,
-          [attribute]: { ...oldAttribute, value, writeValue, quality }
-        }
-      };
+      return updateAttribute(
+        state,
+        device,
+        attribute,
+        quality,
+        value,
+        writeValue
+      );
     }
 
     default:
