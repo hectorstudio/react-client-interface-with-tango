@@ -9,7 +9,8 @@ import {
   FETCH_DEVICE_SUCCESS,
   FETCH_DEVICE,
   FETCH_DATABASE_INFO,
-  FETCH_LOGGED_ACTIONS
+  FETCH_LOGGED_ACTIONS,
+  SET_DEVICE_ATTRIBUTE_SUCCESS
 } from "../actions/actionTypes";
 
 import TangoAPI from "../api/tango";
@@ -37,7 +38,7 @@ import { displayError } from "../actions/error";
 
 export default function* tango() {
   yield fork(fetchDeviceNames);
-  yield fork (fetchLoggedActions);
+  yield fork(fetchLoggedActions);
   yield fork(executeCommand);
   yield fork(setDeviceAttribute);
   yield fork(setDeviceProperty);
@@ -45,6 +46,7 @@ export default function* tango() {
   yield fork(fetchDevice);
   yield fork(subscribeOnFetchDevice);
   yield fork(fetchDatabaseInfo);
+  yield fork(refetchDeviceStateOnAttributeWrite);
 }
 
 /* Asynchronous actions */
@@ -160,6 +162,15 @@ function* fetchDatabaseInfo() {
     const action = info
       ? fetchDatabaseInfoSuccess(tangoDB, info)
       : fetchDatabaseInfoFailed(tangoDB);
+    yield put(action);
+  }
+}
+
+function *refetchDeviceStateOnAttributeWrite() {
+  while (true) {
+    const { tangoDB, attribute: { device} } = yield take(SET_DEVICE_ATTRIBUTE_SUCCESS);
+    const state = yield call(TangoAPI.fetchDeviceState, tangoDB, device);
+    const action = { type: "DEVICE_STATE_RECEIVED", device, state };
     yield put(action);
   }
 }

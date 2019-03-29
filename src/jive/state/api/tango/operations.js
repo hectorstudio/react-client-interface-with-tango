@@ -140,6 +140,13 @@ query FetchDevice($name: String!) {
 }
 `;
 
+export const FETCH_DEVICE_STATE = `
+query FetchDevice($name: String!) {
+  device(name: $name) {
+    state
+  }
+}`;
+
 export const ATTRIBUTES_SUB = `
 subscription Attributes($fullNames: [String]!) {
   attributes(fullNames: $fullNames) {
