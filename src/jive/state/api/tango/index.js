@@ -61,7 +61,8 @@ export default {
   async setDeviceAttribute(tangoDB, device, name, value) {
     const params = { device, name, value };
     const data = await client(tangoDB).request(SET_DEVICE_ATTRIBUTE, params);
-    return data.setAttributeValue.ok;
+    const { ok, attribute } = data.setAttributeValue;
+    return { ok, attribute };
   },
 
   async setDeviceProperty(tangoDB, device, name, value) {

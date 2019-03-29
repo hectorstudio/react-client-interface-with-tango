@@ -26,6 +26,13 @@ mutation SetDeviceAttribute($device: String!, $name: String!, $value: ScalarType
   setAttributeValue(device: $device, name: $name, value: $value) {
     ok
     message
+    attribute {
+      device
+      name
+      value
+      writevalue
+      quality
+    }
   }
 }
 `;
