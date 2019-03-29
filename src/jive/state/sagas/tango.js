@@ -26,7 +26,6 @@ import {
   deleteDevicePropertyFailed,
   fetchDeviceSuccess,
   fetchDeviceFailed,
-  attributeChange,
   fetchDatabaseInfoSuccess,
   fetchDatabaseInfoFailed,
   attributeFrameReceived,
@@ -146,7 +145,7 @@ function* deleteDeviceProperty() {
 function* fetchDevice() {
   while (true) {
     const { tangoDB, name } = yield take(FETCH_DEVICE);
-    const device = yield TangoAPI.fetchDevice(tangoDB, name);
+    const device = yield call(TangoAPI.fetchDevice, tangoDB, name);
     const action = device
       ? fetchDeviceSuccess(tangoDB, device)
       : fetchDeviceFailed(tangoDB, name);
@@ -157,7 +156,7 @@ function* fetchDevice() {
 function* fetchDatabaseInfo() {
   while (true) {
     const { tangoDB } = yield take(FETCH_DATABASE_INFO);
-    const info = yield TangoAPI.fetchDatabaseInfo(tangoDB);
+    const info = yield call(TangoAPI.fetchDatabaseInfo, tangoDB);
     const action = info
       ? fetchDatabaseInfoSuccess(tangoDB, info)
       : fetchDatabaseInfoFailed(tangoDB);
