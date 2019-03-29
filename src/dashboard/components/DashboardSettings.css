@@ -1,0 +1,15 @@
+.dashboard-settings{
+
+}
+.dashboard-settings .title{
+    font-size: 1.1em;
+}
+.dashboard-settings .btn-new-dashboard{
+    border: none;
+    background: none;
+    outline: none;
+    cursor: pointer;
+    color:#0087db;
+    float: right;
+    margin-top: -0.2em;
+}
