@@ -7,8 +7,10 @@ import {
 interface IDeviceAttribute {
   name: string;
   value: any;
+  writeValue: any;
   displevel: string;
   dataformat: string;
+  quality: string;
 }
 
 export interface IAttributesState {
@@ -21,17 +23,15 @@ function updateAttribute(
   state: IAttributesState,
   device: string,
   name: string,
-  quality: string,
-  value: any,
-  writeValue: any
-) {
+  fields: Partial<IDeviceAttribute>
+): IAttributesState {
   const oldDevice = state[device];
   const oldAttribute = oldDevice[name];
   return {
     ...state,
     [device]: {
       ...oldDevice,
-      [name]: { ...oldAttribute, value, writeValue, quality }
+      [name]: { ...oldAttribute, ...fields }
     }
   };
 }
@@ -52,19 +52,27 @@ export default function attributes(state: IAttributesState = {}, action) {
 
     case SET_DEVICE_ATTRIBUTE_SUCCESS: {
       const { device, name, quality, value, writevalue } = action.attribute;
-      return updateAttribute(state, device, name, quality, value, writevalue);
+      return updateAttribute(state, device, name, {
+        quality,
+        value,
+        writeValue: writevalue
+      });
     }
 
     case ATTRIBUTE_FRAME_RECEIVED: {
       const { value, writeValue, quality, device, attribute } = action.frame;
-      return updateAttribute(
-        state,
-        device,
-        attribute,
+      return updateAttribute(state, device, attribute, {
         quality,
         value,
         writeValue
-      );
+      });
+    }
+
+    // This case relies on the fact that State is a special attribute
+    case "DEVICE_STATE_RECEIVED": {
+      return updateAttribute(state, action.device, "State", {
+        value: action.state
+      });
     }
 
     default:
