@@ -25,7 +25,7 @@ export async function load(id) {
 }
 
 //TODO use correct endpoint when it exists.
-export async function loadUserDashboards(userId) {
+export async function loadUserDashboards() {
   return await new Promise(function(resolve, reject) {
     setTimeout(function() {
       resolve([{id: "123", name: "test"}, {id: "1234", name: "test2"}, {id: "1235", name: "test3"}, {id: "1236", name: "test4"}, ]);
