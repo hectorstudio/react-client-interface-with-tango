@@ -8,7 +8,16 @@ import {
   SELECT_WIDGETS,
   PRELOAD_DASHBOARD,
   DASHBOARDS_LOADED,
+  DASHBOARD_RENAMED,
+  DASHBOARD_DELETED,
+  DASHBOARD_SELECTED,
+  DASHBOARD_CLONED,
+  RENAME_DASHBOARD,
+  DELETE_DASHBOARD,
+  SELECT_DASHBOARD,
+  CLONE_DASHBOARD
 } from "./actionTypes";
+
 
 import {
   AddWidgetAction,
@@ -20,7 +29,7 @@ import {
   SelectWidgetsAction,
   PreloadDashboardAction
 } from "./actions";
-import { Widget, Dashboards } from "../types";
+import { Widget, Dashboards, Dashboard } from "../types";
 
 export function addWidget(
   x: number,
@@ -69,9 +78,34 @@ export function dashboardsLoaded(dashboards:Dashboards){
   return {type: DASHBOARDS_LOADED, dashboards};
 }
 
+export function renameDashboard(dashboard:Dashboard){
+  return {type: RENAME_DASHBOARD, dashboard}
+}
+export function dashboardRenamed(dashboard:Dashboard){
+  return {type: DASHBOARD_RENAMED, dashboard};
+}
+export function deleteDashboard(id:string){
+  return {type: DELETE_DASHBOARD, id}
+}
+export function dashboardDeleted(id:string){
+  return {type: DASHBOARD_DELETED, id};
+}
+export function cloneDashboard(id:string, newUser:string){
+  return {type: CLONE_DASHBOARD, id, newUser}
+}
+export function dashboardCloned(id:string){
+  return {type: DASHBOARD_CLONED, id};
+}
+export function selectDashboard(id: string){
+  return {type: SELECT_DASHBOARD, id}
+}
+export function dashboardSelected(id: string){
+  return {type: DASHBOARD_SELECTED, id};
+}
 export function preloadDashboard(
   id: string,
-  widgets: Widget[]
+  widgets: Widget[],
+  name: string
 ): PreloadDashboardAction {
-  return { type: PRELOAD_DASHBOARD, id, widgets };
+  return { type: PRELOAD_DASHBOARD, id, widgets, name };
 }

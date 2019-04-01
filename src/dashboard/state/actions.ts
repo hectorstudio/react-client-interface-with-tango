@@ -11,9 +11,10 @@ import {
   SELECT_CANVAS,
   TOGGLE_MODE,
   PRELOAD_DASHBOARD,
-  DASHBOARDS_LOADED
+  DASHBOARDS_LOADED,
+  DASHBOARD_SELECTED,
 } from "./actionTypes";
-import { IndexPath, Widget, Dashboards } from "../types";
+import { IndexPath, Widget, Dashboards, Dashboard } from "../types";
 
 export interface AddWidgetAction extends Action {
   type: typeof ADD_WIDGET;
@@ -78,12 +79,14 @@ export interface PreloadDashboardAction extends Action {
   type: typeof PRELOAD_DASHBOARD;
   id: string;
   widgets: Widget[];
+  name: string;
 }
 
-export interface DashboardsLoaded extends Action {
+export interface DashboardsLoadedAction extends Action {
   type: typeof DASHBOARDS_LOADED;
   dashboards: Dashboards;
 }
+
 
 export type DashboardAction =
   | AddWidgetAction
@@ -97,4 +100,4 @@ export type DashboardAction =
   | SelectCanvasAction
   | ToggleModeAction
   | PreloadDashboardAction
-  | DashboardsLoaded;
+  | DashboardsLoadedAction;

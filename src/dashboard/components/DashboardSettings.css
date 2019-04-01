@@ -4,12 +4,12 @@
 .dashboard-settings .title{
     font-size: 1.1em;
 }
-.dashboard-settings .btn-new-dashboard{
-    border: none;
-    background: none;
-    outline: none;
-    cursor: pointer;
+.dashboard-settings .dashboard-link{
     color:#0087db;
+    display: block;
+
+}
+.dashboard-settings .float-right{
     float: right;
     margin-top: -0.2em;
 }

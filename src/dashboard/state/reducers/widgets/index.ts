@@ -31,12 +31,16 @@ import { defaultInputs } from "src/dashboard/utils";
 export interface WidgetsState {
   selectedIds: string[];
   widgets: Record<string, Widget>;
+  id: string;
+  name: string;
 }
 
 const initialState = {
   selectedId: null,
   selectedIds: [],
-  widgets: {}
+  widgets: {},
+  id: "",
+  name: "Untitled dashboard"
 };
 
 export default function canvases(
@@ -136,11 +140,11 @@ export default function canvases(
       return { ...state, widgets };
     }
     case PRELOAD_DASHBOARD: {
-      const { widgets } = action;
+      const { widgets, id, name } = action;
       const newWidgets = widgets.reduce((accum, widget) => {
         return { ...accum, [widget.id]: validate(widget) };
       }, {});
-      return { ...state, widgets: newWidgets };
+      return { ...state, widgets: newWidgets, id, name };
     }
     default:
       return state;

@@ -91,6 +91,10 @@ export interface Widget {
 export interface Dashboards{
   [index: number]: {id: string, name: string}
 }
+export interface Dashboard{
+  id: string;
+  name: string;
+}
 export interface InputMapping {
   [name: string]: any;
 }
