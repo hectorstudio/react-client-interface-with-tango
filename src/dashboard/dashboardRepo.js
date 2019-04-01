@@ -38,7 +38,7 @@ export async function loadUserDashboards() {
 export async function deleteDashboard(dashboardId) {
   return await new Promise(function(resolve, reject) {
     setTimeout(function() {
-      resolve(true);
+      resolve("a7b8207ef");
     }, 300);
   });
 }
@@ -56,7 +56,7 @@ export async function cloneDashboard(dashboardId, newUserId) {
 export async function renameDashboard(dashboardId, newName) {
   return await new Promise(function(resolve, reject) {
     setTimeout(function() {
-      resolve(true);
+      resolve({id: dashboardId, name: newName});
     }, 300);
   });
 }

@@ -39,9 +39,7 @@ export default function TopBar(props: Props) {
             mode={mode}
           />
         </form>
-        <DashboardTitle
-            title="Untitled dashboard"
-          />
+        <DashboardTitle />
         <FetchInfo />
       </div>
       <LogInOut />

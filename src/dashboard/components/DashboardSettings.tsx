@@ -31,42 +31,16 @@ class DashboardSettings extends Component<Props, State> {
         </NotLoggedIn>
       );
     }
-    const search = location.search;
-    console.log("JFDKLSFJDLKFJ");
-    console.log(location);
-    const test = location.host + location.pathname + "";
-    const parsed = queryString.parse(search);
-    const id = String(parsed.id || "");
     return (
       <div className="dashboard-settings">
         <div>
           <span className="title">Your dashboards</span>
-          <button className="btn-new-dashboard" onClick={this.newDashboard}>
-            New
-          </button>
-          <Link to={location.pathname + "?id=5c9e20639333ee18ce6d0e44"}>
-            NEW
-          </Link>
-
-          <Route
-            path="/:tangoDB/"
-            render={({ match, location }) => {
-              const tangoDB = match.params.tangoDB;
-              return (
-                <div className="page-links" style={{ fontSize: "0.75em" }}>
-                  <Link to={location.pathname + "?id=5c9e20639333ee18ce6d0e44"}>
-                    Overview
-                  </Link>
-                  <a href={`/${tangoDB}/dashboard`}>Dashboard</a>
-                </div>
-              );
-            }}
-          />
-
-
+          <a className="dashboard-link float-right" href={`${location.pathname}`}>New</a>
         </div>
         {dashboards.map((value, key) => (
-          <Fragment key={key}>{value.name}</Fragment>
+          <Fragment key={key}>
+          <a className="dashboard-link" href={`${location.pathname}?id=${value.id}`}>{value.name}</a>
+          </Fragment>
         ))}
         {dashboards.length === 0 && (
           <div style={{ fontStyle: "italic", padding: "0.5em" }}>
@@ -76,9 +50,6 @@ class DashboardSettings extends Component<Props, State> {
       </div>
     );
   }
-  private newDashboard = () => {
-    return "fu";
-  };
 }
 function mapStateToProps(state: RootState) {
   return {

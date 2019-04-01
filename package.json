@@ -74,7 +74,7 @@
       "changeOrigin": true
     },
     "/dashboards": {
-      "target": "https://webjive-test.maxiv.lu.se",
+      "target": "http://localhost:3012",
       "secure": false,
       "changeOrigin": true
     }
