@@ -9,7 +9,10 @@ import {
   RESIZE_WIDGET,
   SELECT_WIDGETS,
   MOVE_WIDGETS,
-  PRELOAD_DASHBOARD
+  PRELOAD_DASHBOARD,
+  DASHBOARD_RENAMED,
+  DASHBOARD_DELETED,
+  DASHBOARD_CLONED,
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
@@ -28,7 +31,7 @@ import {
 import { definitionForType, definitionForWidget } from "src/dashboard/widgets";
 import { defaultInputs } from "src/dashboard/utils";
 
-export interface WidgetsState {
+export interface SelectedDashboardState {
   selectedIds: string[];
   widgets: Record<string, Widget>;
   id: string;
@@ -44,9 +47,9 @@ const initialState = {
 };
 
 export default function canvases(
-  state: WidgetsState = initialState,
+  state: SelectedDashboardState = initialState,
   action: DashboardAction
-): WidgetsState {
+): SelectedDashboardState {
   switch (action.type) {
     case ADD_WIDGET: {
       const { x, y, canvas, widgetType: type } = action;
@@ -145,6 +148,10 @@ export default function canvases(
         return { ...accum, [widget.id]: validate(widget) };
       }, {});
       return { ...state, widgets: newWidgets, id, name };
+    }
+    case DASHBOARD_RENAMED:{
+      const {dashboard} = action;
+      return {...state, name: dashboard.name}
     }
     default:
       return state;

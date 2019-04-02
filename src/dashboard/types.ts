@@ -88,8 +88,8 @@ export interface Widget {
   height: number;
   inputs: InputMapping;
 }
-export interface Dashboards{
-  [index: number]: {id: string, name: string}
+export interface Dashboards extends Array<Dashboard>{
+  [index: number]: Dashboard;
 }
 export interface Dashboard{
   id: string;

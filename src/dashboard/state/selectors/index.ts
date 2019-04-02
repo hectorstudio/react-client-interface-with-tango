@@ -1,8 +1,8 @@
 import { createSelector } from "reselect";
 import { RootState } from "../reducers";
 
-function getWidgetState(state: RootState) {
-  return state.widgets;
+function getSelectedDashboardState(state: RootState) {
+  return state.selectedDashboard;
 }
 
 function getUIState(state: RootState) {
@@ -23,11 +23,11 @@ export const getDashboards = createSelector(
 );
 
 export const getSelectedDashboard = createSelector(
-  getDashboardsState,
-  state => state.selectedDashboard
+  getSelectedDashboardState,
+  state => ({id: state.id, name: state.name})
 )
 const getWidgetsObject = createSelector(
-  getWidgetState,
+  getSelectedDashboardState,
   state => state.widgets
 );
 
@@ -42,7 +42,7 @@ export const getWidgets = createSelector(
 );
 
 export const getSelectedWidgets = createSelector(
-  getWidgetState,
+  getSelectedDashboardState,
   ({ selectedIds, widgets }) => selectedIds.map(id => widgets[id])
 );
 

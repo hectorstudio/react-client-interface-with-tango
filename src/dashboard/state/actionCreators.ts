@@ -10,7 +10,6 @@ import {
   DASHBOARDS_LOADED,
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
-  DASHBOARD_SELECTED,
   DASHBOARD_CLONED,
   RENAME_DASHBOARD,
   DELETE_DASHBOARD,
@@ -98,9 +97,6 @@ export function dashboardCloned(id:string){
 }
 export function selectDashboard(id: string){
   return {type: SELECT_DASHBOARD, id}
-}
-export function dashboardSelected(id: string){
-  return {type: DASHBOARD_SELECTED, id};
 }
 export function preloadDashboard(
   id: string,

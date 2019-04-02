@@ -62,7 +62,7 @@ class Dashboard extends Component<Props> {
     if (id) {
       try {
         const { widgets, name } = await loadFromRepo(id);
-        this.props.dispatch(preloadDashboard(id, widgets, (name || "Untitled")));
+        this.props.dispatch(preloadDashboard(id, widgets, (name || "Untitled Dashboard")));
       } catch (err) {
         // console.error(`Failed loading dashboard ${id}: ${err}`);
       }
@@ -75,9 +75,13 @@ class Dashboard extends Component<Props> {
     }
 
     const id = this.parseId();
-    const res = await saveToRepo(id, this.props.widgets);
-    if (res && res.created) {
-      this.props.history.replace("?id=" + res.id);
+    try{
+      const res = await saveToRepo(id, this.props.widgets);
+      if (res && res.created) {
+        this.props.history.replace("?id=" + res.id);
+      }
+    }catch(exception){
+      console.log(exception)
     }
   }
 
