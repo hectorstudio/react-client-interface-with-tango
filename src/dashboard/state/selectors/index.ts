@@ -17,6 +17,13 @@ function getDashboardsState(state: RootState) {
   return state.dashboards;
 }
 
+function getUserState(state: RootState){
+  return state.user;
+}
+export const getUserName = createSelector(
+  getUserState,
+  state => state.username
+)
 export const getDashboards = createSelector(
   getDashboardsState,
   state => state.dashboards
@@ -24,7 +31,7 @@ export const getDashboards = createSelector(
 
 export const getSelectedDashboard = createSelector(
   getSelectedDashboardState,
-  state => ({id: state.id, name: state.name})
+  state => ({id: state.id, name: state.name, user: state.user})
 )
 const getWidgetsObject = createSelector(
   getSelectedDashboardState,

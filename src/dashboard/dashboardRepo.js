@@ -31,7 +31,7 @@ export async function load(id) {
 export async function loadUserDashboards() {
   return await new Promise(function(resolve, reject) {
     setTimeout(function() {
-      resolve([{id: "5c9cd45b7aeef9352a7beb07", name: "test"}, {id: "5c9cd8c13c331e6014b8d384", name: "test2"}, {id: "5c9ce2dded681539a9979bcb", name: "test3"}, {id: "5c9dca9d9333ee18ce6d0e0e", name: "test4"}, ]);
+      resolve([{id: "5c9cd45b7aeef9352a7beb07", name: "test"}, {id: "5c9cd8c13c331e6014b8d384", name: "test2"}, {id: "5c9ce2dded681539a9979bcb", name: "test3"}, {id: "5c9dca9d9333ee18ce6d0e0e", name: "test4"}, {id: "5c9df71b9333ee18ce6d0e26", name: "abdis"}, ]);
     }, 300);
   });
 }
@@ -50,7 +50,7 @@ export async function deleteDashboard(dashboardId) {
 export async function cloneDashboard(dashboardId, newUserId) {
   return await new Promise(function(resolve, reject) {
     setTimeout(function() {
-      resolve("a7b8207ef");
+      resolve("5c9cd45b7aeef9352a7beb07");
     }, 300);
   });
 }

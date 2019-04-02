@@ -82,6 +82,7 @@ export interface PreloadDashboardAction extends Action {
   id: string;
   widgets: Widget[];
   name: string;
+  user: string;
 }
 
 export interface DashboardsLoadedAction extends Action {
