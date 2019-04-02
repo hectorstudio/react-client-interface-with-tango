@@ -10,6 +10,7 @@ import {
   RENAME_DASHBOARD,
   DELETE_DASHBOARD,
   CLONE_DASHBOARD,
+  DASHBOARD_RENAMED,
 } from "./actionTypes";
 export default function* sagas() {
   yield fork(createUserSaga());
@@ -21,7 +22,7 @@ export default function* sagas() {
 
 function* loadDashboards() {
   while (true) {
-    yield take([PRELOAD_USER_SUCCESS, LOGIN_SUCCESS]);
+    yield take([PRELOAD_USER_SUCCESS, LOGIN_SUCCESS, DASHBOARD_RENAMED]);
     const result = yield call(API.loadUserDashboards);
     yield put(dashboardsLoaded(result));
   }
@@ -29,15 +30,12 @@ function* loadDashboards() {
 
 function* renameDashboard() {
   while (true) {
-    const dashboard = yield take(RENAME_DASHBOARD);
-    console.log(dashboard);
-    const result = yield call(API.renameDashboard);
-    console.log("RESULT FROM RENAME DASHBOARD:")
-    console.log(result);
+    const {dashboard} = yield take(RENAME_DASHBOARD);
+    const result = yield call(API.renameDashboard, dashboard.id, dashboard.name);
     yield put(dashboardRenamed(result));
   }
 }
-function* deleteDashboard() {
+function* deleteDashboard() {//WRONG, USE RENAME AS TEMPLATE
   while (true) {
     yield take(DELETE_DASHBOARD);
     const result = yield call(API.deleteDashboard);
@@ -45,7 +43,7 @@ function* deleteDashboard() {
   }
 }
 
-function* cloneDashboard() {
+function* cloneDashboard() {//WRONG, USE RENAME AS TEMPLATE
   while (true) {
     yield take(CLONE_DASHBOARD);
     const result = yield call(API.cloneDashboard);

@@ -2,14 +2,14 @@ import { combineReducers } from "redux";
 
 import user, { IUserState as UserState } from "../../../shared/user/state/reducer";
 import ui, { UIState } from "./ui";
-import widgets, { WidgetsState } from "./widgets";
+import selectedDashboard, { SelectedDashboardState } from "./selectedDashboard";
 import canvases, { CanvasesState } from "./canvases";
 import dashboards, { DashboardsState } from "./dashboards";
 
 export interface RootState {
   ui: UIState;
   canvases: CanvasesState;
-  widgets: WidgetsState;
+  selectedDashboard: SelectedDashboardState;
   user: UserState;
   dashboards: DashboardsState;
 }
@@ -17,7 +17,7 @@ export interface RootState {
 export default combineReducers<RootState>({
   ui,
   canvases,
-  widgets,
+  selectedDashboard,
   user,
   dashboards
 });

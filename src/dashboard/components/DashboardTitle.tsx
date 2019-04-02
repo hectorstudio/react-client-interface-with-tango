@@ -41,8 +41,6 @@ function mapStateToProps(state: RootState) {
 function mapDispatchToProps(dispatch) {
   return {
     onTitleChange: (dashboard: Dashboard) => {
-      console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXx")
-      console.log(dashboard)
       return dispatch(renameDashboard(dashboard));
     }
   };

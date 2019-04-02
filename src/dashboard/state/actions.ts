@@ -12,7 +12,9 @@ import {
   TOGGLE_MODE,
   PRELOAD_DASHBOARD,
   DASHBOARDS_LOADED,
-  DASHBOARD_SELECTED,
+  DASHBOARD_RENAMED,
+  DASHBOARD_DELETED,
+  DASHBOARD_CLONED,
 } from "./actionTypes";
 import { IndexPath, Widget, Dashboards, Dashboard } from "../types";
 
@@ -87,6 +89,20 @@ export interface DashboardsLoadedAction extends Action {
   dashboards: Dashboards;
 }
 
+export interface DashboardRenamedAction extends Action{
+  type: typeof DASHBOARD_RENAMED;
+  dashboard: Dashboard;
+}
+
+export interface DashboardDeletedAction extends Action{
+  type: typeof DASHBOARD_DELETED;
+  id: string;
+}
+
+export interface DashboardClonedAction extends Action{
+  type: typeof DASHBOARD_CLONED;
+  id: string;
+}
 
 export type DashboardAction =
   | AddWidgetAction
@@ -100,4 +116,7 @@ export type DashboardAction =
   | SelectCanvasAction
   | ToggleModeAction
   | PreloadDashboardAction
-  | DashboardsLoadedAction;
+  | DashboardsLoadedAction
+  | DashboardRenamedAction
+  | DashboardDeletedAction
+  | DashboardClonedAction;

@@ -33,13 +33,36 @@ class DashboardSettings extends Component<Props, State> {
     }
     return (
       <div className="dashboard-settings">
-        <div>
-          <span className="title">Your dashboards</span>
-          <a className="dashboard-link float-right" href={`${location.pathname}`}>New</a>
-        </div>
+          <div className="dashboard-row">
+            <div>Your dashboards</div>
+            <div>
+              {" "}
+              <a
+                className="dashboard-link float-right"
+                href={`${location.pathname}`}
+                title="Create a new dashboard"
+              >
+                New
+              </a>
+            </div>
+          </div>
         {dashboards.map((value, key) => (
           <Fragment key={key}>
-          <a className="dashboard-link" href={`${location.pathname}?id=${value.id}`}>{value.name}</a>
+            <div className="dashboard-row">
+              <a
+                title={`View dashboard ${value.name}`}
+                className="dashboard-link"
+                href={`${location.pathname}?id=${value.id}`}
+              >
+                {value.name}
+              </a>
+              <button
+                title={`Delete dashboard ${value.name}`}
+                className="delete-button"
+              >
+                <i className="fa fa-trash " />
+              </button>
+            </div>
           </Fragment>
         ))}
         {dashboards.length === 0 && (

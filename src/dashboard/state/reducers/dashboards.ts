@@ -1,15 +1,13 @@
-import { DASHBOARDS_LOADED, DASHBOARD_SELECTED } from "../actionTypes";
+import { DASHBOARDS_LOADED, DASHBOARD_RENAMED } from "../actionTypes";
 import { DashboardAction } from "../actions";
 import { Dashboards, Dashboard } from "src/dashboard/types";
 
 export interface DashboardsState {
   dashboards: Dashboards;
-  selectedDashboard: Dashboard;
 }
 
 const initialState: DashboardsState = {
   dashboards: [],
-  selectedDashboard:  { id: "", name: "" },
 };
 
 export default function dashboard(
