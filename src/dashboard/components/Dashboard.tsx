@@ -61,8 +61,8 @@ class Dashboard extends Component<Props> {
     const id = this.parseId();
     if (id) {
       try {
-        const { widgets, name } = await loadFromRepo(id);
-        this.props.dispatch(preloadDashboard(id, widgets, (name || "Untitled Dashboard")));
+        const { widgets, name, user } = await loadFromRepo(id);
+        this.props.dispatch(preloadDashboard(id, widgets, (name || "Untitled Dashboard"), user));
       } catch (err) {
         // console.error(`Failed loading dashboard ${id}: ${err}`);
       }

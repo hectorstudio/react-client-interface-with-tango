@@ -101,7 +101,8 @@ export function selectDashboard(id: string){
 export function preloadDashboard(
   id: string,
   widgets: Widget[],
-  name: string
+  name: string,
+  user: string,
 ): PreloadDashboardAction {
-  return { type: PRELOAD_DASHBOARD, id, widgets, name };
+  return { type: PRELOAD_DASHBOARD, id, widgets, name, user };
 }

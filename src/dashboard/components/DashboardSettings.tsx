@@ -5,16 +5,18 @@ import { getIsLoggedIn } from "../../shared/user/state/selectors";
 import "./DashboardSettings.css";
 import { getDashboards } from "../state/selectors";
 import { RootState } from "../state/reducers";
-import { deleteDashboard } from "../dashboardRepo";
+import { deleteDashboard } from "../state/actionCreators";
 import { Route, Switch, Redirect, Link } from "react-router-dom";
 import queryString from "query-string";
+import DeleteDashboardModal from "./modals/DeleteDashboardModal";
 
 interface Props {
   dashboards: Dashboard[];
   isLoggedIn: boolean;
+  onDeleteProperty: (id:string) => void;
 }
 interface State {
-  dashboards: Dashboard[];
+  deleteDashboardModalId: string;
 }
 
 interface Dashboard {
@@ -22,6 +24,14 @@ interface Dashboard {
   id: string;
 }
 class DashboardSettings extends Component<Props, State> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      deleteDashboardModalId: ""
+    };
+
+    this.handleDeleteProperty = this.handleDeleteProperty.bind(this);
+  }
   public render() {
     const { dashboards, isLoggedIn } = this.props;
     if (!isLoggedIn) {
@@ -33,19 +43,19 @@ class DashboardSettings extends Component<Props, State> {
     }
     return (
       <div className="dashboard-settings">
-          <div className="dashboard-row">
-            <div>Your dashboards</div>
-            <div>
-              {" "}
-              <a
-                className="dashboard-link float-right"
-                href={`${location.pathname}`}
-                title="Create a new dashboard"
-              >
-                New
-              </a>
-            </div>
+        <div className="dashboard-row">
+          <div>Your dashboards</div>
+          <div>
+            {" "}
+            <a
+              className="dashboard-link float-right"
+              href={`${location.pathname}`}
+              title="Create a new dashboard"
+            >
+              New
+            </a>
           </div>
+        </div>
         {dashboards.map((value, key) => (
           <Fragment key={key}>
             <div className="dashboard-row">
@@ -59,10 +69,20 @@ class DashboardSettings extends Component<Props, State> {
               <button
                 title={`Delete dashboard ${value.name}`}
                 className="delete-button"
+                onClick={() => this.setState({ deleteDashboardModalId: value.id })}
               >
                 <i className="fa fa-trash " />
               </button>
             </div>
+
+            {this.state.deleteDashboardModalId === value.id && (
+          <DeleteDashboardModal
+            id={value.id}
+            name={value.name}
+            onClose={() => this.setState({ deleteDashboardModalId: "" })}
+            onDelete={this.handleDeleteProperty}
+          />
+        )}
           </Fragment>
         ))}
         {dashboards.length === 0 && (
@@ -72,6 +92,11 @@ class DashboardSettings extends Component<Props, State> {
         )}
       </div>
     );
+  }
+
+  private handleDeleteProperty(id:string) {
+    this.props.onDeleteProperty(id);
+    this.setState({ deleteDashboardModalId: "" });
   }
 }
 function mapStateToProps(state: RootState) {
@@ -83,7 +108,7 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    // onGoToLogin: () => dispatch(openLoginDialog())
+    onDeleteProperty: (id:string) => dispatch(deleteDashboard(id))
   };
 }
 

@@ -94,6 +94,7 @@ export interface Dashboards extends Array<Dashboard>{
 export interface Dashboard{
   id: string;
   name: string;
+  user?: string;
 }
 export interface InputMapping {
   [name: string]: any;

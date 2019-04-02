@@ -36,6 +36,7 @@ export interface SelectedDashboardState {
   widgets: Record<string, Widget>;
   id: string;
   name: string;
+  user: string;
 }
 
 const initialState = {
@@ -43,7 +44,8 @@ const initialState = {
   selectedIds: [],
   widgets: {},
   id: "",
-  name: "Untitled dashboard"
+  name: "Untitled dashboard",
+  user: ""
 };
 
 export default function canvases(
@@ -143,11 +145,11 @@ export default function canvases(
       return { ...state, widgets };
     }
     case PRELOAD_DASHBOARD: {
-      const { widgets, id, name } = action;
+      const { widgets, id, name, user } = action;
       const newWidgets = widgets.reduce((accum, widget) => {
         return { ...accum, [widget.id]: validate(widget) };
       }, {});
-      return { ...state, widgets: newWidgets, id, name };
+      return { ...state, widgets: newWidgets, id, name, user };
     }
     case DASHBOARD_RENAMED:{
       const {dashboard} = action;

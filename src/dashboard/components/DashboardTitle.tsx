@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import "./DashboardTitle.css";
 import { connect } from "react-redux";
-import { getSelectedDashboard } from "../state/selectors";
+import { getSelectedDashboard, getUserName } from "../state/selectors";
 import { RootState } from "../state/reducers";
 import { Dashboard } from "../types";
-import { renameDashboard } from "../state/actionCreators";
+import { renameDashboard, cloneDashboard } from "../state/actionCreators";
 
 interface Props {
   dashboard: Dashboard;
   onTitleChange: (dashboard: Dashboard) => void;
+  onClone: (id: string, newUser: string) => void;
+  loggedInUser: string;
 }
 
 class DashboardTitle extends Component<Props> {
@@ -16,17 +18,30 @@ class DashboardTitle extends Component<Props> {
     super(props);
   }
   public render() {
-    const { id, name } = this.props.dashboard;
+    const { id, name, user:owner } = this.props.dashboard;
+    const { loggedInUser } = this.props;
+    const isMine = loggedInUser === owner;
+    const editable = isMine || !owner;
+    const clonable = !isMine && loggedInUser && owner;
     return (
       <span className="dashboard-menu">
         <input
           type="text"
           value={name || "Untitled dashboard"}
-          onChange={e =>
-            this.props.onTitleChange({ id, name: e.target.value })
-          }
+          disabled={!editable}
+          onChange={e => this.props.onTitleChange({ id, name: e.target.value })}
         />
-        {id}
+        {clonable && (
+          <span style={{ fontStyle: "italic" }}>
+            This dashboard is owned by {owner} and cannot be edited
+            <button
+              onClick={() => this.props.onClone(id, loggedInUser)}
+              className="btn-clone"
+            >
+              Clone Dashboard
+            </button>
+          </span>
+        )}
       </span>
     );
   }
@@ -34,7 +49,8 @@ class DashboardTitle extends Component<Props> {
 
 function mapStateToProps(state: RootState) {
   return {
-    dashboard: getSelectedDashboard(state)
+    dashboard: getSelectedDashboard(state),
+    loggedInUser: getUserName(state)
   };
 }
 
@@ -42,6 +58,9 @@ function mapDispatchToProps(dispatch) {
   return {
     onTitleChange: (dashboard: Dashboard) => {
       return dispatch(renameDashboard(dashboard));
+    },
+    onClone: (id: string, newUser: string) => {
+      return dispatch(cloneDashboard(id, newUser));
     }
   };
 }
