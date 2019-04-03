@@ -1,7 +1,7 @@
 import { take, fork, put, call } from "redux-saga/effects";
 import createUserSaga from "../../shared/user/state/saga";
 import * as API from "../dashboardRepo";
-import { dashboardsLoaded, dashboardRenamed, dashboardDeleted, dashboardCloned , preloadDashboard} from "./actionCreators";
+import { dashboardsLoaded, dashboardRenamed, dashboardDeleted, dashboardCloned , dashboardLoaded} from "./actionCreators";
 import {
   PRELOAD_USER_SUCCESS,
   LOGIN_SUCCESS,
@@ -10,6 +10,7 @@ import {
   RENAME_DASHBOARD,
   DELETE_DASHBOARD,
   CLONE_DASHBOARD,
+  LOAD_DASHBOARD,
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
   DASHBOARD_CLONED,
@@ -20,7 +21,7 @@ export default function* sagas() {
   yield fork(renameDashboard);
   yield fork(deleteDashboard);
   yield fork(cloneDashboard);
-  yield fork(setCurrentDashboard);
+  yield fork(loadDashboard);
 }
 
 function* loadDashboards() {
@@ -54,10 +55,10 @@ function* cloneDashboard() {
 
   }
 }
-function* setCurrentDashboard(){
+function* loadDashboard(){
   while (true) {
-    const {id} = yield take(DASHBOARD_CLONED);
+    const {id} = yield take(LOAD_DASHBOARD);
     const { widgets, name, user } = yield call(API.load, id);
-    yield put(preloadDashboard(id, widgets, (name || "Untitled Dashboard"), user));
+    yield put(dashboardLoaded(id, widgets, name, user));
   }
 }

@@ -20,6 +20,10 @@ function getDashboardsState(state: RootState) {
 function getUserState(state: RootState){
   return state.user;
 }
+export const getRedirectRequest = createSelector(
+  getSelectedDashboardState,
+  state => state.redirectRequest
+)
 export const getUserName = createSelector(
   getUserState,
   state => state.username

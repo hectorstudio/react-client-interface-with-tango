@@ -6,15 +6,16 @@ import {
   SELECT_CANVAS,
   TOGGLE_MODE,
   SELECT_WIDGETS,
-  PRELOAD_DASHBOARD,
+  DASHBOARD_LOADED,
   DASHBOARDS_LOADED,
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
   DASHBOARD_CLONED,
+  LOAD_DASHBOARD,
   RENAME_DASHBOARD,
   DELETE_DASHBOARD,
-  SELECT_DASHBOARD,
-  CLONE_DASHBOARD
+  CLONE_DASHBOARD,
+
 } from "./actionTypes";
 
 
@@ -26,7 +27,7 @@ import {
   SelectCanvasAction,
   ToggleModeAction,
   SelectWidgetsAction,
-  PreloadDashboardAction
+  DashboardLoadedAction
 } from "./actions";
 import { Widget, Dashboards, Dashboard } from "../types";
 
@@ -95,14 +96,15 @@ export function cloneDashboard(id:string, newUser:string){
 export function dashboardCloned(id:string){
   return {type: DASHBOARD_CLONED, id};
 }
-export function selectDashboard(id: string){
-  return {type: SELECT_DASHBOARD, id}
+export function loadDashboard(id: string){
+  return {type: LOAD_DASHBOARD, id};
 }
-export function preloadDashboard(
+export function dashboardLoaded(
   id: string,
   widgets: Widget[],
   name: string,
   user: string,
-): PreloadDashboardAction {
-  return { type: PRELOAD_DASHBOARD, id, widgets, name, user };
+): DashboardLoadedAction {
+  return { type: DASHBOARD_LOADED, id, widgets, name, user };
 }
+

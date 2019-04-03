@@ -9,7 +9,7 @@ import {
   RESIZE_WIDGET,
   SELECT_WIDGETS,
   MOVE_WIDGETS,
-  PRELOAD_DASHBOARD,
+  DASHBOARD_LOADED,
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
   DASHBOARD_CLONED,
@@ -37,6 +37,7 @@ export interface SelectedDashboardState {
   id: string;
   name: string;
   user: string;
+  redirectRequest: string;
 }
 
 const initialState = {
@@ -45,7 +46,8 @@ const initialState = {
   widgets: {},
   id: "",
   name: "Untitled dashboard",
-  user: ""
+  user: "",
+  redirectRequest: "",
 };
 
 export default function canvases(
@@ -144,16 +146,20 @@ export default function canvases(
       const widgets = { ...state.widgets, [id]: newWidget };
       return { ...state, widgets };
     }
-    case PRELOAD_DASHBOARD: {
+    case DASHBOARD_LOADED: {
       const { widgets, id, name, user } = action;
       const newWidgets = widgets.reduce((accum, widget) => {
         return { ...accum, [widget.id]: validate(widget) };
       }, {});
-      return { ...state, widgets: newWidgets, id, name, user };
+      return { ...state, widgets: newWidgets, id, name, user, redirectRequest: "" };
     }
     case DASHBOARD_RENAMED:{
       const {dashboard} = action;
       return {...state, name: dashboard.name}
+    }
+    case DASHBOARD_CLONED:{
+      const {id} = action;
+      return {...state, redirectRequest: id}
     }
     default:
       return state;
