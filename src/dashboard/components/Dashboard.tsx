@@ -12,7 +12,7 @@ import { DeviceProvider } from "./DevicesProvider";
 
 import { save as saveToRepo } from "../dashboardRepo";
 import { load as loadFromRepo } from "../dashboardRepo";
-
+import { loadDashboard } from "../state/actionCreators";
 import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
 
@@ -21,15 +21,17 @@ import {
   getMode,
   getCanvases,
   getSelectedCanvas,
-  getSelectedWidgets
+  getSelectedWidgets,
+  getSelectedDashboard,
+  getRedirectRequest
 } from "../state/selectors";
 
 import {
   selectCanvas,
   toggleMode,
-  preloadDashboard
+  dashboardLoaded
 } from "../state/actionCreators";
-import { Widget, Canvas } from "../types";
+import { Widget, Canvas, Dashboard as DashboardInterface } from "../types";
 import { RootState } from "../state/reducers";
 
 import "./Dashboard.css";
@@ -48,6 +50,8 @@ interface Props extends RouteComponentProps<Match> {
   selectedWidgets: Widget[];
   canvases: Canvas[];
   selectedCanvas: Canvas;
+  selectedDashboard: DashboardInterface;
+  getRedirectRequest: string;
 }
 
 class Dashboard extends Component<Props> {
@@ -60,28 +64,31 @@ class Dashboard extends Component<Props> {
   public async componentDidMount() {
     const id = this.parseId();
     if (id) {
-      try {
-        const { widgets, name, user } = await loadFromRepo(id);
-        this.props.dispatch(preloadDashboard(id, widgets, (name || "Untitled Dashboard"), user));
-      } catch (err) {
-        // console.error(`Failed loading dashboard ${id}: ${err}`);
-      }
+      this.props.dispatch(loadDashboard(this.parseId()));
     }
   }
 
   public async componentDidUpdate(prevProps) {
+    const { getRedirectRequest: redirectId} = this.props;
+    const id = this.parseId();
+    if (redirectId && redirectId !== id) {
+      // The state has been updated with a flag indicating that we should navigate
+      // to a new dashboard.
+      this.props.history.replace("?id=" + redirectId);
+      this.props.dispatch(loadDashboard(redirectId));
+      return;
+    }
     if (prevProps.widgets === this.props.widgets) {
       return;
     }
 
-    const id = this.parseId();
-    try{
+    try {
       const res = await saveToRepo(id, this.props.widgets);
       if (res && res.created) {
         this.props.history.replace("?id=" + res.id);
       }
-    }catch(exception){
-      console.log(exception)
+    } catch (exception) {
+      console.log(exception);
     }
   }
 
@@ -146,6 +153,8 @@ class Dashboard extends Component<Props> {
 function mapStateToProps(state: RootState) {
   return {
     widgets: getWidgets(state),
+    selectedDashboard: getSelectedDashboard(state),
+    getRedirectRequest: getRedirectRequest(state),
     selectedWidgets: getSelectedWidgets(state),
     mode: getMode(state),
     selectedCanvas: getSelectedCanvas(state),

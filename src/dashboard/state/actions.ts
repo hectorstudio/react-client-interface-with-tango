@@ -10,7 +10,7 @@ import {
   RESIZE_WIDGET,
   SELECT_CANVAS,
   TOGGLE_MODE,
-  PRELOAD_DASHBOARD,
+  DASHBOARD_LOADED,
   DASHBOARDS_LOADED,
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
@@ -78,7 +78,7 @@ export interface ToggleModeAction extends Action {
 }
 
 export interface PreloadDashboardAction extends Action {
-  type: typeof PRELOAD_DASHBOARD;
+  type: typeof DASHBOARD_LOADED;
   id: string;
   widgets: Widget[];
   name: string;
@@ -105,6 +105,14 @@ export interface DashboardClonedAction extends Action{
   id: string;
 }
 
+export interface DashboardLoadedAction extends Action{
+  type: typeof DASHBOARD_LOADED;
+  id: string;
+  widgets: Widget[];
+  name: string;
+  user: string;
+}
+
 export type DashboardAction =
   | AddWidgetAction
   | MoveWidgetsAction
@@ -116,7 +124,7 @@ export type DashboardAction =
   | DeleteInputAction
   | SelectCanvasAction
   | ToggleModeAction
-  | PreloadDashboardAction
+  | DashboardLoadedAction
   | DashboardsLoadedAction
   | DashboardRenamedAction
   | DashboardDeletedAction
