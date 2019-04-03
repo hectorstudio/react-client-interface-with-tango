@@ -111,6 +111,7 @@ export interface DashboardLoadedAction extends Action{
   widgets: Widget[];
   name: string;
   user: string;
+  redirectRequest: boolean;
 }
 
 export type DashboardAction =

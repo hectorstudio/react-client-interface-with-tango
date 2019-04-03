@@ -75,7 +75,6 @@ class Dashboard extends Component<Props> {
       // The state has been updated with a flag indicating that we should navigate
       // to a new dashboard.
       this.props.history.replace("?id=" + redirectId);
-      this.props.dispatch(loadDashboard(redirectId));
       return;
     }
     if (prevProps.widgets === this.props.widgets) {

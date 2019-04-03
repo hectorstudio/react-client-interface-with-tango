@@ -104,7 +104,9 @@ export function dashboardLoaded(
   widgets: Widget[],
   name: string,
   user: string,
+  redirectRequest: boolean,
+
 ): DashboardLoadedAction {
-  return { type: DASHBOARD_LOADED, id, widgets, name, user };
+  return { type: DASHBOARD_LOADED, id, widgets, name, user , redirectRequest};
 }
 

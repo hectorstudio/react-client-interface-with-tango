@@ -57,8 +57,9 @@ function* cloneDashboard() {
 }
 function* loadDashboard(){
   while (true) {
-    const {id} = yield take(LOAD_DASHBOARD);
+    const {id, type} = yield take([LOAD_DASHBOARD, DASHBOARD_CLONED]);
     const { widgets, name, user } = yield call(API.load, id);
-    yield put(dashboardLoaded(id, widgets, name, user));
+    const redirectRequest = type === DASHBOARD_CLONED;
+    yield put(dashboardLoaded(id, widgets, name, user, redirectRequest));
   }
 }
