@@ -147,19 +147,16 @@ export default function canvases(
       return { ...state, widgets };
     }
     case DASHBOARD_LOADED: {
-      const { widgets, id, name, user } = action;
+      const { widgets, id, name, user, redirectRequest } = action;
       const newWidgets = widgets.reduce((accum, widget) => {
         return { ...accum, [widget.id]: validate(widget) };
       }, {});
-      return { ...state, widgets: newWidgets, id, name, user, redirectRequest: "" };
+      const redirect = redirectRequest ? id : "";
+      return { ...state, widgets: newWidgets, id, name, user, redirectRequest: redirect };
     }
     case DASHBOARD_RENAMED:{
       const {dashboard} = action;
       return {...state, name: dashboard.name}
-    }
-    case DASHBOARD_CLONED:{
-      const {id} = action;
-      return {...state, redirectRequest: id}
     }
     default:
       return state;
