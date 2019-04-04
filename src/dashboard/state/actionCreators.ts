@@ -6,8 +6,20 @@ import {
   SELECT_CANVAS,
   TOGGLE_MODE,
   SELECT_WIDGETS,
-  PRELOAD_DASHBOARD
+  DASHBOARD_LOADED,
+  DASHBOARDS_LOADED,
+  DASHBOARD_RENAMED,
+  DASHBOARD_DELETED,
+  DASHBOARD_CLONED,
+  LOAD_DASHBOARD,
+  RENAME_DASHBOARD,
+  DELETE_DASHBOARD,
+  CLONE_DASHBOARD,
+  SAVE_DASHBOARD,
+  DASHBOARD_SAVED,
+
 } from "./actionTypes";
+
 
 import {
   AddWidgetAction,
@@ -17,9 +29,9 @@ import {
   SelectCanvasAction,
   ToggleModeAction,
   SelectWidgetsAction,
-  PreloadDashboardAction
+  DashboardLoadedAction
 } from "./actions";
-import { Widget } from "../types";
+import { Widget, Dashboards, Dashboard } from "../types";
 
 export function addWidget(
   x: number,
@@ -64,9 +76,47 @@ export function toggleMode(): ToggleModeAction {
   return { type: TOGGLE_MODE };
 }
 
-export function preloadDashboard(
-  id: string,
-  widgets: Widget[]
-): PreloadDashboardAction {
-  return { type: PRELOAD_DASHBOARD, id, widgets };
+export function dashboardsLoaded(dashboards:Dashboards){
+  return {type: DASHBOARDS_LOADED, dashboards};
 }
+
+export function renameDashboard(dashboard:Dashboard){
+  return {type: RENAME_DASHBOARD, dashboard}
+}
+export function dashboardRenamed(dashboard:Dashboard){
+  return {type: DASHBOARD_RENAMED, dashboard};
+}
+export function deleteDashboard(id:string){
+  return {type: DELETE_DASHBOARD, id}
+}
+export function dashboardDeleted(id:string){
+  return {type: DASHBOARD_DELETED, id};
+}
+export function cloneDashboard(id:string, newUser:string){
+  return {type: CLONE_DASHBOARD, id, newUser}
+}
+export function dashboardCloned(id:string){
+  return {type: DASHBOARD_CLONED, id};
+}
+export function loadDashboard(id: string){
+  return {type: LOAD_DASHBOARD, id};
+}
+export function dashboardLoaded(
+  id: string,
+  widgets: Widget[],
+  name: string,
+  user: string,
+  redirectRequest: boolean,
+
+): DashboardLoadedAction {
+  return { type: DASHBOARD_LOADED, id, widgets, name, user , redirectRequest};
+}
+export function dashboardSaved(id:string, created:boolean){
+  return {type: DASHBOARD_SAVED, id, created};
+}
+
+export function saveDashboard(id:string, name:string, widgets:Widget[]){
+  return {type: SAVE_DASHBOARD, id, name, widgets};
+}
+
+

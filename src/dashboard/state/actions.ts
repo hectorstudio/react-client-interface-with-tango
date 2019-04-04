@@ -10,9 +10,14 @@ import {
   RESIZE_WIDGET,
   SELECT_CANVAS,
   TOGGLE_MODE,
-  PRELOAD_DASHBOARD
+  DASHBOARD_LOADED,
+  DASHBOARDS_LOADED,
+  DASHBOARD_RENAMED,
+  DASHBOARD_DELETED,
+  DASHBOARD_CLONED,
+  DASHBOARD_SAVED,
 } from "./actionTypes";
-import { IndexPath, Widget } from "../types";
+import { IndexPath, Widget, Dashboards, Dashboard } from "../types";
 
 export interface AddWidgetAction extends Action {
   type: typeof ADD_WIDGET;
@@ -74,9 +79,47 @@ export interface ToggleModeAction extends Action {
 }
 
 export interface PreloadDashboardAction extends Action {
-  type: typeof PRELOAD_DASHBOARD;
+  type: typeof DASHBOARD_LOADED;
   id: string;
   widgets: Widget[];
+  name: string;
+  user: string;
+}
+
+export interface DashboardsLoadedAction extends Action {
+  type: typeof DASHBOARDS_LOADED;
+  dashboards: Dashboards;
+}
+
+export interface DashboardRenamedAction extends Action{
+  type: typeof DASHBOARD_RENAMED;
+  dashboard: Dashboard;
+}
+
+export interface DashboardDeletedAction extends Action{
+  type: typeof DASHBOARD_DELETED;
+  id: string;
+}
+
+export interface DashboardClonedAction extends Action{
+  type: typeof DASHBOARD_CLONED;
+  id: string;
+}
+
+export interface DashboardLoadedAction extends Action{
+  type: typeof DASHBOARD_LOADED;
+  id: string;
+  widgets: Widget[];
+  name: string;
+  user: string;
+  redirectRequest: boolean;
+}
+
+export interface DashboardSavedAction extends Action{
+  type: typeof DASHBOARD_SAVED;
+  id: string;
+  created: boolean;
+
 }
 
 export type DashboardAction =
@@ -90,4 +133,9 @@ export type DashboardAction =
   | DeleteInputAction
   | SelectCanvasAction
   | ToggleModeAction
-  | PreloadDashboardAction;
+  | DashboardLoadedAction
+  | DashboardsLoadedAction
+  | DashboardRenamedAction
+  | DashboardDeletedAction
+  | DashboardClonedAction
+  | DashboardSavedAction;
