@@ -9,7 +9,11 @@ import {
   RESIZE_WIDGET,
   SELECT_WIDGETS,
   MOVE_WIDGETS,
-  PRELOAD_DASHBOARD
+  DASHBOARD_LOADED,
+  DASHBOARD_RENAMED,
+  DASHBOARD_DELETED,
+  DASHBOARD_CLONED,
+  DASHBOARD_SAVED,
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
@@ -28,21 +32,29 @@ import {
 import { definitionForType, definitionForWidget } from "src/dashboard/widgets";
 import { defaultInputs } from "src/dashboard/utils";
 
-export interface WidgetsState {
+export interface SelectedDashboardState {
   selectedIds: string[];
   widgets: Record<string, Widget>;
+  id: string;
+  name: string;
+  user: string;
+  redirectRequest: string;
 }
 
 const initialState = {
   selectedId: null,
   selectedIds: [],
-  widgets: {}
+  widgets: {},
+  id: "",
+  name: "Untitled dashboard",
+  user: "",
+  redirectRequest: "",
 };
 
 export default function canvases(
-  state: WidgetsState = initialState,
+  state: SelectedDashboardState = initialState,
   action: DashboardAction
-): WidgetsState {
+): SelectedDashboardState {
   switch (action.type) {
     case ADD_WIDGET: {
       const { x, y, canvas, widgetType: type } = action;
@@ -135,12 +147,17 @@ export default function canvases(
       const widgets = { ...state.widgets, [id]: newWidget };
       return { ...state, widgets };
     }
-    case PRELOAD_DASHBOARD: {
-      const { widgets } = action;
+    case DASHBOARD_LOADED: {
+      const { widgets, id, name, user, redirectRequest } = action;
       const newWidgets = widgets.reduce((accum, widget) => {
         return { ...accum, [widget.id]: validate(widget) };
       }, {});
-      return { ...state, widgets: newWidgets };
+      const redirect = redirectRequest ? id : "";
+      return { ...state, widgets: newWidgets, id, name, user, redirectRequest: redirect };
+    }
+    case DASHBOARD_RENAMED:{
+      const {dashboard} = action;
+      return {...state, name: dashboard.name}
     }
     default:
       return state;

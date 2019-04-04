@@ -26,14 +26,23 @@ const MultipleSelection = () => (
 
 interface Props {
   mode: "run" | "edit";
+  selectedTab: string;
   tangoDB: string;
   selectedWidgets: Widget[];
 }
+interface State{
+  selectedTab: string;
+}
 
-export default class Sidebar extends Component<Props> {
+export default class Sidebar extends Component<Props, State> {
+  constructor(props){
+    super(props);
+    const {selectedTab} = this.props;
+    this.state = {selectedTab};
+  }
   public render() {
     const { mode, selectedWidgets, tangoDB } = this.props;
-
+    const {selectedTab} = this.state;
     if (mode === "run") {
       return null;
     }
@@ -41,7 +50,10 @@ export default class Sidebar extends Component<Props> {
     return (
       <div className="Sidebar">
         {selectedWidgets.length === 0 ? (
-          <Library />
+          <Library 
+          selectedTab={selectedTab}
+          onTabChange={(newVal) => this.setState({selectedTab: newVal})}
+          />
         ) : selectedWidgets.length === 1 ? (
           <Inspector
             widget={selectedWidgets[0]}
