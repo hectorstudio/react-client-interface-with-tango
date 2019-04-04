@@ -13,6 +13,7 @@ import {
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
   DASHBOARD_CLONED,
+  DASHBOARD_SAVED,
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
