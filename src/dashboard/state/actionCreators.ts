@@ -15,6 +15,8 @@ import {
   RENAME_DASHBOARD,
   DELETE_DASHBOARD,
   CLONE_DASHBOARD,
+  SAVE_DASHBOARD,
+  DASHBOARD_SAVED,
 
 } from "./actionTypes";
 
@@ -109,4 +111,12 @@ export function dashboardLoaded(
 ): DashboardLoadedAction {
   return { type: DASHBOARD_LOADED, id, widgets, name, user , redirectRequest};
 }
+export function dashboardSaved(id:string, created:boolean){
+  return {type: DASHBOARD_SAVED, id, created};
+}
+
+export function saveDashboard(id:string, name:string, widgets:Widget[]){
+  return {type: SAVE_DASHBOARD, id, name, widgets};
+}
+
 

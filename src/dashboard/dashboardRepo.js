@@ -2,7 +2,7 @@ const headers = {
   "Content-Type": "application/json; charset=utf-8"
 };
 
-export async function save(id, widgets) {
+export async function save(id, widgets, name) {
   const withoutValid = widgets.map(widget => {
     const { valid, ...theRest } = widget;
     return theRest;
@@ -11,7 +11,7 @@ export async function save(id, widgets) {
   const res = await fetch("/dashboards/", {
     method: "POST",
     headers,
-    body: JSON.stringify({ id, widgets: withoutValid })
+    body: JSON.stringify({ id, widgets: withoutValid, name })
   });
   if (!res.ok){
     throw res;
@@ -27,39 +27,36 @@ export async function load(id) {
   return res.json();
 }
 
-//TODO use correct endpoint when it exists.
 export async function loadUserDashboards() {
-  return await new Promise(function(resolve, reject) {
-    setTimeout(function() {
-      resolve([{id: "5c9cd45b7aeef9352a7beb07", name: "test"}, {id: "5c9cd8c13c331e6014b8d384", name: "test2"}, {id: "5c9ce2dded681539a9979bcb", name: "test3"}, {id: "5c9dca9d9333ee18ce6d0e0e", name: "test4"}, {id: "5c9df71b9333ee18ce6d0e26", name: "abdis"}, ]);
-    }, 300);
+  const res = await fetch("/dashboards/user/dashboards/", {
+    method: "GET",
+    headers
   });
+  return res.json();
 }
 
 
-//TODO use correct endpoint when it exists.
 export async function deleteDashboard(dashboardId) {
-  return await new Promise(function(resolve, reject) {
-    setTimeout(function() {
-      resolve("a7b8207ef");
-    }, 300);
+  const res = await fetch("/dashboards/" + dashboardId, {
+    method: "DELETE",
+    headers
   });
+  return res.json();
 }
 
-//TODO use correct endpoint when it exists.
-export async function cloneDashboard(dashboardId, newUserId) {
-  return await new Promise(function(resolve, reject) {
-    setTimeout(function() {
-      resolve("5c9cd45b7aeef9352a7beb07");
-    }, 300);
+export async function cloneDashboard(dashboardId) {
+  const res = await fetch("/dashboards/" + dashboardId + "/clone", {
+    method: "POST",
+    headers
   });
+  return res.json();
 }
 
-//TODO use correct endpoint when it exists.
 export async function renameDashboard(id, newName) {
-  return await new Promise(function(resolve, reject) {
-    setTimeout(function() {
-      resolve({id, name: newName});
-    }, 100);
+  const res = await fetch("/dashboards/" + id + "/rename", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ newName })
   });
+  return res.json();
 }

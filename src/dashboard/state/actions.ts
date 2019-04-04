@@ -15,6 +15,7 @@ import {
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
   DASHBOARD_CLONED,
+  DASHBOARD_SAVED,
 } from "./actionTypes";
 import { IndexPath, Widget, Dashboards, Dashboard } from "../types";
 
@@ -114,6 +115,13 @@ export interface DashboardLoadedAction extends Action{
   redirectRequest: boolean;
 }
 
+export interface DashboardSavedAction extends Action{
+  type: typeof DASHBOARD_SAVED;
+  id: string;
+  created: boolean;
+
+}
+
 export type DashboardAction =
   | AddWidgetAction
   | MoveWidgetsAction
@@ -129,4 +137,5 @@ export type DashboardAction =
   | DashboardsLoadedAction
   | DashboardRenamedAction
   | DashboardDeletedAction
-  | DashboardClonedAction;
+  | DashboardClonedAction
+  | DashboardSavedAction;
