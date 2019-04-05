@@ -8,6 +8,12 @@ export interface BaseInputDefinition<T> {
   required?: boolean;
 }
 
+export interface Notification{
+  level:string;
+  sourceAction:string;
+  msg:string;
+}
+
 export interface BooleanInputDefinition extends BaseInputDefinition<boolean> {
   type: "boolean";
 }
@@ -94,8 +100,12 @@ export interface Dashboards extends Array<Dashboard>{
 export interface Dashboard{
   id: string;
   name: string;
-  user?: string;
+  user: string;
+  redirect: boolean;
+  insertTime: Date;
+  updateTime: Date;
 }
+
 export interface InputMapping {
   [name: string]: any;
 }

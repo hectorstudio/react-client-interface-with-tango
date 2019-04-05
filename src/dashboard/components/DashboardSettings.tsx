@@ -3,7 +3,7 @@ import NotLoggedIn from "../../jive/components/DeviceViewer/NotLoggedIn/NotLogge
 import { connect } from "react-redux";
 import { getIsLoggedIn } from "../../shared/user/state/selectors";
 import "./DashboardSettings.css";
-import { getDashboards } from "../state/selectors";
+import { getDashboards, getSelectedDashboard } from "../state/selectors";
 import { RootState } from "../state/reducers";
 import { deleteDashboard } from "../state/actionCreators";
 import { Route, Switch, Redirect, Link } from "react-router-dom";
@@ -13,7 +13,8 @@ import DeleteDashboardModal from "./modals/DeleteDashboardModal";
 interface Props {
   dashboards: Dashboard[];
   isLoggedIn: boolean;
-  onDeleteProperty: (id:string) => void;
+  selectedDashboard: Dashboard;
+  onDeleteProperty: (id: string) => void;
 }
 interface State {
   deleteDashboardModalId: string;
@@ -34,6 +35,7 @@ class DashboardSettings extends Component<Props, State> {
   }
   public render() {
     const { dashboards, isLoggedIn } = this.props;
+    const { id: selectedDashboardId } = this.props.selectedDashboard;
     if (!isLoggedIn) {
       return (
         <NotLoggedIn>
@@ -58,31 +60,38 @@ class DashboardSettings extends Component<Props, State> {
         </div>
         {dashboards.map((value, key) => (
           <Fragment key={key}>
-            <div className="dashboard-row">
-              <a
-                title={`View dashboard ${value.name}`}
-                className="dashboard-link"
-                href={`${location.pathname}?id=${value.id}`}
-              >
-                {value.name}
-              </a>
+            <div className={"dashboard-row " + (value.id === selectedDashboardId ? "selected" :"")}>
+              {selectedDashboardId !== value.id ? (
+                <a
+                  title={`View dashboard ${value.name || "Untitled dashboard"}`}
+                  className="dashboard-link"
+                  href={`${location.pathname}?id=${value.id}`}
+                >
+                  {value.name || "Untitled dashboard"}
+                </a>
+              ) : (
+                <span>{value.name || "Untitled dashboard"}</span>
+              )}
+
               <button
-                title={`Delete dashboard ${value.name}`}
+                title={`Delete dashboard ${value.name || "Untitled dashboard"}`}
                 className="delete-button"
-                onClick={() => this.setState({ deleteDashboardModalId: value.id })}
+                onClick={() =>
+                  this.setState({ deleteDashboardModalId: value.id })
+                }
               >
                 <i className="fa fa-trash " />
               </button>
             </div>
 
             {this.state.deleteDashboardModalId === value.id && (
-          <DeleteDashboardModal
-            id={value.id}
-            name={value.name}
-            onClose={() => this.setState({ deleteDashboardModalId: "" })}
-            onDelete={this.handleDeleteProperty}
-          />
-        )}
+              <DeleteDashboardModal
+                id={value.id}
+                name={value.name}
+                onClose={() => this.setState({ deleteDashboardModalId: "" })}
+                onDelete={this.handleDeleteProperty}
+              />
+            )}
           </Fragment>
         ))}
         {dashboards.length === 0 && (
@@ -94,7 +103,7 @@ class DashboardSettings extends Component<Props, State> {
     );
   }
 
-  private handleDeleteProperty(id:string) {
+  private handleDeleteProperty(id: string) {
     this.props.onDeleteProperty(id);
     this.setState({ deleteDashboardModalId: "" });
   }
@@ -102,13 +111,14 @@ class DashboardSettings extends Component<Props, State> {
 function mapStateToProps(state: RootState) {
   return {
     dashboards: getDashboards(state),
-    isLoggedIn: getIsLoggedIn(state)
+    isLoggedIn: getIsLoggedIn(state),
+    selectedDashboard: getSelectedDashboard(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onDeleteProperty: (id:string) => dispatch(deleteDashboard(id))
+    onDeleteProperty: (id: string) => dispatch(deleteDashboard(id))
   };
 }
 
