@@ -9,11 +9,8 @@ import queryString from "query-string";
 import EditCanvas from "./EditCanvas/EditCanvas";
 import RunCanvas from "./RunCanvas/RunCanvas";
 import { DeviceProvider } from "./DevicesProvider";
-
-import { save as saveToRepo } from "../dashboardRepo";
-import { load as loadFromRepo } from "../dashboardRepo";
+import { saveDashboard } from "../state/actionCreators";
 import { loadDashboard } from "../state/actionCreators";
-import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
 import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
 
 import {
@@ -23,14 +20,10 @@ import {
   getSelectedCanvas,
   getSelectedWidgets,
   getSelectedDashboard,
-  getRedirectRequest
+  getRedirect
 } from "../state/selectors";
 
-import {
-  selectCanvas,
-  toggleMode,
-  dashboardLoaded
-} from "../state/actionCreators";
+import { toggleMode } from "../state/actionCreators";
 import { Widget, Canvas, Dashboard as DashboardInterface } from "../types";
 import { RootState } from "../state/reducers";
 
@@ -38,56 +31,60 @@ import "./Dashboard.css";
 import ModeToggleButton from "./ModeToggleButton";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
+import { getIsLoggedIn } from "src/shared/user/state/selectors";
 
 interface Match {
   tangoDB: string;
 }
 
 interface Props extends RouteComponentProps<Match> {
-  dispatch: (action: object) => void;
+  toggleMode: () => void;
+  loadDashboard: (id: string) => void;
+  saveDashboard: (id: string, name: string, widgets: Widget[]) => void;
   mode: "edit" | "run";
   widgets: Widget[];
   selectedWidgets: Widget[];
   canvases: Canvas[];
   selectedCanvas: Canvas;
   selectedDashboard: DashboardInterface;
-  getRedirectRequest: string;
+  isLoggedIn: boolean;
 }
 
 class Dashboard extends Component<Props> {
   public constructor(props) {
     super(props);
     this.toggleMode = this.toggleMode.bind(this);
-    this.handleChangeCanvas = this.handleChangeCanvas.bind(this);
   }
 
   public async componentDidMount() {
-    const id = this.parseId();
+    const redirectId = this.props.selectedDashboard.redirect;
+    const id = redirectId  ? this.props.selectedDashboard.id : this.parseId();
     if (id) {
-      this.props.dispatch(loadDashboard(this.parseId()));
+      this.props.loadDashboard(id);
     }
   }
 
   public async componentDidUpdate(prevProps) {
-    const { getRedirectRequest: redirectId} = this.props;
+    // update if url currently is missing and the selcted one has one?
+    const redirectId = this.props.selectedDashboard.redirect;
+    const currentId = this.props.selectedDashboard.id;
     const id = this.parseId();
-    if (redirectId !== null && redirectId !== id) {
+
+    if (redirectId) {
       // The state has been updated with a flag indicating that we should navigate
       // to a new dashboard.
-      this.props.history.replace("?id=" + redirectId);
+      this.props.history.replace("?id=" + this.props.selectedDashboard.id);
       return;
     }
-    if (prevProps.widgets === this.props.widgets) {
+    if (JSON.stringify(prevProps.widgets) === JSON.stringify((this.props.widgets))) {
       return;
     }
-
-    try {
-      const res = await saveToRepo(id, this.props.widgets);
-      if (res && res.created) {
-        this.props.history.replace("?id=" + res.id);
-      }
-    } catch (exception) {
-      console.log(exception);
+    if (this.props.isLoggedIn) {
+      this.props.saveDashboard(
+        id,
+        this.props.selectedDashboard.name,
+        this.props.widgets
+      );
     }
   }
 
@@ -125,14 +122,8 @@ class Dashboard extends Component<Props> {
   }
 
   private toggleMode() {
-    this.props.dispatch(toggleMode());
+    this.props.toggleMode();
   }
-
-  private handleChangeCanvas(event) {
-    const id = event.target.value;
-    this.props.dispatch(selectCanvas(id));
-  }
-
   private isRootCanvas() {
     return this.props.selectedCanvas.id === "0";
   }
@@ -153,14 +144,23 @@ function mapStateToProps(state: RootState) {
   return {
     widgets: getWidgets(state),
     selectedDashboard: getSelectedDashboard(state),
-    getRedirectRequest: getRedirectRequest(state),
+    getRedirect: getRedirect(state),
     selectedWidgets: getSelectedWidgets(state),
     mode: getMode(state),
     selectedCanvas: getSelectedCanvas(state),
-    canvases: getCanvases(state)
+    canvases: getCanvases(state),
+    isLoggedIn: getIsLoggedIn(state)
   };
 }
-
-export default connect(mapStateToProps)(
-  DragDropContext(HTML5Backend)(Dashboard)
-);
+function mapDispatchToProps(dispatch) {
+  return {
+    saveDashboard: (id: string, name: string, widgets: Widget[]) =>
+      dispatch(saveDashboard(id, name, widgets)),
+    toggleMode: () => dispatch(toggleMode()),
+    loadDashboard: (id: string) => dispatch(loadDashboard(id))
+  };
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DragDropContext(HTML5Backend)(Dashboard));

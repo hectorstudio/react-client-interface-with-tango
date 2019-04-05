@@ -1,3 +1,6 @@
+.dashboard-menu{
+    display: inline-block;
+}
 .dashboard-menu input[type="text"]{
     background: rgba(0,0,0,0);
     border: none;
@@ -9,11 +12,7 @@
     margin-left: 2em;
     cursor: text;
 }
-/* .dashboard-menu input[type="text"]:hover{
-    background: rgba(255,255,255,0.2);
-    border: 1px solid #ddd;
-    cursor: pointer;
-} */
+
 .dashboard-menu .title{
     color: #495057;
     margin-left: 2em;
@@ -53,7 +52,7 @@
 }
 .dashboard-menu .notification-msg{
     position: relative;
-    padding: .5rem 1.25rem;
+    padding: 0.4em 1.25em;
     border: 1px solid transparent;
     border-radius: .25rem;
     margin-left: 1em;
@@ -62,15 +61,15 @@
 .dashboard-menu .INFO{
     color: #155724;
     background-color: #d4edda;
-    border-color: #c3e6cb;
+    border-color: #92d6a2;
 }
 .dashboard-menu .WARNING{
     color: #856404;
     background-color: #fff3cd;
-    border-color: #ffeeba;
+    border-color: #e0ce95;
 }
 .dashboard-menu .ERROR{
     color: #721c24;
     background-color: #f8d7da;
-    border-color: #f5c6cb;
+    border-color: #f1b6bc;
 }
