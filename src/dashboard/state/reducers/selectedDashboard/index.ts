@@ -38,7 +38,7 @@ export interface SelectedDashboardState {
   id: string;
   name: string;
   user: string;
-  redirectRequest: string;
+  redirectRequest: string | null;
 }
 
 const initialState = {
@@ -48,7 +48,7 @@ const initialState = {
   id: "",
   name: "Untitled dashboard",
   user: "",
-  redirectRequest: "",
+  redirectRequest: null,
 };
 
 export default function canvases(
@@ -152,12 +152,21 @@ export default function canvases(
       const newWidgets = widgets.reduce((accum, widget) => {
         return { ...accum, [widget.id]: validate(widget) };
       }, {});
-      const redirect = redirectRequest ? id : "";
+
+      // A redirect request means that the dashboard component should rewrite the dashboard id in the URL param
+      const redirect = redirectRequest ? id : null;
       return { ...state, widgets: newWidgets, id, name, user, redirectRequest: redirect };
     }
     case DASHBOARD_RENAMED:{
       const {dashboard} = action;
       return {...state, name: dashboard.name}
+    }
+    case DASHBOARD_DELETED:{
+      const {id} = action;
+      if (id === state.id){
+        // Clear the selectedDashboard state if we deleted the selected dashboard
+        return {...state, id: "", name: "", widgets:{}, selectedIds: [], redirectRequest: ""}
+      }
     }
     default:
       return state;

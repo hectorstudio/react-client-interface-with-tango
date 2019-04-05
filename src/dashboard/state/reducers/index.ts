@@ -5,6 +5,8 @@ import ui, { UIState } from "./ui";
 import selectedDashboard, { SelectedDashboardState } from "./selectedDashboard";
 import canvases, { CanvasesState } from "./canvases";
 import dashboards, { DashboardsState } from "./dashboards";
+import notifications, { NotificationsState } from "./notifications";
+
 
 export interface RootState {
   ui: UIState;
@@ -12,6 +14,7 @@ export interface RootState {
   selectedDashboard: SelectedDashboardState;
   user: UserState;
   dashboards: DashboardsState;
+  notifications: NotificationsState;
 }
 
 export default combineReducers<RootState>({
@@ -19,5 +22,6 @@ export default combineReducers<RootState>({
   canvases,
   selectedDashboard,
   user,
-  dashboards
+  dashboards,
+  notifications
 });

@@ -17,9 +17,11 @@ import {
   CLONE_DASHBOARD,
   SAVE_DASHBOARD,
   DASHBOARD_SAVED,
+  SHOW_NOTIFICATION,
+  HIDE_NOTIFICATION,
 
 } from "./actionTypes";
-
+import { Action } from "redux";
 
 import {
   AddWidgetAction,
@@ -31,7 +33,7 @@ import {
   SelectWidgetsAction,
   DashboardLoadedAction
 } from "./actions";
-import { Widget, Dashboards, Dashboard } from "../types";
+import { Widget, Dashboards, Dashboard, Notification } from "../types";
 
 export function addWidget(
   x: number,
@@ -111,12 +113,20 @@ export function dashboardLoaded(
 ): DashboardLoadedAction {
   return { type: DASHBOARD_LOADED, id, widgets, name, user , redirectRequest};
 }
-export function dashboardSaved(id:string, created:boolean){
-  return {type: DASHBOARD_SAVED, id, created};
+export function dashboardSaved(id:string, created:boolean, reassigned:boolean){
+  return {type: DASHBOARD_SAVED, id, created, reassigned};
 }
 
 export function saveDashboard(id:string, name:string, widgets:Widget[]){
   return {type: SAVE_DASHBOARD, id, name, widgets};
 }
+
+export function showNotification(level:string, action:string, msg:string){
+  return ({ type: SHOW_NOTIFICATION, notification: {level, action, msg}})
+}
+export function hideNotification(){
+    return { type: HIDE_NOTIFICATION }
+}
+
 
 

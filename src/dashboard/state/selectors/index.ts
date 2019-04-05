@@ -20,6 +20,13 @@ function getDashboardsState(state: RootState) {
 function getUserState(state: RootState){
   return state.user;
 }
+function getNotificationsState(state: RootState){
+  return state.notifications;
+}
+export const getNotification = createSelector(
+  getNotificationsState,
+  state => state.notification 
+)
 export const getRedirectRequest = createSelector(
   getSelectedDashboardState,
   state => state.redirectRequest
