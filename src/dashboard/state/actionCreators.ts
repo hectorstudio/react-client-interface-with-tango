@@ -104,17 +104,14 @@ export function loadDashboard(id: string){
   return {type: LOAD_DASHBOARD, id};
 }
 export function dashboardLoaded(
-  id: string,
+  dashboard:Dashboard,
   widgets: Widget[],
-  name: string,
-  user: string,
-  redirectRequest: boolean,
 
 ): DashboardLoadedAction {
-  return { type: DASHBOARD_LOADED, id, widgets, name, user , redirectRequest};
+  return { type: DASHBOARD_LOADED, dashboard, widgets};
 }
-export function dashboardSaved(id:string, created:boolean, reassigned:boolean){
-  return {type: DASHBOARD_SAVED, id, created, reassigned};
+export function dashboardSaved(id:string, created:boolean){
+  return {type: DASHBOARD_SAVED, id, created};
 }
 
 export function saveDashboard(id:string, name:string, widgets:Widget[]){

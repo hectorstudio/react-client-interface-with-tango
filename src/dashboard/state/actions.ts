@@ -110,11 +110,8 @@ export interface DashboardClonedAction extends Action{
 
 export interface DashboardLoadedAction extends Action{
   type: typeof DASHBOARD_LOADED;
-  id: string;
+  dashboard: Dashboard;
   widgets: Widget[];
-  name: string;
-  user: string;
-  redirectRequest: boolean;
 }
 
 export interface DashboardSavedAction extends Action{
@@ -124,12 +121,12 @@ export interface DashboardSavedAction extends Action{
 }
 
 export interface ShowNotificationAction extends Action{
-  type: typeof SHOW_NOTIFICATION
+  type: typeof SHOW_NOTIFICATION;
   notification: Notification;
 }
 
 export interface HideNotificationAction extends Action{
-  type: typeof HIDE_NOTIFICATION
+  type: typeof HIDE_NOTIFICATION;
   notification: Notification;
 }
 

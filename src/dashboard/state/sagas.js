@@ -39,7 +39,7 @@ export default function* sagas() {
 
 function* loadDashboards() {
   while (true) {
-    const payload = yield take([
+    yield take([
       PRELOAD_USER_SUCCESS,
       LOGIN_SUCCESS,
       DASHBOARD_RENAMED,
@@ -53,48 +53,18 @@ function* loadDashboards() {
     } catch (exception) {
       console.log(exception);
     }
-    const { type } = payload;
-    if (type === DASHBOARD_DELETED) {
-      yield put(
-        showNotification("INFO", DASHBOARD_DELETED, "Dashboard deleted")
-      );
-      yield delay();
-      yield put(hideNotification());
-    } else if (type === DASHBOARD_CLONED) {
-      yield put(showNotification("INFO", DASHBOARD_CLONED, "Dashboard cloned"));
-      yield delay();
-      yield put(hideNotification());
-    } else if (type === DASHBOARD_SAVED) {
-      const { created, reassigned } = payload;
-      if (created) {
-        yield put(
-          showNotification("INFO", DASHBOARD_CREATED, "Dashboard created")
-        );
-        yield delay();
-        yield put(hideNotification());
-      }
-      if (reassigned) {
-        yield put(
-          showNotification("INFO", DASHBOARD_CREATED, "Dashboard reassigned")
-        );
-        yield delay();
-        yield put(hideNotification());
-      }
-    }
   }
 }
 
 function* renameDashboard() {
   while (true) {
     const { dashboard } = yield take(RENAME_DASHBOARD);
-    console.log("REASSIGN DASHBOARD");
-    console.log(dashboard);
-    const { id, name } = yield call(
+    const { id } = yield call(
       API.renameDashboard,
       dashboard.id,
       dashboard.name
     );
-    yield put(dashboardRenamed({ id, name }));
+    yield put(dashboardRenamed({ id, name: dashboard.name }));
     yield put(showNotification("INFO", DASHBOARD_RENAMED, "Dashboard renamed"));
     yield delay();
     yield put(hideNotification());
@@ -105,6 +75,9 @@ function* deleteDashboard() {
     const { id } = yield take(DELETE_DASHBOARD);
     const result = yield call(API.deleteDashboard, id);
     yield put(dashboardDeleted(result.id));
+    yield put(showNotification("INFO", DASHBOARD_DELETED, "Dashboard deleted"));
+    yield delay();
+    yield put(hideNotification());
   }
 }
 
@@ -113,25 +86,33 @@ function* cloneDashboard() {
     const { id } = yield take(CLONE_DASHBOARD);
     const { id: newId, created } = yield call(API.cloneDashboard, id);
     yield put(dashboardCloned(newId));
+    yield put(showNotification("INFO", DASHBOARD_CLONED, "Dashboard cloned"));
+    yield delay();
+    yield put(hideNotification());
   }
 }
 function* loadDashboard() {
   while (true) {
-    const { id, type } = yield take([
+    const  payload  = yield take([
       LOAD_DASHBOARD,
       DASHBOARD_CLONED,
       DASHBOARD_SAVED
     ]);
+    const { id, type } = payload;
     try {
-      const { widgets, name, user, created, reassigned } = yield call(
+      const { widgets, name, user, insertTime, updateTime } = yield call(
         API.load,
         id
       );
       //We want to redirect the dashboard component to the url with the dashboard id if the
       //dashboard was just created
+      let created = false;
+      if (type === DASHBOARD_SAVED){
+        created = payload.created;
+      }
       const redirect =
         type === DASHBOARD_CLONED || (type === DASHBOARD_SAVED && created);
-      yield put(dashboardLoaded(id, widgets, name, user, redirect));
+      yield put(dashboardLoaded({id, name, user, redirect, insertTime, updateTime}, widgets));
     } catch (exception) {
       yield put(
         showNotification("ERROR", LOAD_DASHBOARD, "Dashboard not found")
@@ -147,16 +128,16 @@ function* saveDashboard() {
     const { id, widgets, name } = yield take(SAVE_DASHBOARD);
 
     try {
-      const { id: newId, created, reassigned } = yield call(
-        API.save,
-        id,
-        widgets,
-        name
-      );
-      //we only notify about saved dashboard if it was either also created or reassigned
-      if (created || reassigned) {
-        yield put(dashboardSaved(newId, created, reassigned));
+      const { id: newId, created } = yield call(API.save, id, widgets, name || "");
+      yield put(dashboardSaved(newId, created));
+      if (created){
+        yield put(
+          showNotification("INFO", DASHBOARD_CREATED, "Dashboard created")
+        );
+        yield delay();
+        yield put(hideNotification());
       }
+
     } catch (exception) {
       yield put(
         showNotification(

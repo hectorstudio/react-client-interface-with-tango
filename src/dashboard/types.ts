@@ -100,8 +100,12 @@ export interface Dashboards extends Array<Dashboard>{
 export interface Dashboard{
   id: string;
   name: string;
-  user?: string;
+  user: string;
+  redirect: boolean;
+  insertTime: Date;
+  updateTime: Date;
 }
+
 export interface InputMapping {
   [name: string]: any;
 }
