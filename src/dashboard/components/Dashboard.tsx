@@ -71,7 +71,7 @@ class Dashboard extends Component<Props> {
   public async componentDidUpdate(prevProps) {
     const { getRedirectRequest: redirectId} = this.props;
     const id = this.parseId();
-    if (redirectId && redirectId !== id) {
+    if (redirectId !== null && redirectId !== id) {
       // The state has been updated with a flag indicating that we should navigate
       // to a new dashboard.
       this.props.history.replace("?id=" + redirectId);

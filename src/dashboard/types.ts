@@ -8,6 +8,12 @@ export interface BaseInputDefinition<T> {
   required?: boolean;
 }
 
+export interface Notification{
+  level:string;
+  sourceAction:string;
+  msg:string;
+}
+
 export interface BooleanInputDefinition extends BaseInputDefinition<boolean> {
   type: "boolean";
 }

@@ -16,6 +16,8 @@ import {
   DASHBOARD_DELETED,
   DASHBOARD_CLONED,
   DASHBOARD_SAVED,
+  SHOW_NOTIFICATION,
+  HIDE_NOTIFICATION,
 } from "./actionTypes";
 import { IndexPath, Widget, Dashboards, Dashboard } from "../types";
 
@@ -119,7 +121,16 @@ export interface DashboardSavedAction extends Action{
   type: typeof DASHBOARD_SAVED;
   id: string;
   created: boolean;
+}
 
+export interface ShowNotificationAction extends Action{
+  type: typeof SHOW_NOTIFICATION
+  notification: Notification;
+}
+
+export interface HideNotificationAction extends Action{
+  type: typeof HIDE_NOTIFICATION
+  notification: Notification;
 }
 
 export type DashboardAction =
@@ -138,4 +149,6 @@ export type DashboardAction =
   | DashboardRenamedAction
   | DashboardDeletedAction
   | DashboardClonedAction
-  | DashboardSavedAction;
+  | DashboardSavedAction
+  | ShowNotificationAction
+  | HideNotificationAction;
