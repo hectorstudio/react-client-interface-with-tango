@@ -12,8 +12,8 @@ import {
   DASHBOARD_LOADED,
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
-  DASHBOARD_CLONED,
   DASHBOARD_SAVED,
+  DASHBOARD_CLONED,
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
@@ -38,7 +38,9 @@ export interface SelectedDashboardState {
   id: string;
   name: string;
   user: string;
-  redirectRequest: string;
+  redirect: boolean;
+  insertTime: Date | null,
+  updateTime: Date | null,
 }
 
 const initialState = {
@@ -48,7 +50,9 @@ const initialState = {
   id: "",
   name: "Untitled dashboard",
   user: "",
-  redirectRequest: "",
+  redirect: false,
+  insertTime: null,
+  updateTime: null,
 };
 
 export default function canvases(
@@ -148,16 +152,26 @@ export default function canvases(
       return { ...state, widgets };
     }
     case DASHBOARD_LOADED: {
-      const { widgets, id, name, user, redirectRequest } = action;
+      const { widgets, dashboard} = action;
+      const {id, name, user, redirect, insertTime, updateTime} = dashboard;
       const newWidgets = widgets.reduce((accum, widget) => {
         return { ...accum, [widget.id]: validate(widget) };
       }, {});
-      const redirect = redirectRequest ? id : "";
-      return { ...state, widgets: newWidgets, id, name, user, redirectRequest: redirect };
+
+      return { ...state, widgets: newWidgets, id, name, user, redirect, insertTime, updateTime };
     }
     case DASHBOARD_RENAMED:{
       const {dashboard} = action;
       return {...state, name: dashboard.name}
+    }
+    case DASHBOARD_DELETED:{
+      const {id} = action;
+      if (id === state.id){
+        // Clear the selectedDashboard state if we deleted the selected dashboard
+        return {...state, id: "", name: "", widgets:{}, selectedIds: [], redirect: true}
+      }else{
+        return state;
+      }
     }
     default:
       return state;
