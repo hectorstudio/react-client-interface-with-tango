@@ -51,25 +51,12 @@
     background-image: linear-gradient(-180deg,#34d058,#23bd46 90%);
 }
 .dashboard-menu .notification-msg{
-    position: relative;
-    padding: 0.4em 1.25em;
-    border: 1px solid transparent;
-    border-radius: .25rem;
-    margin-left: 1em;
-}
-
-.dashboard-menu .INFO{
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #92d6a2;
-}
-.dashboard-menu .WARNING{
     color: #856404;
     background-color: #fff3cd;
-    border-color: #e0ce95;
-}
-.dashboard-menu .ERROR{
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f1b6bc;
+    border-color: #ffeeba;
+    position: relative;
+    padding: .5em 1em;
+    margin-left: 1em;
+    border: 1px solid transparent;
+    border-radius: .25em;
 }

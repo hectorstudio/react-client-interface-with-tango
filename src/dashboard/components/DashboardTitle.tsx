@@ -23,7 +23,7 @@ interface Props {
     oldName: string,
     inputRef: any
   ) => void;
-  onBlur: (dashboard: Dashboard, oldName:string) => void;
+  onBlur: (dashboard: Dashboard, oldName: string) => void;
   onClone: (id: string, newUser: string) => void;
   loggedInUser: string;
   notification: Notification;
@@ -64,9 +64,7 @@ class DashboardTitle extends Component<Props, State> {
     if (!loggedInUser) {
       return (
         <div className="dashboard-menu">
-          <span className="notification-msg INFO">
-            You need to be logged in to save your dashboard
-          </span>
+          <span style={{fontSize: "1.2em", marginLeft: "2em"}}>{name}</span>
         </div>
       );
     }
@@ -95,18 +93,21 @@ class DashboardTitle extends Component<Props, State> {
             )
           }
           onBlur={() =>
-            this.props.onBlur({
-              id,
-              name,
-              user: owner,
-              redirect: false,
-              insertTime,
-              updateTime
-            }, oldName)
+            this.props.onBlur(
+              {
+                id,
+                name,
+                user: owner,
+                redirect: false,
+                insertTime,
+                updateTime
+              },
+              oldName
+            )
           }
         />
         {notificationMsg && (
-          <span className={"notification-msg " + level}>{notificationMsg}</span>
+          <span className={"notification-msg "}>{notificationMsg}</span>
         )}
         {clonable && (
           <span style={{ fontStyle: "italic" }}>
@@ -136,7 +137,7 @@ function mapDispatchToProps(dispatch) {
   return {
     onBlur: (dashboard: Dashboard, oldName: string) => {
       const { id, name } = dashboard;
-      if (oldName === name){
+      if (oldName === name) {
         return;
       }
       if (!dashboard.id) {

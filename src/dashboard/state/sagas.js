@@ -154,6 +154,6 @@ function* saveDashboard() {
 
 function delay() {
   return new Promise(function(resolve, reject) {
-    setTimeout(resolve, 5000);
+    setTimeout(resolve, 3000);
   });
 }
