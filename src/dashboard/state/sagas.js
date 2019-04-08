@@ -143,7 +143,7 @@ function* saveDashboard() {
         showNotification(
           "ERROR",
           SAVE_DASHBOARD,
-          "You cannot edit this dashboad"
+          "You cannot edit this dashboard"
         )
       );
       yield delay();

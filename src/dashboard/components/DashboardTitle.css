@@ -8,7 +8,7 @@
     height: 2em;
     font-size: 1.2em;
     box-sizing: border-box;
-    width: 30em;
+    width: 20em;
     margin-left: 2em;
     cursor: text;
 }
@@ -59,4 +59,9 @@
     margin-left: 1em;
     border: 1px solid transparent;
     border-radius: .25em;
+}
+.dashboard-menu .ERROR{
+    color: #850404;
+    background-color: #ffcdcd;
+    border-color: #ffbaba;
 }

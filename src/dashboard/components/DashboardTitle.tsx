@@ -106,8 +106,8 @@ class DashboardTitle extends Component<Props, State> {
             )
           }
         />
-        {notificationMsg && (
-          <span className={"notification-msg "}>{notificationMsg}</span>
+        {notificationMsg && !clonable && (
+          <span className={`notification-msg " + ${level}`}>{notificationMsg}</span>
         )}
         {clonable && (
           <span style={{ fontStyle: "italic" }}>
