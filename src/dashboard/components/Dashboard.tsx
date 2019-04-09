@@ -19,8 +19,7 @@ import {
   getCanvases,
   getSelectedCanvas,
   getSelectedWidgets,
-  getSelectedDashboard,
-  getRedirect
+  getSelectedDashboard
 } from "../state/selectors";
 
 import { toggleMode } from "../state/actionCreators";
@@ -58,7 +57,7 @@ class Dashboard extends Component<Props> {
 
   public async componentDidMount() {
     const redirectId = this.props.selectedDashboard.redirect;
-    const id = redirectId  ? this.props.selectedDashboard.id : this.parseId();
+    const id = redirectId ? this.props.selectedDashboard.id : this.parseId();
     if (id) {
       this.props.loadDashboard(id);
     }
@@ -66,17 +65,21 @@ class Dashboard extends Component<Props> {
 
   public async componentDidUpdate(prevProps) {
     // update if url currently is missing and the selcted one has one?
-    const redirectId = this.props.selectedDashboard.redirect;
+    const redirect = this.props.selectedDashboard.redirect;
     const currentId = this.props.selectedDashboard.id;
     const id = this.parseId();
 
-    if (redirectId) {
+    if (redirect && currentId !== id) {
       // The state has been updated with a flag indicating that we should navigate
       // to a new dashboard.
       this.props.history.replace("?id=" + this.props.selectedDashboard.id);
       return;
     }
-    if (JSON.stringify(prevProps.widgets) === JSON.stringify((this.props.widgets))) {
+    const justLoggedInOnAnonymous = this.props.isLoggedIn && this.props.widgets.length > 0 && !id
+
+    if (
+      JSON.stringify(prevProps.widgets) === JSON.stringify(this.props.widgets) && !justLoggedInOnAnonymous
+    ) {
       return;
     }
     if (this.props.isLoggedIn) {
@@ -144,7 +147,6 @@ function mapStateToProps(state: RootState) {
   return {
     widgets: getWidgets(state),
     selectedDashboard: getSelectedDashboard(state),
-    getRedirect: getRedirect(state),
     selectedWidgets: getSelectedWidgets(state),
     mode: getMode(state),
     selectedCanvas: getSelectedCanvas(state),
