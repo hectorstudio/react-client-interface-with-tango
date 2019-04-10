@@ -53,8 +53,8 @@
     "@types/redux-logger": "^3.0.7",
     "react-scripts-ts": "2.16.0",
     "redux-logger": "^3.0.6",
-    "tslint": "^5.13.0",
-    "typescript": "^2.9.2"
+    "tslint": "^5.15.0",
+    "typescript": "^3.4.3"
   },
   "proxy": {
     "/kitslab/socket": {
