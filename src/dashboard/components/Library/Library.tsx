@@ -7,8 +7,8 @@ import DashboardSettings from "../DashboardSettings";
 
 
 interface Props{
-  selectedTab: string;
-  onTabChange: (x:string) => void;
+  selectedTab: "dashboards" | "library";
+  onTabChange: (x: "dashboards" | "library") => void;
 }
 
 export default class Library extends Component<Props> {
