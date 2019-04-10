@@ -4,6 +4,7 @@ before_script:
 build_image_develop:
   stage: build
   script:
+    - touch /tmp/test.txt
     - docker build . -t docker.maxiv.lu.se/webjive-frontend-test
     - docker push docker.maxiv.lu.se/webjive-frontend-test
   only:
