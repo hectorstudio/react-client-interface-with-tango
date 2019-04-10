@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import {
   getSelectedDashboard,
   getUserName,
-  getNotification
+  getNotification,
+  getMode
 } from "../state/selectors";
 import { RootState } from "../state/reducers";
 import { Dashboard } from "../types";
@@ -27,6 +28,7 @@ interface Props {
   onClone: (id: string, newUser: string) => void;
   loggedInUser: string;
   notification: Notification;
+  mode: "edit" | "run";
 }
 interface State {
   name: string;
@@ -49,12 +51,12 @@ class DashboardTitle extends Component<Props, State> {
       user: owner,
       name: oldName,
       insertTime,
-      updateTime
+      updateTime,
     } = this.props.dashboard;
     const { name } = this.state;
-    const { loggedInUser } = this.props;
+    const { loggedInUser, mode } = this.props;
     const isMine = loggedInUser === owner;
-    const editable = isMine || !owner;
+    const editable = (isMine || !owner) && mode !== "run";
     const clonable = !isMine && owner;
     const {
       level,
@@ -64,7 +66,7 @@ class DashboardTitle extends Component<Props, State> {
     if (!loggedInUser) {
       return (
         <div className="dashboard-menu">
-          <span style={{fontSize: "1.2em", marginLeft: "2em"}}>{name}</span>
+          <span style={{marginLeft: "0.5em"}}>{name !== "Untitled dashboard" ? name : ""}</span>
           <span className="notification-msg ">You need to be logged in to save dashboards</span>
         </div>
       );
@@ -130,7 +132,8 @@ function mapStateToProps(state: RootState) {
   return {
     dashboard: getSelectedDashboard(state),
     loggedInUser: getUserName(state),
-    notification: getNotification(state)
+    notification: getNotification(state),
+    mode: getMode(state)
   };
 }
 
