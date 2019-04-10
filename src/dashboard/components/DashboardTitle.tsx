@@ -65,6 +65,7 @@ class DashboardTitle extends Component<Props, State> {
       return (
         <div className="dashboard-menu">
           <span style={{fontSize: "1.2em", marginLeft: "2em"}}>{name}</span>
+          <span className="notification-msg ">You need to be logged in to save dashboards</span>
         </div>
       );
     }
