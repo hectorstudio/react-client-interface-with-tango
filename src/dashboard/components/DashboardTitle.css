@@ -4,12 +4,10 @@
 .dashboard-menu input[type="text"]{
     background: rgba(0,0,0,0);
     border: none;
-    padding: .375rem .75rem;
-    height: 2em;
-    font-size: 1.2em;
+    padding: .25rem .5rem;
     box-sizing: border-box;
     width: 20em;
-    margin-left: 2em;
+    margin-left: 0.5em;
     cursor: text;
 }
 
@@ -55,8 +53,8 @@
     background-color: #fff3cd;
     border-color: #ffeeba;
     position: relative;
-    padding: .5em 1em;
-    margin-left: 1em;
+    padding: .4em 0.8em;
+    margin-left: 0.5em;
     border: 1px solid transparent;
     border-radius: .25em;
 }
