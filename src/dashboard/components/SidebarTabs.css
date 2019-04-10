@@ -7,14 +7,15 @@
     cursor: pointer;
     border: 1px solid #ccc;
     padding: 0.25em 0.4em;
-    background: #eee;
     color: #969696;
+    background: #fff;
+
     width: 50%;
     text-align: center;
 }
 .sidebar-tabs .toggle-button:hover{
     color: #0087db;
-    background: #f0f0f0;
+    background: #eee;
 }
 
 .sidebar-tabs .toggle-button-left{
@@ -28,12 +29,13 @@
     border-left: 0;
 }
 .sidebar-tabs .toggle-button-selected{
-    background: #fff;
+    background: #eee;
     color: #000;
     cursor: default;
+    box-shadow: inset 0px 0px 7px rgba(0,0,0,0.1);
 }
 
 .sidebar-tabs .toggle-button-selected:hover{
     color: #000;
-    background: #fff;
+    background: #eee;
 }
