@@ -1,0 +1,29 @@
+.sardana-motor .title{
+    font-size: 1.2em;
+}
+.sardana-motor .menu{
+    border-bottom: 1px solid #eee;
+}
+.sardana-motor .btn-stop{
+    background: none;
+    border: none;
+    color: #0087db;
+    cursor: pointer;
+}
+.sardana-motor .btn-stop:hover{
+    text-decoration: underline;
+}
+.sardana-motor .row{
+    padding: 0.2em 1em;
+    font-size: 1.1em;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.sardana-motor .border{
+    border: 1px solid #eee;
+    padding: 0em 0.5em 0.2em 0.5em;
+    border-radius: 0.2em;
+}

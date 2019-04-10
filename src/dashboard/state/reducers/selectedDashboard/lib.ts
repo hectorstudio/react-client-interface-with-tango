@@ -140,8 +140,9 @@ function inputIsValid(definition: InputDefinition, value: any): boolean {
   }
 
   if (definition.type === "command") {
-    const { device, command } = value;
-    return device != null && command != null;
+    const resolvedDevice = value.device || definition.device;
+    const resolvedAttribute = value.attribute || definition.command;
+    return resolvedDevice != null && resolvedAttribute != null;
   }
 
   if (definition.type === "number") {
