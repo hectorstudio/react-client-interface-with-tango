@@ -26,12 +26,12 @@ const MultipleSelection = () => (
 
 interface Props {
   mode: "run" | "edit";
-  selectedTab: string;
+  selectedTab: "dashboards" | "library";
   tangoDB: string;
   selectedWidgets: Widget[];
 }
 interface State{
-  selectedTab: string;
+  selectedTab: "dashboards" | "library";
 }
 
 export default class Sidebar extends Component<Props, State> {

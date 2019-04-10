@@ -115,7 +115,7 @@ class Dashboard extends Component<Props> {
           <div className={classNames("CanvasArea", mode)}>{canvasContents}</div>
           <Sidebar
             mode={mode}
-            selectedTab="dashboards"
+            selectedTab="library"
             tangoDB={tangoDB}
             selectedWidgets={selectedWidgets}
           />
