@@ -102,8 +102,8 @@ export interface Dashboard{
   name: string;
   user: string;
   redirect: boolean;
-  insertTime: Date;
-  updateTime: Date;
+  insertTime: Date | null;
+  updateTime: Date | null;
 }
 
 export interface InputMapping {
