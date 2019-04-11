@@ -65,9 +65,6 @@ function* renameDashboard() {
       dashboard.name
     );
     yield put(dashboardRenamed({ id, name: dashboard.name }));
-    yield put(showNotification("INFO", DASHBOARD_RENAMED, "Dashboard renamed"));
-    yield delay();
-    yield put(hideNotification());
   }
 }
 function* deleteDashboard() {

@@ -108,6 +108,7 @@ class DashboardTitle extends Component<Props, State> {
               oldName
             )
           }
+          onFocus={() => this.inputRef.select()}
         />
         {notificationMsg && !clonable && (
           <span className={`notification-msg " + ${level}`}>{notificationMsg}</span>
