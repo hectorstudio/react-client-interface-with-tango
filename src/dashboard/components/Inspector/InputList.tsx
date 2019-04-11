@@ -4,7 +4,7 @@ import {
   InputDefinitionMapping,
   InputMapping,
   IndexPath
-} from "src/dashboard/types";
+} from "../../types";
 
 import NumericInput from "./NumericInput";
 import AttributeSelect from "./AttributeSelect";

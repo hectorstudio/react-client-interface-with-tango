@@ -5,9 +5,9 @@ import {
   InputDefinitionMapping,
   InputMapping,
   InputDefinition
-} from "src/dashboard/types";
-import { defaultInputs } from "src/dashboard/utils";
-import { definitionForWidget } from "src/dashboard/widgets";
+} from "../../../types";
+import { defaultInputs } from "../../../utils";
+import { definitionForWidget } from "../../../widgets";
 
 export function move(widget: Widget, dx: number, dy: number) {
   const { x, y } = widget;

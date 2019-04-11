@@ -1,5 +1,5 @@
 import { SHOW_NOTIFICATION, HIDE_NOTIFICATION } from "../actionTypes";
-import { Notification } from "src/dashboard/types";
+import { Notification } from "../../types";
 import { DashboardAction } from "../actions";
 
 export interface NotificationsState {

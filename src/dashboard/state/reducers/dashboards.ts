@@ -1,6 +1,6 @@
 import { DASHBOARDS_LOADED, DASHBOARD_RENAMED } from "../actionTypes";
 import { DashboardAction } from "../actions";
-import { Dashboards, Dashboard } from "src/dashboard/types";
+import { Dashboards, Dashboard } from "../../types";
 
 export interface DashboardsState {
   dashboards: Dashboards;
