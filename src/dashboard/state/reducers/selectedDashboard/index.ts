@@ -1,4 +1,4 @@
-import { Widget } from "../../../types";
+import { Widget, Dashboard } from "../../../types";
 
 import {
   ADD_WIDGET,
@@ -12,8 +12,6 @@ import {
   DASHBOARD_LOADED,
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
-  DASHBOARD_SAVED,
-  DASHBOARD_CLONED,
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
@@ -32,15 +30,9 @@ import {
 import { definitionForType, definitionForWidget } from "../../../widgets";
 import { defaultInputs } from "../../../utils";
 
-export interface SelectedDashboardState {
-  selectedIds: string[];
+export interface SelectedDashboardState extends Dashboard {
   widgets: Record<string, Widget>;
-  id: string;
-  name: string;
-  user: string;
-  redirect: boolean;
-  insertTime: Date | null,
-  updateTime: Date | null,
+  selectedIds: string[];
 }
 
 const initialState = {
