@@ -4,8 +4,8 @@ import {
   Widget,
   InputDefinition,
   AttributeInputDefinition
-} from "src/dashboard/types";
-import { definitionForWidget } from "src/dashboard/widgets";
+} from "../../types";
+import { definitionForWidget } from "../../widgets";
 
 const numericTypes = [
   "DevDouble",

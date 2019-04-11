@@ -1,5 +1,5 @@
 import AttributePlot from "./AttributePlot";
-import { WidgetDefinition } from "src/dashboard/types";
+import { WidgetDefinition } from "../../../dashboard/types";
 
 const definition: WidgetDefinition = {
   type: "ATTRIBUTE_PLOT",
