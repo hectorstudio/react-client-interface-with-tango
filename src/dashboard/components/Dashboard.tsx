@@ -30,7 +30,7 @@ import "./Dashboard.css";
 import ModeToggleButton from "./ModeToggleButton";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
-import { getIsLoggedIn } from "src/shared/user/state/selectors";
+import { getIsLoggedIn } from "../../shared/user/state/selectors";
 
 interface Match {
   tangoDB: string;

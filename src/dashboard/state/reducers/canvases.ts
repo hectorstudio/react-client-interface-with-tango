@@ -1,4 +1,4 @@
-import { Canvas } from "src/dashboard/types";
+import { Canvas } from "../../types";
 
 export interface CanvasesState {
   [id: string]: Canvas;
