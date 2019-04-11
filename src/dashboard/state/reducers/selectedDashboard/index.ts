@@ -29,8 +29,8 @@ import {
   nextId
 } from "./lib";
 
-import { definitionForType, definitionForWidget } from "src/dashboard/widgets";
-import { defaultInputs } from "src/dashboard/utils";
+import { definitionForType, definitionForWidget } from "../../../widgets";
+import { defaultInputs } from "../../../utils";
 
 export interface SelectedDashboardState {
   selectedIds: string[];

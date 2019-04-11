@@ -1,6 +1,5 @@
 import { createSelector } from "reselect";
 import { RootState } from "../reducers";
-import { Dashboard } from "src/dashboard/types";
 
 function getSelectedDashboardState(state: RootState) {
   return state.selectedDashboard;

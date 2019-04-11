@@ -1,7 +1,7 @@
 import React from "react";
 import Plotly from "react-plotly.js";
 
-import { WidgetDefinition, AttributeInput } from "src/dashboard/types";
+import { WidgetDefinition, AttributeInput } from "../types";
 import { WidgetProps } from "./types";
 
 const definition: WidgetDefinition = {
