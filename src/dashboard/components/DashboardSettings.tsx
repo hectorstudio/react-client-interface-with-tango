@@ -46,7 +46,7 @@ class DashboardSettings extends Component<Props, State> {
     return (
       <div className="dashboard-settings">
         <div className="dashboard-row">
-          <div>Your dashboards</div>
+          <div/>
           <div>
             {" "}
             <a
