@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 interface Props {
   selectedTab: string;
-  onTabChange: (newVal:string) => void;
+  onTabChange: (newVal: "library" | "dashboards") => void;
 }
 import "./SidebarTabs.css";
 

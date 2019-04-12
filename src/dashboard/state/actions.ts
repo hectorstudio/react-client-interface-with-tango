@@ -19,7 +19,7 @@ import {
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
 } from "./actionTypes";
-import { IndexPath, Widget, Dashboards, Dashboard } from "../types";
+import { IndexPath, Widget, Dashboard } from "../types";
 
 export interface AddWidgetAction extends Action {
   type: typeof ADD_WIDGET;
@@ -90,7 +90,7 @@ export interface PreloadDashboardAction extends Action {
 
 export interface DashboardsLoadedAction extends Action {
   type: typeof DASHBOARDS_LOADED;
-  dashboards: Dashboards;
+  dashboards: Dashboard[];
 }
 
 export interface DashboardRenamedAction extends Action{
