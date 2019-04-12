@@ -17,7 +17,7 @@ function parseJSONObject(str) {
 }
 
 function looksLikeMonospace(str) {
-  return str.match(/(\n  )|\t|    /);
+  return str.match(/(\n {2})|\t| {4}/);
 }
 
 function isNumeric(datatype) {

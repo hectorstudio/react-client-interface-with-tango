@@ -88,7 +88,6 @@ class Logs extends Component {
   }
   reload() {
     const { limit } = this.state;
-    const { device } = this.props;
     this.props.onFetchLoggedActions(limit);
   }
   onLimitChange(event) {
