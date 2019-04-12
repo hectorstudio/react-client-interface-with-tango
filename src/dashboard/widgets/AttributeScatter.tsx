@@ -1,5 +1,11 @@
 import React from "react";
-import Plotly from "react-plotly.js";
+
+import PlotlyCore from "plotly.js/lib/core";
+import PlotlyScatter from "plotly.js/lib/scatter";
+import createPlotlyComponent from "react-plotly.js/factory";
+
+PlotlyCore.register([PlotlyScatter]);
+const Plotly = createPlotlyComponent(PlotlyCore);
 
 import { WidgetDefinition, AttributeInput } from "../types";
 import { WidgetProps } from "./types";
