@@ -42,8 +42,12 @@ export const getDashboards = createSelector(
 
 export const getSelectedDashboard = createSelector(
   getSelectedDashboardState,
-  ({widgets, ...dashboard}) => dashboard
+  state => {
+    const { selectedIds, widgets, ...dashboard } = state;
+    return dashboard;
+  }
 );
+
 const getWidgetsObject = createSelector(
   getSelectedDashboardState,
   state => state.widgets
