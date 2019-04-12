@@ -1,4 +1,4 @@
-import { take, fork, put, call, throttle } from "redux-saga/effects";
+import { take, fork, put, call } from "redux-saga/effects";
 import createUserSaga from "../../shared/user/state/saga";
 import * as API from "../dashboardRepo";
 import {
@@ -81,7 +81,7 @@ function* deleteDashboard() {
 function* cloneDashboard() {
   while (true) {
     const { id } = yield take(CLONE_DASHBOARD);
-    const { id: newId, created } = yield call(API.cloneDashboard, id);
+    const { id: newId } = yield call(API.cloneDashboard, id);
     yield put(dashboardCloned(newId));
     yield put(showNotification("INFO", DASHBOARD_CLONED, "Dashboard cloned"));
     yield delay();
