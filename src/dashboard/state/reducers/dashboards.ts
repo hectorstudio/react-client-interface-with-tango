@@ -1,9 +1,9 @@
-import { DASHBOARDS_LOADED, DASHBOARD_RENAMED } from "../actionTypes";
+import { DASHBOARDS_LOADED } from "../actionTypes";
 import { DashboardAction } from "../actions";
-import { Dashboards, Dashboard } from "../../types";
+import { Dashboard } from "../../types";
 
 export interface DashboardsState {
-  dashboards: Dashboards;
+  dashboards: Dashboard[];
 }
 
 const initialState: DashboardsState = {

@@ -6,9 +6,8 @@ import "./DashboardSettings.css";
 import { getDashboards, getSelectedDashboard } from "../state/selectors";
 import { RootState } from "../state/reducers";
 import { deleteDashboard } from "../state/actionCreators";
-import { Route, Switch, Redirect, Link } from "react-router-dom";
-import queryString from "query-string";
 import DeleteDashboardModal from "./modals/DeleteDashboardModal";
+import { Dashboard } from "../types";
 
 interface Props {
   dashboards: Dashboard[];
@@ -16,14 +15,11 @@ interface Props {
   selectedDashboard: Dashboard;
   onDeleteProperty: (id: string) => void;
 }
+
 interface State {
   deleteDashboardModalId: string;
 }
 
-interface Dashboard {
-  name: string;
-  id: string;
-}
 class DashboardSettings extends Component<Props, State> {
   constructor(props) {
     super(props);

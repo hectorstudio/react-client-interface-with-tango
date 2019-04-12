@@ -19,9 +19,7 @@ import {
   DASHBOARD_SAVED,
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
-
 } from "./actionTypes";
-import { Action } from "redux";
 
 import {
   AddWidgetAction,
@@ -33,7 +31,8 @@ import {
   SelectWidgetsAction,
   DashboardLoadedAction
 } from "./actions";
-import { Widget, Dashboards, Dashboard, Notification } from "../types";
+
+import { Widget, Dashboard } from "../types";
 
 export function addWidget(
   x: number,
@@ -78,7 +77,7 @@ export function toggleMode(): ToggleModeAction {
   return { type: TOGGLE_MODE };
 }
 
-export function dashboardsLoaded(dashboards:Dashboards){
+export function dashboardsLoaded(dashboards: Dashboard[]){
   return {type: DASHBOARDS_LOADED, dashboards};
 }
 
