@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import './AttributeInput.css';
 import { connect } from 'react-redux';
-import { getIsLoggedIn } from 'src/shared/user/state/selectors';
+import { getIsLoggedIn } from "../../../../../shared/user/state/selectors";
 
 const ENTER_KEY = 13;
 const MOVING = 3;
