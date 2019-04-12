@@ -1,6 +1,8 @@
 import React from 'react';
-import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 import PropTypes from 'prop-types'
+
+// Spectrum visualisation is disabled for performance reasons until a more sustainable solution is found. For now, skip importing from reacharts in order to reduce bundle size.
+// import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 
 import AttributeInput from '../AttributeInput/AttributeInput';
 import { JSONTree } from './JSONTree';
@@ -116,20 +118,22 @@ const SpectrumValueDisplay = ({value, datatype}) => {
     return <DevStringValueDisplay value={value}/>;
   }
 
-  const values = datatype === 'DevBoolean'
-    ? value.map(val => val ? 1 : 0)
-    : value;
-  const data = values.map(value => ({value}));
-  const lineType = datatype === 'DevBoolean' ? 'step' : 'linear';
+  return null;
 
-  return (
-    <LineChart data={data} width={400} height={300}>
-      <YAxis/>
-      <Tooltip/>
-      <CartesianGrid stroke="#f5f5f5"/>
-      <Line dot={false} isAnimationActive={false} type={lineType} dataKey="value" stroke="#ff7300" yAxisId={0}/>
-    </LineChart>
-  );
+  // const values = datatype === 'DevBoolean'
+  //   ? value.map(val => val ? 1 : 0)
+  //   : value;
+  // const data = values.map(value => ({value}));
+  // const lineType = datatype === 'DevBoolean' ? 'step' : 'linear';
+
+  // return (
+  //   <LineChart data={data} width={400} height={300}>
+  //     <YAxis/>
+  //     <Tooltip/>
+  //     <CartesianGrid stroke="#f5f5f5"/>
+  //     <Line dot={false} isAnimationActive={false} type={lineType} dataKey="value" stroke="#ff7300" yAxisId={0}/>
+  //   </LineChart>
+  // );
 };
 
 SpectrumValueDisplay.propTypes = {
