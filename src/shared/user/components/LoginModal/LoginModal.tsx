@@ -16,7 +16,7 @@ interface IState {
 }
 
 export default class LoginModal extends Component<IProps, IState> {
-  public usernameInput: HTMLInputElement;
+  public usernameInput?: HTMLInputElement;
 
   constructor(props) {
     super(props);
@@ -33,7 +33,9 @@ export default class LoginModal extends Component<IProps, IState> {
   }
 
   public componentDidMount() {
-    this.usernameInput.focus();
+    if (this.usernameInput) {
+      this.usernameInput.focus();
+    }
   }
 
   public render() {
