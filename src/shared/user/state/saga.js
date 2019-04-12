@@ -66,7 +66,7 @@ function* periodicallyExtendLogin() {
     yield take([PRELOAD_USER_SUCCESS, LOGIN_SUCCESS]);
 
     while (true) {
-      const { wait, logout } = yield race({
+      const { logout } = yield race({
         wait: call(delay, interval),
         logout: take(LOGOUT_SUCCESS)
       });
