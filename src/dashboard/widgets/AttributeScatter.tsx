@@ -1,9 +1,9 @@
 import React from "react";
 
+// In order to avoid importing the entire plotly.js library. Note that this mutates the global PlotlyCore object.
 import PlotlyCore from "plotly.js/lib/core";
 import PlotlyScatter from "plotly.js/lib/scatter";
 import createPlotlyComponent from "react-plotly.js/factory";
-
 PlotlyCore.register([PlotlyScatter]);
 const Plotly = createPlotlyComponent(PlotlyCore);
 
