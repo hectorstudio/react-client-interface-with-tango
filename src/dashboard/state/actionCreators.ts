@@ -29,7 +29,8 @@ import {
   SelectCanvasAction,
   ToggleModeAction,
   SelectWidgetsAction,
-  DashboardLoadedAction
+  DashboardLoadedAction,
+  DashboardRenamedAction
 } from "./actions";
 
 import { Widget, Dashboard } from "../types";
@@ -65,8 +66,8 @@ export function selectWidgets(ids: string[]): SelectWidgetsAction {
   return { type: SELECT_WIDGETS, ids };
 }
 
-export function deleteWidget(id: string): DeleteWidgetAction {
-  return { type: DELETE_WIDGET, id };
+export function deleteWidget(): DeleteWidgetAction {
+  return { type: DELETE_WIDGET };
 }
 
 export function selectCanvas(id: string): SelectCanvasAction {
@@ -84,7 +85,7 @@ export function dashboardsLoaded(dashboards: Dashboard[]){
 export function renameDashboard(dashboard:Dashboard){
   return {type: RENAME_DASHBOARD, dashboard}
 }
-export function dashboardRenamed(dashboard:Dashboard){
+export function dashboardRenamed(dashboard:Dashboard): DashboardRenamedAction {
   return {type: DASHBOARD_RENAMED, dashboard};
 }
 export function deleteDashboard(id:string){
