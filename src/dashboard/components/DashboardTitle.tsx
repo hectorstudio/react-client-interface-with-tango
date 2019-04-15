@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./DashboardTitle.css";
-import { connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 import {
   getSelectedDashboard,
   getUserName,
@@ -12,106 +12,82 @@ import { Dashboard } from "../types";
 import {
   renameDashboard,
   cloneDashboard,
-  saveDashboard
 } from "../state/actionCreators";
 import { Notification } from "../types";
+import { DashboardAction } from "../state/actions";
 
 interface Props {
   dashboard: Dashboard;
-  onTitleChange: (
-    event: React.KeyboardEvent<HTMLInputElement>,
-    dashboard: Dashboard,
-    oldName: string,
-    inputRef: any
-  ) => void;
-  onBlur: (dashboard: Dashboard, oldName: string) => void;
-  onClone: (id: string, newUser: string) => void;
   loggedInUser: string;
   notification: Notification;
   mode: "edit" | "run";
+  onTitleChange: (id: string, name: string) => void;
+  onClone: (id: string, newUser: string) => void;
 }
+
 interface State {
-  name: string;
+  wipName: string | null;
 }
+
 class DashboardTitle extends Component<Props, State> {
   public inputRef: any;
 
   constructor(props) {
     super(props);
-    this.state = { name: "" };
+    this.state = { wipName: null };
   }
+
   public componentWillReceiveProps(nextProps) {
     if (nextProps.dashboard !== this.props.dashboard) {
-      this.setState({ name: nextProps.dashboard.name });
+      this.setState({ wipName: null });
     }
   }
+
   public render() {
-    const {
-      id,
-      user: owner,
-      name: oldName,
-      insertTime,
-      updateTime,
-    } = this.props.dashboard;
-    const { name } = this.state;
-    const { loggedInUser, mode } = this.props;
+    const { dashboard, loggedInUser, mode } = this.props;
+    const { id, user: owner } = dashboard;
+
     const isMine = loggedInUser === owner;
     const editable = (isMine || !owner) && mode !== "run";
     const clonable = !isMine && owner;
-    const {
-      level,
-      sourceAction,
-      msg: notificationMsg
-    } = this.props.notification;
+    const { level, msg: notificationMsg } = this.props.notification;
+
     if (!loggedInUser) {
       return (
         <div className="dashboard-menu">
-          <span style={{marginLeft: "0.5em"}}>{name !== "Untitled dashboard" ? name : ""}</span>
-          <span className="notification-msg ">You need to be logged in to save dashboards</span>
+          <span style={{ marginLeft: "0.5em" }}>{dashboard.name}</span>
+          <span className="notification-msg ">
+            You need to be logged in to save dashboards
+          </span>
         </div>
       );
     }
+
+    const { wipName } = this.state;
+    const name =
+      wipName != null ? wipName : dashboard.name || "Untitled dashboard";
 
     return (
       <div className="dashboard-menu">
         <input
           ref={ref => (this.inputRef = ref)}
           type="text"
-          value={name || "Untitled dashboard"}
+          value={name}
           disabled={!editable}
-          onChange={e => this.setState({ name: e.target.value })}
-          onKeyPress={e =>
-            this.props.onTitleChange(
-              e,
-              {
-                id,
-                name,
-                user: owner,
-                redirect: false,
-                insertTime,
-                updateTime
-              },
-              oldName,
-              this.inputRef
-            )
-          }
-          onBlur={() =>
-            this.props.onBlur(
-              {
-                id,
-                name,
-                user: owner,
-                redirect: false,
-                insertTime,
-                updateTime
-              },
-              oldName
-            )
-          }
+          onChange={e => this.setState({ wipName: e.target.value })}
+          onKeyPress={e => {
+            if (e.key === "Enter" && wipName != null) {
+              this.props.onTitleChange(id, wipName);
+              e.currentTarget.blur();
+            }
+          }}
+          onBlur={() => this.setState({ wipName: null })}
           onFocus={() => this.inputRef.select()}
         />
         {notificationMsg && !clonable && (
-          <span className={`notification-msg " + ${level}`}>{notificationMsg}</span>
+          <span className={`notification-msg " + ${level}`}>
+            {notificationMsg}
+          </span>
         )}
         {clonable && (
           <span style={{ fontStyle: "italic" }}>
@@ -138,41 +114,13 @@ function mapStateToProps(state: RootState) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Dispatch<DashboardAction>) {
   return {
-    onBlur: (dashboard: Dashboard, oldName: string) => {
-      const { id, name } = dashboard;
-      if (oldName === name) {
-        return;
-      }
-      if (!dashboard.id) {
-        dispatch(saveDashboard(id, name, []));
-      } else {
-        return dispatch(renameDashboard(dashboard));
-      }
-    },
-    onTitleChange: (
-      e: React.KeyboardEvent<HTMLInputElement>,
-      dashboard: Dashboard,
-      oldName: string,
-      inputRef: any
-    ) => {
-      if (e.key !== "Enter") {
-        return;
-      }
-      inputRef.blur();
-      if (oldName === dashboard.name) {
-        return;
-      }
-      if (!dashboard.id) {
-        const { id, name } = dashboard;
-        dispatch(saveDashboard(id, name, []));
-      } else {
-        return dispatch(renameDashboard(dashboard));
-      }
+    onTitleChange: (id: string, name: string) => {
+      dispatch(renameDashboard(id, name));
     },
     onClone: (id: string, newUser: string) => {
-      return dispatch(cloneDashboard(id, newUser));
+      dispatch(cloneDashboard(id, newUser));
     }
   };
 }
