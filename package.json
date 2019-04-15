@@ -38,7 +38,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "test": "react-scripts test"
   },
   "devDependencies": {
     "@types/minimatch": "^3.0.3",

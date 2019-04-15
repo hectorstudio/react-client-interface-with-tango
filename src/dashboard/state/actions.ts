@@ -52,7 +52,6 @@ export interface SelectWidgetsAction extends Action {
 
 export interface DeleteWidgetAction extends Action {
   type: typeof DELETE_WIDGET;
-  id: string;
 }
 
 export interface SetInputAction extends Action {
