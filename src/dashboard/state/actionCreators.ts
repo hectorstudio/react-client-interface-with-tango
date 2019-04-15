@@ -30,7 +30,9 @@ import {
   ToggleModeAction,
   SelectWidgetsAction,
   DashboardLoadedAction,
-  DashboardRenamedAction
+  DashboardRenamedAction,
+  SaveDashboardAction,
+  DashboardSavedAction
 } from "./actions";
 
 import { Widget, Dashboard } from "../types";
@@ -82,11 +84,11 @@ export function dashboardsLoaded(dashboards: Dashboard[]){
   return {type: DASHBOARDS_LOADED, dashboards};
 }
 
-export function renameDashboard(dashboard:Dashboard){
-  return {type: RENAME_DASHBOARD, dashboard}
+export function renameDashboard(id: string, name: string) {
+  return { type: RENAME_DASHBOARD, id, name };
 }
-export function dashboardRenamed(dashboard:Dashboard): DashboardRenamedAction {
-  return {type: DASHBOARD_RENAMED, dashboard};
+export function dashboardRenamed(id: string, name: string): DashboardRenamedAction {
+  return {type: DASHBOARD_RENAMED, id, name };
 }
 export function deleteDashboard(id:string){
   return {type: DELETE_DASHBOARD, id}
@@ -110,11 +112,11 @@ export function dashboardLoaded(
 ): DashboardLoadedAction {
   return { type: DASHBOARD_LOADED, dashboard, widgets};
 }
-export function dashboardSaved(id:string, created:boolean){
-  return {type: DASHBOARD_SAVED, id, created};
+export function dashboardSaved(id:string, created: boolean, name: string): DashboardSavedAction {
+  return { type: DASHBOARD_SAVED, id, created, name };
 }
 
-export function saveDashboard(id:string, name:string, widgets:Widget[]){
+export function saveDashboard(id: string, name: string, widgets: Widget[]): SaveDashboardAction {
   return {type: SAVE_DASHBOARD, id, name, widgets};
 }
 

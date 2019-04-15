@@ -27,7 +27,6 @@ import { Widget, Canvas, Dashboard as DashboardInterface } from "../types";
 import { RootState } from "../state/reducers";
 
 import "./Dashboard.css";
-import ModeToggleButton from "./ModeToggleButton";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
 import { getIsLoggedIn } from "../../shared/user/state/selectors";

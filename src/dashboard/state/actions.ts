@@ -18,6 +18,7 @@ import {
   DASHBOARD_SAVED,
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
+  SAVE_DASHBOARD,
 } from "./actionTypes";
 import { IndexPath, Widget, Dashboard } from "../types";
 
@@ -94,7 +95,8 @@ export interface DashboardsLoadedAction extends Action {
 
 export interface DashboardRenamedAction extends Action{
   type: typeof DASHBOARD_RENAMED;
-  dashboard: Dashboard;
+  id: string
+  name: string;
 }
 
 export interface DashboardDeletedAction extends Action{
@@ -113,10 +115,18 @@ export interface DashboardLoadedAction extends Action{
   widgets: Widget[];
 }
 
+export interface SaveDashboardAction extends Action {
+  type: typeof SAVE_DASHBOARD;
+  id: string;
+  name: string;
+  widgets: Widget[];
+}
+
 export interface DashboardSavedAction extends Action{
   type: typeof DASHBOARD_SAVED;
   id: string;
   created: boolean;
+  name: string;
 }
 
 export interface ShowNotificationAction extends Action{

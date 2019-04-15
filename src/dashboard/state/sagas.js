@@ -1,4 +1,4 @@
-import { take, fork, put, call } from "redux-saga/effects";
+import { take, fork, put, call, select } from "redux-saga/effects";
 import createUserSaga from "../../shared/user/state/saga";
 import * as API from "../dashboardRepo";
 import {
@@ -9,7 +9,8 @@ import {
   dashboardLoaded,
   dashboardSaved,
   showNotification,
-  hideNotification
+  hideNotification,
+  saveDashboard as saveDashboardAction
 } from "./actionCreators";
 import {
   PRELOAD_USER_SUCCESS,
@@ -27,6 +28,8 @@ import {
   DASHBOARD_SAVED,
   DASHBOARD_CREATED
 } from "./actionTypes";
+import { getWidgets } from "./selectors";
+
 export default function* sagas() {
   yield fork(createUserSaga());
   yield fork(loadDashboards);
@@ -58,15 +61,20 @@ function* loadDashboards() {
 
 function* renameDashboard() {
   while (true) {
-    const { dashboard } = yield take(RENAME_DASHBOARD);
-    const { id } = yield call(
-      API.renameDashboard,
-      dashboard.id,
-      dashboard.name
-    );
-    yield put(dashboardRenamed({ id, name: dashboard.name }));
+    const { id, name } = yield take(RENAME_DASHBOARD);
+
+    if (id === "") {
+      const widgets = yield select(getWidgets);
+      yield put(saveDashboardAction(id, name, widgets));
+    } else {
+      try {
+        yield call(API.renameDashboard, id, name);
+        yield put(dashboardRenamed(id, name));
+      } catch {}
+    }
   }
 }
+
 function* deleteDashboard() {
   while (true) {
     const { id } = yield take(DELETE_DASHBOARD);
@@ -90,7 +98,7 @@ function* cloneDashboard() {
 }
 function* loadDashboard() {
   while (true) {
-    const  payload  = yield take([
+    const payload = yield take([
       LOAD_DASHBOARD,
       DASHBOARD_CLONED,
       DASHBOARD_SAVED
@@ -104,12 +112,17 @@ function* loadDashboard() {
       //We want to redirect the dashboard component to the url with the dashboard id if the
       //dashboard was just created
       let created = false;
-      if (type === DASHBOARD_SAVED){
+      if (type === DASHBOARD_SAVED) {
         created = payload.created;
       }
       const redirect =
         type === DASHBOARD_CLONED || (type === DASHBOARD_SAVED && created);
-      yield put(dashboardLoaded({id, name, user, redirect, insertTime, updateTime}, widgets));
+      yield put(
+        dashboardLoaded(
+          { id, name, user, redirect, insertTime, updateTime },
+          widgets
+        )
+      );
     } catch (exception) {
       yield put(
         showNotification("ERROR", LOAD_DASHBOARD, "Dashboard not found")
@@ -125,16 +138,20 @@ function* saveDashboard() {
     const { id, widgets, name } = yield take(SAVE_DASHBOARD);
 
     try {
-      const { id: newId, created } = yield call(API.save, id, widgets, name || "");
-      yield put(dashboardSaved(newId, created));
-      if (created){
+      const { id: newId, created } = yield call(
+        API.save,
+        id,
+        widgets,
+        name || ""
+      );
+      yield put(dashboardSaved(newId, created, name)); // Should take name from response, but API doesn't support it at time of writing
+      if (created) {
         yield put(
           showNotification("INFO", DASHBOARD_CREATED, "Dashboard created")
         );
         yield delay();
         yield put(hideNotification());
       }
-
     } catch (exception) {
       yield put(
         showNotification(

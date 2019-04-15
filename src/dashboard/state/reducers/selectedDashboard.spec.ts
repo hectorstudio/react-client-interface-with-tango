@@ -19,6 +19,13 @@ const basicState = {
   updateTime: null
 };
 
+const savedState = {
+  ...basicState,
+  id: "5cb49ad146f4c024ece1cea5",
+  insertTime: new Date("1990"),
+  updateTime: new Date("2000")
+};
+
 test("SELECT_WIDGETS", () => {
   const ids = ["2", "3", "5"];
   const action = selectWidgets(ids);
@@ -58,8 +65,8 @@ test("DELETE_WIDGETS", () => {
 
 test("DASHBOARD_RENAMED", () => {
   const newName = "new name";
-  const action = dashboardRenamed({ name: newName } as Dashboard);
+  const action = dashboardRenamed(savedState.id, newName);
 
-  const state = reducer(basicState, action);
+  const state = reducer(savedState, action);
   expect(state.name).toEqual(newName);
 });

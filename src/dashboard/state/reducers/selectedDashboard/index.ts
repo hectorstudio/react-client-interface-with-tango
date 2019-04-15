@@ -153,8 +153,8 @@ export default function canvases(
       return { ...state, widgets: newWidgets, id, name, user, redirect, insertTime, updateTime };
     }
     case DASHBOARD_RENAMED:{
-      const {dashboard} = action;
-      return {...state, name: dashboard.name}
+      const { name } = action;
+      return { ...state, name };
     }
     case DASHBOARD_DELETED:{
       const {id} = action;
