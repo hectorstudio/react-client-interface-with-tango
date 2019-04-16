@@ -1,29 +1,80 @@
-.sardana-motor .title{
-    font-size: 1.2em;
+.sardana-motor .title {
+  font-size: 1.2em;
 }
-.sardana-motor .menu{
-    border-bottom: 1px solid #eee;
+.sardana-motor .menu {
+  border-bottom: 1px solid #eee;
+  padding: 0.4em 1em !important;
 }
-.sardana-motor .btn-stop{
-    background: none;
-    border: none;
-    color: #0087db;
-    cursor: pointer;
+.sardana-motor .btn-running {
+  background: url("../icons/terminate-24.png");
+  border: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  vertical-align: text-bottom;
 }
-.sardana-motor .btn-stop:hover{
-    text-decoration: underline;
+.sardana-motor .btn-stopped {
+  background: url("../icons/terminate-24.png");
+  border: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  outline: none;
+  cursor: default;
+  vertical-align: text-bottom;
 }
-.sardana-motor .row{
-    padding: 0.2em 1em;
-    font-size: 1.1em;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: flex-end;
+
+.sardana-motor .label-running:after {
+  vertical-align: text-bottom;
+  background-color: #9bce7b40;
+  color: #5f8249;
+  border: 1px solid #8cb573;
+  padding: 0.1em 0.4em;
+  border-radius: 0.2em;
+  font-size: 0.9em;
+  content: "Running";
 }
-.sardana-motor .border{
-    border: 1px solid #eee;
-    padding: 0em 0.5em 0.2em 0.5em;
-    border-radius: 0.2em;
+.sardana-motor .label-stopped:after {
+  vertical-align: text-bottom;
+  background-color: #ce7b7b40;
+  color: #4e0f0f;
+  border: 1px solid #dabdbd;
+  padding: 0.1em 0.4em;
+  border-radius: 0.2em;
+  font-size: 0.9em;
+  content: "Stopped";
+}
+
+.sardana-motor .label-unknown:after {
+  vertical-align: text-bottom;
+  background-color: #eee;
+  color: #666;
+  border: 1px solid #ccc;
+  padding: 0.1em 0.4em;
+  border-radius: 0.2em;
+  font-size: 0.9em;
+  content: "Unknown";
+}
+
+.sardana-motor .row {
+  padding: 0.2em 1em;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.sardana-motor .border {
+  border: 1px solid #eee;
+  padding: 0em 0.5em 0.2em 0.5em;
+  border-radius: 0.2em;
+}
+
+.sardana-motor .btn-copy{
+  border: 1px solid #ccc;
+  background: none;
+  font-size: 0.8em;
+  border-radius: 0.2em;
 }
