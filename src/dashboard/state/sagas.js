@@ -1,4 +1,14 @@
-import { take, fork, put, call, select } from "redux-saga/effects";
+import {
+  take,
+  fork,
+  put,
+  call,
+  select,
+  race,
+  delay
+} from "redux-saga/effects";
+// import delay from "@redux-saga/delay-p";
+
 import createUserSaga from "../../shared/user/state/saga";
 import * as API from "../dashboardRepo";
 import {
@@ -26,7 +36,8 @@ import {
   DASHBOARD_CLONED,
   SAVE_DASHBOARD,
   DASHBOARD_SAVED,
-  DASHBOARD_CREATED
+  DASHBOARD_CREATED,
+  SHOW_NOTIFICATION
 } from "./actionTypes";
 import { getWidgets } from "./selectors";
 
@@ -38,6 +49,8 @@ export default function* sagas() {
   yield fork(cloneDashboard);
   yield fork(loadDashboard);
   yield fork(saveDashboard);
+  yield fork(notifyOnSave);
+  yield fork(hideNotificationAfterDelay);
 }
 
 function* loadDashboards() {
@@ -81,8 +94,6 @@ function* deleteDashboard() {
     const result = yield call(API.deleteDashboard, id);
     yield put(dashboardDeleted(result.id));
     yield put(showNotification("INFO", DASHBOARD_DELETED, "Dashboard deleted"));
-    yield delay();
-    yield put(hideNotification());
   }
 }
 
@@ -92,10 +103,9 @@ function* cloneDashboard() {
     const { id: newId } = yield call(API.cloneDashboard, id);
     yield put(dashboardCloned(newId));
     yield put(showNotification("INFO", DASHBOARD_CLONED, "Dashboard cloned"));
-    yield delay();
-    yield put(hideNotification());
   }
 }
+
 function* loadDashboard() {
   while (true) {
     const payload = yield take([
@@ -127,8 +137,6 @@ function* loadDashboard() {
       yield put(
         showNotification("ERROR", LOAD_DASHBOARD, "Dashboard not found")
       );
-      yield delay();
-      yield put(hideNotification());
     }
   }
 }
@@ -145,13 +153,6 @@ function* saveDashboard() {
         name || ""
       );
       yield put(dashboardSaved(newId, created, name)); // Should take name from response, but API doesn't support it at time of writing
-      if (created) {
-        yield put(
-          showNotification("INFO", DASHBOARD_CREATED, "Dashboard created")
-        );
-        yield delay();
-        yield put(hideNotification());
-      }
     } catch (exception) {
       yield put(
         showNotification(
@@ -160,14 +161,36 @@ function* saveDashboard() {
           "You cannot edit this dashboard"
         )
       );
-      yield delay();
-      yield put(hideNotification());
     }
   }
 }
 
-function delay() {
-  return new Promise(function(resolve, reject) {
-    setTimeout(resolve, 2000);
-  });
+function* notifyOnSave() {
+  while (true) {
+    const { created } = yield take(DASHBOARD_SAVED);
+    if (created) {
+      yield put(
+        showNotification("INFO", DASHBOARD_CREATED, "Dashboard created")
+      );
+    }
+  }
+}
+
+function* hideNotificationAfterDelay() {
+  while (true) {
+    yield take(SHOW_NOTIFICATION);
+
+    while (true) {
+      const { timePassed } = yield race({
+        newNotification: take(SHOW_NOTIFICATION),
+        timePassed: delay(2000)
+      });
+
+      if (timePassed) {
+        break;
+      }
+    }
+    
+    yield put(hideNotification());
+  }
 }
