@@ -1,5 +1,5 @@
 import { take, fork, call, put, race } from "redux-saga/effects";
-import { delay } from "redux-saga";
+import delay from "@redux-saga/delay-p";
 
 import {
   preloadUserSuccess,
