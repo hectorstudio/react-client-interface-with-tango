@@ -50,6 +50,8 @@ export default function* sagas() {
   yield fork(loadDashboard);
   yield fork(saveDashboard);
   yield fork(notifyOnSave);
+  yield fork(notifyOnClone);
+  yield fork(notifyOnDelete);
   yield fork(hideNotificationAfterDelay);
 }
 
@@ -93,7 +95,6 @@ function* deleteDashboard() {
     const { id } = yield take(DELETE_DASHBOARD);
     const result = yield call(API.deleteDashboard, id);
     yield put(dashboardDeleted(result.id));
-    yield put(showNotification("INFO", DASHBOARD_DELETED, "Dashboard deleted"));
   }
 }
 
@@ -102,7 +103,6 @@ function* cloneDashboard() {
     const { id } = yield take(CLONE_DASHBOARD);
     const { id: newId } = yield call(API.cloneDashboard, id);
     yield put(dashboardCloned(newId));
-    yield put(showNotification("INFO", DASHBOARD_CLONED, "Dashboard cloned"));
   }
 }
 
@@ -134,6 +134,7 @@ function* loadDashboard() {
         )
       );
     } catch (exception) {
+      // Replace with failure action and write saga that reacts on it and puts a notification action
       yield put(
         showNotification("ERROR", LOAD_DASHBOARD, "Dashboard not found")
       );
@@ -154,6 +155,7 @@ function* saveDashboard() {
       );
       yield put(dashboardSaved(newId, created, name)); // Should take name from response, but API doesn't support it at time of writing
     } catch (exception) {
+      // Replace with failure action and write saga that reacts on it and puts a notification action
       yield put(
         showNotification(
           "ERROR",
@@ -176,12 +178,25 @@ function* notifyOnSave() {
   }
 }
 
+function* notifyOnClone() {
+  while (true) {
+    yield take(DASHBOARD_CLONED);
+    yield put(showNotification("INFO", DASHBOARD_CLONED, "Dashboard cloned"));
+  }
+}
+
+function* notifyOnDelete() {
+  yield take(DASHBOARD_DELETED);
+  yield put(showNotification("INFO", DASHBOARD_DELETED, "Dashboard deleted"));
+}
+
+// Can possibly be simplified using debounce()
 function* hideNotificationAfterDelay() {
   while (true) {
     yield take(SHOW_NOTIFICATION);
 
     while (true) {
-      const { timePassed } = yield race({
+      const { timePassed } = yield race({
         newNotification: take(SHOW_NOTIFICATION),
         timePassed: delay(2000)
       });
