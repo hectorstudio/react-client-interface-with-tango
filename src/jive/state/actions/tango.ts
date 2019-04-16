@@ -129,7 +129,7 @@ export function setDataFormat(format): SetDataFormatAction {
 
 interface FetchDeviceNamesSuccessAction extends Action {
   type: typeof FETCH_DEVICE_NAMES_SUCCESS;
-  names;
+  names: string[];
 }
 
 export function fetchDeviceNamesSuccess(names): FetchDeviceNamesSuccessAction {
