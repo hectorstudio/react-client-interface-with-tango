@@ -14,7 +14,7 @@ const initialState: UIState = {
 export default function ui(
   state: UIState = initialState,
   action: DashboardAction
-) {
+): UIState {
   switch (action.type) {
     case SELECT_CANVAS:
       return { ...state, selectedCanvas: action.id };

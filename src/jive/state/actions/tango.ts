@@ -27,7 +27,8 @@ import {
   FETCH_LOGGED_ACTIONS,
   FETCH_LOGGED_ACTIONS_SUCCESS,
   FETCH_LOGGED_ACTIONS_FAILED,
-  SET_DATA_FORMAT
+  SET_DATA_FORMAT,
+  DEVICE_STATE_RECEIVED
 } from "./actionTypes";
 
 interface FetchDatabaseInfoAction extends Action {
@@ -215,7 +216,7 @@ export function setDeviceAttribute(
 interface SetDeviceAttributeSuccessAction extends Action {
   type: typeof SET_DEVICE_ATTRIBUTE_SUCCESS;
   tangoDB: string;
-  attribute: string;
+  attribute;
 }
 
 export function setDeviceAttributeSuccess(
@@ -353,6 +354,12 @@ export function attributeFrameReceived(frame): AttributeFrameReceivedAction {
   return { type: ATTRIBUTE_FRAME_RECEIVED, frame };
 }
 
+interface DeviceStateReceivedAction extends Action {
+  type: typeof DEVICE_STATE_RECEIVED;
+  device: string;
+  state: string;
+}
+
 interface FetchLoggedActionsAction extends Action {
   type: typeof FETCH_LOGGED_ACTIONS;
   tangoDB: string;
@@ -416,6 +423,7 @@ export type TangoAction =
   | FetchDeviceSuccessAction
   | FetchDeviceFailedAction
   | AttributeFrameReceivedAction
+  | DeviceStateReceivedAction
   | FetchLoggedActionsAction
   | FetchLoggedActionsSuccessAction
   | FetchLoggedActionsFailedAction;

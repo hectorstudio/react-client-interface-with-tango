@@ -1,8 +1,10 @@
 import {
   FETCH_DEVICE_SUCCESS,
   ATTRIBUTE_FRAME_RECEIVED,
-  SET_DEVICE_ATTRIBUTE_SUCCESS
+  SET_DEVICE_ATTRIBUTE_SUCCESS,
+  DEVICE_STATE_RECEIVED
 } from "../actions/actionTypes";
+import JiveAction from "../actions";
 
 interface IDeviceAttribute {
   name: string;
@@ -36,7 +38,10 @@ function updateAttribute(
   };
 }
 
-export default function attributes(state: IAttributesState = {}, action) {
+export default function attributes(
+  state: IAttributesState = {},
+  action: JiveAction
+): IAttributesState {
   switch (action.type) {
     case FETCH_DEVICE_SUCCESS: {
       const { name, attributes: attrs } = action.device;
@@ -69,7 +74,7 @@ export default function attributes(state: IAttributesState = {}, action) {
     }
 
     // This case relies on the fact that State is a special attribute
-    case "DEVICE_STATE_RECEIVED": {
+    case DEVICE_STATE_RECEIVED: {
       return updateAttribute(state, action.device, "State", {
         value: action.state
       });
