@@ -1,0 +1,29 @@
+.paw .set-position {
+  font-family: "Courier New", Courier, monospace;
+  letter-spacing: 0.9rem;
+}
+.paw .btn{
+  border: none;
+  background: none;
+  width: 1.5em;
+  height: 1em;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+.paw .btn:focus{
+  outline: none;
+  box-shadow: none;
+}
+.paw .btn:hover{
+}
+.paw .btn-up {
+}
+
+.paw .btn-down {
+}
+
+.paw .hidden{
+  visibility: hidden;
+  cursor: default;
+}
