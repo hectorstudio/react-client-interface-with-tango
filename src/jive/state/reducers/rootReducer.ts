@@ -13,7 +13,6 @@ import commands, { ICommandsState } from "./commands";
 import properties, { IPropertiesState } from "./properties";
 
 import user, { IUserState } from "../../../shared/user/state/reducer";
-
 import error from "./error";
 
 export interface IRootState {

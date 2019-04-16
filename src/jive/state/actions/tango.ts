@@ -43,7 +43,7 @@ export function fetchDatabaseInfo(tangoDB: string): FetchDatabaseInfoAction {
 interface FetchDatabaseInfoSuccessAction extends Action {
   type: typeof FETCH_DATABASE_INFO_SUCCESS;
   tangoDB: string;
-  info;
+  info: string;
 } 
 
 export function fetchDatabaseInfoSuccess(
