@@ -89,17 +89,15 @@ const definition: WidgetDefinition = {
 				{
 					name: "<",
 					value: "<"
-				}
-				,
+				},
 				{
-					name: ">",
-					value: ">"
+					name: "=",
+					value: "="
 				},
 				{
 					name: ">=",
 					value: ">="
-				}
-				,
+				},
 				{
 					name: "<=",
 					value: "<="
