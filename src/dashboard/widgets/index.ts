@@ -6,7 +6,7 @@ import label from "./Label";
 import spectrum from "./Spectrum";
 import commandExecutor from "./CommandExecutor";
 import attributeDial from "./AttributeDial";
-
+import booleanDisplay from "./BooleanDisplay";
 import { Widget, WidgetDefinition } from "../types";
 
 export const bundles = [
@@ -17,7 +17,8 @@ export const bundles = [
   AttributeScatter,
   spectrum,
   commandExecutor,
-  attributeDial
+  attributeDial,
+  booleanDisplay
 ];
 
 function bundleForType(type: string) {
