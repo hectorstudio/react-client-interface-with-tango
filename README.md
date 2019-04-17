@@ -12,8 +12,11 @@ With this device explorer built on TangoGQL, you can:
 
 1. Clone the repository.
 2. Run `npm install`.
-3. Modify the `proxy` setting in `package.json` to reflect the location of the TangoGQL instance.
-4. Type `npm start`.
+3. Type `npm start`.
+
+Minimum node version: 7.6 (introduced async/wait)
+
+Verified working node version: 9.11.2 (currently used by the dockerfile)
 
 # Online demo
 
