@@ -9,10 +9,7 @@ import {
 } from "../state/selectors";
 import { RootState } from "../state/reducers";
 import { Dashboard } from "../types";
-import {
-  renameDashboard,
-  cloneDashboard,
-} from "../state/actionCreators";
+import { renameDashboard, cloneDashboard } from "../state/actionCreators";
 import { Notification } from "../types";
 import { DashboardAction } from "../state/actions";
 
@@ -55,7 +52,7 @@ class DashboardTitle extends Component<Props, State> {
     if (!loggedInUser) {
       return (
         <div className="dashboard-menu">
-          <span style={{ marginLeft: "0.5em" }}>{dashboard.name}</span>
+          {id && <span style={{ marginLeft: "0.5em" }}>{dashboard.name}</span>}
           <span className="notification-msg ">
             You need to be logged in to save dashboards
           </span>
