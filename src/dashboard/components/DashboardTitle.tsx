@@ -26,6 +26,8 @@ interface State {
   wipName: string | null;
 }
 
+// TODO: displaying notifications is outside of the scope of this component and should be factored out at some point, e.g. to TopBar
+
 class DashboardTitle extends Component<Props, State> {
   public inputRef: any;
 
