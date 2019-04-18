@@ -45,7 +45,8 @@ class DashboardTitle extends Component<Props, State> {
     const { id, user: owner } = dashboard;
 
     const isMine = loggedInUser === owner;
-    const editable = (isMine || !owner) && mode !== "run";
+    const inEditMode = mode === "edit";
+    const editable = (isMine || !owner) && inEditMode;
     const clonable = !isMine && owner;
     const { level, msg: notificationMsg } = this.props.notification;
 
@@ -53,9 +54,9 @@ class DashboardTitle extends Component<Props, State> {
       return (
         <div className="dashboard-menu">
           {id && <span style={{ marginLeft: "0.5em" }}>{dashboard.name}</span>}
-          <span className="notification-msg ">
+          {inEditMode && <span className="notification-msg ">
             You need to be logged in to save dashboards
-          </span>
+          </span>}
         </div>
       );
     }
@@ -81,7 +82,7 @@ class DashboardTitle extends Component<Props, State> {
           onBlur={() => this.setState({ wipName: null })}
           onFocus={() => this.inputRef.select()}
         />
-        {notificationMsg && !clonable && (
+        {inEditMode && notificationMsg && !clonable && (
           <span className={`notification-msg " + ${level}`}>
             {notificationMsg}
           </span>
