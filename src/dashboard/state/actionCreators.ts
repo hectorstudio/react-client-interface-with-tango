@@ -6,7 +6,19 @@ import {
   SELECT_CANVAS,
   TOGGLE_MODE,
   SELECT_WIDGETS,
-  PRELOAD_DASHBOARD
+  DASHBOARD_LOADED,
+  DASHBOARDS_LOADED,
+  DASHBOARD_RENAMED,
+  DASHBOARD_DELETED,
+  DASHBOARD_CLONED,
+  LOAD_DASHBOARD,
+  RENAME_DASHBOARD,
+  DELETE_DASHBOARD,
+  CLONE_DASHBOARD,
+  SAVE_DASHBOARD,
+  DASHBOARD_SAVED,
+  SHOW_NOTIFICATION,
+  HIDE_NOTIFICATION,
 } from "./actionTypes";
 
 import {
@@ -17,9 +29,13 @@ import {
   SelectCanvasAction,
   ToggleModeAction,
   SelectWidgetsAction,
-  PreloadDashboardAction
+  DashboardLoadedAction,
+  DashboardRenamedAction,
+  SaveDashboardAction,
+  DashboardSavedAction
 } from "./actions";
-import { Widget } from "../types";
+
+import { Widget, Dashboard } from "../types";
 
 export function addWidget(
   x: number,
@@ -52,8 +68,8 @@ export function selectWidgets(ids: string[]): SelectWidgetsAction {
   return { type: SELECT_WIDGETS, ids };
 }
 
-export function deleteWidget(id: string): DeleteWidgetAction {
-  return { type: DELETE_WIDGET, id };
+export function deleteWidget(): DeleteWidgetAction {
+  return { type: DELETE_WIDGET };
 }
 
 export function selectCanvas(id: string): SelectCanvasAction {
@@ -64,9 +80,52 @@ export function toggleMode(): ToggleModeAction {
   return { type: TOGGLE_MODE };
 }
 
-export function preloadDashboard(
-  id: string,
-  widgets: Widget[]
-): PreloadDashboardAction {
-  return { type: PRELOAD_DASHBOARD, id, widgets };
+export function dashboardsLoaded(dashboards: Dashboard[]){
+  return {type: DASHBOARDS_LOADED, dashboards};
 }
+
+export function renameDashboard(id: string, name: string) {
+  return { type: RENAME_DASHBOARD, id, name };
+}
+export function dashboardRenamed(id: string, name: string): DashboardRenamedAction {
+  return {type: DASHBOARD_RENAMED, id, name };
+}
+export function deleteDashboard(id:string){
+  return {type: DELETE_DASHBOARD, id}
+}
+export function dashboardDeleted(id:string){
+  return {type: DASHBOARD_DELETED, id};
+}
+export function cloneDashboard(id:string, newUser:string){
+  return {type: CLONE_DASHBOARD, id, newUser}
+}
+export function dashboardCloned(id:string){
+  return {type: DASHBOARD_CLONED, id};
+}
+export function loadDashboard(id: string){
+  return {type: LOAD_DASHBOARD, id};
+}
+export function dashboardLoaded(
+  dashboard:Dashboard,
+  widgets: Widget[],
+
+): DashboardLoadedAction {
+  return { type: DASHBOARD_LOADED, dashboard, widgets};
+}
+export function dashboardSaved(id:string, created: boolean, name: string): DashboardSavedAction {
+  return { type: DASHBOARD_SAVED, id, created, name };
+}
+
+export function saveDashboard(id: string, name: string, widgets: Widget[]): SaveDashboardAction {
+  return {type: SAVE_DASHBOARD, id, name, widgets};
+}
+
+export function showNotification(level:string, action:string, msg:string){
+  return ({ type: SHOW_NOTIFICATION, notification: {level, action, msg}})
+}
+export function hideNotification(){
+    return { type: HIDE_NOTIFICATION }
+}
+
+
+

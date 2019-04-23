@@ -1,5 +1,6 @@
 import React from "react";
 import ModeToggleButton from "./ModeToggleButton";
+import DashboardTitle from "./DashboardTitle";
 import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
 import { DeviceConsumer } from "./DevicesProvider";
 
@@ -38,6 +39,7 @@ export default function TopBar(props: Props) {
             mode={mode}
           />
         </form>
+        <DashboardTitle />
         <FetchInfo />
       </div>
       <LogInOut />

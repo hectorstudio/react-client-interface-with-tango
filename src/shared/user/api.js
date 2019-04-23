@@ -29,7 +29,7 @@ export default {
   async logout() {
     try {
       const init = { method: "POST" };
-      const res = await fetch("/auth/logout", init);
+      await fetch("/auth/logout", init);
       return true;
     } catch (err) {
       return false;
@@ -39,7 +39,7 @@ export default {
   async extendLogin() {
     try {
       const init = { method: "POST" };
-      const res = await fetch("/auth/extend", init);
+      await fetch("/auth/extend", init);
       return true;
     } catch (err) {
       return false;

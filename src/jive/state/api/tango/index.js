@@ -7,6 +7,7 @@ import {
   SET_DEVICE_PROPERTY,
   DELETE_DEVICE_PROPERTY,
   FETCH_DEVICE,
+  FETCH_DEVICE_STATE,
   ATTRIBUTES_SUB,
   FETCH_DATABASE_INFO,
   FETCH_LOGGED_ACTIONS,
@@ -61,7 +62,8 @@ export default {
   async setDeviceAttribute(tangoDB, device, name, value) {
     const params = { device, name, value };
     const data = await client(tangoDB).request(SET_DEVICE_ATTRIBUTE, params);
-    return data.setAttributeValue.ok;
+    const { ok, attribute } = data.setAttributeValue;
+    return { ok, attribute };
   },
 
   async setDeviceProperty(tangoDB, device, name, value) {
@@ -95,6 +97,16 @@ export default {
     }
 
     return { ...device, errors };
+  },
+
+  async fetchDeviceState(tangoDB, name) {
+    try {
+      const params = { name };
+      const data = await client(tangoDB).request(FETCH_DEVICE_STATE, params);
+      return data.device.state;
+    } catch (err) {
+      return null;
+    }
   },
 
   changeEventEmitter(tangoDB, fullNames) {

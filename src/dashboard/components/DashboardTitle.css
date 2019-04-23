@@ -1,0 +1,65 @@
+.dashboard-menu{
+    display: inline-block;
+}
+.dashboard-menu input[type="text"]{
+    background: rgba(0,0,0,0);
+    border: none;
+    padding: .25rem .5rem;
+    box-sizing: border-box;
+    width: 20em;
+    margin-left: 0.5em;
+    cursor: text;
+}
+
+.dashboard-menu .title{
+    color: #495057;
+    margin-left: 2em;
+}
+.dashboard-menu input[type="text"]:focus{
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0;
+    outline: none;
+    box-shadow: none;
+    font-style: normal;
+    cursor: text;
+}
+
+.dashboard-menu .btn-clone{
+    color: white;
+    font-weight: bold;
+    background: #499e49;
+    border: 1px solid rgba(27,31,35,.2);
+    border-radius: .25em;
+    padding: 0.25em 1em;
+    margin: 0em 1em;
+    background-color: #28a745;
+    background-image: -webkit-gradient(linear,left top, left bottom,from(#34d058),color-stop(90%, #28a745));
+    background-image: -webkit-linear-gradient(top,#34d058,#28a745 90%);
+    background-image: -o-linear-gradient(top,#34d058,#28a745 90%);
+    background-image: linear-gradient(-180deg,#34d058,#28a745 90%);
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+
+.dashboard-menu .btn-clone:hover{
+    background-color: #28a745;
+    background-image: linear-gradient(-180deg,#34d058,#23bd46 90%);
+}
+.dashboard-menu .notification-msg{
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    position: relative;
+    padding: .4em 0.8em;
+    margin-left: 0.5em;
+    border: 1px solid transparent;
+    border-radius: .25em;
+}
+.dashboard-menu .ERROR{
+    color: #850404;
+    background-color: #ffcdcd;
+    border-color: #ffbaba;
+}

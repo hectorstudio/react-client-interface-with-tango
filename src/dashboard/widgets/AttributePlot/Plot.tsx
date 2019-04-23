@@ -1,5 +1,11 @@
-import React, { Component } from "react";
-import Plotly from "react-plotly.js";
+import React, { Component, Suspense } from "react";
+
+// In order to avoid importing the entire plotly.js library. Note that this mutates the global PlotlyCore object.
+import PlotlyCore from "plotly.js/lib/core";
+import PlotlyScatter from "plotly.js/lib/scatter";
+import createPlotlyComponent from "react-plotly.js/factory";
+PlotlyCore.register([PlotlyScatter]);
+const Plotly = createPlotlyComponent(PlotlyCore);
 
 export interface PlotParams {
   height: number;
@@ -36,7 +42,8 @@ export default class Plot extends Component<PlotProps> {
 
     const zeroline = showZeroLine !== false;
     const hasRight = data.find(({ yaxis }) => yaxis === "y2") != null;
-    const hasLeft = hasRight === false || data.find(({ yaxis }) => yaxis === "y1") != null;
+    const hasLeft =
+      hasRight === false || data.find(({ yaxis }) => yaxis === "y1") != null;
 
     const addY1 = hasLeft
       ? {
@@ -79,12 +86,14 @@ export default class Plot extends Component<PlotProps> {
     };
 
     return (
-      <Plotly
-        data={data}
-        layout={layout}
-        config={{ staticPlot: staticMode === true }}
-        responsive={true}
-      />
+      <Suspense fallback={null}>
+        <Plotly
+          data={data}
+          layout={layout}
+          config={{ staticPlot: staticMode === true }}
+          responsive={true}
+        />
+      </Suspense>
     );
   }
 

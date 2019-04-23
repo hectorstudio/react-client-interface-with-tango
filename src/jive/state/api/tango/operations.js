@@ -26,6 +26,13 @@ mutation SetDeviceAttribute($device: String!, $name: String!, $value: ScalarType
   setAttributeValue(device: $device, name: $name, value: $value) {
     ok
     message
+    attribute {
+      device
+      name
+      value
+      writevalue
+      quality
+    }
   }
 }
 `;
@@ -132,6 +139,13 @@ query FetchDevice($name: String!) {
   }
 }
 `;
+
+export const FETCH_DEVICE_STATE = `
+query FetchDevice($name: String!) {
+  device(name: $name) {
+    state
+  }
+}`;
 
 export const ATTRIBUTES_SUB = `
 subscription Attributes($fullNames: [String]!) {

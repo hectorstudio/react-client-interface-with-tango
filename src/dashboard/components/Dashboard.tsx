@@ -9,11 +9,8 @@ import queryString from "query-string";
 import EditCanvas from "./EditCanvas/EditCanvas";
 import RunCanvas from "./RunCanvas/RunCanvas";
 import { DeviceProvider } from "./DevicesProvider";
-
-import { save as saveToRepo } from "../dashboardRepo";
-import { load as loadFromRepo } from "../dashboardRepo";
-
-import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
+import { saveDashboard } from "../state/actionCreators";
+import { loadDashboard } from "../state/actionCreators";
 import LoginDialog from "../../shared/user/components/LoginDialog/LoginDialog";
 
 import {
@@ -21,63 +18,75 @@ import {
   getMode,
   getCanvases,
   getSelectedCanvas,
-  getSelectedWidgets
+  getSelectedWidgets,
+  getSelectedDashboard
 } from "../state/selectors";
 
-import {
-  selectCanvas,
-  toggleMode,
-  preloadDashboard
-} from "../state/actionCreators";
-import { Widget, Canvas } from "../types";
+import { toggleMode } from "../state/actionCreators";
+import { Widget, Canvas, Dashboard as DashboardInterface } from "../types";
 import { RootState } from "../state/reducers";
 
 import "./Dashboard.css";
-import ModeToggleButton from "./ModeToggleButton";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
+import { getIsLoggedIn } from "../../shared/user/state/selectors";
 
 interface Match {
   tangoDB: string;
 }
 
 interface Props extends RouteComponentProps<Match> {
-  dispatch: (action: object) => void;
+  toggleMode: () => void;
+  loadDashboard: (id: string) => void;
+  saveDashboard: (id: string, name: string, widgets: Widget[]) => void;
   mode: "edit" | "run";
   widgets: Widget[];
   selectedWidgets: Widget[];
   canvases: Canvas[];
   selectedCanvas: Canvas;
+  selectedDashboard: DashboardInterface;
+  isLoggedIn: boolean;
 }
 
 class Dashboard extends Component<Props> {
   public constructor(props) {
     super(props);
     this.toggleMode = this.toggleMode.bind(this);
-    this.handleChangeCanvas = this.handleChangeCanvas.bind(this);
   }
 
   public async componentDidMount() {
-    const id = this.parseId();
+    const redirectId = this.props.selectedDashboard.redirect;
+    const id = redirectId ? this.props.selectedDashboard.id : this.parseId();
     if (id) {
-      try {
-        const { widgets } = await loadFromRepo(id);
-        this.props.dispatch(preloadDashboard(id, widgets));
-      } catch (err) {
-        // console.error(`Failed loading dashboard ${id}: ${err}`);
-      }
+      this.props.loadDashboard(id);
     }
   }
 
   public async componentDidUpdate(prevProps) {
-    if (prevProps.widgets === this.props.widgets) {
+    // update if url currently is missing and the selcted one has one?
+    const redirect = this.props.selectedDashboard.redirect;
+    const currentId = this.props.selectedDashboard.id;
+    const id = this.parseId();
+
+    if (redirect && currentId !== id) {
+      // The state has been updated with a flag indicating that we should navigate
+      // to a new dashboard.
+      this.props.history.replace("?id=" + this.props.selectedDashboard.id);
       return;
     }
+    const justLoggedInOnAnonymous = this.props.isLoggedIn && this.props.widgets.length > 0 && !id
 
-    const id = this.parseId();
-    const res = await saveToRepo(id, this.props.widgets);
-    if (res && res.created) {
-      this.props.history.replace("?id=" + res.id);
+    if (
+      JSON.stringify(prevProps.widgets) === JSON.stringify(this.props.widgets) && !justLoggedInOnAnonymous
+    ) {
+      return;
+    }
+    if (this.props.isLoggedIn) {
+      this.props.saveDashboard(
+        id,
+        this.props.selectedDashboard.name,
+        this.props.widgets
+      );
     }
   }
 
@@ -105,6 +114,7 @@ class Dashboard extends Component<Props> {
           <div className={classNames("CanvasArea", mode)}>{canvasContents}</div>
           <Sidebar
             mode={mode}
+            selectedTab="library"
             tangoDB={tangoDB}
             selectedWidgets={selectedWidgets}
           />
@@ -114,14 +124,8 @@ class Dashboard extends Component<Props> {
   }
 
   private toggleMode() {
-    this.props.dispatch(toggleMode());
+    this.props.toggleMode();
   }
-
-  private handleChangeCanvas(event) {
-    const id = event.target.value;
-    this.props.dispatch(selectCanvas(id));
-  }
-
   private isRootCanvas() {
     return this.props.selectedCanvas.id === "0";
   }
@@ -132,6 +136,7 @@ class Dashboard extends Component<Props> {
   }
 
   private parseId(): string {
+    /* eslint-disable no-restricted-globals */
     const search = location.search;
     const parsed = queryString.parse(search);
     return String(parsed.id || "") || ""; // TODO: improve handling of id parameter
@@ -141,13 +146,23 @@ class Dashboard extends Component<Props> {
 function mapStateToProps(state: RootState) {
   return {
     widgets: getWidgets(state),
+    selectedDashboard: getSelectedDashboard(state),
     selectedWidgets: getSelectedWidgets(state),
     mode: getMode(state),
     selectedCanvas: getSelectedCanvas(state),
-    canvases: getCanvases(state)
+    canvases: getCanvases(state),
+    isLoggedIn: getIsLoggedIn(state)
   };
 }
-
-export default connect(mapStateToProps)(
-  DragDropContext(HTML5Backend)(Dashboard)
-);
+function mapDispatchToProps(dispatch) {
+  return {
+    saveDashboard: (id: string, name: string, widgets: Widget[]) =>
+      dispatch(saveDashboard(id, name, widgets)),
+    toggleMode: () => dispatch(toggleMode()),
+    loadDashboard: (id: string) => dispatch(loadDashboard(id))
+  };
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DragDropContext(HTML5Backend)(Dashboard));
