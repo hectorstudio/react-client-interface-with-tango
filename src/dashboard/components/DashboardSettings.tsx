@@ -8,6 +8,7 @@ import { RootState } from "../state/reducers";
 import { deleteDashboard } from "../state/actionCreators";
 import DeleteDashboardModal from "./modals/DeleteDashboardModal";
 import { Dashboard } from "../types";
+import { Route } from "react-router-dom";
 
 interface Props {
   dashboards: Dashboard[];
@@ -42,35 +43,51 @@ class DashboardSettings extends Component<Props, State> {
     return (
       <div className="dashboard-settings">
         <div className="dashboard-row">
-          <div/>
           <div>
             {" "}
-            <a
-              className="dashboard-link float-right"
-              href={`${location.pathname}`}
-              title="Create a new dashboard"
-            >
-              New
-            </a>
+            <Route
+              path="/:tangoDB/dashboard"
+              render={({ match }) => (
+                <a
+                  className="dashboard-link float-right"
+                  href={`${match.url}`}
+                  title="Create a new dashboard"
+                >
+                  New
+                </a>
+              )}
+            />
           </div>
         </div>
         {dashboards.map((value, key) => (
           <Fragment key={key}>
-            <div className={"dashboard-row " + (value.id === selectedDashboardId ? "selected" :"")}>
+            <div
+              className={
+                "dashboard-row " +
+                (value.id === selectedDashboardId ? "selected" : "")
+              }
+            >
               {selectedDashboardId !== value.id ? (
-                <a
-                  title={`View dashboard ${value.name || "Untitled dashboard"}`}
-                  className="dashboard-link"
-                  href={`${location.pathname}?id=${value.id}`}
-                >
-                  {value.name || "Untitled dashboard"}
-                </a>
+                <Route
+                  path="/:tangoDB/dashboard"
+                  render={({ match }) => (
+                    <a
+                      title={`View dashboard ${value.name ||
+                        "Untitled dashboard"}`}
+                      className="dashboard-link"
+                      href={`${match.url}?id=${value.id}`}
+                    >
+                      {value.name || "Untitled dashboard"}
+                    </a>
+                  )}
+                />
               ) : (
                 <span>{value.name || "Untitled dashboard"}</span>
               )}
 
               <button
-                title={`Delete dashboard ${value.name || "Untitled dashboard"}`}
+                title={`Delete dashboard ${value.name ||
+                  "Untitled dashboard"}`}
                 className="delete-button"
                 onClick={() =>
                   this.setState({ deleteDashboardModalId: value.id })
@@ -84,7 +101,9 @@ class DashboardSettings extends Component<Props, State> {
               <DeleteDashboardModal
                 id={value.id}
                 name={value.name}
-                onClose={() => this.setState({ deleteDashboardModalId: "" })}
+                onClose={() =>
+                  this.setState({ deleteDashboardModalId: "" })
+                }
                 onDelete={this.handleDeleteProperty}
               />
             )}
