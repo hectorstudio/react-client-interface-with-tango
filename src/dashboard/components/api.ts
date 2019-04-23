@@ -1,5 +1,11 @@
 import { request as graphqlRequest } from "graphql-request";
 
+interface FetchAttributes {
+  device: {
+    attributes: Array<{ name: string; dataformat: string; datatype: string }>;
+  };
+}
+
 const FETCH_ATTRIBUTES = `
 query FetchAttributeNames($device: String!) {
   device(name: $device) {
@@ -12,6 +18,12 @@ query FetchAttributeNames($device: String!) {
 }
 `;
 
+interface FetchCommands {
+  device: {
+    commands: Array<{ name: string; intype: string }>;
+  };
+}
+
 const FETCH_COMMANDS = `
 query FetchCommandNames($device: String!) {
   device(name: $device) {
@@ -22,6 +34,10 @@ query FetchCommandNames($device: String!) {
   }
 }
 `;
+
+interface FetchDeviceNames {
+  devices: Array<{ name: string }>;
+}
 
 const FETCH_DEVICE_NAMES = `
 query {
@@ -63,14 +79,20 @@ query FetchAttributeMetadata($deviceName: String!) {
   }
   `;
 
-function request<T = any>(tangoDB: string, query: string, args?: object): Promise<T> {
+function request<T = any>(
+  tangoDB: string,
+  query: string,
+  args?: object
+): Promise<T> {
   const url = `/${tangoDB}/db`;
-  return graphqlRequest(url, query, args || {});
+  return graphqlRequest(url, query, args || {});
 }
 
-export async function fetchDeviceAttributes(tangoDB, device) {
+export async function fetchDeviceAttributes(tangoDB: string, device: string) {
   try {
-    const data = await request(tangoDB, FETCH_ATTRIBUTES, { device });
+    const data = await request<FetchAttributes>(tangoDB, FETCH_ATTRIBUTES, {
+      device
+    });
     const { attributes } = data.device;
     if (attributes != null) {
       return attributes;
@@ -83,25 +105,31 @@ export async function fetchDeviceAttributes(tangoDB, device) {
   }
 }
 
-export async function fetchCommands(tangoDB, device) {
+export async function fetchCommands(tangoDB: string, device: string) {
   try {
-    const data = await request(tangoDB, FETCH_COMMANDS, { device });
+    const data = await request<FetchCommands>(tangoDB, FETCH_COMMANDS, {
+      device
+    });
     return data.device.commands;
   } catch (err) {
     return [];
   }
 }
 
-export async function fetchDeviceNames(tangoDB) {
+export async function fetchDeviceNames(tangoDB: string) {
   try {
-    const data = await request(tangoDB, FETCH_DEVICE_NAMES);
+    const data = await request<FetchDeviceNames>(tangoDB, FETCH_DEVICE_NAMES);
     return data.devices.map(({ name }) => name);
   } catch (err) {
     return [];
   }
 }
 
-export async function executeCommand(tangoDB, device, command) {
+export async function executeCommand(
+  tangoDB: string,
+  device: string,
+  command: string
+) {
   try {
     const args = { device, command };
     const data = await request(tangoDB, EXECUTE_COMMAND, args);
