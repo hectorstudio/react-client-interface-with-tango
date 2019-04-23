@@ -7,9 +7,6 @@ interface Props {
 }
 
 export default class SidebarTabs extends Component<Props> {
-  constructor(props) {
-    super(props);
-  }
   public render() {
     const {onTabChange, selectedTab} = this.props;
     return (
