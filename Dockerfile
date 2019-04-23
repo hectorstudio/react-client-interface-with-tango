@@ -5,7 +5,7 @@ WORKDIR /home/node/app
 COPY package.json package-lock.json ./
 RUN npm install --no-cache
 
-COPY tsconfig.json tsconfig.prod.json tslint.json ./
+COPY tsconfig.json tsconfig.prod.json ./
 COPY src src
 COPY public public
 
