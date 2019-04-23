@@ -1,0 +1,49 @@
+.dashboard-settings{
+
+}
+.dashboard-settings .title{
+    font-size: 1.2em;
+}
+.dashboard-settings .dashboard-link{
+    color:#0087db;
+
+}
+.dashboard-settings .float-right{
+    float: right;
+    margin-top: -0.2em;
+}
+
+.dashboard-settings input[type=button]{
+    background: none;
+}
+.dashboard-settings .delete-button{
+    border: none;
+    background: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.dashboard-settings .delete-button{
+    border: none;
+    background: none;
+    outline: none;
+    color: rgba(0,0,0,0.2);
+}
+
+.dashboard-settings .delete-button:hover{
+    color: rgba(0,0,0,0.6);
+}
+
+.dashboard-settings .dashboard-row{
+    padding: 0.2em 1em;
+    font-size: 1.1em;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.dashboard-settings .selected{
+    background: #ffffe2;
+}

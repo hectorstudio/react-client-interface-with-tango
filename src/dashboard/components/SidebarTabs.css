@@ -1,0 +1,34 @@
+.sidebar-tabs{
+    margin-bottom: 1em;
+}
+.sidebar-tabs .toggle-button{
+    cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 0.25em 0.4em;
+    color: #969696;
+    background: #fff;
+    width: 50%;
+    text-align: center;
+}
+
+.sidebar-tabs .toggle-button-left{
+ border-top-left-radius: 0.3em;
+ border-bottom-left-radius: 0.3em;
+ border-right: 1px solid #ccc;
+}
+.sidebar-tabs .toggle-button-right{
+    border-top-right-radius: 0.3em;
+    border-bottom-right-radius: 0.3em;
+    border-left: 0;
+}
+.sidebar-tabs .toggle-button-selected{
+    background: #f0f0f0;
+    color: #000;
+    cursor: default;
+    box-shadow: inset 0px 0px 7px rgba(0,0,0,0.1);
+}
+
+.sidebar-tabs .toggle-button-selected:hover{
+    color: #000;
+    background: #f0f0f0;
+}

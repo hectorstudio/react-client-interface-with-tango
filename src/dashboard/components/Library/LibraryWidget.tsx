@@ -57,7 +57,7 @@ function libraryWidgetCollect(
 }
 
 class LibraryWidget extends Component<Props> {
-  private ref: HTMLDivElement;
+  private ref?: HTMLDivElement;
 
   public constructor(props: Props) {
     super(props);

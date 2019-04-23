@@ -18,12 +18,12 @@ import {
   resizeWidget,
   deleteWidget,
   selectWidgets
-} from "src/dashboard/state/actionCreators";
+} from "../../state/actionCreators";
 
 import {
   getSelectedWidgets,
   getCurrentCanvasWidgets
-} from "src/dashboard/state/selectors";
+} from "../../state/selectors";
 
 const BACKSPACE = 8;
 const DELETE = 46;

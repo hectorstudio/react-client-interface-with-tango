@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
-import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
+import React from 'react';
 import PropTypes from 'prop-types'
+
+// Spectrum visualisation is disabled for performance reasons until a more sustainable solution is found. For now, skip importing from reacharts in order to reduce bundle size.
+// import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 
 import AttributeInput from '../AttributeInput/AttributeInput';
 import { JSONTree } from './JSONTree';
@@ -17,7 +19,26 @@ function parseJSONObject(str) {
 }
 
 function looksLikeMonospace(str) {
-  return str.match(/(\n  )|\t|    /);
+  return str.match(/(\n {2})|\t| {4}/);
+}
+
+function isNumeric(datatype) {
+  const numericTypes = [
+    "DevDouble",
+    "DevShort",
+    "DevFloat",
+    "DevLong",
+    "DevULong",
+    "DevULong64",
+    "DevUShort",
+    "DevLong64",
+    "DevUChar"
+  ];
+  return numericTypes.indexOf(datatype) !== -1;
+}
+
+function isWritable(writable) {
+  return ["READ_WRITE", "WRITE", "READ_WITH_WRITE"].indexOf(writable) !== -1;
 }
 
 const DevStringValueDisplay = ({ value }) => {
@@ -45,11 +66,11 @@ DevStringValueDisplay.propTypes = {
 }
 
 const ScalarValueDisplay = ({value, writeValue, datatype, name, writable, setDeviceAttribute, minvalue, maxvalue}) => {
-  if (datatype === 'DevString') {
+  if (datatype === "DevString") {
     return <DevStringValueDisplay value={value}/>;
-  } else if (datatype === 'DevEncoded') {
+  } else if (datatype === "DevEncoded") {
     const [type, payload] = value;
-    if (type !== 'json') {
+    if (type !== "json") {
       return `Unsupported encoding '${type}'`;
     }
 
@@ -62,21 +83,21 @@ const ScalarValueDisplay = ({value, writeValue, datatype, name, writable, setDev
     }
 
     return <DevStringValueDisplay value={payload}/>;
-
-  }else if(writable === "WRITE" || writable === "READ_WITH_WRITE" && datatype === 'DevDouble' || datatype === 'DevShort'
-  || datatype === 'DevFloat' || datatype === 'DevLong' || datatype === 'DevULong' || datatype === 'DevULong64' || datatype === 'DevUShort' || datatype === 'DevLong64' || datatype === 'DevUChar'){
-    return<AttributeInput
-      save={setDeviceAttribute.bind(this, name)}
-      value={Number(value)}
-      motorName={name}
-      writeValue={writeValue}
-      decimalPoints="24"
-      state={2}
-      disabled={false}
-      maxvalue={maxvalue}
-      minvalue={minvalue} 
-    />
-  }else{
+  } else if (isWritable(writable) && isNumeric(datatype)) {
+    return (
+      <AttributeInput
+        save={setDeviceAttribute.bind(this, name)}
+        value={Number(value)}
+        motorName={name}
+        writeValue={writeValue}
+        decimalPoints="24"
+        state={2}
+        disabled={false}
+        maxvalue={maxvalue}
+        minvalue={minvalue}
+      />
+    );
+  } else {
     return String(value);
   }
 }
@@ -97,20 +118,22 @@ const SpectrumValueDisplay = ({value, datatype}) => {
     return <DevStringValueDisplay value={value}/>;
   }
 
-  const values = datatype === 'DevBoolean'
-    ? value.map(val => val ? 1 : 0)
-    : value;
-  const data = values.map(value => ({value}));
-  const lineType = datatype === 'DevBoolean' ? 'step' : 'linear';
+  return null;
 
-  return (
-    <LineChart data={data} width={400} height={300}>
-      <YAxis/>
-      <Tooltip/>
-      <CartesianGrid stroke="#f5f5f5"/>
-      <Line dot={false} isAnimationActive={false} type={lineType} dataKey="value" stroke="#ff7300" yAxisId={0}/>
-    </LineChart>
-  );
+  // const values = datatype === 'DevBoolean'
+  //   ? value.map(val => val ? 1 : 0)
+  //   : value;
+  // const data = values.map(value => ({value}));
+  // const lineType = datatype === 'DevBoolean' ? 'step' : 'linear';
+
+  // return (
+  //   <LineChart data={data} width={400} height={300}>
+  //     <YAxis/>
+  //     <Tooltip/>
+  //     <CartesianGrid stroke="#f5f5f5"/>
+  //     <Line dot={false} isAnimationActive={false} type={lineType} dataKey="value" stroke="#ff7300" yAxisId={0}/>
+  //   </LineChart>
+  // );
 };
 
 SpectrumValueDisplay.propTypes = {
@@ -139,7 +162,7 @@ class ImageValueDisplay extends React.Component {
   }
 
   updateCanvas(){
-    const canvas = document.getElementById(this.props.name);
+    const canvas = document.getElementById(this.props.name); // TODO: use ref instead
     const context = canvas.getContext('2d');
 
     const image = this.props.value;

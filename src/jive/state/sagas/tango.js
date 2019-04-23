@@ -9,7 +9,8 @@ import {
   FETCH_DEVICE_SUCCESS,
   FETCH_DEVICE,
   FETCH_DATABASE_INFO,
-  FETCH_LOGGED_ACTIONS
+  FETCH_LOGGED_ACTIONS,
+  SET_DEVICE_ATTRIBUTE_SUCCESS
 } from "../actions/actionTypes";
 
 import TangoAPI from "../api/tango";
@@ -26,7 +27,6 @@ import {
   deleteDevicePropertyFailed,
   fetchDeviceSuccess,
   fetchDeviceFailed,
-  attributeChange,
   fetchDatabaseInfoSuccess,
   fetchDatabaseInfoFailed,
   attributeFrameReceived,
@@ -38,7 +38,7 @@ import { displayError } from "../actions/error";
 
 export default function* tango() {
   yield fork(fetchDeviceNames);
-  yield fork (fetchLoggedActions);
+  yield fork(fetchLoggedActions);
   yield fork(executeCommand);
   yield fork(setDeviceAttribute);
   yield fork(setDeviceProperty);
@@ -46,6 +46,7 @@ export default function* tango() {
   yield fork(fetchDevice);
   yield fork(subscribeOnFetchDevice);
   yield fork(fetchDatabaseInfo);
+  yield fork(refetchDeviceStateOnAttributeWrite);
 }
 
 /* Asynchronous actions */
@@ -98,7 +99,7 @@ function* setDeviceAttribute() {
   while (true) {
     const { tangoDB, device, name, value } = yield take("SET_DEVICE_ATTRIBUTE");
     try {
-      const ok = yield call(
+      const { ok, attribute } = yield call(
         TangoAPI.setDeviceAttribute,
         tangoDB,
         device,
@@ -106,7 +107,7 @@ function* setDeviceAttribute() {
         value
       );
       const action = ok
-        ? setDeviceAttributeSuccess(tangoDB, device, name, value)
+        ? setDeviceAttributeSuccess(tangoDB, attribute)
         : setDeviceAttributeFailed(tangoDB, device, name, value);
       yield put(action);
     } catch (err) {
@@ -146,7 +147,7 @@ function* deleteDeviceProperty() {
 function* fetchDevice() {
   while (true) {
     const { tangoDB, name } = yield take(FETCH_DEVICE);
-    const device = yield TangoAPI.fetchDevice(tangoDB, name);
+    const device = yield call(TangoAPI.fetchDevice, tangoDB, name);
     const action = device
       ? fetchDeviceSuccess(tangoDB, device)
       : fetchDeviceFailed(tangoDB, name);
@@ -157,10 +158,19 @@ function* fetchDevice() {
 function* fetchDatabaseInfo() {
   while (true) {
     const { tangoDB } = yield take(FETCH_DATABASE_INFO);
-    const info = yield TangoAPI.fetchDatabaseInfo(tangoDB);
+    const info = yield call(TangoAPI.fetchDatabaseInfo, tangoDB);
     const action = info
       ? fetchDatabaseInfoSuccess(tangoDB, info)
       : fetchDatabaseInfoFailed(tangoDB);
+    yield put(action);
+  }
+}
+
+function *refetchDeviceStateOnAttributeWrite() {
+  while (true) {
+    const { tangoDB, attribute: { device} } = yield take(SET_DEVICE_ATTRIBUTE_SUCCESS);
+    const state = yield call(TangoAPI.fetchDeviceState, tangoDB, device);
+    const action = { type: "DEVICE_STATE_RECEIVED", device, state };
     yield put(action);
   }
 }

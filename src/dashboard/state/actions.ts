@@ -10,9 +10,18 @@ import {
   RESIZE_WIDGET,
   SELECT_CANVAS,
   TOGGLE_MODE,
-  PRELOAD_DASHBOARD
+  DASHBOARD_LOADED,
+  DASHBOARDS_LOADED,
+  DASHBOARD_RENAMED,
+  DASHBOARD_DELETED,
+  DASHBOARD_CLONED,
+  DASHBOARD_SAVED,
+  SHOW_NOTIFICATION,
+  HIDE_NOTIFICATION,
+  SAVE_DASHBOARD,
 } from "./actionTypes";
-import { IndexPath, Widget } from "../types";
+
+import { IndexPath, Widget, Dashboard, Notification } from "../types";
 
 export interface AddWidgetAction extends Action {
   type: typeof ADD_WIDGET;
@@ -45,7 +54,6 @@ export interface SelectWidgetsAction extends Action {
 
 export interface DeleteWidgetAction extends Action {
   type: typeof DELETE_WIDGET;
-  id: string;
 }
 
 export interface SetInputAction extends Action {
@@ -74,9 +82,62 @@ export interface ToggleModeAction extends Action {
 }
 
 export interface PreloadDashboardAction extends Action {
-  type: typeof PRELOAD_DASHBOARD;
+  type: typeof DASHBOARD_LOADED;
   id: string;
   widgets: Widget[];
+  name: string;
+  user: string;
+}
+
+export interface DashboardsLoadedAction extends Action {
+  type: typeof DASHBOARDS_LOADED;
+  dashboards: Dashboard[];
+}
+
+export interface DashboardRenamedAction extends Action{
+  type: typeof DASHBOARD_RENAMED;
+  id: string
+  name: string;
+}
+
+export interface DashboardDeletedAction extends Action{
+  type: typeof DASHBOARD_DELETED;
+  id: string;
+}
+
+export interface DashboardClonedAction extends Action{
+  type: typeof DASHBOARD_CLONED;
+  id: string;
+}
+
+export interface DashboardLoadedAction extends Action{
+  type: typeof DASHBOARD_LOADED;
+  dashboard: Dashboard;
+  widgets: Widget[];
+}
+
+export interface SaveDashboardAction extends Action {
+  type: typeof SAVE_DASHBOARD;
+  id: string;
+  name: string;
+  widgets: Widget[];
+}
+
+export interface DashboardSavedAction extends Action{
+  type: typeof DASHBOARD_SAVED;
+  id: string;
+  created: boolean;
+  name: string;
+}
+
+export interface ShowNotificationAction extends Action{
+  type: typeof SHOW_NOTIFICATION;
+  notification: Notification;
+}
+
+export interface HideNotificationAction extends Action{
+  type: typeof HIDE_NOTIFICATION;
+  notification: Notification;
 }
 
 export type DashboardAction =
@@ -90,4 +151,11 @@ export type DashboardAction =
   | DeleteInputAction
   | SelectCanvasAction
   | ToggleModeAction
-  | PreloadDashboardAction;
+  | DashboardLoadedAction
+  | DashboardsLoadedAction
+  | DashboardRenamedAction
+  | DashboardDeletedAction
+  | DashboardClonedAction
+  | DashboardSavedAction
+  | ShowNotificationAction
+  | HideNotificationAction;

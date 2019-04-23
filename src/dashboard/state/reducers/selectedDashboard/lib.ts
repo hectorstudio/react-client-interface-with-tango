@@ -5,9 +5,9 @@ import {
   InputDefinitionMapping,
   InputMapping,
   InputDefinition
-} from "src/dashboard/types";
-import { defaultInputs } from "src/dashboard/utils";
-import { definitionForWidget } from "src/dashboard/widgets";
+} from "../../../types";
+import { defaultInputs } from "../../../utils";
+import { definitionForWidget } from "../../../widgets";
 
 export function move(widget: Widget, dx: number, dy: number) {
   const { x, y } = widget;
@@ -102,6 +102,7 @@ export function defaultDimensions(
 }
 
 export function nestedDefault(definition: WidgetDefinition, path: IndexPath) {
+  const initial = { inputs: definition.inputs };
   const leaf = path.reduce((accum, segment): {
     inputs: InputDefinitionMapping;
   } => {
@@ -113,7 +114,7 @@ export function nestedDefault(definition: WidgetDefinition, path: IndexPath) {
     } else {
       throw new Error("only complex inputs can be traversed");
     }
-  }, definition);
+  }, initial);
   return defaultInputs(leaf.inputs);
 }
 
