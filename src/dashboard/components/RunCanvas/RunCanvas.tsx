@@ -156,15 +156,26 @@ export default class RunCanvas extends Component<Props, State> {
     device: string,
     command: string
   ): Promise<boolean> {
-    const output = await TangoAPI.executeCommand(
-      this.props.tangoDB,
-      device,
-      command
-    );
+    let output;
+    try {
+      output = await TangoAPI.executeCommand(
+        this.props.tangoDB,
+        device,
+        command
+      );
+    } catch (err) {
+      // Possibly display a visual indication of the error
+      return false;
+    }
+
     const fullName = `${device}/${command}`;
-    const commandOutputs = { ...this.state.commandOutputs, [fullName]: output };
+    const commandOutputs = {
+      ...this.state.commandOutputs,
+      [fullName]: output
+    };
+
     this.setState({ commandOutputs });
-    return output;
+    return true;
   }
 
   private async writeAttribute(
@@ -172,20 +183,29 @@ export default class RunCanvas extends Component<Props, State> {
     attribute: string,
     value: any
   ): Promise<boolean> {
-    const { ok, attribute: attributeAfter } = await TangoAPI.writeAttribute(
-      this.props.tangoDB,
-      device,
-      attribute,
-      value
-    );
+    let result;
+    try {
+      result = await TangoAPI.writeAttribute(
+        this.props.tangoDB,
+        device,
+        attribute,
+        value
+      );
+    } catch (err) {
+      // Possibly display a visual indication of the error
+      return false;
+    }
 
-    this.recordAttribute(
-      device,
-      attribute,
-      attributeAfter.value,
-      attributeAfter.writevalue,
-      attributeAfter.timestamp
-    );
+    const { ok, attribute: attributeAfter } = result;
+    if (ok) {
+      this.recordAttribute(
+        device,
+        attribute,
+        attributeAfter.value,
+        attributeAfter.writevalue,
+        attributeAfter.timestamp
+      );
+    }
 
     return ok;
   }
