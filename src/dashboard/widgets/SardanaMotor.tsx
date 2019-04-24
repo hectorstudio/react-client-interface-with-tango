@@ -1,26 +1,29 @@
 import React, { Component } from "react";
 
 import { WidgetProps } from "./types";
-import { WidgetDefinition, CommandInput } from "../types";
+import { WidgetDefinition } from "../types";
 import "./SardanaMotor.css";
 import { QualityIndicatorLabel } from "../../shared/widgets/snippets";
 import {PrecisionAttributeWriter} from "./PrecisionAttributeWriter";
 
 interface State{
   pawPosition: number;
+  copiedPosition: number;
 }
 
 class SardanaMotor extends Component<WidgetProps, State> {
   constructor(props: WidgetProps) {
     super(props);
-    this.state = { pawPosition: this.props.inputs.position.value };
+    this.state = { pawPosition: this.props.inputs.position.value, copiedPosition: this.props.inputs.position.value};
     this.handleStop = this.handleStop.bind(this);
+    this.setPower = this.setPower.bind(this);
+    this.setPosition = this.setPosition.bind(this);
   }
 
   public render() {
     const { inputs, mode } = this.props;
-    const { title, upperLimit, lowerLimit, position, powerOn, state, precision, maxMagnitude } = inputs;
-    const running = powerOn.value ? "running" : "stopped";
+    const { title, upperLimit, lowerLimit, power, position, state, precision, maxMagnitude } = inputs;
+    const running = power.value ? "running" : "stopped";
     const editMode = mode === "edit";
     return (
       <div className="sardana-motor">
@@ -28,16 +31,22 @@ class SardanaMotor extends Component<WidgetProps, State> {
           <div className="row menu">
             <div>
             <QualityIndicatorLabel state={(editMode ? "UNKNOWN" : state.value)} />
+            {state.value === "MOVING" && <button className="btn-stop" title="Stop the movement" onClick={this.handleStop}/>}
               <span className="title">{title}</span>
             </div>
             <div>
               <span className={"label-" + (editMode ? "unknown" : running)} />
               {" "}
-              <button
-                className={"btn-" + running}
+              {power.value ? <button
+                className={"btn-running"}
                 title="Stop the motor"
-                onClick={this.handleStop}
-              />
+                onClick={() => this.setPower(false)}
+              /> : <button
+              className={"btn-stopped"}
+              title="Start the motor"
+              onClick={() => this.setPower(true)}
+            /> }
+              
             </div>
           </div>
           <div className="row">
@@ -45,8 +54,6 @@ class SardanaMotor extends Component<WidgetProps, State> {
             <span>
               {mode === "run"
                 ? upperLimit.value
-                  ? "Reached"
-                  : "Not reached"
                 : "-"}
             </span>
           </div>
@@ -55,8 +62,6 @@ class SardanaMotor extends Component<WidgetProps, State> {
             <span>
               {!editMode
                 ? lowerLimit.value
-                  ? "Reached"
-                  : "Not reached"
                 : "-"}
             </span>
           </div>
@@ -65,10 +70,10 @@ class SardanaMotor extends Component<WidgetProps, State> {
             <span>{editMode ? "-" : position.value}</span>
           </div>
           <div className="row">
-          <button className="btn-copy" onClick={() => this.setPosition()}>Set position</button>
+          <button className="btn-copy" onClick={this.setPosition}>Set position</button>
             {editMode ? 
             <PrecisionAttributeWriter
-            initialValue={position.value}
+            initialValue={0}
             precision={precision}
             maxMagnitude={maxMagnitude}
             mode={mode}
@@ -76,7 +81,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
             />
             :
             <PrecisionAttributeWriter
-            initialValue={position.value}
+            initialValue={this.state.copiedPosition}
             precision={precision}
             maxMagnitude={maxMagnitude}
             mode={mode}
@@ -84,22 +89,23 @@ class SardanaMotor extends Component<WidgetProps, State> {
             />
           }
             
-            <button className="btn-copy" onClick={() => this.copyCurrent()}>Copy current</button>
+            <button className="btn-copy" onClick={() => this.setState({copiedPosition: this.props.inputs.position.value})}>Copy current</button>
           </div>
         </div>
       </div>
     );
   }
 
-  private copyCurrent(){
-    console.log("copying");
-  }
   private setPosition(){
-    console.log("New value: " + this.state.pawPosition);
+    this.props.inputs.position.write(this.state.pawPosition);
   }
-  private async handleStop() {
-    // const { stop } = this.props.inputs;
-    // stop.execute();
+
+  private handleStop() {
+    this.props.inputs.stop.execute();
+    
+  }
+  private setPower(value:boolean){
+    this.props.inputs.power.write(value);
   }
 }
 
@@ -118,36 +124,6 @@ const definition: WidgetDefinition = {
       label: "Title",
       default: "Motor"
     },
-    stop: {
-      type: "command",
-      device: "$device",
-      command: "Stop"
-    },
-    upperLimit: {
-      type: "attribute",
-      device: "$device",
-      attribute: "StatusLim+"
-    },
-    lowerLimit: {
-      type: "attribute",
-      device: "$device",
-      attribute: "StatusLim-"
-    },
-    position: {
-      type: "attribute",
-      device: "$device",
-      attribute: "Position"
-    },
-    powerOn: {
-      type: "attribute",
-      device: "$device",
-      attribute: "PowerOn"
-    },
-    state: {
-      type: "attribute",
-      device: "$device",
-      attribute: "State"
-    },
     maxMagnitude: {
       type: "number",
       label: "Max. magnitude",
@@ -157,7 +133,37 @@ const definition: WidgetDefinition = {
       type: "number",
       label: "precision",
       default: 3,
-    }
+    },
+    stop: {
+      type: "command",
+      device: "$device",
+      command: "Stop"
+    },
+    upperLimit: {
+      type: "attribute",
+      device: "$device",
+      attribute: "UpperLimitSwitch"
+    },
+    lowerLimit: {
+      type: "attribute",
+      device: "$device",
+      attribute: "LowerLimitSwitch"
+    },
+    position: {
+      type: "attribute",
+      device: "$device",
+      attribute: "Position"
+    },
+    power: {
+      type: "attribute",
+      device: "$device",
+      attribute: "Power"
+    },
+    state: {
+      type: "attribute",
+      device: "$device",
+      attribute: "State"
+    },
   }
 };
 

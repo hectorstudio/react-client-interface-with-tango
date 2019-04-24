@@ -27,3 +27,15 @@
   visibility: hidden;
   cursor: default;
 }
+
+.paw .btn-sign{
+  background: #fff;
+  vertical-align: super;
+  border: 1px solid #ccc;
+  border-radius: 0.2em;
+  margin-right: 0.3em;
+  padding: 0em 0.4em;
+}
+.paw .btn-sign:hover{
+  background: #f0f0f0;
+}
