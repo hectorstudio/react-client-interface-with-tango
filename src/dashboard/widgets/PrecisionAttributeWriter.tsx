@@ -17,22 +17,39 @@ interface Props {
 export class PrecisionAttributeWriter extends Component<Props, State> {
   public constructor(props: Props) {
     super(props);
-    const {precision, maxMagnitude} = this.props;
+    const { precision, maxMagnitude, initialValue } = this.props;
     this.state = {
-      wholeArray: this.getWholeArray(0, maxMagnitude),
-      decimalArray: this.getDecimalArray(0, precision),
-      positive: true,
+      wholeArray: this.getWholeArray(initialValue, maxMagnitude),
+      decimalArray: this.getDecimalArray(initialValue, precision),
+      positive: true
     };
   }
 
+  /**
+   * We need to update the state on component update in two cases:
+   * 1) We're in edit mode and chaning the precision or magnitude params.
+   * 2) We're in run mode and the initialValue has changed
+   * @param prevProps
+   */
   public componentDidUpdate(prevProps) {
-    const { mode: prevMode } = prevProps.mode;
+    const {
+      mode: prevMode,
+      precision: prevPrecision,
+      maxMagnitude: prevMaxMag,
+      initialValue: prevInitialValue
+    } = prevProps;
     const { mode, initialValue, precision, maxMagnitude } = this.props;
-    if (prevMode === "edit" && mode === "run") {
+    const newPrecision = prevPrecision != precision;
+    const newMaxMag = prevMaxMag != maxMagnitude;
+    const newInitialvalue = prevInitialValue != initialValue;
+    if (
+      (mode === "edit" && (newPrecision || newMaxMag)) ||
+      (mode === "run" && newInitialvalue)
+    ) {
       this.setState({
         wholeArray: this.getWholeArray(initialValue, maxMagnitude),
         decimalArray: this.getDecimalArray(initialValue, precision),
-        positive: initialValue > 0
+        positive: initialValue >= 0
       });
     }
   }
@@ -40,12 +57,10 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
   public render() {
     return this.createWidget();
   }
-  
 
   private createWidget() {
-
     const { precision, maxMagnitude } = this.props;
-    const {wholeArray, decimalArray } = this.state;
+    const { wholeArray, decimalArray, positive } = this.state;
     const upArrows: JSX.Element[] = [];
     const downArrows: JSX.Element[] = [];
     for (let i = 0; i < maxMagnitude + 1; i++) {
@@ -95,94 +110,134 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
         />
       );
     }
-
+    const sign = positive ? "+" : "-";
     return (
       <div className="paw">
-        <div style={{ marginBottom: "-0.3em" }}>
-          {upArrows.map(elem => elem)}
-        </div>
-        <div className="set-position">
-        {wholeArray.join('')}.
-        {decimalArray.join('')}
-        </div>
-        <div style={{ marginTop: "-1.1rem" }}>
-          {downArrows.map(elem => elem)}
+          <button
+            title="Toggle sign"
+            className="btn-sign"
+            onClick={() => this.toggleSign()}
+          >
+            {sign}
+          </button>
+
+        <div style={{ display: "inline-block" }}>
+          <div style={{ marginBottom: "-0.3em" }}>
+            {upArrows.map(elem => elem)}
+          </div>
+          <div className="set-position">
+            {wholeArray.join("")}.{decimalArray.join("")}
+          </div>
+          <div style={{ marginTop: "-1.1rem" }}>
+            {downArrows.map(elem => elem)}
+          </div>
         </div>
       </div>
     );
   }
-  private getWholeArray(value:number, maxMagnitude:number):number[]{
-    if (!value){
+  private getWholeArray(value: number, maxMagnitude: number): number[] {
+    if (!value) {
       value = 0;
     }
     let whole = Math.abs(Math.floor(value)).toString();
-    if (whole.includes(".")){
+    if (whole.includes(".")) {
       whole = whole.substring(0, whole.indexOf("."));
     }
-    return this.lpad(whole.split('').map((char => parseInt(char, 10))), maxMagnitude);
+    return this.lpad(
+      whole.split("").map(char => parseInt(char, 10)),
+      maxMagnitude
+    );
   }
-  private getDecimalArray(value:number, precision:number):number[]{
-    if (!value){
+  private getDecimalArray(value: number, precision: number): number[] {
+    if (!value) {
       value = 0;
     }
     let decimal = (value - Math.floor(value)).toString();
-    if (decimal.length > precision){
-      decimal = decimal.substring(0, precision);
-    }
-    if (decimal.includes(".")){
+    if (decimal.includes(".")) {
       decimal = decimal.substring(decimal.indexOf(".") + 1);
     }
-    return this.rpad(decimal.split('').map((char => parseInt(char, 10))), precision);
+    if (decimal.length > precision) {
+      decimal = decimal.substring(0, precision);
+    }
+    return this.rpad(
+      decimal.split("").map(char => parseInt(char, 10)),
+      precision
+    );
   }
-  private increment(index:number, whole:boolean) {
-    if (whole){
-      const {wholeArray} = this.state;
+  private increment(index: number, whole: boolean) {
+    if (whole) {
+      const { wholeArray } = this.state;
       wholeArray[index] = (wholeArray[index] + 1) % 10;
-      this.setState({wholeArray})
-    }else{
-      const {decimalArray} = this.state;
+      this.setState({ wholeArray }, () =>
+        this.props.onValueChange(this.getValue())
+      );
+    } else {
+      const { decimalArray } = this.state;
       decimalArray[index] = (decimalArray[index] + 1) % 10;
-      this.setState({decimalArray})
+      this.setState({ decimalArray }, () =>
+        this.props.onValueChange(this.getValue())
+      );
     }
   }
 
-  private decrement(index:number, whole:boolean) {
-    if (whole){
-      const {wholeArray} = this.state;
-      if (wholeArray[index] === 0){
+  private decrement(index: number, whole: boolean) {
+    if (whole) {
+      const { wholeArray } = this.state;
+      if (wholeArray[index] === 0) {
         wholeArray[index] = 9;
-      }else{
-        wholeArray[index] = wholeArray[index] - 1;  
+      } else {
+        wholeArray[index] = wholeArray[index] - 1;
       }
-      this.setState({wholeArray})
-    }else{
-      const {decimalArray} = this.state;
-      if (decimalArray[index] === 0){
+      this.setState({ wholeArray }, () =>
+        this.props.onValueChange(this.getValue())
+      );
+    } else {
+      const { decimalArray } = this.state;
+      if (decimalArray[index] === 0) {
         decimalArray[index] = 9;
-      }else{
+      } else {
         decimalArray[index] = decimalArray[index] - 1;
       }
-      
-      this.setState({decimalArray})
+
+      this.setState({ decimalArray }, () =>
+        this.props.onValueChange(this.getValue())
+      );
     }
   }
 
   private lpad(value: number[], length: number) {
-    while(value.length < length){
+    while (value.length < length) {
       value.unshift(0);
     }
     return value;
   }
 
   private rpad(value: number[], length: number) {
-    while(value.length < length){
+    while (value.length < length) {
       value.push(0);
     }
     return value;
   }
 
-  private getValue():number{
-    const {wholeArray, decimalArray} = this.state;
-    return parseInt(wholeArray.join('') + "." + decimalArray.join(''), 10);
+  private getValue(): number {
+    const { wholeArray, decimalArray, positive } = this.state;
+    const value =
+      (positive ? 1 : -1) *
+      parseFloat(wholeArray.join("") + "." + decimalArray.join(""));
+    return value;
+  }
+  private setValue(value: number) {
+    const { maxMagnitude, precision } = this.props;
+    this.state = {
+      wholeArray: this.getWholeArray(value, maxMagnitude),
+      decimalArray: this.getDecimalArray(value, precision),
+      positive: value >= 0
+    };
+  }
+  private toggleSign() {
+    const { positive } = this.state;
+    this.setState({ positive: !positive }, () =>
+      this.props.onValueChange(this.getValue())
+    );
   }
 }
