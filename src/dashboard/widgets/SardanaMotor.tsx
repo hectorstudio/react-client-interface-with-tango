@@ -8,16 +8,19 @@ import {PrecisionAttributeWriter} from "./PrecisionAttributeWriter";
 
 interface State{
   pawPosition: number;
-  copiedPosition: number;
 }
 
 class SardanaMotor extends Component<WidgetProps, State> {
+
+  public pawRef: any;
+
   constructor(props: WidgetProps) {
     super(props);
-    this.state = { pawPosition: this.props.inputs.position.value, copiedPosition: this.props.inputs.position.value};
+    this.state = { pawPosition: this.props.inputs.position.value};
     this.handleStop = this.handleStop.bind(this);
     this.setPower = this.setPower.bind(this);
     this.setPosition = this.setPosition.bind(this);
+    this.pawRef = React.createRef();
   }
 
   public render() {
@@ -73,6 +76,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
           <button className="btn-copy" onClick={this.setPosition}>Set position</button>
             {editMode ? 
             <PrecisionAttributeWriter
+            ref={this.pawRef}
             initialValue={0}
             precision={precision}
             maxMagnitude={maxMagnitude}
@@ -81,7 +85,8 @@ class SardanaMotor extends Component<WidgetProps, State> {
             />
             :
             <PrecisionAttributeWriter
-            initialValue={this.state.copiedPosition}
+            ref={this.pawRef}
+            initialValue={0}
             precision={precision}
             maxMagnitude={maxMagnitude}
             mode={mode}
@@ -89,7 +94,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
             />
           }
             
-            <button className="btn-copy" onClick={() => this.setState({copiedPosition: this.props.inputs.position.value})}>Copy current</button>
+            <button className="btn-copy" onClick={() => this.pawRef.current.setValue(position.value)}>Copy current</button>
           </div>
         </div>
       </div>
