@@ -11,19 +11,29 @@
   cursor: pointer;
   width: 24px;
   height: 24px;
+  outline: none;
   vertical-align: text-bottom;
 }
+
 .sardana-motor .btn-stopped {
   background: url("../icons/terminate-24.png");
   border: none;
   cursor: pointer;
   width: 24px;
   height: 24px;
-  -webkit-filter: grayscale(100%);
-  filter: grayscale(100%);
+  -webkit-filter: hue-rotate(100deg);
+  filter: hue-rotate(100deg);
   outline: none;
-  cursor: default;
   vertical-align: text-bottom;
+}
+.sardana-motor .btn-stop{
+  background: #e07070;
+  border: 1px solid #b15454;
+  border-radius: 0.2em;
+  margin-right: 0.2em;
+  width: 1em;
+  height: 1em;
+  cursor: pointer;
 }
 
 .sardana-motor .label-running:after {
