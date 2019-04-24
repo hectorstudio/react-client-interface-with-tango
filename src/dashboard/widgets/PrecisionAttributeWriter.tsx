@@ -254,13 +254,13 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
       parseFloat(wholeArray.join("") + "." + decimalArray.join(""));
     return value;
   }
-  private setValue(value: number) {
+  public setValue(value: number) {
     const { maxMagnitude, precision } = this.props;
-    this.state = {
+    this.setState({
       wholeArray: this.getWholeArray(value, maxMagnitude),
       decimalArray: this.getDecimalArray(value, precision),
       positive: value >= 0
-    };
+    });
   }
   private toggleSign() {
     const { positive } = this.state;
