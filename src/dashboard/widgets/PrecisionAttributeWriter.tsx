@@ -168,12 +168,26 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
     if (whole) {
       const { wholeArray } = this.state;
       wholeArray[index] = (wholeArray[index] + 1) % 10;
+      if (wholeArray[index] === 0 && index > 0){
+        //roll over and increment the next digit
+        this.increment(index-1, true);
+      }
       this.setState({ wholeArray }, () =>
         this.props.onValueChange(this.getValue())
       );
     } else {
       const { decimalArray } = this.state;
       decimalArray[index] = (decimalArray[index] + 1) % 10;
+      if (decimalArray[index] === 0 && index > 0){
+        //roll over and increment the next digit
+        this.increment(index-1, false);
+      }else if (decimalArray[index] === 0 && index === 0){
+        const { wholeArray } = this.state;
+        if (wholeArray.length > 0){
+           //roll over and increment the whole next digit
+          this.increment(wholeArray.length - 1, true);
+        }
+      }
       this.setState({ decimalArray }, () =>
         this.props.onValueChange(this.getValue())
       );
@@ -185,6 +199,10 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
       const { wholeArray } = this.state;
       if (wholeArray[index] === 0) {
         wholeArray[index] = 9;
+        if (index > 0){
+          //roll over and decrement the next digit
+          this.decrement(index-1, true);
+        }
       } else {
         wholeArray[index] = wholeArray[index] - 1;
       }
@@ -195,6 +213,16 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
       const { decimalArray } = this.state;
       if (decimalArray[index] === 0) {
         decimalArray[index] = 9;
+        if (index > 0){
+          //roll over and decrement the next digit
+          this.decrement(index-1, false);
+        }else{
+          const { wholeArray } = this.state;
+          if (wholeArray.length > 0){
+            //roll over and decrement the next whole digit
+            this.decrement(wholeArray.length - 1, true);
+          }
+        }
       } else {
         decimalArray[index] = decimalArray[index] - 1;
       }
