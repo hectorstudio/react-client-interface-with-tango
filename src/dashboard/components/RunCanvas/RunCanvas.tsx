@@ -13,7 +13,8 @@ import {
   AttributeValueLookup,
   CommandOutputLookup,
   AttributeMetadataLookup,
-  AttributeHistoryLookup
+  AttributeHistoryLookup,
+  DeviceMetadataLookup
 } from "./lib";
 
 import * as TangoAPI from "../api";
@@ -45,6 +46,7 @@ interface State {
   attributeHistories: AttributeHistoryLookup;
   commandOutputs: CommandOutputLookup;
   attributeMetadata: AttributeMetadataLookup | null;
+  deviceMetadata: DeviceMetadataLookup | null;
   t0: number;
 }
 
@@ -60,6 +62,7 @@ export default class RunCanvas extends Component<Props, State> {
       attributeHistories: {},
       commandOutputs: {},
       attributeMetadata: null,
+      deviceMetadata: null,
       t0: Date.now() / 1000
     };
 
@@ -72,16 +75,21 @@ export default class RunCanvas extends Component<Props, State> {
     const { widgets, tangoDB } = this.props;
     const fullNames = extractFullNamesFromWidgets(widgets);
 
-    const attributeMetadata = (await TangoAPI.fetchAttributeMetadata(
+    const attributeMetadata = await TangoAPI.fetchAttributeMetadata(
       tangoDB,
       fullNames
-    )) as AttributeMetadataLookup | null;
+    );
+
+    const deviceMetadata = await TangoAPI.fetchDeviceMetadata(
+      tangoDB,
+      fullNames
+    );
 
     const attributeHistories = fullNames.reduce((accum, name) => {
       return { ...accum, [name]: [] };
     }, {});
 
-    this.setState({ attributeMetadata, attributeHistories });
+    this.setState({ deviceMetadata, attributeMetadata, attributeHistories });
 
     const startEmission = attributeEmitter(tangoDB, fullNames);
     this.unsubscribe = startEmission(this.handleNewFrame);
