@@ -41,10 +41,15 @@ interface AttributeMetadata {
   isNumeric: boolean;
 }
 
+interface DeviceMetadata {
+  alias: string;
+}
+
 export type AttributeMetadataLookup = Record<string, AttributeMetadata>;
 export type AttributeValueLookup = Record<string, AttributeValue>;
 export type AttributeHistoryLookup = Record<string, AttributeValue[]>;
 export type CommandOutputLookup = Record<string, any>;
+export type DeviceMetadataLookup = Record<string, DeviceMetadata>;
 
 type OnWrite = (
   device: string,
