@@ -42,11 +42,11 @@ class SardanaMotor extends Component<WidgetProps, State> {
               {" "}
               {power.value ? <button
                 className={"btn-running"}
-                title="Stop the motor"
+                title="Power off the motor"
                 onClick={() => this.setPower(false)}
               /> : <button
               className={"btn-stopped"}
-              title="Start the motor"
+              title="Power on motor"
               onClick={() => this.setPower(true)}
             /> }
               
