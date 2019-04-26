@@ -154,6 +154,10 @@ function inputIsValid(definition: InputDefinition, value: any): boolean {
     }
   }
 
+  if (definition.type === "device") {
+    return value != null;
+  }
+
   return true;
 }
 
