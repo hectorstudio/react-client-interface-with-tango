@@ -120,6 +120,13 @@ Manifests itself as an input where the user can select any of the devices in the
 |-|-|-
 | publish | string | If true, the device name is made available to other inputs as a variable (see example at the top.)
 
+In the component, the input is an objec with the following structure:
+
+| Key | Type | Description
+|-|-|-
+| name | string | The device name
+| alias | string | The device alias, or null if none
+
 ### Attribute Input Definition
 
 An input representing a device attribute. Unless bound to a certain attribute, it manifests itself as an input where the user can select a device attribute.
