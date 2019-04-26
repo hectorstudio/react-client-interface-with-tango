@@ -160,7 +160,7 @@ function deviceNameFromFull(fullName: string) {
   return parts.slice(0, 3).join("/");
 }
 
-function uniqueDeviceNames(fullNames: string[]) {
+function deviceNamesFromFullNames(fullNames: string[]) {
   const deviceNames = fullNames.map(deviceNameFromFull);
   const uniqueNames = deviceNames.filter(
     (name, i, names) => names.indexOf(name) === i
@@ -176,7 +176,7 @@ export async function fetchAttributeMetadata(
   fullNames: string[]
 ) {
   try {
-    const deviceNames = uniqueDeviceNames(fullNames);
+    const deviceNames = deviceNamesFromFullNames(fullNames);
     const result = {};
 
     for (const deviceName of deviceNames) {
@@ -202,8 +202,10 @@ export async function fetchAttributeMetadata(
   }
 }
 
-export async function fetchDeviceMetadata(tangoDB, fullNames) {
-  const deviceNames = uniqueDeviceNames(fullNames);
+export async function fetchDeviceMetadata(
+  tangoDB: string,
+  deviceNames: string[]
+) {
   const result = {};
 
   for (const deviceName of deviceNames) {
