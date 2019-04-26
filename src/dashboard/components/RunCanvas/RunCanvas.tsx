@@ -105,12 +105,17 @@ export default class RunCanvas extends Component<Props, State> {
     const { widgets } = this.props;
 
     const {
+      deviceMetadata,
       attributeMetadata,
       attributeValues,
       attributeHistories,
       commandOutputs,
       t0
     } = this.state;
+
+    if (deviceMetadata == null) {
+      return null;
+    }
 
     if (attributeMetadata == null) {
       return null;
@@ -126,6 +131,7 @@ export default class RunCanvas extends Component<Props, State> {
           const inputs = enrichedInputs(
             widget.inputs,
             definition.inputs,
+            deviceMetadata,
             attributeMetadata,
             attributeValues,
             attributeHistories,
