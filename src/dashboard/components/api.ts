@@ -71,13 +71,19 @@ const FETCH_ATTRIBUTE_METADATA = `
 query FetchAttributeMetadata($deviceName: String!) {
   device(name: $deviceName) {
     attributes {
-        name
-        dataformat
-        datatype
-      }
+      name
+      dataformat
+      datatype
     }
   }
-  `;
+}`;
+
+const FETCH_DEVICE_METADATA = `
+query FetchDeviceMetadata($deviceName: String!) {
+  device(name: $deviceName) {
+    alias
+  }
+}`;
 
 function request<T = any>(
   tangoDB: string,
@@ -149,20 +155,28 @@ export async function writeAttribute(tangoDB, device, attribute, value) {
   }
 }
 
-function deviceNameFromFull(fullName) {
+function deviceNameFromFull(fullName: string) {
   const parts = fullName.split("/");
   return parts.slice(0, 3).join("/");
+}
+
+function deviceNamesFromFullNames(fullNames: string[]) {
+  const deviceNames = fullNames.map(deviceNameFromFull);
+  const uniqueNames = deviceNames.filter(
+    (name, i, names) => names.indexOf(name) === i
+  );
+  return uniqueNames;
 }
 
 // This is a cumbersome and potentially slow way of retrieving all attribute metadata.
 // Simplify it when there exists a `query { attributes(fullNames: [String]) }' resolver available in the backend
 
-export async function fetchAttributeMetadata(tangoDB, fullNames) {
+export async function fetchAttributeMetadata(
+  tangoDB: string,
+  fullNames: string[]
+) {
   try {
-    const deviceNames = fullNames
-      .map(deviceNameFromFull)
-      .filter((name, i, names) => names.indexOf(name) === i);
-
+    const deviceNames = deviceNamesFromFullNames(fullNames);
     const result = {};
 
     for (const deviceName of deviceNames) {
@@ -186,4 +200,19 @@ export async function fetchAttributeMetadata(tangoDB, fullNames) {
     alert(err);
     return null;
   }
+}
+
+export async function fetchDeviceMetadata(
+  tangoDB: string,
+  deviceNames: string[]
+) {
+  const result = {};
+
+  for (const deviceName of deviceNames) {
+    const data = await request(tangoDB, FETCH_DEVICE_METADATA, { deviceName });
+    const { alias } = data.device;
+    result[deviceName] = { alias };
+  }
+
+  return result;
 }

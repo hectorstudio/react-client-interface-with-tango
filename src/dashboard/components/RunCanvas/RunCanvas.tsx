@@ -7,16 +7,21 @@ import { TILE_SIZE } from "../constants";
 import ErrorBoundary from "../ErrorBoundary";
 
 import { attributeEmitter, END, EmittedFrame } from "./emitter";
+import * as TangoAPI from "../api";
+
 import {
-  extractFullNamesFromWidgets,
-  enrichedInputs,
   AttributeValueLookup,
+  AttributeHistoryLookup,
   CommandOutputLookup,
   AttributeMetadataLookup,
-  AttributeHistoryLookup
-} from "./lib";
+  DeviceMetadataLookup,
+  enrichedInputs
+} from "./lib/enrichment";
 
-import * as TangoAPI from "../api";
+import {
+  extractFullNamesFromWidgets,
+  extractDeviceNamesFromWidgets
+} from "./lib/extraction";
 
 const HISTORY_LIMIT = 1000;
 
@@ -45,6 +50,7 @@ interface State {
   attributeHistories: AttributeHistoryLookup;
   commandOutputs: CommandOutputLookup;
   attributeMetadata: AttributeMetadataLookup | null;
+  deviceMetadata: DeviceMetadataLookup | null;
   t0: number;
 }
 
@@ -60,6 +66,7 @@ export default class RunCanvas extends Component<Props, State> {
       attributeHistories: {},
       commandOutputs: {},
       attributeMetadata: null,
+      deviceMetadata: null,
       t0: Date.now() / 1000
     };
 
@@ -72,16 +79,22 @@ export default class RunCanvas extends Component<Props, State> {
     const { widgets, tangoDB } = this.props;
     const fullNames = extractFullNamesFromWidgets(widgets);
 
-    const attributeMetadata = (await TangoAPI.fetchAttributeMetadata(
+    const attributeMetadata = await TangoAPI.fetchAttributeMetadata(
       tangoDB,
       fullNames
-    )) as AttributeMetadataLookup | null;
+    );
+
+    const deviceNames = extractDeviceNamesFromWidgets(widgets);
+    const deviceMetadata = await TangoAPI.fetchDeviceMetadata(
+      tangoDB,
+      deviceNames
+    );
 
     const attributeHistories = fullNames.reduce((accum, name) => {
       return { ...accum, [name]: [] };
     }, {});
 
-    this.setState({ attributeMetadata, attributeHistories });
+    this.setState({ deviceMetadata, attributeMetadata, attributeHistories });
 
     const startEmission = attributeEmitter(tangoDB, fullNames);
     this.unsubscribe = startEmission(this.handleNewFrame);
@@ -97,12 +110,17 @@ export default class RunCanvas extends Component<Props, State> {
     const { widgets } = this.props;
 
     const {
+      deviceMetadata,
       attributeMetadata,
       attributeValues,
       attributeHistories,
       commandOutputs,
       t0
     } = this.state;
+
+    if (deviceMetadata == null) {
+      return null;
+    }
 
     if (attributeMetadata == null) {
       return null;
@@ -118,6 +136,7 @@ export default class RunCanvas extends Component<Props, State> {
           const inputs = enrichedInputs(
             widget.inputs,
             definition.inputs,
+            deviceMetadata,
             attributeMetadata,
             attributeValues,
             attributeHistories,
