@@ -1,11 +1,9 @@
 import {
   InputDefinitionMapping,
   InputMapping,
-  Widget,
   InputDefinition,
-  AttributeInputDefinition
-} from "../../types";
-import { definitionForWidget } from "../../widgets";
+} from "../../../types";
+import { publishedDevices, resolveDevice } from "./utils";
 
 const numericTypes = [
   "DevDouble",
@@ -18,16 +16,6 @@ const numericTypes = [
   "DevULong64",
   "DevUShort"
 ];
-
-function resolveDevice(
-  published: PublishedDevices,
-  inputDevice: string,
-  definitionDevice?: string
-) {
-  return definitionDevice && published.hasOwnProperty(definitionDevice)
-    ? published[definitionDevice]
-    : inputDevice;
-}
 
 interface AttributeValue {
   value: any;
@@ -57,72 +45,6 @@ type OnWrite = (
   value: any
 ) => Promise<boolean>;
 type OnExecute = (device: string, command: string) => Promise<any>;
-
-function* extractFullNamesFromInputsGen(
-  inputs: InputMapping,
-  inputDefinitions: InputDefinitionMapping,
-  published: PublishedDevices
-) {
-  const inputNames = Object.keys(inputs);
-  for (const name of inputNames) {
-    const inputDefinition = inputDefinitions[name];
-    const input = inputs[name];
-    const { type, repeat } = inputDefinition;
-
-    if (type === "attribute") {
-      const {
-        device: definitionDevice,
-        attribute: definitionAttribute
-      } = inputDefinition as AttributeInputDefinition;
-
-      const { device: inputDevice, attribute: inputAttribute } = input;
-      const attribute = definitionAttribute || inputAttribute;
-      const resolvedDevice = resolveDevice(
-        published,
-        inputDevice,
-        definitionDevice
-      );
-
-      if (resolvedDevice != null && attribute != null) {
-        yield `${resolvedDevice}/${attribute}`;
-      }
-    } else if (type === "complex") {
-      if (inputDefinition.type === "complex") {
-        if (repeat) {
-          for (const entry of input) {
-            yield* extractFullNamesFromInputsGen(
-              entry,
-              inputDefinition.inputs,
-              published
-            );
-          }
-        } else {
-          yield* extractFullNamesFromInputsGen(
-            input.inputs,
-            inputDefinition.inputs,
-            published
-          );
-        }
-      } else {
-        throw new Error();
-      }
-    }
-  }
-}
-
-function* extractFullNamesFromWidgetsGen(widgets: Widget[]) {
-  for (const widget of widgets) {
-    const definition = definitionForWidget(widget);
-    const inputs = widget.inputs;
-    const inputDefinitions = definition!.inputs;
-    const published = publishedDevices(inputs, inputDefinitions);
-    yield* extractFullNamesFromInputsGen(inputs, inputDefinitions, published);
-  }
-}
-
-export function extractFullNamesFromWidgets(widgets: Widget[]) {
-  return Array.from(extractFullNamesFromWidgetsGen(widgets));
-}
 
 function enrichedInput(
   input: any,
@@ -215,29 +137,12 @@ function enrichedInput(
     };
   }
 
+  if (definition.type === "device") {
+    const { alias } = deviceMetadata[input];
+    return { name: input, alias };
+  }
+
   return input;
-}
-
-interface PublishedDevices {
-  [variable: string]: string;
-}
-
-export function publishedDevices(
-  inputs: InputMapping,
-  definitions: InputDefinitionMapping
-): PublishedDevices {
-  const inputNames = Object.keys(inputs);
-  return inputNames.reduce((accum, name) => {
-    const definition = definitions[name];
-    if (definition.type === "device") {
-      const { publish } = definition;
-      if (publish) {
-        const input = inputs[name];
-        return { ...accum, [publish]: input };
-      }
-    }
-    return accum;
-  }, {});
 }
 
 export function enrichedInputs(

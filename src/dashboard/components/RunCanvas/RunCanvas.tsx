@@ -7,17 +7,21 @@ import { TILE_SIZE } from "../constants";
 import ErrorBoundary from "../ErrorBoundary";
 
 import { attributeEmitter, END, EmittedFrame } from "./emitter";
+import * as TangoAPI from "../api";
+
 import {
-  extractFullNamesFromWidgets,
-  enrichedInputs,
   AttributeValueLookup,
+  AttributeHistoryLookup,
   CommandOutputLookup,
   AttributeMetadataLookup,
-  AttributeHistoryLookup,
-  DeviceMetadataLookup
-} from "./lib";
+  DeviceMetadataLookup,
+  enrichedInputs
+} from "./lib/enrichment";
 
-import * as TangoAPI from "../api";
+import {
+  extractFullNamesFromWidgets,
+  extractDeviceNamesFromWidgets
+} from "./lib/extraction";
 
 const HISTORY_LIMIT = 1000;
 
@@ -80,9 +84,10 @@ export default class RunCanvas extends Component<Props, State> {
       fullNames
     );
 
+    const deviceNames = extractDeviceNamesFromWidgets(widgets);
     const deviceMetadata = await TangoAPI.fetchDeviceMetadata(
       tangoDB,
-      fullNames
+      deviceNames
     );
 
     const attributeHistories = fullNames.reduce((accum, name) => {
