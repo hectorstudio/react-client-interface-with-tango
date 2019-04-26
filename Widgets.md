@@ -120,7 +120,7 @@ Manifests itself as an input where the user can select any of the devices in the
 |-|-|-
 | publish | string | If true, the device name is made available to other inputs as a variable (see example at the top.)
 
-In the component, the input is an objec with the following structure:
+In the component, the input is an object with the following structure:
 
 | Key | Type | Description
 |-|-|-
