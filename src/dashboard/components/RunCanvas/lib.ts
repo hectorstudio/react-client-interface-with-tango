@@ -127,6 +127,7 @@ export function extractFullNamesFromWidgets(widgets: Widget[]) {
 function enrichedInput(
   input: any,
   definition: InputDefinition,
+  deviceMetadata: DeviceMetadataLookup,
   attributeMetadata: AttributeMetadataLookup,
   attributeValues: AttributeValueLookup,
   attributeHistory: AttributeHistoryLookup,
@@ -140,6 +141,7 @@ function enrichedInput(
       enrichedInput(
         entry,
         { ...definition, repeat: false },
+        deviceMetadata,
         attributeMetadata,
         attributeValues,
         attributeHistory,
@@ -185,6 +187,7 @@ function enrichedInput(
     return enrichedInputs(
       input,
       definition.inputs,
+      deviceMetadata,
       attributeMetadata,
       attributeValues,
       attributeHistory,
@@ -240,6 +243,7 @@ export function publishedDevices(
 export function enrichedInputs(
   inputs: InputMapping,
   definitions: InputDefinitionMapping,
+  deviceMetadata: DeviceMetadataLookup,
   attributeMetadata: AttributeMetadataLookup,
   attributeValuesLookup: AttributeValueLookup,
   attributeHistoryLookup: AttributeHistoryLookup,
@@ -256,6 +260,7 @@ export function enrichedInputs(
     const value = enrichedInput(
       subInput,
       subDefinition,
+      deviceMetadata,
       attributeMetadata,
       attributeValuesLookup,
       attributeHistoryLookup,
