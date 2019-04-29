@@ -1,4 +1,4 @@
-import { InputMapping, InputDefinitionMapping } from "../../../types";
+import { InputMapping, InputDefinitionMapping } from "../types";
 
 export function resolveDevice(
   published: PublishedDevices,
