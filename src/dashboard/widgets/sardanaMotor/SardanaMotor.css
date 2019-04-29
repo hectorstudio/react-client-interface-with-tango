@@ -6,7 +6,7 @@
   padding: 0.4em 1em !important;
 }
 .sardana-motor .btn-running {
-  background: url("../icons/terminate-24.png");
+  background: url("../../icons/terminate-24.png");
   border: none;
   cursor: pointer;
   width: 24px;
@@ -16,7 +16,7 @@
 }
 
 .sardana-motor .btn-stopped {
-  background: url("../icons/terminate-24.png");
+  background: url("../../icons/terminate-24.png");
   border: none;
   cursor: pointer;
   width: 24px;
@@ -84,7 +84,20 @@
 
 .sardana-motor .btn-copy{
   border: 1px solid #ccc;
-  background: none;
-  font-size: 0.8em;
+  background: white;
   border-radius: 0.2em;
+  height: 1.8em;
+  vertical-align: super;
+  margin: 0em 0.2em;
+}
+
+.sardana-motor .btn-copy:disabled{
+  background: #eee;
+  cursor: default;
+}
+
+.sardana-motor .input-row{
+  padding: 1em;
+  border-top: 2px solid #f0f0f0;
+  margin: 1em 0em;
 }
