@@ -35,8 +35,8 @@ export class MultiDialWriter extends Component<Props, State> {
   public componentDidUpdate(prevProps) {
     const { precision: prevPrecision, maxMagnitude: prevMaxMag } = prevProps;
     const { mode, precision, maxMagnitude, value } = this.props;
-    const newPrecision = prevPrecision != precision;
-    const newMaxMag = prevMaxMag != maxMagnitude;
+    const newPrecision = prevPrecision !== precision;
+    const newMaxMag = prevMaxMag !== maxMagnitude;
     if (mode === "edit" && (newPrecision || newMaxMag)) {
       this.setState({
         wholeArray: this.getWholeArray(value, maxMagnitude),
