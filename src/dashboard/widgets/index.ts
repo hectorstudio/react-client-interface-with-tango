@@ -6,7 +6,7 @@ import label from "./Label";
 import spectrum from "./Spectrum";
 import commandExecutor from "./CommandExecutor";
 import attributeDial from "./AttributeDial";
-import sardanaMotor from "./SardanaMotor";
+import sardanaMotor from "./sardanaMotor/SardanaMotor";
 
 import { Widget, WidgetDefinition } from "../types";
 
