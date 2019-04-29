@@ -1,8 +1,8 @@
 import {
   InputDefinitionMapping,
   InputMapping,
-  InputDefinition,
-} from "../../../types";
+  InputDefinition
+} from "../types";
 import { publishedDevices, resolveDevice } from "./utils";
 
 const numericTypes = [
