@@ -17,19 +17,19 @@ const numericTypes = [
   "DevUShort"
 ];
 
-interface AttributeValue {
+export interface AttributeValue {
   value: any;
   writeValue: any;
   timestamp: number;
 }
 
-interface AttributeMetadata {
+export interface AttributeMetadata {
   dataFormat: string;
   dataType: string;
   isNumeric: boolean;
 }
 
-interface DeviceMetadata {
+export interface DeviceMetadata {
   alias: string;
 }
 

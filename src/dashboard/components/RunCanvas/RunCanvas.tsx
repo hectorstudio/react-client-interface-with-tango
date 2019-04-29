@@ -10,12 +10,10 @@ import { attributeEmitter, END, EmittedFrame } from "./emitter";
 import * as TangoAPI from "../api";
 
 import {
-  AttributeValueLookup,
-  AttributeHistoryLookup,
-  CommandOutputLookup,
-  AttributeMetadataLookup,
-  DeviceMetadataLookup,
-  enrichedInputs
+  AttributeValue,
+  enrichedInputs,
+  AttributeMetadata,
+  DeviceMetadata
 } from "../../runtime/enrichment";
 
 import {
@@ -46,11 +44,11 @@ interface Props {
 
 interface State {
   connectionLost: boolean;
-  attributeValues: AttributeValueLookup;
-  attributeHistories: AttributeHistoryLookup;
-  commandOutputs: CommandOutputLookup;
-  attributeMetadata: AttributeMetadataLookup | null;
-  deviceMetadata: DeviceMetadataLookup | null;
+  attributeValues: Record<string, AttributeValue>;
+  attributeHistories: Record<string, AttributeValue[]>;
+  commandOutputs: Record<string, any>;
+  attributeMetadata: Record<string, AttributeMetadata> | null;
+  deviceMetadata: Record<string, DeviceMetadata> | null;
   t0: number;
 }
 
