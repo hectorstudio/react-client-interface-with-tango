@@ -1,6 +1,6 @@
-import React, { Component, FormEvent } from "react";
+import React, { Component } from "react";
 
-import "./PrecisionAttributeWriter.css";
+import "./MultiDialWriter.css";
 
 interface State {
   wholeArray: number[];
@@ -8,19 +8,20 @@ interface State {
   positive: boolean;
 }
 interface Props {
-  initialValue: number;
+  value: number;
   precision: number;
   maxMagnitude: number;
   mode: string;
-  onValueChange: (value: number) => void;
+  state: string;
+  onSetPosition: (value: number) => void;
 }
-export class PrecisionAttributeWriter extends Component<Props, State> {
+export class MultiDialWriter extends Component<Props, State> {
   public constructor(props: Props) {
     super(props);
-    const { precision, maxMagnitude, initialValue } = this.props;
+    const { precision, maxMagnitude, value } = this.props;
     this.state = {
-      wholeArray: this.getWholeArray(initialValue, maxMagnitude),
-      decimalArray: this.getDecimalArray(initialValue, precision),
+      wholeArray: this.getWholeArray(value, maxMagnitude),
+      decimalArray: this.getDecimalArray(value, precision),
       positive: true
     };
   }
@@ -32,24 +33,15 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
    * @param prevProps
    */
   public componentDidUpdate(prevProps) {
-    const {
-      mode: prevMode,
-      precision: prevPrecision,
-      maxMagnitude: prevMaxMag,
-      initialValue: prevInitialValue
-    } = prevProps;
-    const { mode, initialValue, precision, maxMagnitude } = this.props;
+    const { precision: prevPrecision, maxMagnitude: prevMaxMag } = prevProps;
+    const { mode, precision, maxMagnitude, value } = this.props;
     const newPrecision = prevPrecision != precision;
     const newMaxMag = prevMaxMag != maxMagnitude;
-    const newInitialvalue = prevInitialValue != initialValue;
-    if (
-      (mode === "edit" && (newPrecision || newMaxMag)) ||
-      (mode === "run" && newInitialvalue)
-    ) {
+    if (mode === "edit" && (newPrecision || newMaxMag)) {
       this.setState({
-        wholeArray: this.getWholeArray(initialValue, maxMagnitude),
-        decimalArray: this.getDecimalArray(initialValue, precision),
-        positive: initialValue >= 0
+        wholeArray: this.getWholeArray(value, maxMagnitude),
+        decimalArray: this.getDecimalArray(value, precision),
+        positive: value >= 0
       });
     }
   }
@@ -59,7 +51,7 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
   }
 
   private createWidget() {
-    const { precision, maxMagnitude } = this.props;
+    const { precision, maxMagnitude, state } = this.props;
     const { wholeArray, decimalArray, positive } = this.state;
     const upArrows: JSX.Element[] = [];
     const downArrows: JSX.Element[] = [];
@@ -113,15 +105,15 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
     const sign = positive ? "+" : "-";
     return (
       <div className="paw">
-          <button
-            title="Toggle sign"
-            className="btn-sign"
-            onClick={() => this.toggleSign()}
-          >
-            {sign}
-          </button>
+        <button
+          title="Toggle sign"
+          className="btn-sign"
+          onClick={() => this.toggleSign()}
+        >
+          {sign}
+        </button>
 
-        <div style={{ display: "inline-block" }}>
+        <div style={{ display: "inline-block", marginBottom: "1em" }}>
           <div style={{ marginBottom: "-0.3em" }}>
             {upArrows.map(elem => elem)}
           </div>
@@ -132,6 +124,16 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
             {downArrows.map(elem => elem)}
           </div>
         </div>
+        <button className="btn-copy" onClick={() => this.setCurrentValue()}>
+          Copy current
+        </button>
+        <button
+          disabled={state === "MOVING"}
+          className="btn-copy"
+          onClick={() => this.props.onSetPosition(this.getValue())}
+        >
+          Set position
+        </button>
       </div>
     );
   }
@@ -168,29 +170,25 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
     if (whole) {
       const { wholeArray } = this.state;
       wholeArray[index] = (wholeArray[index] + 1) % 10;
-      if (wholeArray[index] === 0 && index > 0){
+      if (wholeArray[index] === 0 && index > 0) {
         //roll over and increment the next digit
-        this.increment(index-1, true);
+        this.increment(index - 1, true);
       }
-      this.setState({ wholeArray }, () =>
-        this.props.onValueChange(this.getValue())
-      );
+      this.setState({ wholeArray });
     } else {
       const { decimalArray } = this.state;
       decimalArray[index] = (decimalArray[index] + 1) % 10;
-      if (decimalArray[index] === 0 && index > 0){
+      if (decimalArray[index] === 0 && index > 0) {
         //roll over and increment the next digit
-        this.increment(index-1, false);
-      }else if (decimalArray[index] === 0 && index === 0){
+        this.increment(index - 1, false);
+      } else if (decimalArray[index] === 0 && index === 0) {
         const { wholeArray } = this.state;
-        if (wholeArray.length > 0){
-           //roll over and increment the whole next digit
+        if (wholeArray.length > 0) {
+          //roll over and increment the whole next digit
           this.increment(wholeArray.length - 1, true);
         }
       }
-      this.setState({ decimalArray }, () =>
-        this.props.onValueChange(this.getValue())
-      );
+      this.setState({ decimalArray });
     }
   }
 
@@ -199,26 +197,24 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
       const { wholeArray } = this.state;
       if (wholeArray[index] === 0) {
         wholeArray[index] = 9;
-        if (index > 0){
+        if (index > 0) {
           //roll over and decrement the next digit
-          this.decrement(index-1, true);
+          this.decrement(index - 1, true);
         }
       } else {
         wholeArray[index] = wholeArray[index] - 1;
       }
-      this.setState({ wholeArray }, () =>
-        this.props.onValueChange(this.getValue())
-      );
+      this.setState({ wholeArray });
     } else {
       const { decimalArray } = this.state;
       if (decimalArray[index] === 0) {
         decimalArray[index] = 9;
-        if (index > 0){
+        if (index > 0) {
           //roll over and decrement the next digit
-          this.decrement(index-1, false);
-        }else{
+          this.decrement(index - 1, false);
+        } else {
           const { wholeArray } = this.state;
-          if (wholeArray.length > 0){
+          if (wholeArray.length > 0) {
             //roll over and decrement the next whole digit
             this.decrement(wholeArray.length - 1, true);
           }
@@ -227,9 +223,7 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
         decimalArray[index] = decimalArray[index] - 1;
       }
 
-      this.setState({ decimalArray }, () =>
-        this.props.onValueChange(this.getValue())
-      );
+      this.setState({ decimalArray });
     }
   }
 
@@ -254,8 +248,8 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
       parseFloat(wholeArray.join("") + "." + decimalArray.join(""));
     return value;
   }
-  public setValue(value: number) {
-    const { maxMagnitude, precision } = this.props;
+  public setCurrentValue() {
+    const { maxMagnitude, precision, value } = this.props;
     this.setState({
       wholeArray: this.getWholeArray(value, maxMagnitude),
       decimalArray: this.getDecimalArray(value, precision),
@@ -264,8 +258,6 @@ export class PrecisionAttributeWriter extends Component<Props, State> {
   }
   private toggleSign() {
     const { positive } = this.state;
-    this.setState({ positive: !positive }, () =>
-      this.props.onValueChange(this.getValue())
-    );
+    this.setState({ positive: !positive });
   }
 }
