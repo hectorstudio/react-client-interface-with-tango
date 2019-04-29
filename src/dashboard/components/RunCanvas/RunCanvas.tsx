@@ -16,12 +16,12 @@ import {
   AttributeMetadataLookup,
   DeviceMetadataLookup,
   enrichedInputs
-} from "./lib/enrichment";
+} from "../../runtime/enrichment";
 
 import {
   extractFullNamesFromWidgets,
   extractDeviceNamesFromWidgets
-} from "./lib/extraction";
+} from "../../runtime/extraction";
 
 const HISTORY_LIMIT = 1000;
 
