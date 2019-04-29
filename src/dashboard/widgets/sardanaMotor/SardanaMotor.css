@@ -3,7 +3,7 @@
 }
 .sardana-motor .menu {
   border-bottom: 1px solid #eee;
-  padding: 0.4em 1em !important;
+  padding: 0.2em 1em !important;
 }
 .sardana-motor .btn-running {
   background: url("../../icons/terminate-24.png");
@@ -26,7 +26,7 @@
   outline: none;
   vertical-align: text-bottom;
 }
-.sardana-motor .btn-stop{
+.sardana-motor .btn-stop {
   background: #e07070;
   border: 1px solid #b15454;
   border-radius: 0.2em;
@@ -69,7 +69,7 @@
 }
 
 .sardana-motor .row {
-  padding: 0.2em 1em;
+  padding: 0.1em 0.8em;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -82,7 +82,7 @@
   border-radius: 0.2em;
 }
 
-.sardana-motor .btn-copy{
+.sardana-motor .btn-copy {
   border: 1px solid #ccc;
   background: white;
   border-radius: 0.2em;
@@ -91,13 +91,36 @@
   margin: 0em 0.2em;
 }
 
-.sardana-motor .btn-copy:disabled{
+.sardana-motor .btn-copy:disabled {
   background: #eee;
   cursor: default;
 }
+.sardana-motor .upper-limit-warning:after {
+  font-size: 0.8em;
+  font-weight: bold;
+  color: white;
+  background: #b12121;
+  padding: 0em;
+  border-radius: 0.2em;
+  content: "+";
+  height: 1.5em;
+  width: 1.5em;
+  display: inline-block;
+  text-align: center;
+  margin-left: 0.5em;
+}
 
-.sardana-motor .input-row{
-  padding: 1em;
-  border-top: 2px solid #f0f0f0;
-  margin: 1em 0em;
+.sardana-motor .lower-limit-warning:after {
+  font-size: 0.8em;
+  font-weight: bold;
+  color: white;
+  background: #b12121;
+  padding: 0em;
+  border-radius: 0.2em;
+  content: "-";
+  height: 1.5em;
+  width: 1.5em;
+  display: inline-block;
+  text-align: center;
+  margin-left: 0.5em;
 }

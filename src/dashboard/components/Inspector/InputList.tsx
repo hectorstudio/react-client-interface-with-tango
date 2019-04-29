@@ -25,7 +25,6 @@ export default class InputList extends Component<Props> {
   public render() {
     const { inputDefinitions, inputs, tangoDB } = this.props;
     const inputNames = Object.keys(inputDefinitions);
-
     const inputControls = inputNames.map(inputName => {
       const inputDefinition = inputDefinitions[inputName];
       const definitionLabel = inputDefinition.label;
@@ -65,6 +64,7 @@ export default class InputList extends Component<Props> {
         );
       } else if (inputDefinition.type === "string") {
         const value = inputs[inputName] as string;
+        console.log(inputDefinition);
         return (
           <tr key={inputName}>
             <td>{label}</td>
@@ -73,6 +73,7 @@ export default class InputList extends Component<Props> {
                 className="form-control"
                 type="text"
                 value={value}
+                placeholder={inputDefinition.placeholder || ""}
                 onChange={e => this.props.onChange([inputName], e.target.value)}
               />
             </td>
