@@ -33,11 +33,11 @@ export interface DeviceMetadata {
   alias: string;
 }
 
-export type AttributeMetadataLookup = Record<string, AttributeMetadata>;
+export type AttributeMetadataLookup = (name: string) => AttributeMetadata;
 export type AttributeValueLookup = Record<string, AttributeValue>;
 export type AttributeHistoryLookup = Record<string, AttributeValue[]>;
 export type CommandOutputLookup = Record<string, any>;
-export type DeviceMetadataLookup = Record<string, DeviceMetadata>;
+export type DeviceMetadataLookup = (name: string) => DeviceMetadata;
 
 type OnWrite = (
   device: string,
@@ -84,7 +84,7 @@ function enrichedInput(
 
     const attribute = input.attribute || definition.attribute;
     const fullName = `${resolvedDevice}/${attribute}`;
-    const { dataType, dataFormat } = attributeMetadata[fullName];
+    const { dataType, dataFormat } = attributeMetadata(fullName);
     const isNumeric = numericTypes.indexOf(dataType) !== -1;
 
     const history = attributeHistory.hasOwnProperty(fullName)
@@ -138,7 +138,7 @@ function enrichedInput(
   }
 
   if (definition.type === "device") {
-    const { alias } = deviceMetadata[input];
+    const { alias } = deviceMetadata(input);
     return { name: input, alias };
   }
 

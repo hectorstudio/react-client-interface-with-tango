@@ -134,8 +134,8 @@ export default class RunCanvas extends Component<Props, State> {
           const inputs = enrichedInputs(
             widget.inputs,
             definition.inputs,
-            deviceMetadata,
-            attributeMetadata,
+            (name: string) => deviceMetadata[name],
+            (name: string) => attributeMetadata[name],
             attributeValues,
             attributeHistories,
             commandOutputs,
