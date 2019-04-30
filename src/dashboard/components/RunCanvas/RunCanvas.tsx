@@ -68,6 +68,12 @@ export default class RunCanvas extends Component<Props, State> {
       t0: Date.now() / 1000
     };
 
+    this.resolveAttributeValue = this.resolveAttributeValue.bind(this);
+    this.resolveDeviceMetadata = this.resolveDeviceMetadata.bind(this);
+    this.resolveAttributeMetadata = this.resolveAttributeMetadata.bind(this);
+    this.resolveAttributeHistories = this.resolveAttributeHistories.bind(this);
+    this.resolveCommandOutputs = this.resolveCommandOutputs.bind(this);
+
     this.writeAttribute = this.writeAttribute.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
     this.handleNewFrame = this.handleNewFrame.bind(this);
@@ -106,15 +112,7 @@ export default class RunCanvas extends Component<Props, State> {
 
   public render() {
     const { widgets } = this.props;
-
-    const {
-      deviceMetadata,
-      attributeMetadata,
-      attributeValues,
-      attributeHistories,
-      commandOutputs,
-      t0
-    } = this.state;
+    const { deviceMetadata, attributeMetadata, t0 } = this.state;
 
     if (deviceMetadata == null) {
       return null;
@@ -134,11 +132,11 @@ export default class RunCanvas extends Component<Props, State> {
           const inputs = enrichedInputs(
             widget.inputs,
             definition.inputs,
-            (name: string) => deviceMetadata[name],
-            (name: string) => attributeMetadata[name],
-            (name: string) => attributeValues[name] || {},
-            (name: string) => attributeHistories[name] || [],
-            (name: string) => commandOutputs[name],
+            this.resolveDeviceMetadata,
+            this.resolveAttributeMetadata,
+            this.resolveAttributeValue,
+            this.resolveAttributeHistories,
+            this.resolveCommandOutputs,
             this.writeAttribute,
             this.executeCommand
           );
@@ -167,6 +165,36 @@ export default class RunCanvas extends Component<Props, State> {
         })}
       </div>
     );
+  }
+
+  private resolveAttributeValue(name) {
+    return this.state.attributeValues[name] || {};
+  }
+
+  private resolveDeviceMetadata(name: string) {
+    const { deviceMetadata } = this.state;
+    if (deviceMetadata == null) {
+      throw new Error("trying to resolve device metadata before initialised");
+    }
+    return deviceMetadata[name];
+  }
+
+  private resolveAttributeMetadata(name: string) {
+    const { attributeMetadata } = this.state;
+    if (attributeMetadata == null) {
+      throw new Error(
+        "trying to resolve attribute metadata before initialised"
+      );
+    }
+    return attributeMetadata[name];
+  }
+
+  private resolveAttributeHistories(name: string) {
+    return this.state.attributeHistories[name] || [];
+  }
+
+  private resolveCommandOutputs(name: string) {
+    return this.state.commandOutputs[name];
   }
 
   private async executeCommand(
