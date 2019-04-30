@@ -136,8 +136,8 @@ function enrichedInput(
   }
 
   if (definition.type === "device") {
-    const { alias } = deviceMetadata(input);
-    return { name: input, alias };
+    const metadata = deviceMetadata(input);
+    return { name: input, ...metadata };
   }
 
   return input;
