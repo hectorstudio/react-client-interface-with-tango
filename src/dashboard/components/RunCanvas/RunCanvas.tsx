@@ -136,9 +136,9 @@ export default class RunCanvas extends Component<Props, State> {
             definition.inputs,
             (name: string) => deviceMetadata[name],
             (name: string) => attributeMetadata[name],
-            attributeValues,
-            attributeHistories,
-            commandOutputs,
+            (name: string) => attributeValues[name] || {},
+            (name: string) => attributeHistories[name] || [],
+            (name: string) => commandOutputs[name],
             this.writeAttribute,
             this.executeCommand
           );
