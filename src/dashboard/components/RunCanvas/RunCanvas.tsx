@@ -13,7 +13,8 @@ import {
   AttributeValue,
   enrichedInputs,
   AttributeMetadata,
-  DeviceMetadata
+  DeviceMetadata,
+  ExecutionContext
 } from "../../runtime/enrichment";
 
 import {
@@ -122,6 +123,16 @@ export default class RunCanvas extends Component<Props, State> {
       return null;
     }
 
+    const executionContext = {
+      deviceMetadataLookup: this.resolveDeviceMetadata,
+      attributeMetadataLookup: this.resolveAttributeMetadata,
+      attributeValuesLookup: this.resolveAttributeValue,
+      attributeHistoryLookup: this.resolveAttributeHistories,
+      commandOutputLookup: this.resolveCommandOutputs,
+      onWrite: this.writeAttribute,
+      onExecute: this.executeCommand
+    };
+
     return (
       <div className="Canvas run">
         {this.state.connectionLost && <ConnectionLost />}
@@ -132,13 +143,7 @@ export default class RunCanvas extends Component<Props, State> {
           const inputs = enrichedInputs(
             widget.inputs,
             definition.inputs,
-            this.resolveDeviceMetadata,
-            this.resolveAttributeMetadata,
-            this.resolveAttributeValue,
-            this.resolveAttributeHistories,
-            this.resolveCommandOutputs,
-            this.writeAttribute,
-            this.executeCommand
+            executionContext
           );
 
           const actualWidth = width * TILE_SIZE;
@@ -276,6 +281,11 @@ export default class RunCanvas extends Component<Props, State> {
 
     if (attributeHistory.length > 0) {
       const lastFrame = attributeHistory.slice(-1)[0];
+
+      if (lastFrame.timestamp == null) {
+        throw new Error("timestamp is missing");
+      }
+
       if (lastFrame.timestamp >= timestamp) {
         return;
       }
