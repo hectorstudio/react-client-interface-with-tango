@@ -50,7 +50,7 @@
   content: "Stopped";
 }
 
-.sardana-motor .label-unknown:after {
+.sardana-motor .label-status:after {
   vertical-align: text-bottom;
   background-color: #eee;
   color: #666;
@@ -58,22 +58,24 @@
   padding: 0.1em 0.4em;
   border-radius: 0.2em;
   font-size: 0.9em;
-  content: "Unknown";
+  content: "Status";
 }
 
 .sardana-motor .motor-row {
     display: -webkit-box;
     flex-wrap: nowrap;
     margin-right: 0.5em;
-    margin-bottom: 0.3em;
+    margin-bottom: 0.2em;
 }
-.sardana-motor .container {
+.sardana-motor .motor-container {
   border: 1px solid #eee;
   border-radius: 0.2em;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
+  padding: 0.4em;
+  padding-bottom: 0em;
 }
 
 

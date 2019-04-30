@@ -58,11 +58,11 @@ class SardanaMotor extends Component<WidgetProps, State> {
     const editMode = mode === "edit";
     return (
       <div className="sardana-motor">
-        <div className="container">
+        <div className="motor-container">
           <div className="motor-row">
             <div>
               <QualityIndicatorLabel
-                state={editMode ? "UNKNOWN" : state.value}
+                state={editMode ? "Power" : state.value}
               />
               {state.value === "MOVING" && (
                 <button
@@ -71,10 +71,10 @@ class SardanaMotor extends Component<WidgetProps, State> {
                   onClick={this.handleStop}
                 />
               )}
-              <span style={{margin: "0em 0.3em"}}>{title || alias || name}</span>
+              <span style={{margin: "0em 0.3em"}}>{title || alias || name || "name"}</span>
             </div>
             <div>
-              <span className={"label-" + (editMode ? "unknown" : running)} />{" "}
+              <span className={"label-" + (editMode ? "status" : running)} />{" "}
               {power.value ? (
                 <button
                   className={"btn-running"}
@@ -91,8 +91,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
             </div>
           </div>
           <div className="motor-row">
-            <span>Current position:</span> {" "}
-            <span title={limitWarningTitle} className={limitWarningCss}>{editMode ? "-" : position.value}</span>
+            <span title={limitWarningTitle} className={limitWarningCss}>{editMode ? "0.000000000000" : position.value}</span>
           </div>
           {showAbsInput && (
             <div className="motor-row">
