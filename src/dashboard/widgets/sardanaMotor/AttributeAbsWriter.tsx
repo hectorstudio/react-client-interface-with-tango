@@ -29,7 +29,6 @@ export class AttributeAbsWriter extends Component<Props, State> {
       const { state } = this.props;
     return (
       <Fragment>
-        <div style={{marginRight: "0.2em"}} className="attributeAbsWriter">Absolute value:</div>
         <div className="attributeAbsWriter">
           <input
             className="input"
