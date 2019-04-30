@@ -25,7 +25,7 @@ export class AttributeStepWriter extends Component<Props, State> {
     const { state } = this.props;
     return (
       <Fragment>
-        <div className="attributeStepWriter">Step size: </div>
+        <div style={{marginRight: "0.2em"}} className="attributeStepWriter">Step size: </div>
         <div className="attributeStepWriter">
           <input
             className="input"

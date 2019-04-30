@@ -36,5 +36,5 @@ export const QualityIndicatorLight = ({quality}) => {
       UNKNOWN: "unknown"
     };
     const classSuffix = classSuffixes[state] || "invalid";
-    return <span className={`state state-${classSuffix}`}>{state}</span>;
+    return <span style={{verticalAlign: "text-top"}} className={`state state-${classSuffix}`}>{state}</span>;
   }

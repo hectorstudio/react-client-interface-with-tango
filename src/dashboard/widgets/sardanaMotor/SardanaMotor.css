@@ -1,10 +1,3 @@
-.sardana-motor .title {
-  font-size: 1.2em;
-}
-.sardana-motor .menu {
-  border-bottom: 1px solid #eee;
-  padding: 0.2em 1em !important;
-}
 .sardana-motor .btn-running {
   background: url("../../icons/terminate-24.png");
   border: none;
@@ -68,19 +61,21 @@
   content: "Unknown";
 }
 
-.sardana-motor .row {
-  padding: 0.1em 0.8em;
+.sardana-motor .motor-row {
+    display: -webkit-box;
+    flex-wrap: nowrap;
+    margin-right: 0.5em;
+    margin-bottom: 0.3em;
+}
+.sardana-motor .container {
+  border: 1px solid #eee;
+  border-radius: 0.2em;
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: flex-end;
 }
-.sardana-motor .border {
-  border: 1px solid #eee;
-  padding: 0em 0.5em 0.2em 0.5em;
-  border-radius: 0.2em;
-}
+
 
 .sardana-motor .btn-copy {
   border: 1px solid #ccc;
