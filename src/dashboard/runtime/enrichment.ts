@@ -18,19 +18,19 @@ const numericTypes = [
 ];
 
 export interface AttributeValue {
-  value: any;
-  writeValue: any;
-  timestamp: number;
+  value?: any;
+  writeValue?: any;
+  timestamp?: number;
 }
 
 export interface AttributeMetadata {
-  dataFormat: string;
-  dataType: string;
-  isNumeric: boolean;
+  dataFormat?: string;
+  dataType?: string;
+  isNumeric?: boolean;
 }
 
 export interface DeviceMetadata {
-  alias: string;
+  alias?: string;
 }
 
 type LookupFunction<T> = (name: string) => T;
@@ -48,32 +48,25 @@ type OnWrite = (
 ) => Promise<boolean>;
 type OnExecute = (device: string, command: string) => Promise<any>;
 
+export interface ExecutionContext {
+  deviceMetadataLookup: DeviceMetadataLookup;
+  attributeMetadataLookup: AttributeMetadataLookup;
+  attributeValuesLookup: AttributeValueLookup;
+  attributeHistoryLookup: AttributeHistoryLookup;
+  commandOutputLookup: CommandOutputLookup;
+  onWrite: OnWrite;
+  onExecute: OnExecute;
+}
+
 function enrichedInput(
   input: any,
   definition: InputDefinition,
-  deviceMetadata: DeviceMetadataLookup,
-  attributeMetadata: AttributeMetadataLookup,
-  attributeValues: AttributeValueLookup,
-  attributeHistory: AttributeHistoryLookup,
-  commandOutputs: CommandOutputLookup,
   published: { [variable: string]: string },
-  onWrite: OnWrite,
-  onExecute: OnExecute
+  context: ExecutionContext
 ) {
   if (definition.repeat) {
     return input.map(entry =>
-      enrichedInput(
-        entry,
-        { ...definition, repeat: false },
-        deviceMetadata,
-        attributeMetadata,
-        attributeValues,
-        attributeHistory,
-        commandOutputs,
-        published,
-        onWrite,
-        onExecute
-      )
+      enrichedInput(entry, { ...definition, repeat: false }, published, context)
     );
   }
 
@@ -86,11 +79,11 @@ function enrichedInput(
 
     const attribute = input.attribute || definition.attribute;
     const fullName = `${resolvedDevice}/${attribute}`;
-    const { dataType, dataFormat } = attributeMetadata(fullName);
-    const isNumeric = numericTypes.indexOf(dataType) !== -1;
+    const { dataType, dataFormat } = context.attributeMetadataLookup(fullName);
+    const isNumeric = dataType && numericTypes.indexOf(dataType) !== -1;
 
-    const history = attributeHistory(fullName);
-    const values = attributeValues(fullName);
+    const history = context.attributeHistoryLookup(fullName);
+    const values = context.attributeValuesLookup(fullName);
 
     return {
       ...input,
@@ -99,22 +92,12 @@ function enrichedInput(
       dataType,
       dataFormat,
       isNumeric,
-      write: (param: any) => onWrite(resolvedDevice, attribute, param)
+      write: (param: any) => context.onWrite(resolvedDevice, attribute, param)
     };
   }
 
   if (definition.type === "complex") {
-    return enrichedInputs(
-      input,
-      definition.inputs,
-      deviceMetadata,
-      attributeMetadata,
-      attributeValues,
-      attributeHistory,
-      commandOutputs,
-      onWrite,
-      onExecute
-    );
+    return enrichedInputs(input, definition.inputs, context);
   }
 
   if (definition.type === "command") {
@@ -126,52 +109,77 @@ function enrichedInput(
     );
 
     const fullName = `${resolvedDevice}/${command}`;
-    const output = commandOutputs(fullName);
+    const output = context.commandOutputLookup(fullName);
 
     return {
       ...input,
-      execute: () => onExecute(resolvedDevice, command),
+      execute: () => context.onExecute(resolvedDevice, command),
       output
     };
   }
 
   if (definition.type === "device") {
-    const metadata = deviceMetadata(input);
+    const metadata = context.deviceMetadataLookup(input);
     return { name: input, ...metadata };
   }
 
   return input;
 }
 
+function defaultDeviceMetadataLookup() {
+  return {};
+}
+
+function defaultAttributeMetadataLookup() {
+  return {};
+}
+
+function defaultAttributeValuesLookup() {
+  return {};
+}
+
+function defaultAttributeHistoryLookup() {
+  return [];
+}
+
+function defaultCommandOutputLookup() {
+  return null;
+}
+
+async function defaultActionHandler() {
+  return false;
+}
+
+const defaultContext: ExecutionContext = {
+  deviceMetadataLookup: defaultDeviceMetadataLookup,
+  attributeMetadataLookup: defaultAttributeMetadataLookup,
+  attributeValuesLookup: defaultAttributeValuesLookup,
+  attributeHistoryLookup: defaultAttributeHistoryLookup,
+  commandOutputLookup: defaultCommandOutputLookup,
+  onWrite: defaultActionHandler,
+  onExecute: defaultActionHandler
+};
+
 export function enrichedInputs(
   inputs: InputMapping,
   definitions: InputDefinitionMapping,
-  deviceMetadata: DeviceMetadataLookup,
-  attributeMetadata: AttributeMetadataLookup,
-  attributeValuesLookup: AttributeValueLookup,
-  attributeHistoryLookup: AttributeHistoryLookup,
-  commandLookup: CommandOutputLookup,
-  onWrite: OnWrite,
-  onExecute: OnExecute
+  context: Partial<ExecutionContext>
 ) {
+  const contextWithDefaults = { ...defaultContext, ...context };
   const published = publishedDevices(inputs, definitions);
   const names = Object.keys(inputs);
 
   return names.reduce((accum, name) => {
     const subInput = inputs[name];
     const subDefinition = definitions[name];
+
     const value = enrichedInput(
       subInput,
       subDefinition,
-      deviceMetadata,
-      attributeMetadata,
-      attributeValuesLookup,
-      attributeHistoryLookup,
-      commandLookup,
       published,
-      onWrite,
-      onExecute
+      contextWithDefaults
     );
+
     return { ...accum, [name]: value };
   }, {});
 }
