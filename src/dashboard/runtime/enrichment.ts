@@ -46,7 +46,12 @@ type OnWrite = (
   attribute: string,
   value: any
 ) => Promise<boolean>;
-type OnExecute = (device: string, command: string) => Promise<any>;
+
+type OnExecute = (
+  device: string,
+  command: string,
+  argin: any
+) => Promise<boolean>;
 
 export interface ExecutionContext {
   deviceMetadataLookup: DeviceMetadataLookup;
@@ -113,7 +118,7 @@ function enrichedInput(
 
     return {
       ...input,
-      execute: () => context.onExecute(resolvedDevice, command),
+      execute: argin => context.onExecute(resolvedDevice, command, argin),
       output
     };
   }
