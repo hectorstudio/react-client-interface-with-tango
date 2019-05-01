@@ -27,31 +27,37 @@ const inputDefinitions: InputDefinitionMapping = {
 
 test("device metadata", () => {
   const context = {
-    deviceMetadataLookup(name) {
+    deviceMetadataLookup() {
       return {
-        alias: name + "_alias"
+        alias: "an alias"
       };
     }
   };
 
+  const spy = jest.spyOn(context, "deviceMetadataLookup");
   const { device } = enrichedInputs(inputs, inputDefinitions, context);
-  expect(device.alias).toBe("device1_alias");
+
+  expect(device.alias).toBe("an alias");
+  expect(spy).toHaveBeenCalledWith("device1");
 });
 
 test("attribute values", () => {
   const context = {
-    attributeValuesLookup(name) {
+    attributeValuesLookup() {
       return {
-        value: name + "_value",
-        writeValue: name + "_writeValue",
+        value: "a value",
+        writeValue: "a write value",
         timestamp: 12345
       };
     }
   };
 
+  const spy = jest.spyOn(context, "attributeValuesLookup");
   const { attribute } = enrichedInputs(inputs, inputDefinitions, context);
-  expect(attribute.value).toBe("device2/attribute2_value");
-  expect(attribute.writeValue).toBe("device2/attribute2_writeValue");
+
+  expect(spy).toHaveBeenCalledWith("device2/attribute2");
+  expect(attribute.value).toBe("a value");
+  expect(attribute.writeValue).toBe("a write value");
   expect(attribute.timestamp).toBe(12345);
 });
 
@@ -64,14 +70,10 @@ test("attribute write", async () => {
 
   const spy = jest.spyOn(context, "onWrite");
   const { attribute } = enrichedInputs(inputs, inputDefinitions, context);
+  const result = await attribute.write("a write value");
 
-  const writeValue = Math.random();
-  const result = await attribute.write(writeValue);
-
-  expect(spy).toHaveBeenCalledWith("device2", "attribute2", writeValue);
+  expect(spy).toHaveBeenCalledWith("device2", "attribute2", "a write value");
   expect(result).toBe(true);
-
-  spy.mockRestore();
 });
 
 test("command execution", async () => {
@@ -89,6 +91,4 @@ test("command execution", async () => {
 
   expect(spy).toHaveBeenCalledWith("device3", "command3", argin);
   expect(result).toBe(true);
-
-  spy.mockRestore();
 });
