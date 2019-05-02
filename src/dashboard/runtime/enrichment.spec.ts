@@ -102,3 +102,13 @@ test("attribute.isNumeric by default resolves to false", () => {
   const { attribute } = enrichedInputs(inputs, inputDefinitions);
   expect(attribute.isNumeric).toBe(false);
 });
+
+test("attribute.dataType by default resolves to undefined", () => {
+  const { attribute } = enrichedInputs(inputs, inputDefinitions);
+  expect(attribute.dataType).toBe(undefined);
+});
+
+test("attribute.dataFormat by default resolves to undefined", () => {
+  const { attribute } = enrichedInputs(inputs, inputDefinitions);
+  expect(attribute.dataFormat).toBe(undefined);
+});
