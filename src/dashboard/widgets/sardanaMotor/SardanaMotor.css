@@ -1,0 +1,129 @@
+.sardana-motor {
+  padding: 0.25em;
+  height: 100%;
+}
+
+.sardana-motor .btn-running {
+  background: url("../../icons/terminate-24.png");
+  border: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  outline: none;
+  vertical-align: text-bottom;
+}
+
+.sardana-motor .btn-stopped {
+  background: url("../../icons/terminate-24.png");
+  border: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  -webkit-filter: hue-rotate(100deg);
+  filter: hue-rotate(100deg);
+  outline: none;
+  vertical-align: text-bottom;
+}
+.sardana-motor .btn-stop {
+  background: #e07070;
+  border: 1px solid #b15454;
+  border-radius: 0.2em;
+  margin-right: 0.2em;
+  width: 1em;
+  height: 1em;
+  cursor: pointer;
+}
+
+.sardana-motor .label-running:after {
+  vertical-align: text-bottom;
+  background-color: #9bce7b40;
+  color: #5f8249;
+  border: 1px solid #8cb573;
+  padding: 0.1em 0.4em;
+  border-radius: 0.2em;
+  font-size: 0.9em;
+  content: "Running";
+}
+.sardana-motor .label-stopped:after {
+  vertical-align: text-bottom;
+  background-color: #ce7b7b40;
+  color: #4e0f0f;
+  border: 1px solid #dabdbd;
+  padding: 0.1em 0.4em;
+  border-radius: 0.2em;
+  font-size: 0.9em;
+  content: "Stopped";
+}
+
+.sardana-motor .label-status:after {
+  vertical-align: text-bottom;
+  background-color: #eee;
+  color: #666;
+  border: 1px solid #ccc;
+  padding: 0.1em 0.4em;
+  border-radius: 0.2em;
+  font-size: 0.9em;
+  content: "Status";
+}
+
+.sardana-motor .motor-row {
+  width: 30%;
+}
+
+.sardana-motor .motor-row:nth-child(2) {
+  text-align: right;
+}
+
+.sardana-motor .motor-container {
+  border-radius: 0.2em;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.sardana-motor .btn-copy {
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 0.2em;
+  height: 1.8em;
+  vertical-align: super;
+  margin: 0em 0.2em;
+}
+
+.sardana-motor .btn-copy:disabled {
+  background: #eee;
+  cursor: default;
+}
+.sardana-motor .upper-limit-warning:after {
+  font-size: 0.8em;
+  font-weight: bold;
+  color: white;
+  background: #b12121;
+  padding: 0em;
+  border-radius: 0.2em;
+  content: "+";
+  height: 1.5em;
+  width: 1.5em;
+  display: inline-block;
+  text-align: center;
+  margin-left: 0.5em;
+}
+
+.sardana-motor .lower-limit-warning:after {
+  font-size: 0.8em;
+  font-weight: bold;
+  color: white;
+  background: #b12121;
+  padding: 0em;
+  border-radius: 0.2em;
+  content: "-";
+  height: 1.5em;
+  width: 1.5em;
+  display: inline-block;
+  text-align: center;
+  margin-left: 0.5em;
+}

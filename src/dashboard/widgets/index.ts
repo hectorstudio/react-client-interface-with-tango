@@ -6,6 +6,7 @@ import label from "./Label";
 import spectrum from "./Spectrum";
 import commandExecutor from "./CommandExecutor";
 import attributeDial from "./AttributeDial";
+import sardanaMotor from "./sardanaMotor/SardanaMotor";
 
 import { Widget, WidgetDefinition } from "../types";
 
@@ -17,7 +18,8 @@ export const bundles = [
   AttributeScatter,
   spectrum,
   commandExecutor,
-  attributeDial
+  attributeDial,
+  sardanaMotor,
 ];
 
 function bundleForType(type: string) {
