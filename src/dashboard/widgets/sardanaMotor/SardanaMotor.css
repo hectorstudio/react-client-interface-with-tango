@@ -67,11 +67,16 @@
 }
 
 .sardana-motor .motor-row {
-  width: 30%;
+  width: 25%;
 }
 
 .sardana-motor .motor-row:nth-child(2) {
+  width: 35%;
   text-align: right;
+}
+
+.sardana-motor .motor-row:nth-child(3) {
+  width: 35%;
 }
 
 .sardana-motor .motor-container {
