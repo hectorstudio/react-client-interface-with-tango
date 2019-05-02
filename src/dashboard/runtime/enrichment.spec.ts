@@ -92,3 +92,13 @@ test("command execution", async () => {
   expect(spy).toHaveBeenCalledWith("device3", "command3", argin);
   expect(result).toBe(true);
 });
+
+test("device input by default resolves to { name: <device name> }", () => {
+  const { device } = enrichedInputs(inputs, inputDefinitions);
+  expect(device).toEqual({ name: "device1" });
+});
+
+test("attribute.isNumeric by default resolves to false", () => {
+  const { attribute } = enrichedInputs(inputs, inputDefinitions);
+  expect(attribute.isNumeric).toBe(false);
+});

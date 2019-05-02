@@ -26,7 +26,6 @@ export interface AttributeValue {
 export interface AttributeMetadata {
   dataFormat?: string;
   dataType?: string;
-  isNumeric?: boolean;
 }
 
 export interface DeviceMetadata {
@@ -85,7 +84,7 @@ function enrichedInput(
     const attribute = input.attribute || definition.attribute;
     const fullName = `${resolvedDevice}/${attribute}`;
     const { dataType, dataFormat } = context.attributeMetadataLookup(fullName);
-    const isNumeric = dataType && numericTypes.indexOf(dataType) !== -1;
+    const isNumeric = dataType != null && numericTypes.indexOf(dataType) !== -1;
 
     const history = context.attributeHistoryLookup(fullName);
     const values = context.attributeValuesLookup(fullName);
