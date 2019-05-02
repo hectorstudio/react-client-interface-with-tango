@@ -6,7 +6,7 @@ import cx from "classnames";
 import boxIntersect from "box-intersect";
 
 import dndTypes from "../../dndTypes";
-import { componentForWidget } from "../../widgets";
+import { componentForWidget, definitionForWidget } from "../../widgets";
 import { TILE_SIZE } from "../constants";
 
 import SelectionBox from "./SelectionBox";
@@ -24,6 +24,7 @@ import {
   getSelectedWidgets,
   getCurrentCanvasWidgets
 } from "../../state/selectors";
+import { enrichedInputs } from "../../runtime/enrichment";
 
 const BACKSPACE = 8;
 const DELETE = 46;
@@ -220,7 +221,11 @@ class EditCanvas extends Component {
 
         <div className="grid">
           {this.props.widgets.map(widget => {
-            const { x, y, id, width, height, inputs, valid } = widget;
+            const { x, y, id, width, height, valid } = widget;
+
+            const definition = definitionForWidget(widget);
+            const inputs = enrichedInputs(widget.inputs, definition.inputs);
+
             const actualWidth = TILE_SIZE * width;
             const actualHeight = TILE_SIZE * height;
             const props = { inputs, mode: "edit", actualWidth, actualHeight };
