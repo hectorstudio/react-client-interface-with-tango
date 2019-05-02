@@ -83,7 +83,7 @@ function* extractDeviceNamesFromInputsGen(
     const input = inputs[name];
     const { type, repeat } = inputDefinition;
 
-    if (type === "device") {
+    if (type === "device" && input != null) {
       yield input;
     } else if (type === "complex") {
       if (inputDefinition.type === "complex") {
