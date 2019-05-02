@@ -168,7 +168,7 @@ const defaultContext: ExecutionContext = {
 export function enrichedInputs(
   inputs: InputMapping,
   definitions: InputDefinitionMapping,
-  context: Partial<ExecutionContext>
+  context: Partial<ExecutionContext> = {}
 ) {
   const contextWithDefaults = { ...defaultContext, ...context };
   const published = publishedDevices(inputs, definitions);
