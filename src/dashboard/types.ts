@@ -25,6 +25,7 @@ export interface NumberInputDefinition extends BaseInputDefinition<number> {
 
 export interface StringInputDefinition extends BaseInputDefinition<string> {
   type: "string";
+  placeholder?: string;
 }
 
 export interface ComplexInputDefinition extends BaseInputDefinition<null> {
