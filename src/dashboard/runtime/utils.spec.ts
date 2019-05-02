@@ -34,3 +34,15 @@ test("resolving published device", () => {
   const nonResolved = resolveDevice(published, "another device");
   expect(nonResolved).toBe("another device");
 });
+
+test("throw when publishing name that doesn't start with $", () => {
+  const inputs: InputMapping = {
+    device: "a device"
+  };
+
+  const definitions: InputDefinitionMapping = {
+    device: { type: "device", publish: "a name" }
+  };
+
+  expect(() => publishedDevices(inputs, definitions)).toThrow();
+});

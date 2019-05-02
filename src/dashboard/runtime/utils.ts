@@ -19,15 +19,25 @@ export function publishedDevices(
   definitions: InputDefinitionMapping
 ): PublishedDevices {
   const inputNames = Object.keys(inputs);
-  return inputNames.reduce((accum, name) => {
+  const result = {};
+
+  for (const name of inputNames) {
     const definition = definitions[name];
     if (definition.type === "device") {
       const { publish } = definition;
-      if (publish) {
-        const input = inputs[name];
-        return { ...accum, [publish]: input };
+
+      if (publish == null) {
+        continue;
       }
+
+      if (publish[0] !== "$") {
+        throw new Error("published names must begin with $");
+      }
+
+      const input = inputs[name];
+      result[publish] = input;
     }
-    return accum;
-  }, {});
+  }
+
+  return result;
 }
