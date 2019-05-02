@@ -10,18 +10,16 @@ import { attributeEmitter, END, EmittedFrame } from "./emitter";
 import * as TangoAPI from "../api";
 
 import {
-  AttributeValueLookup,
-  AttributeHistoryLookup,
-  CommandOutputLookup,
-  AttributeMetadataLookup,
-  DeviceMetadataLookup,
-  enrichedInputs
-} from "./lib/enrichment";
+  AttributeValue,
+  enrichedInputs,
+  AttributeMetadata,
+  DeviceMetadata
+} from "../../runtime/enrichment";
 
 import {
   extractFullNamesFromWidgets,
   extractDeviceNamesFromWidgets
-} from "./lib/extraction";
+} from "../../runtime/extraction";
 
 const HISTORY_LIMIT = 1000;
 
@@ -46,11 +44,11 @@ interface Props {
 
 interface State {
   connectionLost: boolean;
-  attributeValues: AttributeValueLookup;
-  attributeHistories: AttributeHistoryLookup;
-  commandOutputs: CommandOutputLookup;
-  attributeMetadata: AttributeMetadataLookup | null;
-  deviceMetadata: DeviceMetadataLookup | null;
+  attributeValues: Record<string, AttributeValue>;
+  attributeHistories: Record<string, AttributeValue[]>;
+  commandOutputs: Record<string, any>;
+  attributeMetadata: Record<string, AttributeMetadata> | null;
+  deviceMetadata: Record<string, DeviceMetadata> | null;
   t0: number;
 }
 
@@ -69,6 +67,12 @@ export default class RunCanvas extends Component<Props, State> {
       deviceMetadata: null,
       t0: Date.now() / 1000
     };
+
+    this.resolveAttributeValue = this.resolveAttributeValue.bind(this);
+    this.resolveDeviceMetadata = this.resolveDeviceMetadata.bind(this);
+    this.resolveAttributeMetadata = this.resolveAttributeMetadata.bind(this);
+    this.resolveAttributeHistories = this.resolveAttributeHistories.bind(this);
+    this.resolveCommandOutputs = this.resolveCommandOutputs.bind(this);
 
     this.writeAttribute = this.writeAttribute.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
@@ -108,15 +112,7 @@ export default class RunCanvas extends Component<Props, State> {
 
   public render() {
     const { widgets } = this.props;
-
-    const {
-      deviceMetadata,
-      attributeMetadata,
-      attributeValues,
-      attributeHistories,
-      commandOutputs,
-      t0
-    } = this.state;
+    const { deviceMetadata, attributeMetadata, t0 } = this.state;
 
     if (deviceMetadata == null) {
       return null;
@@ -125,6 +121,16 @@ export default class RunCanvas extends Component<Props, State> {
     if (attributeMetadata == null) {
       return null;
     }
+
+    const executionContext = {
+      deviceMetadataLookup: this.resolveDeviceMetadata,
+      attributeMetadataLookup: this.resolveAttributeMetadata,
+      attributeValuesLookup: this.resolveAttributeValue,
+      attributeHistoryLookup: this.resolveAttributeHistories,
+      commandOutputLookup: this.resolveCommandOutputs,
+      onWrite: this.writeAttribute,
+      onExecute: this.executeCommand
+    };
 
     return (
       <div className="Canvas run">
@@ -136,13 +142,7 @@ export default class RunCanvas extends Component<Props, State> {
           const inputs = enrichedInputs(
             widget.inputs,
             definition.inputs,
-            deviceMetadata,
-            attributeMetadata,
-            attributeValues,
-            attributeHistories,
-            commandOutputs,
-            this.writeAttribute,
-            this.executeCommand
+            executionContext
           );
 
           const actualWidth = width * TILE_SIZE;
@@ -169,6 +169,36 @@ export default class RunCanvas extends Component<Props, State> {
         })}
       </div>
     );
+  }
+
+  private resolveAttributeValue(name) {
+    return this.state.attributeValues[name] || {};
+  }
+
+  private resolveDeviceMetadata(name: string) {
+    const { deviceMetadata } = this.state;
+    if (deviceMetadata == null) {
+      throw new Error("trying to resolve device metadata before initialised");
+    }
+    return deviceMetadata[name];
+  }
+
+  private resolveAttributeMetadata(name: string) {
+    const { attributeMetadata } = this.state;
+    if (attributeMetadata == null) {
+      throw new Error(
+        "trying to resolve attribute metadata before initialised"
+      );
+    }
+    return attributeMetadata[name];
+  }
+
+  private resolveAttributeHistories(name: string) {
+    return this.state.attributeHistories[name] || [];
+  }
+
+  private resolveCommandOutputs(name: string) {
+    return this.state.commandOutputs[name];
   }
 
   private async executeCommand(
@@ -250,6 +280,11 @@ export default class RunCanvas extends Component<Props, State> {
 
     if (attributeHistory.length > 0) {
       const lastFrame = attributeHistory.slice(-1)[0];
+
+      if (lastFrame.timestamp == null) {
+        throw new Error("timestamp is missing");
+      }
+
       if (lastFrame.timestamp >= timestamp) {
         return;
       }
