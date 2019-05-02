@@ -13,20 +13,17 @@ interface Props {
 }
 
 export class AttributeAbsWriter extends Component<Props, State> {
-  public inputRef: any;
-
   public constructor(props: Props) {
     super(props);
-    this.inputRef = React.createRef();
-    const { value, mode } = this.props;
+    const { value } = this.props;
     this.state = {
       currentValue: value
     };
   }
 
   public render() {
-      const { currentValue } = this.state;
-      const { state } = this.props;
+    const { currentValue } = this.state;
+    const { state } = this.props;
     return (
       <Fragment>
         <div className="attributeAbsWriter">
@@ -42,7 +39,7 @@ export class AttributeAbsWriter extends Component<Props, State> {
             }}
           />
           <button
-          disabled={state === "MOVING"}
+            disabled={state === "MOVING"}
             className="btn"
             onClick={() =>
               this.props.onSetPosition(parseFloat(this.state.currentValue))

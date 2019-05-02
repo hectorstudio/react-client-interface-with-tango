@@ -1,3 +1,8 @@
+.sardana-motor {
+  padding: 0.25em;
+  height: 100%;
+}
+
 .sardana-motor .btn-running {
   background: url("../../icons/terminate-24.png");
   border: none;
@@ -62,22 +67,23 @@
 }
 
 .sardana-motor .motor-row {
-    display: -webkit-box;
-    flex-wrap: nowrap;
-    margin-right: 0.5em;
-    margin-bottom: 0.2em;
+  width: 30%;
 }
+
+.sardana-motor .motor-row:nth-child(2) {
+  text-align: right;
+}
+
 .sardana-motor .motor-container {
-  border: 1px solid #eee;
   border-radius: 0.2em;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 0.4em;
-  padding-bottom: 0em;
+  align-content: center;
+  align-items: center;
+  height: 100%;
 }
-
 
 .sardana-motor .btn-copy {
   border: 1px solid #ccc;

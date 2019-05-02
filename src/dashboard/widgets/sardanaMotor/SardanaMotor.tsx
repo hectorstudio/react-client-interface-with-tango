@@ -4,8 +4,8 @@ import { WidgetProps } from "../types";
 import { WidgetDefinition } from "../../types";
 import "./SardanaMotor.css";
 import { QualityIndicatorLabel } from "../../../shared/widgets/snippets";
-import { MultiDialWriter } from "./MultiDialWriter";
-import { AttributeStepWriter } from "./AttributeStepWriter";
+// import { MultiDialWriter } from "./MultiDialWriter";
+// import { AttributeStepWriter } from "./AttributeStepWriter";
 import { AttributeAbsWriter } from "./AttributeAbsWriter";
 
 interface State {}
@@ -20,90 +20,86 @@ class SardanaMotor extends Component<WidgetProps, State> {
 
   public render() {
     const { inputs, mode } = this.props;
-    const {
-      title,
-      limits,
-      power,
-      position,
-      state,
-      precision,
-      maxMagnitude,
-      showAbsInput,
-      showStepInput,
-      showMultipleDialInput,
-      device,
-    } = inputs;
+    const { title, limits, precision, power, position, state, device } = inputs;
 
     let name = "";
     let alias = "";
 
-    if (device){
+    if (device) {
       name = device.name;
       alias = device.alias;
     }
     const limitValues = limits.value;
     let limitWarningCss = "";
     let limitWarningTitle = "";
-    if (limitValues){
-      if (limitValues[1]){
+    if (limitValues) {
+      if (limitValues[1]) {
         limitWarningCss = "upper-limit-warning";
         limitWarningTitle = "Upper limit reached";
-      }else if (limitValues[2]){
+      } else if (limitValues[2]) {
         limitWarningCss = "lower-limit-warning";
         limitWarningTitle = "Lower limit reached";
       }
     }
 
-    const running = power.value ? "running" : "stopped";
-    const editMode = mode === "edit";
+    // const running = power.value ? "running" : "stopped";
+    // const editMode = mode === "edit";
+
+    const value = mode === "run" ? position.value : 0;
+    const displayElement =
+      value === undefined ? (
+        <span style={{ color: "gray" }}>n/a</span>
+      ) : (
+        <span
+          style={{ fontFamily: "monospace" }}
+          title={limitWarningTitle}
+          className={limitWarningCss}
+        >
+          {value.toFixed(precision)}
+        </span>
+      );
+
     return (
       <div className="sardana-motor">
         <div className="motor-container">
           <div className="motor-row">
-            <div>
-              <QualityIndicatorLabel
-                state={editMode ? "Power" : state.value}
+            <QualityIndicatorLabel
+              state={mode === "run" ? state.value : "UNKNOWN"}
+            />
+            {state.value === "MOVING" && (
+              <button
+                className="btn-stop"
+                title="Stop the movement"
+                onClick={this.handleStop}
               />
-              {state.value === "MOVING" && (
-                <button
-                  className="btn-stop"
-                  title="Stop the movement"
-                  onClick={this.handleStop}
-                />
-              )}
-              <span style={{margin: "0em 0.3em"}}>{title || alias || name || "name"}</span>
-            </div>
-            <div>
-              <span className={"label-" + (editMode ? "status" : running)} />{" "}
-              {power.value ? (
-                <button
-                  className={"btn-running"}
-                  title="Power off the motor"
-                  onClick={() => this.setPower(false)}
-                />
-              ) : (
-                <button
-                  className={"btn-stopped"}
-                  title="Power on motor"
-                  onClick={() => this.setPower(true)}
-                />
-              )}
-            </div>
+            )}
+            <span style={{ margin: "0em 0.3em" }}>
+              {title || alias || name || "name"}
+            </span>
           </div>
-          <div className="motor-row">
-            <span title={limitWarningTitle} className={limitWarningCss}>{editMode ? "0.000000000000" : position.value}</span>
-          </div>
-          {showAbsInput && (
+          {mode === "run" && !power.value ? (
             <div className="motor-row">
-              <AttributeAbsWriter
-                state={state.value}
-                value={position.value}
-                mode={mode}
-                onSetPosition={value => this.setPosition(value)}
+              Power is off.{" "}
+              <button
+                className={"btn-stopped"}
+                title="Power on motor"
+                onClick={() => this.setPower(true)}
               />
             </div>
+          ) : (
+            <>
+              <div className="motor-row">{displayElement}</div>
+              <div className="motor-row">
+                <AttributeAbsWriter
+                  state={state.value}
+                  value={position.value}
+                  mode={mode}
+                  onSetPosition={value => this.setPosition(value)}
+                />
+              </div>
+            </>
           )}
-          {showStepInput && (
+          {/* {showStepInput && (
             <div className="motor-row">
               <AttributeStepWriter
                 state={state.value}
@@ -119,8 +115,8 @@ class SardanaMotor extends Component<WidgetProps, State> {
                 }
               />
             </div>
-          )}
-          {showMultipleDialInput && (
+          )} */}
+          {/* {showMultipleDialInput && (
             <div className="motor-row input-row">
               <MultiDialWriter
                 state={state.value}
@@ -131,14 +127,14 @@ class SardanaMotor extends Component<WidgetProps, State> {
                 onSetPosition={value => this.setPosition(value)}
               />
             </div>
-          )}
+          )} */}
         </div>
       </div>
     );
   }
 
   private setPosition(value: number) {
-    console.log("Settings position: " + value)
+    console.log("Settings position: " + value);
     this.props.inputs.position.write(value);
   }
 
@@ -152,43 +148,19 @@ class SardanaMotor extends Component<WidgetProps, State> {
 
 const definition: WidgetDefinition = {
   type: "SARDANA_MOTOR",
-  name: "Sardana motor",
-  defaultHeight: 7,
-  defaultWidth: 18,
+  name: "Sardana Motor",
+  defaultHeight: 2,
+  defaultWidth: 20,
   inputs: {
     device: {
       type: "device",
+      label: "Device",
       publish: "$device"
-    },
-    title: {
-      type: "string",
-      label: "Title",
-      placeholder: "name or alias",
-    },
-    maxMagnitude: {
-      type: "number",
-      label: "Max. magnitude",
-      default: 6
     },
     precision: {
       type: "number",
-      label: "precision",
+      label: "Precision",
       default: 3
-    },
-    showAbsInput: {
-      type: "boolean",
-      label: "Show abs. input",
-      default: true
-    },
-    showStepInput: {
-      type: "boolean",
-      label: "Show step input",
-      default: true
-    },
-    showMultipleDialInput: {
-      type: "boolean",
-      label: "Show mult. dial input",
-      default: false
     },
     stop: {
       type: "command",
