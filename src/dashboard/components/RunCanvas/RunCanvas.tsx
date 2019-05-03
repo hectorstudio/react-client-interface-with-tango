@@ -171,7 +171,7 @@ export default class RunCanvas extends Component<Props, State> {
     );
   }
 
-  private resolveAttributeValue(name) {
+  private resolveAttributeValue(name: string) {
     return this.state.attributeValues[name] || {};
   }
 
