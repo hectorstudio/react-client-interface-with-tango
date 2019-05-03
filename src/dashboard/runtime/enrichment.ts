@@ -18,18 +18,18 @@ const numericTypes = [
 ];
 
 export interface AttributeValue {
-  value?: any;
-  writeValue?: any;
-  timestamp?: number;
+  readonly value?: any;
+  readonly writeValue?: any;
+  readonly timestamp?: number;
 }
 
 export interface AttributeMetadata {
-  dataFormat?: string;
-  dataType?: string;
+  readonly dataFormat?: string;
+  readonly dataType?: string;
 }
 
 export interface DeviceMetadata {
-  alias?: string;
+  readonly alias?: string;
 }
 
 type LookupFunction<T> = (name: string) => T;
@@ -53,13 +53,13 @@ type OnExecute = (
 ) => Promise<boolean>;
 
 export interface ExecutionContext {
-  deviceMetadataLookup: DeviceMetadataLookup;
-  attributeMetadataLookup: AttributeMetadataLookup;
-  attributeValuesLookup: AttributeValueLookup;
-  attributeHistoryLookup: AttributeHistoryLookup;
-  commandOutputLookup: CommandOutputLookup;
-  onWrite: OnWrite;
-  onExecute: OnExecute;
+  readonly deviceMetadataLookup: DeviceMetadataLookup;
+  readonly attributeMetadataLookup: AttributeMetadataLookup;
+  readonly attributeValuesLookup: AttributeValueLookup;
+  readonly attributeHistoryLookup: AttributeHistoryLookup;
+  readonly commandOutputLookup: CommandOutputLookup;
+  readonly onWrite: OnWrite;
+  readonly onExecute: OnExecute;
 }
 
 function enrichedInput(
@@ -130,38 +130,28 @@ function enrichedInput(
   return input;
 }
 
-function defaultDeviceMetadataLookup() {
-  return {};
-}
-
-function defaultAttributeMetadataLookup() {
-  return {};
-}
-
-function defaultAttributeValuesLookup() {
-  return {};
-}
-
-function defaultAttributeHistoryLookup() {
-  return [];
-}
-
-function defaultCommandOutputLookup() {
-  return null;
-}
-
-async function defaultActionHandler() {
-  return false;
-}
-
 const defaultContext: ExecutionContext = {
-  deviceMetadataLookup: defaultDeviceMetadataLookup,
-  attributeMetadataLookup: defaultAttributeMetadataLookup,
-  attributeValuesLookup: defaultAttributeValuesLookup,
-  attributeHistoryLookup: defaultAttributeHistoryLookup,
-  commandOutputLookup: defaultCommandOutputLookup,
-  onWrite: defaultActionHandler,
-  onExecute: defaultActionHandler
+  deviceMetadataLookup() {
+    return {}
+  },
+  attributeMetadataLookup() {
+    return {};
+  },
+  attributeValuesLookup() {
+    return {};
+  },
+  attributeHistoryLookup() {
+    return [];
+  },
+  commandOutputLookup() {
+    return null;
+  },
+  async onWrite() {
+    return false;
+  },
+  async onExecute() {
+    return false;
+  }
 };
 
 export function enrichedInputs(
