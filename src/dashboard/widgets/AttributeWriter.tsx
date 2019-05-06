@@ -123,7 +123,7 @@ const definition: WidgetDefinition = {
   inputs: {
     attribute: {
       type: "attribute",
-      label: "Attribute:",
+      label: "",
       dataFormat: "scalar"
     },
     showDevice: {
