@@ -26,6 +26,7 @@ export interface AttributeValue {
 export interface AttributeMetadata {
   readonly dataFormat?: string;
   readonly dataType?: string;
+  readonly unit?: string;
 }
 
 export interface DeviceMetadata {
@@ -83,7 +84,9 @@ function enrichedInput(
 
     const attribute = input.attribute || definition.attribute;
     const fullName = `${resolvedDevice}/${attribute}`;
-    const { dataType, dataFormat } = context.attributeMetadataLookup(fullName);
+    const { dataType, dataFormat, unit } = context.attributeMetadataLookup(
+      fullName
+    );
     const isNumeric = dataType != null && numericTypes.indexOf(dataType) !== -1;
 
     const history = context.attributeHistoryLookup(fullName);
@@ -96,6 +99,7 @@ function enrichedInput(
       dataType,
       dataFormat,
       isNumeric,
+      unit,
       write: (param: any) => context.onWrite(resolvedDevice, attribute, param)
     };
   }
@@ -132,7 +136,7 @@ function enrichedInput(
 
 const defaultContext: ExecutionContext = {
   deviceMetadataLookup() {
-    return {}
+    return {};
   },
   attributeMetadataLookup() {
     return {};

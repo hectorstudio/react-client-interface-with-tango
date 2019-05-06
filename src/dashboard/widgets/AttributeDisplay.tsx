@@ -1,4 +1,4 @@
-import React, { Component, Fragment, CSSProperties } from "react";
+import React, { Component, Fragment, CSSProperties, ReactNode } from "react";
 import { WidgetProps } from "./types";
 import { WidgetDefinition, AttributeInput } from "../types";
 
@@ -13,9 +13,9 @@ type Props = WidgetProps<Input>;
 class AttributeReadOnly extends Component<Props> {
   public render() {
     const { device, name } = this.deviceAndAttribute();
-    const value = this.value();
 
-    const style = { padding: "0.5em", whiteSpace: "nowrap" } as CSSProperties;
+    const value = this.value();
+    const style: CSSProperties = { padding: "0.5em", whiteSpace: "nowrap" };
     const inner = this.props.inputs.showDevice ? (
       <Fragment>
         {device}/{name}: {value}
@@ -29,21 +29,30 @@ class AttributeReadOnly extends Component<Props> {
     return <div style={style}>{inner}</div>;
   }
 
-  private value(): any {
+  private value(): ReactNode {
     if (this.props.mode !== "run") {
       return <span style={{ fontStyle: "italic" }}>value</span>;
     }
 
     const {
-      attribute: { value },
+      attribute: { value, unit },
       precision
     } = this.props.inputs;
 
+    let result: ReactNode;
     if (Number(parseFloat(value)) === value) {
-      return value.toFixed(precision);
+      result = value.toFixed(precision);
     } else {
-      return value === undefined ? null : String(value);
+      result = value === undefined ? null : String(value);
     }
+
+    const unitSuffix = unit ? ` ${unit} ` : "";
+    return (
+      <>
+        {result}
+        {unitSuffix}
+      </>
+    );
   }
 
   private deviceAndAttribute(): { device: string; name: string } {
