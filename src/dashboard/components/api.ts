@@ -74,6 +74,7 @@ query FetchAttributeMetadata($deviceName: String!) {
       name
       dataformat
       datatype
+      unit
     }
   }
 }`;
@@ -185,13 +186,13 @@ export async function fetchAttributeMetadata(
       });
 
       for (const attribute of data.device.attributes) {
-        const { name, dataformat, datatype } = attribute;
+        const { name, dataformat, datatype, unit } = attribute;
 
         const dataFormat = dataformat.toLowerCase();
         const dataType = datatype;
 
         const fullName = `${deviceName}/${name}`;
-        result[fullName] = { dataFormat, dataType };
+        result[fullName] = { dataFormat, dataType, unit };
       }
     }
 
