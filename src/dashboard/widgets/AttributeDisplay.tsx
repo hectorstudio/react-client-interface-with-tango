@@ -47,7 +47,12 @@ class AttributeReadOnly extends Component<Props> {
     }
 
     const unitSuffix = unit ? ` ${unit} ` : "";
-    return result + unitSuffix;
+    return (
+      <>
+        {result}
+        {unitSuffix}
+      </>
+    );
   }
 
   private deviceAndAttribute(): { device: string; name: string } {
