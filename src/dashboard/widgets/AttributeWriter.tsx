@@ -29,9 +29,11 @@ class AttributeWriter extends Component<Props, State> {
   public render() {
     const { mode, inputs } = this.props;
     const { attribute, showDevice, showAttribute } = inputs;
+    const { device, attribute: attributeName } = attribute;
 
-    const deviceLabel = attribute.device || "device";
-    const attributeLabel = attribute.attribute || "attribute";
+    const unit = mode === "run" ? attribute.unit : "unit";
+    const deviceLabel = device || "device";
+    const attributeLabel = attributeName || "attribute";
 
     const label = [
       ...(showDevice ? [deviceLabel] : []),
@@ -72,6 +74,7 @@ class AttributeWriter extends Component<Props, State> {
           value={this.state.input}
           onChange={e => this.setState({ input: e.target.value })}
         />
+        {unit && <span style={{ marginLeft: "0.5em" }}>{unit}</span>}
       </form>
     );
   }
@@ -120,17 +123,17 @@ const definition: WidgetDefinition = {
   inputs: {
     attribute: {
       type: "attribute",
-      label: "",
+      label: "Attribute:",
       dataFormat: "scalar"
     },
     showDevice: {
       type: "boolean",
-      label: "Show Device",
+      label: "Show Device Name",
       default: true
     },
     showAttribute: {
       type: "boolean",
-      label: "Show Attribute",
+      label: "Show Attribute Name",
       default: true
     }
   }
