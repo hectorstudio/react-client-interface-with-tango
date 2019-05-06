@@ -137,6 +137,7 @@ export interface AttributeInput<ValueT = any> extends AttributeValue<ValueT> {
   dataType: string;
   dataFormat: string;
   isNumeric: boolean;
+  unit: string;
   write: (value: ValueT) => void;
 }
 
