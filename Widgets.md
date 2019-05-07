@@ -145,6 +145,8 @@ In the component, the input is an object with the following structure:
 | device | string | The device name
 | attribute | string | The attribute name
 | value | | The current value of the attribute
+| writeValue | | The current write value of the attribute
+| unit | string | The attribute unit, or null if none
 | write | function | A function which writes a value to the attribute when executed. Signature:<br>`(value: any) => Promise<boolean>`
 
 ### Command Input Definition
