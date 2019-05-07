@@ -140,8 +140,9 @@ function inputIsValid(definition: InputDefinition, value: any): boolean {
   }
 
   if (definition.type === "command") {
-    const { device, command } = value;
-    return device != null && command != null;
+    const resolvedDevice = value.device || definition.device;
+    const resolvedCommand = value.command || definition.command;
+    return resolvedDevice != null && resolvedCommand != null;
   }
 
   if (definition.type === "number") {
@@ -152,6 +153,10 @@ function inputIsValid(definition: InputDefinition, value: any): boolean {
     if (definition.nonNegative) {
       return value >= 0;
     }
+  }
+
+  if (definition.type === "device") {
+    return value != null;
   }
 
   return true;

@@ -9,6 +9,7 @@ import {
 import { WidgetBundle } from "../../types";
 import dndTypes from "../../dndTypes";
 import { defaultInputs } from "../../utils";
+import { enrichedInputs } from "../../runtime/enrichment";
 
 function NameLabel({ name }: { name: string }) {
   return (
@@ -66,7 +67,10 @@ class LibraryWidget extends Component<Props> {
 
   public render() {
     const { definition, component } = this.props.bundle;
-    const inputs = defaultInputs(definition.inputs);
+    
+    // Q: should defaults be determined and injected using enrichment instead?
+    const withDefaults = defaultInputs(definition.inputs);
+    const inputs = enrichedInputs(withDefaults, definition.inputs);
 
     const actualSize = this.ref
       ? {
@@ -74,9 +78,7 @@ class LibraryWidget extends Component<Props> {
         }
       : {};
 
-    // What's the correct way to perform the cast?
-    // See e.g. https://github.com/Microsoft/TypeScript/issues/15019
-    const widget = React.createElement(component as any, {
+    const widget = React.createElement(component, {
       mode: "library",
       inputs,
       ...actualSize
