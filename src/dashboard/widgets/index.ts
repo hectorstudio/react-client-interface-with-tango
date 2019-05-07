@@ -6,10 +6,11 @@ import label from "./Label";
 import spectrum from "./Spectrum";
 import commandExecutor from "./CommandExecutor";
 import attributeDial from "./AttributeDial";
+import sardanaMotor from "./sardanaMotor/SardanaMotor";
 
-import { Widget, WidgetDefinition } from "../types";
+import { Widget, WidgetDefinition, WidgetBundle } from "../types";
 
-export const bundles = [
+export const bundles: WidgetBundle[] = [
   label,
   attributeDisplay,
   attributeWriter,
@@ -17,20 +18,27 @@ export const bundles = [
   AttributeScatter,
   spectrum,
   commandExecutor,
-  attributeDial
+  attributeDial,
+  sardanaMotor
 ];
 
 function bundleForType(type: string) {
-  return bundles.find(bundle => bundle.definition.type === type);
+  const bundle = bundles.find(bundle => bundle.definition.type === type);
+
+  if (bundle == null) {
+    throw new Error(`No bundle for type ${type}`);
+  }
+
+  return bundle;
 }
 
 export function definitionForType(type: string): WidgetDefinition {
-  const bundle = bundleForType(type)!;
+  const bundle = bundleForType(type);
   return bundle.definition;
 }
 
 export function componentForType(type: string) {
-  const bundle = bundleForType(type)!;
+  const bundle = bundleForType(type);
   return bundle.component;
 }
 

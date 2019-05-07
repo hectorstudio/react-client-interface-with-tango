@@ -6,7 +6,7 @@ import cx from "classnames";
 import boxIntersect from "box-intersect";
 
 import dndTypes from "../../dndTypes";
-import { componentForWidget } from "../../widgets";
+import { componentForWidget, definitionForWidget } from "../../widgets";
 import { TILE_SIZE } from "../constants";
 
 import SelectionBox from "./SelectionBox";
@@ -20,10 +20,11 @@ import {
   selectWidgets
 } from "../../state/actionCreators";
 
-import {
-  getSelectedWidgets,
-  getCurrentCanvasWidgets
-} from "../../state/selectors";
+import { getSelectedWidgets } from "../../state/selectors";
+import { enrichedInputs } from "../../runtime/enrichment";
+
+import * as API from "../api";
+import { extractDeviceNamesFromWidgets } from "../../runtime/extraction";
 
 const BACKSPACE = 8;
 const DELETE = 46;
@@ -41,13 +42,53 @@ class EditCanvas extends Component {
       mouseActionType: null,
       mouseActionStartLocation: null,
       mouseActionCurrentLocation: null,
-      isShiftDown: false
+      isShiftDown: false,
+      deviceMetadata: {}
     };
 
     this.canvasRef = null;
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
+
+    this.executionResolver = {
+      deviceMetadataLookup: name => this.state.deviceMetadata[name]
+    };
+  }
+
+  componentDidMount() {
+    this.refreshDeviceMetadata(this.props.widgets);
+  }
+
+  componentDidUpdate(prevProps) {
+    this.refreshDeviceMetadata(this.props.widgets, prevProps.widgets);
+  }
+
+  async refreshDeviceMetadata(currentWidgets, previousWidgets = []) {
+    const currentDeviceNames = extractDeviceNamesFromWidgets(currentWidgets);
+    const previousDeviceNames = extractDeviceNamesFromWidgets(previousWidgets);
+
+    if (this.deviceNamesHaveChanged(currentDeviceNames, previousDeviceNames)) {
+      // TODO: no need to refetch when current names are a subset of previous
+      const deviceMetadata = await API.fetchDeviceMetadata(
+        this.props.tangoDB,
+        currentDeviceNames
+      );
+      this.setState({ deviceMetadata });
+    }
+  }
+
+  deviceNamesHaveChanged(currentNames, previousNames) {
+    // Maybe there's a much better way to do this...
+    // Intent: check whether the set of devices has changed, regardless of duplicates and order
+    const currentSet = new Set(currentNames);
+    const previousSet = new Set(previousNames);
+    const combinedSet = new Set([...previousNames, ...currentNames]);
+
+    return !(
+      currentSet.size === combinedSet.size &&
+      previousSet.size === combinedSet.size
+    );
   }
 
   componentForWidget(widget) {
@@ -220,7 +261,15 @@ class EditCanvas extends Component {
 
         <div className="grid">
           {this.props.widgets.map(widget => {
-            const { x, y, id, width, height, inputs, valid } = widget;
+            const { x, y, id, width, height, valid } = widget;
+
+            const definition = definitionForWidget(widget);
+            const inputs = enrichedInputs(
+              widget.inputs,
+              definition.inputs,
+              this.executionResolver
+            );
+
             const actualWidth = TILE_SIZE * width;
             const actualHeight = TILE_SIZE * height;
             const props = { inputs, mode: "edit", actualWidth, actualHeight };
@@ -303,7 +352,6 @@ const addFromLibraryDropTarget = DropTarget(
 
 function mapStateToProps(state) {
   return {
-    widgets: getCurrentCanvasWidgets(state),
     selectedWidgets: getSelectedWidgets(state)
   };
 }

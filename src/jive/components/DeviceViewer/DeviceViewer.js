@@ -34,14 +34,7 @@ class DeviceMenu extends Component {
     const hasCommands = commands.length > 0;
     const hasErrors = errors.length > 0;
 
-    const mask = [
-      true,
-      hasErrors,
-      true,
-      hasAttributes,
-      hasCommands,
-      true
-    ];
+    const mask = [true, hasErrors, true, hasAttributes, hasCommands, true];
 
     const tabTitles = [
       "Server",
@@ -174,9 +167,7 @@ class DeviceViewer extends Component {
 
     return (
       <div>
-        <Helmet>
-          <title>{device.name}</title>
-        </Helmet>
+        <Helmet title={device.name} />
         <div className="device-header">
           <QualityIndicator state={device.state} /> {device.name}
           {enableDisplevelChooser && displevels.length > 1 && (

@@ -1,0 +1,95 @@
+.QualityIndicator {
+    text-shadow: 0em 0em 0.3em;
+    cursor: help;
+    margin-right: 0.5em;
+    font-weight: bold;
+}
+
+.QualityIndicator.quality-valid {
+	color: lightgreen;
+}
+
+.QualityIndicator.quality-invalid {
+    color: lightgray;
+    text-shadow: none;
+}
+
+.QualityIndicator.quality-changing {
+	color: blue;
+}
+
+.QualityIndicator.quality-alarm {
+	color: red;
+}
+
+.QualityIndicator.quality-warning {
+	color: orange;
+}
+
+.state {
+    margin-right: 0.25em;
+    color: white;
+    font-size: 0.75em;
+    vertical-align: middle;
+    padding: 0.25em;
+    border-radius: 0.35em;
+    vertical-align: text-bottom;
+}
+
+.state-on,
+.state-open,
+.state-extract {
+	background-color: #5c5;
+}
+
+.state-off,
+.state-close,
+.state-insert {
+    background-color: white;
+    border: 1px solid lightgray;
+    color: black;
+}
+
+.state-invalid {
+    background-color: lightgray;
+}
+
+.state-moving {
+    background-color: lightblue;
+    color: darkblue;
+}
+
+.state-standby {
+    background-color: yellow;
+    color: black;
+}
+
+.state-fault {
+    background-color: red;
+    color: text;
+}
+
+.state-init {
+    background-color: beige;
+    border: 1px solid orange;
+}
+
+.state-running {
+    background-color: darkgreen;
+    color: white;
+}
+
+.state-alarm {
+    background-color: orange;
+    color: white;
+}
+
+.state-disabled {
+    background-color: magenta;
+    color: white;
+}
+
+.state-unknown {
+    background-color: gray;
+    color: white;
+}

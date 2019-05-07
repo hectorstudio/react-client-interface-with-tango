@@ -54,7 +54,7 @@ export default function canvases(
   switch (action.type) {
     case ADD_WIDGET: {
       const { x, y, canvas, widgetType: type } = action;
-      const definition = definitionForType(type)!;
+      const definition = definitionForType(type);
       const inputs = defaultInputs(definition.inputs);
       const { width, height } = defaultDimensions(definition);
       const id = nextId(state.widgets);
@@ -125,7 +125,7 @@ export default function canvases(
         return state;
       }
       const oldWidget = state.widgets[id];
-      const definition = definitionForWidget(oldWidget)!;
+      const definition = definitionForWidget(oldWidget);
       const value = nestedDefault(definition, path);
       const newWidget = validate(
         addInput(state.widgets[id], [...path, -1], value)
