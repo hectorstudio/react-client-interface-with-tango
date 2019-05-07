@@ -157,7 +157,7 @@ export default class RunCanvas extends Component<Props, State> {
       <div className="Canvas run">
         {this.state.connectionLost && <ConnectionLost />}
         {widgets.map(widget => {
-          const { component, definition } = bundleForWidget(widget)!;
+          const { component, definition } = bundleForWidget(widget);
           const { x, y, id, width, height } = widget;
 
           const actualWidth = width * TILE_SIZE;
@@ -177,7 +177,7 @@ export default class RunCanvas extends Component<Props, State> {
               actualHeight,
               t0
             };
-            element = React.createElement(component as any, props); // How to avoid the cast?
+            element = React.createElement(component, props);
           } catch (error) {
             element = <ErrorWidget error={error} />;
           }

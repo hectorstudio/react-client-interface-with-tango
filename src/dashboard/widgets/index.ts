@@ -8,9 +8,9 @@ import commandExecutor from "./CommandExecutor";
 import attributeDial from "./AttributeDial";
 import sardanaMotor from "./sardanaMotor/SardanaMotor";
 
-import { Widget, WidgetDefinition } from "../types";
+import { Widget, WidgetDefinition, WidgetBundle } from "../types";
 
-export const bundles = [
+export const bundles: WidgetBundle[] = [
   label,
   attributeDisplay,
   attributeWriter,
@@ -24,7 +24,7 @@ export const bundles = [
 
 function bundleForType(type: string) {
   const bundle = bundles.find(bundle => bundle.definition.type === type);
-  
+
   if (bundle == null) {
     throw new Error(`No bundle for type ${type}`);
   }
