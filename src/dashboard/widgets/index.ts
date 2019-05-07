@@ -19,20 +19,26 @@ export const bundles = [
   spectrum,
   commandExecutor,
   attributeDial,
-  sardanaMotor,
+  sardanaMotor
 ];
 
 function bundleForType(type: string) {
-  return bundles.find(bundle => bundle.definition.type === type);
+  const bundle = bundles.find(bundle => bundle.definition.type === type);
+  
+  if (bundle == null) {
+    throw new Error(`No bundle for type ${type}`);
+  }
+
+  return bundle;
 }
 
 export function definitionForType(type: string): WidgetDefinition {
-  const bundle = bundleForType(type)!;
+  const bundle = bundleForType(type);
   return bundle.definition;
 }
 
 export function componentForType(type: string) {
-  const bundle = bundleForType(type)!;
+  const bundle = bundleForType(type);
   return bundle.component;
 }
 
