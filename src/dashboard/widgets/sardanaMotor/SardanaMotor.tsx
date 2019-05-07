@@ -46,6 +46,14 @@ class SardanaMotor extends Component<WidgetProps, State> {
     // const editMode = mode === "edit";
 
     const value = mode === "run" ? position.value : 0;
+
+    // Value hasn't been initialised yet
+    if (value == null) {
+      return null;
+    }
+
+    const valueWithPrecision = value.toFixed(precision);
+
     const displayElement =
       value === undefined ? (
         <span style={{ color: "gray" }}>n/a</span>
@@ -55,7 +63,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
           title={limitWarningTitle}
           className={limitWarningCss}
         >
-          {value.toFixed(precision)}
+          {valueWithPrecision}
         </span>
       );
 
@@ -92,7 +100,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
               <div className="motor-row">
                 <AttributeAbsWriter
                   state={state.value}
-                  value={position.value}
+                  value={valueWithPrecision}
                   mode={mode}
                   onSetPosition={value => this.setPosition(value)}
                 />
@@ -134,7 +142,6 @@ class SardanaMotor extends Component<WidgetProps, State> {
   }
 
   private setPosition(value: number) {
-    console.log("Settings position: " + value);
     this.props.inputs.position.write(value);
   }
 
