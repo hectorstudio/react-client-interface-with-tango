@@ -78,9 +78,7 @@ class LibraryWidget extends Component<Props> {
         }
       : {};
 
-    // What's the correct way to perform the cast?
-    // See e.g. https://github.com/Microsoft/TypeScript/issues/15019
-    const widget = React.createElement(component as any, {
+    const widget = React.createElement(component, {
       mode: "library",
       inputs,
       ...actualSize

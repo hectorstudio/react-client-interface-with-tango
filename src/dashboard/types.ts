@@ -119,7 +119,7 @@ export interface WidgetDefinition {
 
 export interface WidgetBundle {
   definition: WidgetDefinition;
-  component: React.Component<WidgetProps>; // This isn't the right type, is it?
+  component: React.ElementType;
 }
 
 export type IndexPath = Array<string | number>;

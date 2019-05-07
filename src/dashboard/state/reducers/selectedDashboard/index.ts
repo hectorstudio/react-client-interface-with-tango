@@ -125,7 +125,7 @@ export default function canvases(
         return state;
       }
       const oldWidget = state.widgets[id];
-      const definition = definitionForWidget(oldWidget)!;
+      const definition = definitionForWidget(oldWidget);
       const value = nestedDefault(definition, path);
       const newWidget = validate(
         addInput(state.widgets[id], [...path, -1], value)
