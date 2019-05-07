@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, ReactNode } from "react";
 
 import { Widget } from "../../types";
 import { bundleForWidget } from "../../widgets";
@@ -23,19 +23,40 @@ import {
 
 const HISTORY_LIMIT = 1000;
 
-const ConnectionLost = () => (
-  <div
-    style={{
-      position: "absolute",
-      padding: "1em",
-      color: "red",
-      fontWeight: "bold",
-      zIndex: 1
-    }}
-  >
-    Connection lost. Please refresh your browser.
-  </div>
-);
+function ConnectionLost() {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        padding: "1em",
+        color: "red",
+        fontWeight: "bold",
+        zIndex: 1
+      }}
+    >
+      Connection lost. Please refresh your browser.
+    </div>
+  );
+}
+
+function ErrorWidget({ error }) {
+  return (
+    <div
+      style={{
+        backgroundColor: "pink",
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "small"
+      }}
+    >
+      <span className="fa fa-exclamation-triangle" />
+      ️️ {String(error)}
+    </div>
+  );
+}
 
 interface Props {
   widgets: Widget[];
@@ -139,25 +160,38 @@ export default class RunCanvas extends Component<Props, State> {
           const { component, definition } = bundleForWidget(widget)!;
           const { x, y, id, width, height } = widget;
 
-          const inputs = enrichedInputs(
-            widget.inputs,
-            definition.inputs,
-            executionContext
-          );
-
           const actualWidth = width * TILE_SIZE;
           const actualHeight = height * TILE_SIZE;
 
-          const props = { mode: "run", inputs, actualWidth, actualHeight, t0 };
-          const element = React.createElement(component as any, props); // How to avoid the cast?
+          let element: ReactNode;
+          try {
+            const inputs = enrichedInputs(
+              widget.inputs,
+              definition.inputs,
+              executionContext
+            );
+            const props = {
+              mode: "run",
+              inputs,
+              actualWidth,
+              actualHeight,
+              t0
+            };
+            element = React.createElement(component as any, props); // How to avoid the cast?
+          } catch (error) {
+            element = <ErrorWidget error={error} />;
+          }
+
+          const left = 1 + x * TILE_SIZE;
+          const top = 1 + y * TILE_SIZE;
 
           return (
             <div
               key={id}
               className="Widget"
               style={{
-                left: 1 + x * TILE_SIZE,
-                top: 1 + y * TILE_SIZE,
+                left,
+                top,
                 width: actualWidth,
                 height: actualHeight,
                 overflow: "hidden"
