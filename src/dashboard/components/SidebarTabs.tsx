@@ -1,15 +1,12 @@
 import React, { Component } from "react";
+import "./SidebarTabs.css";
 
 interface Props {
   selectedTab: string;
   onTabChange: (newVal: "library" | "dashboards") => void;
 }
-import "./SidebarTabs.css";
 
 export default class SidebarTabs extends Component<Props> {
-  constructor(props) {
-    super(props);
-  }
   public render() {
     const {onTabChange, selectedTab} = this.props;
     return (

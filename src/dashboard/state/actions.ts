@@ -20,7 +20,8 @@ import {
   HIDE_NOTIFICATION,
   SAVE_DASHBOARD,
 } from "./actionTypes";
-import { IndexPath, Widget, Dashboard } from "../types";
+
+import { IndexPath, Widget, Dashboard, Notification } from "../types";
 
 export interface AddWidgetAction extends Action {
   type: typeof ADD_WIDGET;

@@ -120,6 +120,13 @@ Manifests itself as an input where the user can select any of the devices in the
 |-|-|-
 | publish | string | If true, the device name is made available to other inputs as a variable (see example at the top.)
 
+In the component, the input is an object with the following structure:
+
+| Key | Type | Description
+|-|-|-
+| name | string | The device name
+| alias | string | The device alias, or null if none
+
 ### Attribute Input Definition
 
 An input representing a device attribute. Unless bound to a certain attribute, it manifests itself as an input where the user can select a device attribute.
@@ -138,6 +145,8 @@ In the component, the input is an object with the following structure:
 | device | string | The device name
 | attribute | string | The attribute name
 | value | | The current value of the attribute
+| writeValue | | The current write value of the attribute
+| unit | string | The attribute unit, or null if none
 | write | function | A function which writes a value to the attribute when executed. Signature:<br>`(value: any) => Promise<boolean>`
 
 ### Command Input Definition

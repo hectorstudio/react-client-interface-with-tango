@@ -137,7 +137,8 @@ class DeviceList extends Component<Props, State> {
         </div>
         {didLimit && (
           <div className="limited">
-            ⚠️ <span>Only displaying the first {limit} matching devices.</span>
+            <span role="img" aria-label="Warning">⚠️</span>{" "}
+            <span>Only displaying the first {limit} matching devices.</span>
           </div>
         )}
         <TreeView

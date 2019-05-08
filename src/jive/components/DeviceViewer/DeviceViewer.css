@@ -84,7 +84,7 @@
     color: white;
 }
 
-.DeviceViewer .state-disabled {
+.DeviceViewer .state-disable {
     background-color: magenta;
     color: white;
 }
