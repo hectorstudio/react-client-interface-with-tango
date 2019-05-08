@@ -41,15 +41,15 @@ class BooleanDisplay extends Component<Props>{
 		if (Number(parseFloat(value)) === value) {
 			switch (relation) {
 				case ">":
-					return String(value > limitValue)
+					return value > limitValue
 				case "<":
-					return String(value < limitValue)
+					return value < limitValue
 				case "=":
-					return String(value == limitValue)
+					return value === limitValue
 				case ">=":
-					return String(value >= limitValue)
+					return value >= limitValue
 				case "<=":
-					return String(value <= limitValue)
+					return value <= limitValue
 				default:
 					break;
 			}
