@@ -6,6 +6,7 @@ import label from "./Label";
 import spectrum from "./Spectrum";
 import commandExecutor from "./CommandExecutor";
 import attributeDial from "./AttributeDial";
+import booleanDisplay from "./BooleanDisplay";
 import sardanaMotor from "./sardanaMotor/SardanaMotor";
 
 import { Widget, WidgetDefinition, WidgetBundle } from "../types";
@@ -19,6 +20,7 @@ export const bundles: WidgetBundle[] = [
   spectrum,
   commandExecutor,
   attributeDial,
+  booleanDisplay,
   sardanaMotor
 ];
 
