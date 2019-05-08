@@ -9,10 +9,7 @@ import {
 } from "../state/selectors";
 import { RootState } from "../state/reducers";
 import { Dashboard } from "../types";
-import {
-  renameDashboard,
-  cloneDashboard,
-} from "../state/actionCreators";
+import { renameDashboard, cloneDashboard } from "../state/actionCreators";
 import { Notification } from "../types";
 import { DashboardAction } from "../state/actions";
 
@@ -28,6 +25,8 @@ interface Props {
 interface State {
   wipName: string | null;
 }
+
+// TODO: displaying notifications is outside of the scope of this component and should be factored out at some point, e.g. to TopBar
 
 class DashboardTitle extends Component<Props, State> {
   public inputRef: any;
@@ -48,17 +47,18 @@ class DashboardTitle extends Component<Props, State> {
     const { id, user: owner } = dashboard;
 
     const isMine = loggedInUser === owner;
-    const editable = (isMine || !owner) && mode !== "run";
+    const inEditMode = mode === "edit";
+    const editable = (isMine || !owner) && inEditMode;
     const clonable = !isMine && owner;
     const { level, msg: notificationMsg } = this.props.notification;
 
     if (!loggedInUser) {
       return (
         <div className="dashboard-menu">
-          <span style={{ marginLeft: "0.5em" }}>{dashboard.name}</span>
-          <span className="notification-msg ">
+          {id && <span style={{ marginLeft: "0.5em" }}>{dashboard.name}</span>}
+          {inEditMode && <span className="notification-msg ">
             You need to be logged in to save dashboards
-          </span>
+          </span>}
         </div>
       );
     }
@@ -84,7 +84,7 @@ class DashboardTitle extends Component<Props, State> {
           onBlur={() => this.setState({ wipName: null })}
           onFocus={() => this.inputRef.select()}
         />
-        {notificationMsg && !clonable && (
+        {inEditMode && notificationMsg && !clonable && (
           <span className={`notification-msg " + ${level}`}>
             {notificationMsg}
           </span>

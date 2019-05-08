@@ -64,6 +64,7 @@ class CommandExecutor extends Component<Props, State> {
       command.device
     }"`;
 
+    /* eslint-disable no-restricted-globals */
     if (!requireConfirmation || confirm(message)) {
       command.execute();
 
@@ -112,7 +113,7 @@ const definition: WidgetDefinition = {
     title: {
       type: "string",
       label: "Title",
-      default: ""
+      default: "",
     },
     requireConfirmation: {
       type: "boolean",

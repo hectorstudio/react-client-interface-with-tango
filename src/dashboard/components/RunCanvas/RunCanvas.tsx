@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, ReactNode } from "react";
 
 import { Widget } from "../../types";
 import { bundleForWidget } from "../../widgets";
@@ -7,32 +7,56 @@ import { TILE_SIZE } from "../constants";
 import ErrorBoundary from "../ErrorBoundary";
 
 import { attributeEmitter, END, EmittedFrame } from "./emitter";
+import * as TangoAPI from "../api";
+
+import {
+  AttributeValue,
+  enrichedInputs,
+  AttributeMetadata,
+  DeviceMetadata
+} from "../../runtime/enrichment";
+
 import {
   extractFullNamesFromWidgets,
-  enrichedInputs,
-  AttributeValueLookup,
-  CommandOutputLookup,
-  AttributeMetadataLookup,
-  AttributeHistoryLookup
-} from "./lib";
-
-import * as TangoAPI from "../api";
+  extractDeviceNamesFromWidgets
+} from "../../runtime/extraction";
 
 const HISTORY_LIMIT = 1000;
 
-const ConnectionLost = () => (
-  <div
-    style={{
-      position: "absolute",
-      padding: "1em",
-      color: "red",
-      fontWeight: "bold",
-      zIndex: 1
-    }}
-  >
-    Connection lost. Please refresh your browser.
-  </div>
-);
+function ConnectionLost() {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        padding: "1em",
+        color: "red",
+        fontWeight: "bold",
+        zIndex: 1
+      }}
+    >
+      Connection lost. Please refresh your browser.
+    </div>
+  );
+}
+
+function ErrorWidget({ error }) {
+  return (
+    <div
+      style={{
+        backgroundColor: "pink",
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "small"
+      }}
+    >
+      <span className="fa fa-exclamation-triangle" />
+      ️️ {String(error)}
+    </div>
+  );
+}
 
 interface Props {
   widgets: Widget[];
@@ -41,10 +65,11 @@ interface Props {
 
 interface State {
   connectionLost: boolean;
-  attributeValues: AttributeValueLookup;
-  attributeHistories: AttributeHistoryLookup;
-  commandOutputs: CommandOutputLookup;
-  attributeMetadata: AttributeMetadataLookup | null;
+  attributeValues: Record<string, AttributeValue>;
+  attributeHistories: Record<string, AttributeValue[]>;
+  commandOutputs: Record<string, any>;
+  attributeMetadata: Record<string, AttributeMetadata> | null;
+  deviceMetadata: Record<string, DeviceMetadata> | null;
   t0: number;
 }
 
@@ -60,8 +85,15 @@ export default class RunCanvas extends Component<Props, State> {
       attributeHistories: {},
       commandOutputs: {},
       attributeMetadata: null,
+      deviceMetadata: null,
       t0: Date.now() / 1000
     };
+
+    this.resolveAttributeValue = this.resolveAttributeValue.bind(this);
+    this.resolveDeviceMetadata = this.resolveDeviceMetadata.bind(this);
+    this.resolveAttributeMetadata = this.resolveAttributeMetadata.bind(this);
+    this.resolveAttributeHistories = this.resolveAttributeHistories.bind(this);
+    this.resolveCommandOutputs = this.resolveCommandOutputs.bind(this);
 
     this.writeAttribute = this.writeAttribute.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
@@ -72,16 +104,22 @@ export default class RunCanvas extends Component<Props, State> {
     const { widgets, tangoDB } = this.props;
     const fullNames = extractFullNamesFromWidgets(widgets);
 
-    const attributeMetadata = (await TangoAPI.fetchAttributeMetadata(
+    const attributeMetadata = await TangoAPI.fetchAttributeMetadata(
       tangoDB,
       fullNames
-    )) as AttributeMetadataLookup | null;
+    );
+
+    const deviceNames = extractDeviceNamesFromWidgets(widgets);
+    const deviceMetadata = await TangoAPI.fetchDeviceMetadata(
+      tangoDB,
+      deviceNames
+    );
 
     const attributeHistories = fullNames.reduce((accum, name) => {
       return { ...accum, [name]: [] };
     }, {});
 
-    this.setState({ attributeMetadata, attributeHistories });
+    this.setState({ deviceMetadata, attributeMetadata, attributeHistories });
 
     const startEmission = attributeEmitter(tangoDB, fullNames);
     this.unsubscribe = startEmission(this.handleNewFrame);
@@ -95,50 +133,65 @@ export default class RunCanvas extends Component<Props, State> {
 
   public render() {
     const { widgets } = this.props;
+    const { deviceMetadata, attributeMetadata, t0 } = this.state;
 
-    const {
-      attributeMetadata,
-      attributeValues,
-      attributeHistories,
-      commandOutputs,
-      t0
-    } = this.state;
+    if (deviceMetadata == null) {
+      return null;
+    }
 
     if (attributeMetadata == null) {
       return null;
     }
 
+    const executionContext = {
+      deviceMetadataLookup: this.resolveDeviceMetadata,
+      attributeMetadataLookup: this.resolveAttributeMetadata,
+      attributeValuesLookup: this.resolveAttributeValue,
+      attributeHistoryLookup: this.resolveAttributeHistories,
+      commandOutputLookup: this.resolveCommandOutputs,
+      onWrite: this.writeAttribute,
+      onExecute: this.executeCommand
+    };
+
     return (
       <div className="Canvas run">
         {this.state.connectionLost && <ConnectionLost />}
         {widgets.map(widget => {
-          const { component, definition } = bundleForWidget(widget)!;
+          const { component, definition } = bundleForWidget(widget);
           const { x, y, id, width, height } = widget;
-
-          const inputs = enrichedInputs(
-            widget.inputs,
-            definition.inputs,
-            attributeMetadata,
-            attributeValues,
-            attributeHistories,
-            commandOutputs,
-            this.writeAttribute,
-            this.executeCommand
-          );
 
           const actualWidth = width * TILE_SIZE;
           const actualHeight = height * TILE_SIZE;
 
-          const props = { mode: "run", inputs, actualWidth, actualHeight, t0 };
-          const element = React.createElement(component as any, props); // How to avoid the cast?
+          let element: ReactNode;
+          try {
+            const inputs = enrichedInputs(
+              widget.inputs,
+              definition.inputs,
+              executionContext
+            );
+            const props = {
+              mode: "run",
+              inputs,
+              actualWidth,
+              actualHeight,
+              t0
+            };
+            element = React.createElement(component, props);
+          } catch (error) {
+            element = <ErrorWidget error={error} />;
+          }
+
+          const left = 1 + x * TILE_SIZE;
+          const top = 1 + y * TILE_SIZE;
 
           return (
             <div
               key={id}
               className="Widget"
               style={{
-                left: 1 + x * TILE_SIZE,
-                top: 1 + y * TILE_SIZE,
+                left,
+                top,
                 width: actualWidth,
                 height: actualHeight,
                 overflow: "hidden"
@@ -152,19 +205,60 @@ export default class RunCanvas extends Component<Props, State> {
     );
   }
 
+  private resolveAttributeValue(name: string) {
+    return this.state.attributeValues[name] || {};
+  }
+
+  private resolveDeviceMetadata(name: string) {
+    const { deviceMetadata } = this.state;
+    if (deviceMetadata == null) {
+      throw new Error("trying to resolve device metadata before initialised");
+    }
+    return deviceMetadata[name];
+  }
+
+  private resolveAttributeMetadata(name: string) {
+    const { attributeMetadata } = this.state;
+    if (attributeMetadata == null) {
+      throw new Error(
+        "trying to resolve attribute metadata before initialised"
+      );
+    }
+    return attributeMetadata[name];
+  }
+
+  private resolveAttributeHistories(name: string) {
+    return this.state.attributeHistories[name] || [];
+  }
+
+  private resolveCommandOutputs(name: string) {
+    return this.state.commandOutputs[name];
+  }
+
   private async executeCommand(
     device: string,
     command: string
   ): Promise<boolean> {
-    const output = await TangoAPI.executeCommand(
-      this.props.tangoDB,
-      device,
-      command
-    );
+    let output;
+    try {
+      output = await TangoAPI.executeCommand(
+        this.props.tangoDB,
+        device,
+        command
+      );
+    } catch (err) {
+      // Possibly display a visual indication of the error
+      return false;
+    }
+
     const fullName = `${device}/${command}`;
-    const commandOutputs = { ...this.state.commandOutputs, [fullName]: output };
+    const commandOutputs = {
+      ...this.state.commandOutputs,
+      [fullName]: output
+    };
+
     this.setState({ commandOutputs });
-    return output;
+    return true;
   }
 
   private async writeAttribute(
@@ -172,20 +266,29 @@ export default class RunCanvas extends Component<Props, State> {
     attribute: string,
     value: any
   ): Promise<boolean> {
-    const { ok, attribute: attributeAfter } = await TangoAPI.writeAttribute(
-      this.props.tangoDB,
-      device,
-      attribute,
-      value
-    );
+    let result;
+    try {
+      result = await TangoAPI.writeAttribute(
+        this.props.tangoDB,
+        device,
+        attribute,
+        value
+      );
+    } catch (err) {
+      // Possibly display a visual indication of the error
+      return false;
+    }
 
-    this.recordAttribute(
-      device,
-      attribute,
-      attributeAfter.value,
-      attributeAfter.writevalue,
-      attributeAfter.timestamp
-    );
+    const { ok, attribute: attributeAfter } = result;
+    if (ok) {
+      this.recordAttribute(
+        device,
+        attribute,
+        attributeAfter.value,
+        attributeAfter.writevalue,
+        attributeAfter.timestamp
+      );
+    }
 
     return ok;
   }
@@ -211,6 +314,11 @@ export default class RunCanvas extends Component<Props, State> {
 
     if (attributeHistory.length > 0) {
       const lastFrame = attributeHistory.slice(-1)[0];
+
+      if (lastFrame.timestamp == null) {
+        throw new Error("timestamp is missing");
+      }
+
       if (lastFrame.timestamp >= timestamp) {
         return;
       }

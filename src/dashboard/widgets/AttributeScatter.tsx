@@ -1,14 +1,14 @@
 import React from "react";
 
+import { WidgetDefinition, AttributeInput } from "../types";
+import { WidgetProps } from "./types";
+
 // In order to avoid importing the entire plotly.js library. Note that this mutates the global PlotlyCore object.
 import PlotlyCore from "plotly.js/lib/core";
 import PlotlyScatter from "plotly.js/lib/scatter";
 import createPlotlyComponent from "react-plotly.js/factory";
 PlotlyCore.register([PlotlyScatter]);
 const Plotly = createPlotlyComponent(PlotlyCore);
-
-import { WidgetDefinition, AttributeInput } from "../types";
-import { WidgetProps } from "./types";
 
 const definition: WidgetDefinition = {
   type: "ATTRIBUTE_SCATTER",

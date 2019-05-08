@@ -74,10 +74,13 @@ class Dashboard extends Component<Props> {
       this.props.history.replace("?id=" + this.props.selectedDashboard.id);
       return;
     }
-    const justLoggedInOnAnonymous = this.props.isLoggedIn && this.props.widgets.length > 0 && !id
+    const justLoggedInOnAnonymous =
+      this.props.isLoggedIn && this.props.widgets.length > 0 && !id;
 
     if (
-      JSON.stringify(prevProps.widgets) === JSON.stringify(this.props.widgets) && !justLoggedInOnAnonymous
+      JSON.stringify(prevProps.widgets) ===
+        JSON.stringify(this.props.widgets) &&
+      !justLoggedInOnAnonymous
     ) {
       return;
     }
@@ -97,7 +100,7 @@ class Dashboard extends Component<Props> {
 
     const canvasContents =
       mode === "edit" ? (
-        <EditCanvas />
+        <EditCanvas widgets={widgets} tangoDB={tangoDB} />
       ) : (
         <RunCanvas widgets={widgets} tangoDB={tangoDB} />
       );
@@ -136,6 +139,7 @@ class Dashboard extends Component<Props> {
   }
 
   private parseId(): string {
+    /* eslint-disable no-restricted-globals */
     const search = location.search;
     const parsed = queryString.parse(search);
     return String(parsed.id || "") || ""; // TODO: improve handling of id parameter

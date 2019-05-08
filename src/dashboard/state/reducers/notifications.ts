@@ -13,12 +13,15 @@ const initialState: NotificationsState = {
 export default function notifications(
   state: NotificationsState = initialState,
   action: DashboardAction
-) {
+): NotificationsState {
   switch (action.type) {
     case SHOW_NOTIFICATION:
       return { ...state, notification: action.notification };
     case HIDE_NOTIFICATION:
-      return { ...state, notification: { level: "", sourceAction: "", msg: "" } };
+      return {
+        ...state,
+        notification: { level: "", sourceAction: "", msg: "" }
+      };
     default:
       return state;
   }

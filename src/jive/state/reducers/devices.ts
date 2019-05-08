@@ -1,7 +1,9 @@
 import {
   FETCH_DEVICE_SUCCESS,
-  ATTRIBUTE_FRAME_RECEIVED
+  ATTRIBUTE_FRAME_RECEIVED,
+  DEVICE_STATE_RECEIVED
 } from "../actions/actionTypes";
+import JiveAction from "../actions";
 
 interface IDevice {
   name: string;
@@ -17,7 +19,10 @@ export interface IDevicesState {
   [name: string]: IDevice;
 }
 
-export default function devices(state: IDevicesState = {}, action) {
+export default function devices(
+  state: IDevicesState = {},
+  action: JiveAction
+): IDevicesState {
   switch (action.type) {
     case FETCH_DEVICE_SUCCESS: {
       const { attributes, properties, commands, name, ...core } = action.device;
@@ -34,7 +39,7 @@ export default function devices(state: IDevicesState = {}, action) {
       }
     }
 
-    case "DEVICE_STATE_RECEIVED": {
+    case DEVICE_STATE_RECEIVED: {
       const { device } = action;
       const oldDevice = state[device];
       return { ...state, [device]: { ...oldDevice, state: action.state } };

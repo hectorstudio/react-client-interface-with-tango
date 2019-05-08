@@ -25,6 +25,7 @@ export interface NumberInputDefinition extends BaseInputDefinition<number> {
 
 export interface StringInputDefinition extends BaseInputDefinition<string> {
   type: "string";
+  placeholder?: string;
 }
 
 export interface ComplexInputDefinition extends BaseInputDefinition<null> {
@@ -118,7 +119,7 @@ export interface WidgetDefinition {
 
 export interface WidgetBundle {
   definition: WidgetDefinition;
-  component: React.Component<WidgetProps>;
+  component: React.ElementType;
 }
 
 export type IndexPath = Array<string | number>;
@@ -136,6 +137,7 @@ export interface AttributeInput<ValueT = any> extends AttributeValue<ValueT> {
   dataType: string;
   dataFormat: string;
   isNumeric: boolean;
+  unit: string;
   write: (value: ValueT) => void;
 }
 
