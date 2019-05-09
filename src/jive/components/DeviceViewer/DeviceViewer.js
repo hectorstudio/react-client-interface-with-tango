@@ -71,8 +71,8 @@ class DeviceMenu extends Component {
   }
 }
 
-const QualityIndicator = ({ state }) => {
-  const classSuffixes = {
+const StateIndicator = ({ state }) => {
+  const classes = {
     ON: "on",
     OFF: "off",
     CLOSE: "close",
@@ -88,8 +88,11 @@ const QualityIndicator = ({ state }) => {
     DISABLE: "disable",
     UNKNOWN: "unknown"
   };
-  const classSuffix = classSuffixes[state] || "invalid";
-  return <span className={`state state-${classSuffix}`}>{state}</span>;
+  
+  const className = classes[state] || "invalid";
+  return (
+    <span className={classNames("StateIndicator", className)}>{state}</span>
+  );
 };
 
 class DeviceViewer extends Component {
@@ -169,7 +172,7 @@ class DeviceViewer extends Component {
       <div>
         <Helmet title={device.name} />
         <div className="device-header">
-          <QualityIndicator state={device.state} /> {device.name}
+          <StateIndicator state={device.state} /> {device.name}
           {enableDisplevelChooser && displevels.length > 1 && (
             <DisplevelChooser
               displevels={[] /*displevels*/}

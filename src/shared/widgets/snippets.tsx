@@ -12,7 +12,7 @@ export const QualityIndicatorLight = ({quality}) => {
       }[quality] || "invalid";
   
     return (
-      <span className={`QualityIndicator quality-${sub}`} title={quality}>
+      <span className={`QualityIndicator ${sub}`} title={quality}>
         ●{" "}
       </span>
     );
