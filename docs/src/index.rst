@@ -45,6 +45,7 @@ For developers
 
 .. toctree::
     widget
+    architecture
 
 Authors
 =====
@@ -58,6 +59,7 @@ WebJive was written by the KITS Group at MAX IV Laboratory .
    :caption: Contents:
 
    widget
+   architecture
 
 
 Prerequsities
