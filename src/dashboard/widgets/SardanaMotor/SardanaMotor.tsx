@@ -172,7 +172,8 @@ const definition: WidgetDefinition = {
     stop: {
       type: "command",
       device: "$device",
-      command: "Stop"
+      command: "Stop",
+      invalidates: ["state"]
     },
     limits: {
       type: "attribute",
@@ -182,12 +183,14 @@ const definition: WidgetDefinition = {
     position: {
       type: "attribute",
       device: "$device",
-      attribute: "Position"
+      attribute: "Position",
+      invalidates: ["state", "limits"]
     },
     power: {
       type: "attribute",
       device: "$device",
-      attribute: "Power"
+      attribute: "Power",
+      invalidates: ["state"]
     },
     state: {
       type: "attribute",
