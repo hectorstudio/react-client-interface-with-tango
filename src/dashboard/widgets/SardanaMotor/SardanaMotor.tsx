@@ -189,7 +189,7 @@ const definition: WidgetDefinition = {
     power: {
       type: "attribute",
       device: "$device",
-      attribute: "Power",
+      attribute: "Power"
     },
     state: {
       type: "attribute",
