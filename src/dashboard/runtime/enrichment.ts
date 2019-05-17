@@ -216,6 +216,7 @@ export function enrichedInputs(
       return;
     }
 
+    // Not all inputs invalidate, so inputNames can be undefined
     if (inputNames == null) {
       return;
     }
