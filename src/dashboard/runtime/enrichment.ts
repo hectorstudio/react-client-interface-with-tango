@@ -170,12 +170,6 @@ const defaultContext: ExecutionContext = {
   },
   commandOutputLookup() {
     return null;
-  },
-  async onWrite() {
-    return false;
-  },
-  async onExecute() {
-    return false;
   }
 };
 

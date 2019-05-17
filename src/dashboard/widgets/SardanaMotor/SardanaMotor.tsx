@@ -190,7 +190,6 @@ const definition: WidgetDefinition = {
       type: "attribute",
       device: "$device",
       attribute: "Power",
-      invalidates: ["state"]
     },
     state: {
       type: "attribute",
