@@ -1,4 +1,4 @@
-.QualityIndicator {
+/* .QualityIndicator {
     text-shadow: 0em 0em 0.3em;
     cursor: help;
     margin-right: 0.5em;
@@ -24,9 +24,9 @@
 
 .QualityIndicator.quality {
 	color: orange;
-}
+} */
 
-.state {
+.StateIndicatorLabel {
     margin-right: 0.25em;
     color: white;
     font-size: 0.75em;
@@ -36,60 +36,60 @@
     vertical-align: text-bottom;
 }
 
-.state-on,
-.state-open,
-.state-extract {
+.StateIndicatorLabel.on,
+.StateIndicatorLabel.open,
+.StateIndicatorLabel.extract {
 	background-color: #5c5;
 }
 
-.state-off,
-.state-close,
-.state-insert {
+.StateIndicatorLabel.off,
+.StateIndicatorLabel.close,
+.StateIndicatorLabel.insert {
     background-color: white;
     border: 1px solid lightgray;
     color: black;
 }
 
-.state-invalid {
+.StateIndicatorLabel.invalid {
     background-color: lightgray;
 }
 
-.state-moving {
+.StateIndicatorLabel.moving {
     background-color: lightblue;
     color: darkblue;
 }
 
-.state-standby {
+.StateIndicatorLabel.standby {
     background-color: yellow;
     color: black;
 }
 
-.state-fault {
+.StateIndicatorLabel.fault {
     background-color: red;
     color: text;
 }
 
-.state-init {
+.StateIndicatorLabel.init {
     background-color: beige;
     border: 1px solid orange;
 }
 
-.state-running {
+.StateIndicatorLabel.running {
     background-color: darkgreen;
     color: white;
 }
 
-.state-alarm {
+.StateIndicatorLabel.alarm {
     background-color: orange;
     color: white;
 }
 
-.state-disable {
+.StateIndicatorLabel.disable {
     background-color: magenta;
     color: white;
 }
 
-.state-unknown {
+.StateIndicatorLabel.unknown {
     background-color: gray;
     color: white;
 }
