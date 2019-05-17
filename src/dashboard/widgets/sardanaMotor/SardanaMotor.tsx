@@ -3,10 +3,10 @@ import React, { Component } from "react";
 import { WidgetProps } from "../types";
 import { WidgetDefinition } from "../../types";
 import "./SardanaMotor.css";
-import { QualityIndicatorLabel } from "../../../shared/widgets/snippets";
 // import { MultiDialWriter } from "./MultiDialWriter";
 // import { AttributeStepWriter } from "./AttributeStepWriter";
 import { AttributeAbsWriter } from "./AttributeAbsWriter";
+import { StateIndicatorLabel } from "../../../shared/ui/components/StateIndicatorLabel";
 
 interface State {}
 
@@ -71,7 +71,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
       <div className="sardana-motor">
         <div className="motor-container">
           <div className="motor-row">
-            <QualityIndicatorLabel
+            <StateIndicatorLabel
               state={mode === "run" ? state.value : "UNKNOWN"}
             />
             {state.value === "MOVING" && (
