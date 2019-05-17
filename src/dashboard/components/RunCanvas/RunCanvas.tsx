@@ -296,8 +296,16 @@ export default class RunCanvas extends Component<Props, State> {
     return ok;
   }
 
-  private handleInvalidation(fullNames: string[]) {
-    // Handle invalidation
+  private async handleInvalidation(fullNames: string[]) {
+    const attributes = await TangoAPI.fetchAttributesValues(
+      this.props.tangoDB,
+      fullNames
+    );
+
+    for (const attribute of attributes) {
+      const { device, name, value, writevalue, timestamp } = attribute;
+      this.recordAttribute(device, name, value, writevalue, timestamp);
+    }
   }
 
   private recordAttribute(
