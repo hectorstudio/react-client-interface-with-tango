@@ -97,6 +97,8 @@ export default class RunCanvas extends Component<Props, State> {
 
     this.writeAttribute = this.writeAttribute.bind(this);
     this.executeCommand = this.executeCommand.bind(this);
+
+    this.handleInvalidation = this.handleInvalidation.bind(this);
     this.handleNewFrame = this.handleNewFrame.bind(this);
   }
 
@@ -150,7 +152,8 @@ export default class RunCanvas extends Component<Props, State> {
       attributeHistoryLookup: this.resolveAttributeHistories,
       commandOutputLookup: this.resolveCommandOutputs,
       onWrite: this.writeAttribute,
-      onExecute: this.executeCommand
+      onExecute: this.executeCommand,
+      onInvalidate: this.handleInvalidation
     };
 
     return (
@@ -291,6 +294,18 @@ export default class RunCanvas extends Component<Props, State> {
     }
 
     return ok;
+  }
+
+  private async handleInvalidation(fullNames: string[]) {
+    const attributes = await TangoAPI.fetchAttributesValues(
+      this.props.tangoDB,
+      fullNames
+    );
+
+    for (const attribute of attributes) {
+      const { device, name, value, writevalue, timestamp } = attribute;
+      this.recordAttribute(device, name, value, writevalue, timestamp);
+    }
   }
 
   private recordAttribute(
