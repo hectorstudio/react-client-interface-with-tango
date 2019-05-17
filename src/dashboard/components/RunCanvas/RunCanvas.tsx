@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react";
 
-import { Widget, CommandInputDefinition } from "../../types";
+import { Widget } from "../../types";
 import { bundleForWidget } from "../../widgets";
 import { TILE_SIZE } from "../constants";
 
