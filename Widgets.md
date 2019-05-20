@@ -171,7 +171,7 @@ In the component, the input is an object with the following structure:
 
 ## Invalidation
 
-An attribute input can be *invalidated*, which forces a refresh of its value and metadata outside of the subscription. This is used when there is a relationship between attributes and commands or other attributes, which should needs to be immediately reflected in the UI to produce a consistent user experience. Invalidation is achieved by adding an `invalidates` field to the definition of the input that causes the invalidation – see [Attribute Input Definition](#attribute-input-definition) and [Comand Input Definition](#command-input-definition).
+An attribute input can be *invalidated*, which forces a refresh of its value and metadata outside of the event stream. This is used when there is a relationship between attributes and commands or other attributes, which should be immediately reflected in the UI to produce a consistent user experience. Invalidation is achieved by adding an `invalidates` field to the definition of the input that causes the invalidation – see [Attribute Input Definition](#attribute-input-definition) and [Comand Input Definition](#command-input-definition).
 
 ### Example
 

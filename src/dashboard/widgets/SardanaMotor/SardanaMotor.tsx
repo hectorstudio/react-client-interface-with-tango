@@ -157,7 +157,7 @@ const definition: WidgetDefinition = {
   type: "SARDANA_MOTOR",
   name: "Sardana Motor",
   defaultHeight: 2,
-  defaultWidth: 20,
+  defaultWidth: 24,
   inputs: {
     device: {
       type: "device",
