@@ -51,6 +51,7 @@ export interface AttributeInputDefinition
   dataType?: "numeric";
   device?: string;
   attribute?: string;
+  invalidates?: string[];
 }
 
 export interface ColorInputDefinition extends BaseInputDefinition<string> {
@@ -67,6 +68,7 @@ export interface CommandInputDefinition extends BaseInputDefinition<null> {
   device?: string;
   command?: string;
   intype?: string;
+  invalidates?: string[];
 }
 
 export type InputDefinition =

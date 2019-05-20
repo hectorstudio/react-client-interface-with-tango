@@ -137,6 +137,7 @@ An input representing a device attribute. Unless bound to a certain attribute, i
 | dataType? | string | If "numeric", only numeric attributes are shown.
 | device? | string | If set, the input is bound to this device.
 | attribute? | string | If set, the input is bound to this attribute.
+| invalidates? | string[] | If set, a list of input names that will be invalidated when writing to the attribute. These inputs have to be attribute inputs in the root. See [Invalidation](#invalidation).
 
 In the component, the input is an object with the following structure:
 
@@ -158,6 +159,7 @@ An input representing a device command. Unless bound to a certain command, it ma
 | device? | string | If set, the input is bound to this device.
 | command? | string | If set, the input is bound to this command.
 | intype? | string | If set, only commands with this intype are shown to the user.
+| invalidates? | string[] | If set, a list of input names that will be invalidated when executing the command. These inputs have to be attribute inputs in the root.
 
 In the component, the input is an object with the following structure:
 
@@ -166,3 +168,34 @@ In the component, the input is an object with the following structure:
 | device | string | The device name
 | command | string | The command name
 | execute | function | A function which executes the command when executed. Currently doesn't take input parameters. Signature:<br>`() => Promise<any>`
+
+## Invalidation
+
+An attribute input can be *invalidated*, which forces a refresh of its value and metadata outside of the event stream. This is used when there is a relationship between attributes and commands or other attributes, which should be immediately reflected in the UI to produce a consistent user experience. Invalidation is achieved by adding an `invalidates` field to the definition of the input that causes the invalidation – see [Attribute Input Definition](#attribute-input-definition) and [Comand Input Definition](#command-input-definition).
+
+### Example
+
+A device exposes a command `TurnOff` and an attribute `Power`. Executing `TurnOff` makes `Power` go to zero, which should be reflected immediately. This is achieved as follows:
+
+    {
+      …
+      inputs: {
+        device: {
+          type: "device",
+          publish: "$device"
+        },
+        power: {
+          type: "attribute",
+          device: "$device",
+          attribute: "Power"
+        },
+        turnOff: {
+          type: "command",
+          device: "$device",
+          command: "TurnOff",
+          invalidates: ["power"]
+        }
+      }
+    }
+
+Notice that each string in the `invalidates` array refers to the name of an *input*, not of an attribute.
