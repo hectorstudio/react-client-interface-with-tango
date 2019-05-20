@@ -27,7 +27,7 @@
     border-bottom: none;
 }
 
-.DeviceViewer .state {
+.DeviceViewer .StateIndicator {
     margin-right: 0.25em;
     color: white;
     font-size: 0.75em;
@@ -36,60 +36,60 @@
     border-radius: 0.35em;
 }
 
-.DeviceViewer .state-on,
-.DeviceViewer .state-open,
-.DeviceViewer .state-extract {
+.DeviceViewer .StateIndicator.on,
+.DeviceViewer .StateIndicator.open,
+.DeviceViewer .StateIndicator.extract {
 	background-color: #5c5;
 }
 
-.DeviceViewer .state-off,
-.DeviceViewer .state-close,
-.DeviceViewer .state-insert {
+.DeviceViewer .StateIndicator.off,
+.DeviceViewer .StateIndicator.close,
+.DeviceViewer .StateIndicator.insert {
     background-color: white;
     border: 1px solid lightgray;
     color: black;
 }
 
-.DeviceViewer .state-invalid {
+.DeviceViewer .StateIndicator.invalid {
     background-color: lightgray;
 }
 
-.DeviceViewer .state-moving {
+.DeviceViewer .StateIndicator.moving {
     background-color: lightblue;
     color: darkblue;
 }
 
-.DeviceViewer .state-standby {
+.DeviceViewer .StateIndicator.standby {
     background-color: yellow;
     color: black;
 }
 
-.DeviceViewer .state-fault {
+.DeviceViewer .StateIndicator.fault {
     background-color: red;
     color: text;
 }
 
-.DeviceViewer .state-init {
+.DeviceViewer .StateIndicator.init {
     background-color: beige;
     border: 1px solid orange;
 }
 
-.DeviceViewer .state-running {
+.DeviceViewer .StateIndicator.running {
     background-color: darkgreen;
     color: white;
 }
 
-.DeviceViewer .state-alarm {
+.DeviceViewer .StateIndicator.alarm {
     background-color: orange;
     color: white;
 }
 
-.DeviceViewer .state-disabled {
+.DeviceViewer .StateIndicator.disable {
     background-color: magenta;
     color: white;
 }
 
-.DeviceViewer .state-unknown {
+.DeviceViewer .StateIndicator.unknown {
     background-color: gray;
     color: white;
 }

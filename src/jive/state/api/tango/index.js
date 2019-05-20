@@ -20,8 +20,8 @@ function client(tangoDB) {
 
 function socketUrl(tangoDB) {
   const loc = window.location;
-  const protocol = loc.protocol.replace('http', 'ws');
-  return protocol + '//' + loc.host + '/' + tangoDB + '/socket';
+  const protocol = loc.protocol.replace("http", "ws");
+  return protocol + "//" + loc.host + "/" + tangoDB + "/socket";
 }
 
 function createSocket(tangoDB) {
@@ -36,21 +36,22 @@ export default {
 
   async fetchDeviceNames(tangoDB) {
     const data = await client(tangoDB).request(FETCH_DEVICE_NAMES);
-    return data.devices.map(device => device.name);
+    return data.devices.map(device => device.name.toLowerCase());
   },
 
-  async fetchLoggedActions(tangoDB, deviceName, limit){
-    const params = {deviceName, limit}
+  async fetchLoggedActions(tangoDB, deviceName, limit) {
+    const params = { deviceName, limit };
     const isGlobal = deviceName === "";
-    const query = isGlobal ? FETCH_ALL_LOGGED_ACTIONS : FETCH_LOGGED_ACTIONS
+    const query = isGlobal ? FETCH_ALL_LOGGED_ACTIONS : FETCH_LOGGED_ACTIONS;
     const data = await client(tangoDB).request(query, params);
-    if (isGlobal){
-      return {name: "", userActions: data.userActions};
-    }else{
-
-      return {name: data.device.name, userActions: data.device.userActions};
+    if (isGlobal) {
+      return { name: "", userActions: data.userActions };
+    } else {
+      return {
+        name: data.device.name.toLowerCase(),
+        userActions: data.device.userActions
+      };
     }
-   
   },
 
   async executeCommand(tangoDB, command, argin, device) {
@@ -62,7 +63,7 @@ export default {
   async setDeviceAttribute(tangoDB, device, name, value) {
     const params = { device, name, value };
     const data = await client(tangoDB).request(SET_DEVICE_ATTRIBUTE, params);
-    const { ok, attribute } = data.setAttributeValue;
+    const { ok, attribute } = data.setAttributeValue;
     return { ok, attribute };
   },
 
@@ -80,7 +81,7 @@ export default {
 
   async fetchDevice(tangoDB, name) {
     const params = { name };
-    
+
     let device = null;
     let errors = [];
 
@@ -96,7 +97,8 @@ export default {
       }
     }
 
-    return { ...device, errors };
+    const lowerCaseName = device.name.toLowerCase();
+    return { ...device, name: lowerCaseName, errors };
   },
 
   async fetchDeviceState(tangoDB, name) {
@@ -123,18 +125,20 @@ export default {
         });
         socket.send(startMessage);
       });
-  
+
       socket.addEventListener("error", err => {
         emit(new Error(err.reason));
       });
-  
+
       socket.addEventListener("message", msg => {
         const frame = JSON.parse(msg.data);
         if (frame.type === "data" && frame.payload.errors == null) {
-          emit(frame.payload.data.attributes);
+          const attribute = frame.payload.data.attributes;
+          const device = attribute.device.toLowerCase();
+          emit({ ...attribute, device });
         }
       });
-  
+
       return () => {
         socket.close();
       };

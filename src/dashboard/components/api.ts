@@ -79,6 +79,17 @@ query FetchAttributeMetadata($deviceName: String!) {
   }
 }`;
 
+const FETCH_ATTRIBUTES_VALUES = `
+query FetchAttributeValues($fullNames: [String]!) {
+  attributes(fullNames: $fullNames) {
+    name
+    device
+    value
+    writevalue
+    timestamp
+  }
+}`;
+
 const FETCH_DEVICE_METADATA = `
 query FetchDeviceMetadata($deviceName: String!) {
   device(name: $deviceName) {
@@ -200,6 +211,20 @@ export async function fetchAttributeMetadata(
   } catch (err) {
     alert(err);
     return null;
+  }
+}
+
+export async function fetchAttributesValues(
+  tangoDB: string,
+  fullNames: string[]
+): Promise<
+  Array<{ name: string; device: string; value: any; writevalue: any, timestamp: number }>
+> {
+  try {
+    const data = await request(tangoDB, FETCH_ATTRIBUTES_VALUES, { fullNames });
+    return data.attributes;
+  } catch (err) {
+    return [];
   }
 }
 

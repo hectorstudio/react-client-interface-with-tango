@@ -3,10 +3,10 @@ import React, { Component } from "react";
 import { WidgetProps } from "../types";
 import { WidgetDefinition } from "../../types";
 import "./SardanaMotor.css";
-import { QualityIndicatorLabel } from "../../../shared/widgets/snippets";
 // import { MultiDialWriter } from "./MultiDialWriter";
 // import { AttributeStepWriter } from "./AttributeStepWriter";
 import { AttributeAbsWriter } from "./AttributeAbsWriter";
+import { StateIndicatorLabel } from "../../../shared/ui/components/StateIndicatorLabel";
 
 interface State {}
 
@@ -46,6 +46,14 @@ class SardanaMotor extends Component<WidgetProps, State> {
     // const editMode = mode === "edit";
 
     const value = mode === "run" ? position.value : 0;
+
+    // Value hasn't been initialised yet
+    if (value == null) {
+      return null;
+    }
+
+    const valueWithPrecision = value.toFixed(precision);
+
     const displayElement =
       value === undefined ? (
         <span style={{ color: "gray" }}>n/a</span>
@@ -55,7 +63,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
           title={limitWarningTitle}
           className={limitWarningCss}
         >
-          {value.toFixed(precision)}
+          {valueWithPrecision}
         </span>
       );
 
@@ -63,7 +71,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
       <div className="sardana-motor">
         <div className="motor-container">
           <div className="motor-row">
-            <QualityIndicatorLabel
+            <StateIndicatorLabel
               state={mode === "run" ? state.value : "UNKNOWN"}
             />
             {state.value === "MOVING" && (
@@ -92,7 +100,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
               <div className="motor-row">
                 <AttributeAbsWriter
                   state={state.value}
-                  value={position.value}
+                  value={valueWithPrecision}
                   mode={mode}
                   onSetPosition={value => this.setPosition(value)}
                 />
@@ -134,7 +142,6 @@ class SardanaMotor extends Component<WidgetProps, State> {
   }
 
   private setPosition(value: number) {
-    console.log("Settings position: " + value);
     this.props.inputs.position.write(value);
   }
 
@@ -150,7 +157,7 @@ const definition: WidgetDefinition = {
   type: "SARDANA_MOTOR",
   name: "Sardana Motor",
   defaultHeight: 2,
-  defaultWidth: 20,
+  defaultWidth: 24,
   inputs: {
     device: {
       type: "device",
@@ -165,7 +172,8 @@ const definition: WidgetDefinition = {
     stop: {
       type: "command",
       device: "$device",
-      command: "Stop"
+      command: "Stop",
+      invalidates: ["state", "position"]
     },
     limits: {
       type: "attribute",
@@ -175,7 +183,8 @@ const definition: WidgetDefinition = {
     position: {
       type: "attribute",
       device: "$device",
-      attribute: "Position"
+      attribute: "Position",
+      invalidates: ["state"]
     },
     power: {
       type: "attribute",

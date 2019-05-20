@@ -32,24 +32,24 @@
     font-weight: bold;
 }
 
-.AttributeTable .QualityIndicator.quality-valid {
+.AttributeTable .QualityIndicator.valid {
 	color: lightgreen;
 }
 
-.AttributeTable .QualityIndicator.quality-invalid {
+.AttributeTable .QualityIndicator.invalid {
     color: lightgray;
     text-shadow: none;
 }
 
-.AttributeTable .QualityIndicator.quality-changing {
+.AttributeTable .QualityIndicator.changing {
 	color: blue;
 }
 
-.AttributeTable .QualityIndicator.quality-alarm {
+.AttributeTable .QualityIndicator.alarm {
 	color: red;
 }
 
-.AttributeTable .QualityIndicator.quality-warning {
+.AttributeTable .QualityIndicator.warning {
 	color: orange;
 }
 
