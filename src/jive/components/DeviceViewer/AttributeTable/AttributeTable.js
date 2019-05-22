@@ -1,3 +1,7 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+//TODO: We should replace the 'links' that don't have a specific destination  with buttons 
+//      to better signal intention to screen readers etc.
+
 import React, { Component } from "react";
 import classNames from "classnames";
 import { connect } from "react-redux";
