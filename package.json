@@ -36,21 +36,26 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test --env=jsdom",
+    "test:coverage": "react-scripts test \"--coverage\"",
+    "code-analysis": "./node_modules/.bin/eslint \"src/**\" --ignore-path .eslintignore",
+    "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit",
+    "eject": "react-scripts eject"
   },
   "devDependencies": {
     "@types/minimatch": "^3.0.3",
-    "@types/node": "^11.9.5",
-    "@types/react": "^16.8.13",
-    "@types/react-dom": "^16.8.3",
+    "@types/jest": "24.0.13",
+    "@types/node": "12.0.2",
+    "@types/react": "16.8.18",
+    "@types/react-dom": "16.8.4",
     "@types/react-redux": "^5.0.7",
     "@types/react-router-dom": "^4.3.1",
     "@types/redux-logger": "^3.0.7",
     "http-proxy-middleware": "^0.19.1",
-    "react-scripts": "3.0.0",
+    "react-scripts": "3.0.1",
     "redux-logger": "^3.0.6",
     "tslint": "^5.15.0",
-    "typescript": "^3.4.3"
+    "typescript": "^3.4.5"
   },
   "eslintConfig": {
     "extends": "react-app"

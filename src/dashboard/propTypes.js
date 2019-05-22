@@ -2,7 +2,6 @@ import {
   shape,
   number,
   string,
-  oneOf,
   arrayOf,
   func,
   object,

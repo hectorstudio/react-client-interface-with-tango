@@ -1,7 +1,11 @@
 import React, { Component, Fragment, CSSProperties } from "react";
 import { WidgetProps } from "./types";
 import { WidgetDefinition, AttributeInput } from "../types";
-import { number } from "prop-types";
+ 
+//TODO: It looks like eslint doesn't recognise 'number' is used as a type within the interface definition
+//      advice seems to be to put interfaces in their own file - need to check out later
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { number } from "prop-types"; 
 
 interface Input {
 	showDevice: boolean,
