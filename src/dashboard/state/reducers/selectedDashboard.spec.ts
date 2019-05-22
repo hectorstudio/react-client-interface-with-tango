@@ -6,7 +6,7 @@ import {
 } from "../actionCreators";
 import { getWidgets } from "../selectors";
 import { RootState } from ".";
-import { Dashboard } from "../../types";
+//import { Dashboard } from "../../types";
 
 const basicState = {
   widgets: {},
