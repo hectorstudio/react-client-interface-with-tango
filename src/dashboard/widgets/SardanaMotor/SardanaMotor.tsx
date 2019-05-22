@@ -20,7 +20,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
 
   public render() {
     const { inputs, mode } = this.props;
-    const { title, limits, precision, power, position, state, device } = inputs;
+    const { limits, precision, power, position, state, device } = inputs;
 
     let name = "";
     let alias = "";
@@ -74,15 +74,8 @@ class SardanaMotor extends Component<WidgetProps, State> {
             <StateIndicatorLabel
               state={mode === "run" ? state.value : "UNKNOWN"}
             />
-            {state.value === "MOVING" && (
-              <button
-                className="btn-stop"
-                title="Stop the movement"
-                onClick={this.handleStop}
-              />
-            )}
             <span style={{ margin: "0em 0.3em" }}>
-              {title || alias || name || "name"}
+              {alias || name || "name"}
             </span>
           </div>
           {mode === "run" && !power.value ? (
@@ -100,9 +93,9 @@ class SardanaMotor extends Component<WidgetProps, State> {
               <div className="motor-row">
                 <AttributeAbsWriter
                   state={state.value}
-                  value={valueWithPrecision}
-                  mode={mode}
+                  writeValue={position.writeValue}
                   onSetPosition={value => this.setPosition(value)}
+                  onStop={this.handleStop}
                 />
               </div>
             </>
