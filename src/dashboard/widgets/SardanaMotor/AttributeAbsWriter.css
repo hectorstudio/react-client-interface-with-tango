@@ -1,14 +1,15 @@
-.AttributeAbsWriter .btn {
+.AttributeAbsWriter button {
   background: #fff;
   border: 1px solid #aaa;
   border-radius: 0.2em;
-  padding: 0em 0.4em;
+  padding: 0;
   height: 1.75em;
-  margin-left: 0.2em;
+  margin-left: 0.25em;
   cursor: pointer;
+  width: 4em;
 }
 
-.AttributeAbsWriter .btn:disabled{
+.AttributeAbsWriter button:disabled {
     background: #eee;
     cursor: default;
 }

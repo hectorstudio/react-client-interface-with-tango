@@ -6,13 +6,14 @@ interface Props {
   writeValue: number;
   state: string;
   onSetPosition: (value: number) => void;
+  onStop: () => void;
 }
 
 export function AttributeAbsWriter(props: Props) {
   const { writeValue, state } = props;
   const isMoving = state === "MOVING";
 
-  const [currentValue, setCurrentValue] = useState(props.writeValue);
+  const [currentValue, setCurrentValue] = useState(writeValue);
 
   useEffect(() => {
     setCurrentValue(writeValue);
@@ -22,10 +23,14 @@ export function AttributeAbsWriter(props: Props) {
     props.onSetPosition(currentValue);
   }
 
-  const shownButton = (
-    <button disabled={isMoving} className="btn" onClick={triggerSet}>
-      Set
-    </button>
+  function triggerStop() {
+    props.onStop();
+  }
+
+  const shownButton = isMoving ? (
+    <button onClick={triggerStop}>Stop</button>
+  ) : (
+    <button onClick={triggerSet}>Set</button>
   );
 
   function onChange(event: React.ChangeEvent<HTMLInputElement>) {
