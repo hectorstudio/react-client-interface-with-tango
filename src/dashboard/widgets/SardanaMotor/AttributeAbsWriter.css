@@ -1,4 +1,4 @@
-.attributeAbsWriter .btn {
+.AttributeAbsWriter .btn {
   background: #fff;
   border: 1px solid #aaa;
   border-radius: 0.2em;
@@ -8,18 +8,18 @@
   cursor: pointer;
 }
 
-.attributeAbsWriter .btn:disabled{
+.AttributeAbsWriter .btn:disabled{
     background: #eee;
     cursor: default;
 }
 
-.attributeAbsWriter .input {
+.AttributeAbsWriter .input {
   height: 1.75em;
   text-align: right;
   padding: 0.2em 0.5em;
   width: 100%;
 }
 
-.attributeAbsWriter {
+.AttributeAbsWriter {
   display: flex;
 }

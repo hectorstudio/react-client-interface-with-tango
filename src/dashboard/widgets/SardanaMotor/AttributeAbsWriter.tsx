@@ -39,7 +39,7 @@ export function AttributeAbsWriter(props: Props) {
   }
 
   return (
-    <div className="attributeAbsWriter">
+    <div className="AttributeAbsWriter">
       <input
         className="input"
         disabled={isMoving}
