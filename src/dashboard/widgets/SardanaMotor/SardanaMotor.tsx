@@ -100,8 +100,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
               <div className="motor-row">
                 <AttributeAbsWriter
                   state={state.value}
-                  value={valueWithPrecision}
-                  mode={mode}
+                  writeValue={position.writeValue}
                   onSetPosition={value => this.setPosition(value)}
                 />
               </div>
