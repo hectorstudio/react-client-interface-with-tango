@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from "react";
 
 import "./AttributeAbsWriter.css";
 
@@ -28,16 +28,20 @@ export function AttributeAbsWriter(props: Props) {
   }
 
   const shownButton = isMoving ? (
-    <button onClick={triggerStop}>Stop</button>
+    <button className="stop" onClick={triggerStop} tabIndex={-1}>
+      Stop
+    </button>
   ) : (
-    <button onClick={triggerSet}>Set</button>
+    <button onClick={triggerSet} tabIndex={-1}>
+      Set
+    </button>
   );
 
-  function onChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function onChange(event: ChangeEvent<HTMLInputElement>) {
     setCurrentValue(event.target.valueAsNumber);
   }
 
-  function onKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
+  function onKeyPress(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
       triggerSet();
     }
