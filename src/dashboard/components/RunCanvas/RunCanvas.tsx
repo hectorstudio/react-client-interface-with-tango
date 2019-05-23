@@ -238,11 +238,8 @@ export default class RunCanvas extends Component<Props, State> {
     return this.state.commandOutputs[name];
   }
 
-  private async executeCommand(
-    device: string,
-    command: string
-  ): Promise<boolean> {
-    let output;
+  private async executeCommand(device: string, command: string): Promise<void> {
+    let output: any;
     try {
       output = await TangoAPI.executeCommand(
         this.props.tangoDB,
@@ -251,7 +248,7 @@ export default class RunCanvas extends Component<Props, State> {
       );
     } catch (err) {
       // Possibly display a visual indication of the error
-      return false;
+      return;
     }
 
     const fullName = `${device}/${command}`;
@@ -261,15 +258,14 @@ export default class RunCanvas extends Component<Props, State> {
     };
 
     this.setState({ commandOutputs });
-    return true;
   }
 
   private async writeAttribute(
     device: string,
     attribute: string,
     value: any
-  ): Promise<boolean> {
-    let result;
+  ): Promise<void> {
+    let result: any;
     try {
       result = await TangoAPI.writeAttribute(
         this.props.tangoDB,
@@ -279,7 +275,7 @@ export default class RunCanvas extends Component<Props, State> {
       );
     } catch (err) {
       // Possibly display a visual indication of the error
-      return false;
+      return;
     }
 
     const { ok, attribute: attributeAfter } = result;
@@ -292,8 +288,6 @@ export default class RunCanvas extends Component<Props, State> {
         attributeAfter.timestamp
       );
     }
-
-    return ok;
   }
 
   private async handleInvalidation(fullNames: string[]) {
