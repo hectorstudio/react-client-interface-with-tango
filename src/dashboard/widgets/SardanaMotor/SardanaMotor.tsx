@@ -8,9 +8,7 @@ import "./SardanaMotor.css";
 import { AttributeAbsWriter } from "./AttributeAbsWriter";
 import { StateIndicatorLabel } from "../../../shared/ui/components/StateIndicatorLabel";
 
-interface State {}
-
-class SardanaMotor extends Component<WidgetProps, State> {
+class SardanaMotor extends Component<WidgetProps> {
   constructor(props: WidgetProps) {
     super(props);
     this.handleStop = this.handleStop.bind(this);
@@ -63,7 +61,7 @@ class SardanaMotor extends Component<WidgetProps, State> {
           title={limitWarningTitle}
           className={limitWarningCss}
         >
-          {valueWithPrecision}
+          {valueWithPrecision} {position.unit}
         </span>
       );
 

@@ -7,11 +7,17 @@
   margin-left: 0.25em;
   cursor: pointer;
   width: 4em;
+  user-select: none;
 }
 
 .AttributeAbsWriter button:disabled {
     background: #eee;
     cursor: default;
+}
+
+.AttributeAbsWriter button.stop {
+  background-color: pink;
+  border-color: brown;
 }
 
 .AttributeAbsWriter .input {

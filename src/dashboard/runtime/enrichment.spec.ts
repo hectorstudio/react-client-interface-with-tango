@@ -64,22 +64,21 @@ test("attribute values", () => {
 test("attribute write", async () => {
   const context = {
     async onWrite() {
-      return true;
+      return;
     }
   };
 
   const spy = jest.spyOn(context, "onWrite");
   const { attribute } = enrichedInputs(inputs, inputDefinitions, context);
-  const result = await attribute.write("a write value");
 
+  await attribute.write("a write value");
   expect(spy).toHaveBeenCalledWith("device2", "attribute2", "a write value");
-  expect(result).toBe(true);
 });
 
 test("command execution", async () => {
   const context = {
     async onExecute() {
-      return true;
+      return;
     }
   };
 
@@ -87,10 +86,8 @@ test("command execution", async () => {
   const { command } = enrichedInputs(inputs, inputDefinitions, context);
 
   const argin = Math.random();
-  const result = await command.execute(argin);
-
+  await command.execute(argin);
   expect(spy).toHaveBeenCalledWith("device3", "command3", argin);
-  expect(result).toBe(true);
 });
 
 test("device input by default resolves to { name: <device name> }", () => {

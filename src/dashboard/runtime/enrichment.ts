@@ -45,13 +45,13 @@ type OnWrite = (
   device: string,
   attribute: string,
   value: any
-) => Promise<boolean>;
+) => Promise<void>;
 
 type OnExecute = (
   device: string,
   command: string,
   argin: any
-) => Promise<boolean>;
+) => Promise<void>;
 
 type OnInvalidate = (attributes: string[]) => void;
 
