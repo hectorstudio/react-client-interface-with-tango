@@ -1,5 +1,5 @@
 import React from "react";
-import { WidgetProps } from "./widgets/types";
+//import { WidgetProps } from "./widgets/types";
 
 export interface BaseInputDefinition<T> {
   label?: string;

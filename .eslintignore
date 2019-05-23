@@ -1,0 +1,5 @@
+/src/resources/logo.svg
+node_modules
+coverage
+**/*.png
+**/*.css
