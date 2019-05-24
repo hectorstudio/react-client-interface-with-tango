@@ -2,11 +2,10 @@
   background: #fff;
   border: 1px solid #aaa;
   border-radius: 0.2em;
-  padding: 0;
+  padding: 0 0.25em;
   height: 1.75em;
   margin-left: 0.25em;
   cursor: pointer;
-  width: 4em;
   user-select: none;
 }
 
@@ -15,20 +14,32 @@
     cursor: default;
 }
 
-.AttributeAbsWriter button.stop {
+.AttributeAbsWriter button.movement.stop {
   background-color: pink;
   border-color: brown;
+}
+
+.AttributeAbsWriter button.movement {
+  min-width: 3em;
+}
+
+.AttributeAbsWriter button.change-type {
+  font-family: serif;
 }
 
 .AttributeAbsWriter button.change-type.relative {
   background-color: lightgray;
 }
 
-.AttributeAbsWriter .input {
+.AttributeAbsWriter input {
   height: 1.75em;
   text-align: right;
   padding: 0.2em 0.5em;
   width: 100%;
+}
+
+.AttributeAbsWriter input.invalid {
+  outline: 2px solid red;
 }
 
 .AttributeAbsWriter {

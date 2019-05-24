@@ -92,6 +92,7 @@ class SardanaMotor extends Component<WidgetProps> {
                 <AttributeAbsWriter
                   state={state.value}
                   writeValue={position.writeValue}
+                  mode={mode}
                   onSetPosition={value => this.setPosition(value)}
                   onStop={this.handleStop}
                 />
