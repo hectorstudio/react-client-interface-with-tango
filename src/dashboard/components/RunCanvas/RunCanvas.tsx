@@ -68,7 +68,7 @@ function RuntimeErrors(props: { errors: RuntimeErrorDescriptor[] }) {
             onClick={hideError.bind(null, i)}
           >
             <i style={{ color }} className={`fa fa-exclamation-${shape}`} />
-            <div>{error.message}</div>
+            <div className="message">{error.message}</div>
           </div>
         );
       })}
