@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import cx from "classnames";
 
 import { WidgetProps } from "../types";
 import { WidgetDefinition } from "../../types";
@@ -54,12 +55,14 @@ class SardanaMotor extends Component<WidgetProps> {
 
     const displayElement =
       value === undefined ? (
-        <span style={{ color: "gray" }}>n/a</span>
+        <span className="value" style={{ color: "gray" }}>
+          n/a
+        </span>
       ) : (
         <span
           style={{ fontFamily: "monospace" }}
           title={limitWarningTitle}
-          className={limitWarningCss}
+          className={cx("value", limitWarningCss)}
         >
           {valueWithPrecision} {position.unit}
         </span>

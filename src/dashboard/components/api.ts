@@ -209,7 +209,6 @@ export async function fetchAttributeMetadata(
 
     return result;
   } catch (err) {
-    alert(err);
     return null;
   }
 }
@@ -235,7 +234,13 @@ export async function fetchDeviceMetadata(
   const result = {};
 
   for (const deviceName of deviceNames) {
-    const data = await request(tangoDB, FETCH_DEVICE_METADATA, { deviceName });
+    let data: any;
+    try {
+      data = await request(tangoDB, FETCH_DEVICE_METADATA, { deviceName });
+    } catch (err) {
+      return null;
+    }
+
     const { alias } = data.device;
     result[deviceName] = { alias };
   }
