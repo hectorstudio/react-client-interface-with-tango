@@ -68,15 +68,19 @@
 
 .sardana-motor .motor-row {
   width: 25%;
+  flex-grow: 2;
 }
 
 .sardana-motor .motor-row:nth-child(2) {
   width: 35%;
   text-align: right;
+  padding-right: 1em;
+  flex-grow: 1;
 }
 
 .sardana-motor .motor-row:nth-child(3) {
   width: 35%;
+  flex-grow: 2;
 }
 
 .sardana-motor .motor-container {
