@@ -1,4 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from "react";
+import cx from "classnames";
 
 import "./AttributeAbsWriter.css";
 
@@ -14,6 +15,7 @@ export function AttributeAbsWriter(props: Props) {
   const isMoving = state === "MOVING";
 
   const [currentValue, setCurrentValue] = useState(writeValue);
+  const [usesRelative, setUsesRelative] = useState(false);
 
   useEffect(() => {
     setCurrentValue(writeValue);
@@ -49,6 +51,14 @@ export function AttributeAbsWriter(props: Props) {
 
   return (
     <div className="AttributeAbsWriter">
+      <button
+        className={cx("change-type", { relative: usesRelative })}
+        style={{ marginRight: "0.25em", width: "3em" }}
+        onClick={() => setUsesRelative(!usesRelative)}
+        tabIndex={-1}
+      >
+        ∆
+      </button>
       <input
         className="input"
         disabled={isMoving}
