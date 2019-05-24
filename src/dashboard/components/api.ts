@@ -68,14 +68,13 @@ mutation WriteAttribute($device: String!, $attribute: String!, $value: ScalarTyp
 }`;
 
 const FETCH_ATTRIBUTE_METADATA = `
-query FetchAttributeMetadata($deviceName: String!) {
-  device(name: $deviceName) {
-    attributes {
-      name
-      dataformat
-      datatype
-      unit
-    }
+query FetchAttributeMetadata($fullNames: [String]!) {
+  attributes(fullNames: $fullNames) {
+    name
+    device
+    dataformat
+    datatype
+    unit
   }
 }`;
 
@@ -167,57 +166,37 @@ export async function writeAttribute(tangoDB, device, attribute, value) {
   }
 }
 
-function deviceNameFromFull(fullName: string) {
-  const parts = fullName.split("/");
-  return parts.slice(0, 3).join("/");
-}
-
-function deviceNamesFromFullNames(fullNames: string[]) {
-  const deviceNames = fullNames.map(deviceNameFromFull);
-  const uniqueNames = deviceNames.filter(
-    (name, i, names) => names.indexOf(name) === i
-  );
-  return uniqueNames;
-}
-
-// This is a cumbersome and potentially slow way of retrieving all attribute metadata.
-// Simplify it when there exists a `query { attributes(fullNames: [String]) }' resolver available in the backend
-
 export async function fetchAttributeMetadata(
   tangoDB: string,
   fullNames: string[]
 ) {
-  try {
-    const deviceNames = deviceNamesFromFullNames(fullNames);
-    const result = {};
+  const data = await request(tangoDB, FETCH_ATTRIBUTE_METADATA, { fullNames });
+  const result = {};
 
-    for (const deviceName of deviceNames) {
-      const data = await request(tangoDB, FETCH_ATTRIBUTE_METADATA, {
-        deviceName
-      });
+  for (const attribute of data.attributes) {
+    const { device, name, dataformat, datatype, unit } = attribute;
 
-      for (const attribute of data.device.attributes) {
-        const { name, dataformat, datatype, unit } = attribute;
+    const fullName = device + "/" + name;
+    const dataFormat = dataformat.toLowerCase();
+    const dataType = datatype;
 
-        const dataFormat = dataformat.toLowerCase();
-        const dataType = datatype;
-
-        const fullName = `${deviceName}/${name}`;
-        result[fullName] = { dataFormat, dataType, unit };
-      }
-    }
-
-    return result;
-  } catch (err) {
-    return null;
+    result[fullName] = { dataFormat, dataType, unit };
   }
+
+  return result;
 }
 
 export async function fetchAttributesValues(
   tangoDB: string,
   fullNames: string[]
 ): Promise<
-  Array<{ name: string; device: string; value: any; writevalue: any, timestamp: number }>
+  Array<{
+    name: string;
+    device: string;
+    value: any;
+    writevalue: any;
+    timestamp: number;
+  }>
 > {
   try {
     const data = await request(tangoDB, FETCH_ATTRIBUTES_VALUES, { fullNames });
