@@ -1,4 +1,5 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component, ReactNode, useState } from "react";
+import cx from "classnames";
 
 import { Widget } from "../../types";
 import { bundleForWidget } from "../../widgets";
@@ -21,20 +22,55 @@ import {
   extractDeviceNamesFromWidgets
 } from "../../runtime/extraction";
 
+import "./RunCanvas.css";
+
 const HISTORY_LIMIT = 1000;
 
-function ConnectionLost() {
-  return (
-    <div
-      style={{
-        position: "absolute",
-        padding: "1em",
-        color: "red",
-        fontWeight: "bold",
-        zIndex: 1
-      }}
-    >
-      Connection lost. Please refresh your browser.
+interface RuntimeErrorDescriptor {
+  type: "warning" | "error";
+  message: string;
+}
+
+function RuntimeErrors(props: { errors: RuntimeErrorDescriptor[] }) {
+  const [hiddenErrors, setHiddenErrors] = useState({});
+  const [hidingErrors, setHidingErrors] = useState({});
+
+  const { errors } = props;
+  if (errors.length === 0) {
+    return null;
+  }
+
+  function hideError(i: number) {
+    setHidingErrors({ ...hidingErrors, [i]: true });
+    setTimeout(() => {
+      setHiddenErrors({ ...hiddenErrors, [i]: true });
+    }, 500);
+  }
+
+  let offset = 0;
+  return errors.length === 0 ? null : (
+    <div className="RuntimeErrors">
+      {errors.map((error, i) => {
+        const isHidden = hiddenErrors.hasOwnProperty(i);
+        const isHiding = hidingErrors.hasOwnProperty(i);
+
+        const shape = error.type === "error" ? "circle" : "triangle";
+        const color = error.type === "error" ? "red" : "orange";
+
+        const top = 0.5 + 5.5 * offset + "em";
+        offset += isHidden || isHiding ? 0 : 1;
+
+        return isHidden ? null : (
+          <div
+            className={cx("RuntimeError", { hiding: isHiding })}
+            style={{ top }}
+            onClick={hideError.bind(null, i)}
+          >
+            <i style={{ color }} className={`fa fa-exclamation-${shape}`} />
+            <div>{error.message}</div>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -71,6 +107,7 @@ interface State {
   attributeMetadata: Record<string, AttributeMetadata> | null;
   deviceMetadata: Record<string, DeviceMetadata> | null;
   t0: number;
+  runtimeErrors: RuntimeErrorDescriptor[];
 }
 
 export default class RunCanvas extends Component<Props, State> {
@@ -86,7 +123,8 @@ export default class RunCanvas extends Component<Props, State> {
       commandOutputs: {},
       attributeMetadata: null,
       deviceMetadata: null,
-      t0: Date.now() / 1000
+      t0: Date.now() / 1000,
+      runtimeErrors: []
     };
 
     this.resolveAttributeValue = this.resolveAttributeValue.bind(this);
@@ -111,11 +149,27 @@ export default class RunCanvas extends Component<Props, State> {
       fullNames
     );
 
+    if (attributeMetadata == null) {
+      this.reportRuntimeError(
+        "error",
+        "Failed to fetch attribute metadata. This dashboard cannot run."
+      );
+      return;
+    }
+
     const deviceNames = extractDeviceNamesFromWidgets(widgets);
     const deviceMetadata = await TangoAPI.fetchDeviceMetadata(
       tangoDB,
       deviceNames
     );
+
+    if (deviceMetadata == null) {
+      this.reportRuntimeError(
+        "error",
+        "Failed to fetch device metadata. This dashboard cannot run."
+      );
+      return;
+    }
 
     const attributeHistories = fullNames.reduce((accum, name) => {
       return { ...accum, [name]: [] };
@@ -158,7 +212,6 @@ export default class RunCanvas extends Component<Props, State> {
 
     return (
       <div className="Canvas run">
-        {this.state.connectionLost && <ConnectionLost />}
         {widgets.map(widget => {
           const { component, definition } = bundleForWidget(widget);
           const { x, y, id, width, height } = widget;
@@ -204,6 +257,7 @@ export default class RunCanvas extends Component<Props, State> {
             </div>
           );
         })}
+        <RuntimeErrors errors={this.state.runtimeErrors} />
       </div>
     );
   }
@@ -238,8 +292,15 @@ export default class RunCanvas extends Component<Props, State> {
     return this.state.commandOutputs[name];
   }
 
+  private reportRuntimeError(type: "error" | "warning", message: string) {
+    const error: RuntimeErrorDescriptor = { type, message };
+    const runtimeErrors = [...this.state.runtimeErrors, error];
+    this.setState({ runtimeErrors });
+  }
+
   private async executeCommand(device: string, command: string): Promise<void> {
     let output: any;
+
     try {
       output = await TangoAPI.executeCommand(
         this.props.tangoDB,
@@ -247,7 +308,15 @@ export default class RunCanvas extends Component<Props, State> {
         command
       );
     } catch (err) {
-      // Possibly display a visual indication of the error
+      this.reportRuntimeError("warning", String(err));
+      return;
+    }
+
+    if (output == null) {
+      this.reportRuntimeError(
+        "warning",
+        `Couldn't execute command "${command}" on device "${device}".`
+      );
       return;
     }
 
@@ -274,7 +343,6 @@ export default class RunCanvas extends Component<Props, State> {
         value
       );
     } catch (err) {
-      // Possibly display a visual indication of the error
       return;
     }
 
@@ -286,6 +354,13 @@ export default class RunCanvas extends Component<Props, State> {
         attributeAfter.value,
         attributeAfter.writevalue,
         attributeAfter.timestamp
+      );
+    } else {
+      this.reportRuntimeError(
+        "warning",
+        `Couldn't set attribute "${attribute}" on "${device}" to ${JSON.stringify(
+          value
+        )}`
       );
     }
   }
@@ -351,7 +426,11 @@ export default class RunCanvas extends Component<Props, State> {
 
   private handleNewFrame(frame: EmittedFrame): void {
     if (frame === END) {
-      this.setState({ connectionLost: true });
+      this.setState({ connectionLost: true }); // Necessary?
+      this.reportRuntimeError(
+        "error",
+        "Lost connection to socket. Please refresh your browser."
+      );
       return;
     }
 
