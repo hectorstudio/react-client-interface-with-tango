@@ -23,13 +23,9 @@ export function AttributeAbsWriter(props: Props) {
   useEffect(() => {
     if (!usesRelative) {
       setCurrentValue(writeValue);
+      setCurrentInput(String(writeValue));
     }
   }, [writeValue, usesRelative]);
-
-  useEffect(() => {
-    const target = String(writeValue);
-    setCurrentInput(target);
-  }, [writeValue]);
 
   useEffect(() => {
     const value = Number(currentInput);
@@ -63,6 +59,10 @@ export function AttributeAbsWriter(props: Props) {
   }
 
   function toggleUseRelative() {
+    if (isMoving) {
+      return;
+    }
+
     const nextValue = !usesRelative;
     setUsesRelative(nextValue);
     setCurrentInput(nextValue ? "0" : String(writeValue));
