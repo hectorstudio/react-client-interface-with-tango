@@ -150,7 +150,8 @@ export async function executeCommand(
   try {
     const args = { device, command };
     const data = await request(tangoDB, EXECUTE_COMMAND, args);
-    return data.executeCommand.output;
+    const { ok, output } = data.executeCommand;
+    return { ok, output };
   } catch (err) {
     return null;
   }
