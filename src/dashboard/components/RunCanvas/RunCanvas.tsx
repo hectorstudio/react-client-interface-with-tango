@@ -68,7 +68,7 @@ function RuntimeErrors(props: { errors: RuntimeErrorDescriptor[] }) {
             onClick={hideError.bind(null, i)}
           >
             <i style={{ color }} className={`fa fa-exclamation-${shape}`} />
-            <div>{error.message}</div>
+            <div className="message">{error.message}</div>
           </div>
         );
       })}
@@ -310,27 +310,18 @@ export default class RunCanvas extends Component<Props, State> {
   }
 
   private async executeCommand(device: string, command: string): Promise<void> {
-    let output: any;
+    let result: any;
 
-    try {
-      output = await TangoAPI.executeCommand(
-        this.props.tangoDB,
-        device,
-        command
-      );
-    } catch (err) {
-      this.reportRuntimeWarning(String(err));
-      return;
-    }
-
-    if (output == null) {
-      this.reportRuntimeWarning(
+    result = await TangoAPI.executeCommand(this.props.tangoDB, device, command);
+    if (result == null || result.ok === false) {
+      return this.reportRuntimeWarning(
         `Couldn't execute command "${command}" on device "${device}".`
       );
-      return;
     }
 
     const fullName = `${device}/${command}`;
+    const { output } = result;
+
     const commandOutputs = {
       ...this.state.commandOutputs,
       [fullName]: output
