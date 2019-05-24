@@ -64,7 +64,7 @@ const QualityIndicator = ({ quality }) => {
 
   return (
     <span className={`QualityIndicator ${sub}`} title={quality}>
-      ●{" "}
+      {sub.toUpperCase()}
     </span>
   );
 };
