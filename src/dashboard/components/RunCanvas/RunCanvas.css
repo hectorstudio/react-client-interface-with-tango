@@ -8,7 +8,8 @@
 .Dashboard .Canvas.run .RuntimeError {
   border-radius: 1em;
   padding: 1em;
-  width: 20em;
+  height: 5em;
+  width: 40em;
   margin-left: 0.5em;
   background: rgba(245, 245, 245, 0.9);
   box-shadow: 0.15em 0.15em 0.25em rgba(0, 0, 0, 0.2);
