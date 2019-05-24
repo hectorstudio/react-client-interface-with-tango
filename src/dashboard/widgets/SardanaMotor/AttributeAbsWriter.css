@@ -20,6 +20,10 @@
   border-color: brown;
 }
 
+.AttributeAbsWriter button.change-type.relative {
+  background-color: lightgray;
+}
+
 .AttributeAbsWriter .input {
   height: 1.75em;
   text-align: right;
