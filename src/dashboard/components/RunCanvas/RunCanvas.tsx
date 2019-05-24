@@ -62,6 +62,7 @@ function RuntimeErrors(props: { errors: RuntimeErrorDescriptor[] }) {
 
         return isHidden ? null : (
           <div
+            key={i}
             className={cx("RuntimeError", { hiding: isHiding })}
             style={{ top }}
             onClick={hideError.bind(null, i)}
@@ -100,7 +101,6 @@ interface Props {
 }
 
 interface State {
-  connectionLost: boolean;
   attributeValues: Record<string, AttributeValue>;
   attributeHistories: Record<string, AttributeValue[]>;
   commandOutputs: Record<string, any>;
@@ -108,6 +108,8 @@ interface State {
   deviceMetadata: Record<string, DeviceMetadata> | null;
   t0: number;
   runtimeErrors: RuntimeErrorDescriptor[];
+  unrecoverableError: boolean;
+  hasInitialized: boolean;
 }
 
 export default class RunCanvas extends Component<Props, State> {
@@ -117,13 +119,14 @@ export default class RunCanvas extends Component<Props, State> {
     super(props);
 
     this.state = {
-      connectionLost: false,
       attributeValues: {},
       attributeHistories: {},
       commandOutputs: {},
       attributeMetadata: null,
       deviceMetadata: null,
       t0: Date.now() / 1000,
+      hasInitialized: false,
+      unrecoverableError: false,
       runtimeErrors: []
     };
 
@@ -140,7 +143,11 @@ export default class RunCanvas extends Component<Props, State> {
     this.handleNewFrame = this.handleNewFrame.bind(this);
   }
 
-  public async componentDidMount() {
+  public componentDidMount() {
+    this.initialize();
+  }
+
+  private async initialize() {
     const { widgets, tangoDB } = this.props;
     const fullNames = extractFullNamesFromWidgets(widgets);
 
@@ -150,11 +157,9 @@ export default class RunCanvas extends Component<Props, State> {
     );
 
     if (attributeMetadata == null) {
-      this.reportRuntimeError(
-        "error",
+      return this.reportUnrecoverableRuntimeError(
         "Failed to fetch attribute metadata. This dashboard cannot run."
       );
-      return;
     }
 
     const deviceNames = extractDeviceNamesFromWidgets(widgets);
@@ -164,11 +169,9 @@ export default class RunCanvas extends Component<Props, State> {
     );
 
     if (deviceMetadata == null) {
-      this.reportRuntimeError(
-        "error",
+      return this.reportUnrecoverableRuntimeError(
         "Failed to fetch device metadata. This dashboard cannot run."
       );
-      return;
     }
 
     const attributeHistories = fullNames.reduce((accum, name) => {
@@ -179,6 +182,8 @@ export default class RunCanvas extends Component<Props, State> {
 
     const startEmission = attributeEmitter(tangoDB, fullNames);
     this.unsubscribe = startEmission(this.handleNewFrame);
+
+    this.setState({ hasInitialized: true });
   }
 
   public componentWillUnmount() {
@@ -189,13 +194,9 @@ export default class RunCanvas extends Component<Props, State> {
 
   public render() {
     const { widgets } = this.props;
-    const { deviceMetadata, attributeMetadata, t0 } = this.state;
+    const { t0, hasInitialized, unrecoverableError } = this.state;
 
-    if (deviceMetadata == null) {
-      return null;
-    }
-
-    if (attributeMetadata == null) {
+    if (!hasInitialized) {
       return null;
     }
 
@@ -210,9 +211,9 @@ export default class RunCanvas extends Component<Props, State> {
       onInvalidate: this.handleInvalidation
     };
 
-    return (
-      <div className="Canvas run">
-        {widgets.map(widget => {
+    const widgetsToRender = unrecoverableError
+      ? []
+      : widgets.map(widget => {
           const { component, definition } = bundleForWidget(widget);
           const { x, y, id, width, height } = widget;
 
@@ -256,8 +257,12 @@ export default class RunCanvas extends Component<Props, State> {
               <ErrorBoundary>{element}</ErrorBoundary>
             </div>
           );
-        })}
+        });
+
+    return (
+      <div className="Canvas run">
         <RuntimeErrors errors={this.state.runtimeErrors} />
+        {widgetsToRender}
       </div>
     );
   }
@@ -292,10 +297,16 @@ export default class RunCanvas extends Component<Props, State> {
     return this.state.commandOutputs[name];
   }
 
-  private reportRuntimeError(type: "error" | "warning", message: string) {
-    const error: RuntimeErrorDescriptor = { type, message };
+  private reportRuntimeWarning(message: string) {
+    const error: RuntimeErrorDescriptor = { type: "warning", message };
     const runtimeErrors = [...this.state.runtimeErrors, error];
     this.setState({ runtimeErrors });
+  }
+
+  private reportUnrecoverableRuntimeError(message: string): void {
+    const error: RuntimeErrorDescriptor = { type: "error", message };
+    const runtimeErrors = [...this.state.runtimeErrors, error];
+    this.setState({ runtimeErrors, unrecoverableError: true });
   }
 
   private async executeCommand(device: string, command: string): Promise<void> {
@@ -308,13 +319,12 @@ export default class RunCanvas extends Component<Props, State> {
         command
       );
     } catch (err) {
-      this.reportRuntimeError("warning", String(err));
+      this.reportRuntimeWarning(String(err));
       return;
     }
 
     if (output == null) {
-      this.reportRuntimeError(
-        "warning",
+      this.reportRuntimeWarning(
         `Couldn't execute command "${command}" on device "${device}".`
       );
       return;
@@ -356,8 +366,7 @@ export default class RunCanvas extends Component<Props, State> {
         attributeAfter.timestamp
       );
     } else {
-      this.reportRuntimeError(
-        "warning",
+      this.reportRuntimeWarning(
         `Couldn't set attribute "${attribute}" on "${device}" to ${JSON.stringify(
           value
         )}`
@@ -426,9 +435,7 @@ export default class RunCanvas extends Component<Props, State> {
 
   private handleNewFrame(frame: EmittedFrame): void {
     if (frame === END) {
-      this.setState({ connectionLost: true }); // Necessary?
-      this.reportRuntimeError(
-        "error",
+      this.reportUnrecoverableRuntimeError(
         "Lost connection to socket. Please refresh your browser."
       );
       return;
