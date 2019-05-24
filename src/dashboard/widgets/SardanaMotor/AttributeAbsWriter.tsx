@@ -1,4 +1,10 @@
-import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from "react";
+import React, {
+  useState,
+  useEffect,
+  ChangeEvent,
+  KeyboardEvent,
+  useReducer
+} from "react";
 import cx from "classnames";
 
 import "./AttributeAbsWriter.css";
@@ -6,64 +12,97 @@ import "./AttributeAbsWriter.css";
 interface Props {
   writeValue: number;
   state: string;
+  mode: string;
   onSetPosition: (value: number) => void;
   onStop: () => void;
 }
 
 export function AttributeAbsWriter(props: Props) {
-  const { writeValue, state } = props;
-  const isMoving = state === "MOVING";
+  const isMoving = props.state === "MOVING";
+  const writeValue = props.mode === "run" ? props.writeValue : 0;
 
+  const [currentInput, setCurrentInput] = useState(String(writeValue));
   const [currentValue, setCurrentValue] = useState(writeValue);
+  const [isInvalid, setIsInvalid] = useState(false);
   const [usesRelative, setUsesRelative] = useState(false);
 
   useEffect(() => {
-    setCurrentValue(writeValue);
-  }, [writeValue]);
+    if (!usesRelative) {
+      setCurrentValue(writeValue);
+    }
+  }, [writeValue, usesRelative]);
 
-  function triggerSet() {
-    props.onSetPosition(currentValue);
+  useEffect(() => {
+    setCurrentInput(String(currentValue));
+  }, [currentValue]);
+
+  useEffect(() => {
+    const value = Number(currentInput);
+    const inputIsInvalid = isNaN(value) || currentInput === "";
+    setIsInvalid(inputIsInvalid);
+
+    if (!inputIsInvalid) {
+      setCurrentValue(value);
+    }
+  }, [currentInput]);
+
+  function triggerMove() {
+    const target = currentValue + (usesRelative ? writeValue : 0);
+    if (!isInvalid) {
+      props.onSetPosition(target);
+    }
   }
 
   function triggerStop() {
     props.onStop();
   }
 
-  const shownButton = isMoving ? (
-    <button className="stop" onClick={triggerStop} tabIndex={-1}>
-      Stop
-    </button>
-  ) : (
-    <button onClick={triggerSet} tabIndex={-1}>
-      Set
-    </button>
-  );
-
   function onChange(event: ChangeEvent<HTMLInputElement>) {
-    setCurrentValue(event.target.valueAsNumber);
+    setCurrentInput(event.target.value);
   }
 
   function onKeyPress(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
-      triggerSet();
+      triggerMove();
     }
   }
+
+  function toggleUseRelative() {
+    const nextValue = !usesRelative;
+    setUsesRelative(nextValue);
+    setCurrentValue(nextValue ? 0 : writeValue);
+  }
+
+  const shownButton = isMoving ? (
+    <button className="movement stop" onClick={triggerStop} tabIndex={-1}>
+      Stop
+    </button>
+  ) : (
+    <button
+      className="movement"
+      onClick={triggerMove}
+      tabIndex={-1}
+      disabled={isInvalid}
+    >
+      Move
+    </button>
+  );
 
   return (
     <div className="AttributeAbsWriter">
       <button
         className={cx("change-type", { relative: usesRelative })}
         style={{ marginRight: "0.25em", width: "3em" }}
-        onClick={() => setUsesRelative(!usesRelative)}
+        onClick={toggleUseRelative}
+        disabled={isInvalid}
         tabIndex={-1}
       >
         ∆
       </button>
       <input
-        className="input"
+        className={cx({ invalid: isInvalid })}
         disabled={isMoving}
-        value={currentValue}
-        type="number"
+        value={currentInput}
         onChange={onChange}
         onKeyPress={onKeyPress}
       />
