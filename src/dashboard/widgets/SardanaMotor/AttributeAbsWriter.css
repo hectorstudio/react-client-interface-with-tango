@@ -25,6 +25,8 @@
 
 .AttributeAbsWriter button.change-type {
   font-family: serif;
+  flex-grow: 0;
+  max-width: 2em;
 }
 
 .AttributeAbsWriter button.change-type.relative {
@@ -34,8 +36,9 @@
 .AttributeAbsWriter input {
   height: 1.75em;
   text-align: right;
-  padding: 0.2em 0.5em;
-  width: 100%;
+  flex-grow: 1;
+  width: 1em;
+  padding-right: 0.25em;
 }
 
 .AttributeAbsWriter input.invalid {
