@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  ChangeEvent,
-  KeyboardEvent,
-  useReducer
-} from "react";
+import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from "react";
 import cx from "classnames";
 
 import "./AttributeAbsWriter.css";
