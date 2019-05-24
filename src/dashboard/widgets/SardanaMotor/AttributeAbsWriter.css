@@ -26,7 +26,8 @@
 .AttributeAbsWriter button.change-type {
   font-family: serif;
   flex-grow: 0;
-  max-width: 2em;
+  padding: 0 0.5em;
+  margin-right: 0.25em;
 }
 
 .AttributeAbsWriter button.change-type.relative {
