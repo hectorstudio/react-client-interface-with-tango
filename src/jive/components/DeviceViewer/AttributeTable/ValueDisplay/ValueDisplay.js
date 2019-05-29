@@ -68,47 +68,27 @@ DevStringValueDisplay.propTypes = {
   ])
 };
 
-const ScalarValueDisplay = ({
-  value,
-  writeValue,
-  datatype,
-  name,
-  writable,
-  setDeviceAttribute,
-  minvalue,
-  maxvalue
-}) => {
-  if (datatype === "DevString") {
-    return <DevStringValueDisplay value={value} />;
-  } else if (datatype === "DevEncoded") {
-    const [type, payload] = value;
-    if (type !== "json") {
-      return `Unsupported encoding '${type}'`;
-    }
+const ScalarValueDisplay = ({ value, datatype }) => {
+  switch (datatype) {
+    case "DevString":
+      return <DevStringValueDisplay value={value} />;
 
-    if (parseJSONObject(payload) == null) {
-      return <span className="invalid-json">Invalid JSON</span>;
-    }
+    case "DevEncoded":
+      const [type, payload] = value;
+      if (type !== "json") {
+        return `Unsupported encoding '${type}'`;
+      }
 
-    return <DevStringValueDisplay value={payload} />;
-  } else if (isWritable(writable) && isNumeric(datatype)) {
-    return (
-      <AttributeInput
-        save={setDeviceAttribute.bind(this, name)}
-        value={Number(value)}
-        motorName={name}
-        writeValue={writeValue}
-        decimalPoints="24"
-        state={2}
-        disabled={false}
-        maxvalue={maxvalue}
-        minvalue={minvalue}
-      />
-    );
-  } else {
-    return String(value);
+      if (parseJSONObject(payload) == null) {
+        return <span className="invalid-json">Invalid JSON</span>;
+      }
+
+      return <DevStringValueDisplay value={payload} />;
+    default:
+      return String(value);
   }
 };
+
 ScalarValueDisplay.propTypes = {
   datatype: PropTypes.string,
   maxvalue: PropTypes.any,

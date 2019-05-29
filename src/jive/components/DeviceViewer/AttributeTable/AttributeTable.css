@@ -16,12 +16,22 @@
 .AttributeTable td.description {
   width: 1%;
   height: 3em; /* Unpretty way of making all rows equally high. Are there better methods? */
+  padding-right: 3em;
 }
 
 .AttributeTable td.quality {
+  width: 7em;
+  padding-left: 0.25em;}
+
+.AttributeTable td.edit {
   width: 1%;
-  padding-left: 0.25em;
-  padding-right: 0.25em;
+  padding-left: 1em;
+  color: lightgray;
+}
+
+.AttributeTable td.edit:hover {
+  color: black;
+  cursor: pointer;
 }
 
 .AttributeTable .QualityIndicator {

@@ -1,17 +1,22 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-//TODO: We should replace the 'links' that don't have a specific destination  with buttons 
+//TODO: We should replace the 'links' that don't have a specific destination  with buttons
 //      to better signal intention to screen readers etc.
 
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import classNames from "classnames";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import ValueDisplay from "./ValueDisplay/ValueDisplay";
+import EditModal from "./EditModal";
+
 import DescriptionDisplay from "../DescriptionDisplay/DescriptionDisplay";
 import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
 
-import { setDeviceAttribute, setDataFormat } from "../../../state/actions/tango";
+import {
+  setDeviceAttribute,
+  setDataFormat
+} from "../../../state/actions/tango";
 
 import {
   getActiveDataFormat,
@@ -19,6 +24,7 @@ import {
 } from "../../../state/selectors/deviceDetail";
 
 import "./AttributeTable.css";
+import { getIsLoggedIn } from "../../../../shared/user/state/selectors";
 
 const DataFormatChooser = ({ dataFormats, selected, onSelect }) => {
   const order = ["SCALAR", "SPECTRUM", "IMAGE"];
@@ -69,10 +75,7 @@ const QualityIndicator = ({ quality }) => {
   );
 };
 
-const AttributeTableRow = ({
-  attribute,
-  onSetDeviceAttribute
-}) => {
+const AttributeTableRow = ({ attribute, canEdit, onEdit }) => {
   const {
     name,
     value,
@@ -92,6 +95,11 @@ const AttributeTableRow = ({
         <QualityIndicator quality={quality} />
       </td>
       <td className="name">{name}</td>
+      <td className="edit">
+        {!canEdit || writable === "READ" ? null : (
+          <i className="fa fa-pencil" onClick={() => onEdit && onEdit(name)} />
+        )}
+      </td>
       <td className="value">
         <ValueDisplay
           name={name}
@@ -102,7 +110,6 @@ const AttributeTableRow = ({
           writable={writable}
           maxvalue={maxvalue}
           minvalue={minvalue}
-          setDeviceAttribute={onSetDeviceAttribute}
         />
       </td>
       <td className="description">
@@ -112,56 +119,79 @@ const AttributeTableRow = ({
   );
 };
 
-class AttributeTable extends Component {
-  render() {
-    const {
-      attributes,
-      selectedFormat,
-      disabledDisplevels,
-      onSelectDataFormat,
-      onSetDeviceAttribute
-    } = this.props;
+function AttributeTable(props) {
+  const {
+    attributes,
+    selectedFormat,
+    disabledDisplevels,
+    deviceName,
+    onSelectDataFormat,
+    onSetDeviceAttribute,
+    isLoggedIn
+  } = props;
 
-    const dataFormats = Array.from(
-      new Set(attributes.map(attr => attr.dataformat))
-    );
+  const [editingName, setEditingName] = useState(null);
+  const editingAttribute =
+    editingName == null
+      ? null
+      : attributes.find(({ name }) => name === editingName);
 
-    const selectedOrFirstFormat =
-      dataFormats.indexOf(selectedFormat) !== -1
-        ? selectedFormat
-        : dataFormats[0];
+  const dataFormats = Array.from(
+    new Set(attributes.map(attr => attr.dataformat))
+  );
 
-    const filteredAttributes = attributes.filter(
-      attr =>
-        attr.dataformat === selectedOrFirstFormat &&
-        disabledDisplevels.indexOf(attr.displevel) === -1
-    );
+  const selectedOrFirstFormat =
+    dataFormats.indexOf(selectedFormat) !== -1
+      ? selectedFormat
+      : dataFormats[0];
 
-    return (
-      <div className="AttributeTable">
-        <NotLoggedIn>
-          You are currently not logged in and cannot change attribute values.
-        </NotLoggedIn>
-        <DataFormatChooser
-          dataFormats={dataFormats}
-          selected={selectedOrFirstFormat}
-          onSelect={onSelectDataFormat}
-        />
-        <table className="separated">
-          <tbody>
-            {filteredAttributes.map((attribute, i) => (
-              <AttributeTableRow
-                key={i}
-                attribute={attribute}
-                deviceName={this.props.deviceName}
-                onSetDeviceAttribute={onSetDeviceAttribute}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
+  const filteredAttributes = attributes.filter(
+    attr =>
+      attr.dataformat === selectedOrFirstFormat &&
+      disabledDisplevels.indexOf(attr.displevel) === -1
+  );
+
+  function onWrite(value) {
+    onSetDeviceAttribute(editingName, value);
+    setEditingName(null);
   }
+
+  function onClose() {
+    setEditingName(null);
+  }
+
+  return (
+    <div className="AttributeTable">
+      {editingAttribute && (
+        <EditModal
+          attribute={editingAttribute}
+          onWrite={onWrite}
+          onClose={onClose}
+        />
+      )}
+      <NotLoggedIn>
+        You are currently not logged in and cannot change attribute values.
+      </NotLoggedIn>
+      <DataFormatChooser
+        dataFormats={dataFormats}
+        selected={selectedOrFirstFormat}
+        onSelect={onSelectDataFormat}
+      />
+      <table className="separated">
+        <tbody>
+          {filteredAttributes.map((attribute, i) => (
+            <AttributeTableRow
+              key={i}
+              attribute={attribute}
+              deviceName={deviceName}
+              canEdit={isLoggedIn}
+              onEdit={attribute => setEditingName(attribute)}
+            />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 AttributeTable.propTypes = {
@@ -189,8 +219,9 @@ AttributeTable.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    isLoggedIn: getIsLoggedIn(state),
     selectedFormat: getActiveDataFormat(state),
-    disabledDisplevels: getDisabledDisplevels(state),
+    disabledDisplevels: getDisabledDisplevels(state)
   };
 }
 
