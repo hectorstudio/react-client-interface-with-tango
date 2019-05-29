@@ -53,16 +53,16 @@ export default function EditModal({ attribute, onClose, onWrite }) {
   const warningMessage = !isNumeric
     ? "The input value is not numeric."
     : hasBounds && !isWithinBounds
-    ? "The input value is not between the permitted bounds."
+    ? "The input value is not in the permitted range."
     : null;
 
-  const bounds = hasBounds ? `[${minvalue}, ${maxvalue}]` : null;
+  const bounds = hasBounds ? `${minvalue}, ${maxvalue}` : null;
 
   const body =
     attributeIsScalar && attributeIsNumeric ? (
       <form onSubmit={onSubmit}>
         <div className="form-group">
-          <label for="write-value">Write Value {bounds}</label>
+          <label for="write-value">Write Value:</label>
           <input
             name="write-value"
             className={cx("form-control", isValid ? "is-valid" : "is-invalid")}
@@ -72,6 +72,9 @@ export default function EditModal({ attribute, onClose, onWrite }) {
           />
           <div className="invalid-feedback">{warningMessage}</div>
         </div>
+        {bounds && <div className="alert alert-info">
+          Permitted Range: {bounds}
+        </div>}
       </form>
     ) : (
       <div>Currently only numeric scalar attributes can be edited.</div>
