@@ -113,7 +113,7 @@ const AttributeTableRow = ({ attribute, canEdit, onEdit }) => {
         />
       </td>
       <td className="description">
-        <DescriptionDisplay description={description} />
+        <DescriptionDisplay name={name} description={description} />
       </td>
     </tr>
   );

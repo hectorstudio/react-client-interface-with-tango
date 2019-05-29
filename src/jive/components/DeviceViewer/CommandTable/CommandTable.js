@@ -76,7 +76,7 @@ class CommandTable extends Component {
                     <InputField isEnabled={isLoggedIn} onExecute={onExecute} commands={commands} name={name} intype={intype}/>
                   </td>
                   <td className='description'>
-                    <DescriptionDisplay description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
+                    <DescriptionDisplay name={name} description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
                   </td>
                 </tr>
               );

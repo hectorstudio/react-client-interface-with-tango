@@ -1,20 +1,40 @@
-import React from 'react';
-import cx from 'classnames';
-import PropTypes from 'prop-types'
-import './DescriptionDisplay.css';
+import React, { useState } from "react";
+import cx from "classnames";
 
-const DescriptionDisplay = ({description}) => <i
-	className={cx(
-		'DescriptionDisplay fa fa-info-circle', {
-		  'no-description': description === 'No description'
-		}
-	)}
-	title={description}
-	onClick={alert.bind(null, description)}
-/>;
+import Modal from "../../../../shared/modal/components/Modal/Modal";
 
-DescriptionDisplay.propTypes = {
-	description: PropTypes.string,
+import "./DescriptionDisplay.css";
+
+function DescriptionDisplay({ name, description }) {
+  const [onDisplay, setOnDisplay] = useState(false);
+
+  return (
+    <>
+      {onDisplay && (
+        <Modal title={name}>
+          <Modal.Body>
+            <div style={{ whiteSpace: "pre" }}>{description}</div>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => setOnDisplay(false)}
+            >
+              Close
+            </button>
+          </Modal.Footer>
+        </Modal>
+      )}
+      <i
+        className={cx("DescriptionDisplay fa fa-info-circle", {
+          "no-description": description === "No description"
+        })}
+        title={description}
+        onClick={() => setOnDisplay(true)}
+      />
+    </>
+  );
 }
 
 export default DescriptionDisplay;
