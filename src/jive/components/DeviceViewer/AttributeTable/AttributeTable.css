@@ -29,7 +29,7 @@
   color: lightgray;
 }
 
-.AttributeTable td.edit:hover {
+.AttributeTable td.edit:hover i {
   color: black;
   cursor: pointer;
 }

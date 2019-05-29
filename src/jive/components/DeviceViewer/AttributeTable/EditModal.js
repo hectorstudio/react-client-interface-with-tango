@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import cx from "classnames";
+
 import Modal from "../../../../shared/modal/components/Modal/Modal";
 
 export default function EditModal({ attribute, onClose, onWrite }) {
@@ -30,7 +32,8 @@ export default function EditModal({ attribute, onClose, onWrite }) {
   const attributeIsNumeric = numericTypes.includes(datatype);
   const attributeIsScalar = attribute.dataformat === "SCALAR";
 
-  const isValid = isNumeric && (!hasBounds || isWithinBounds);
+  const isValid =
+    attributeIsNumeric && isNumeric && (!hasBounds || isWithinBounds);
 
   function onSubmit(event) {
     if (isValid) {
@@ -55,22 +58,24 @@ export default function EditModal({ attribute, onClose, onWrite }) {
 
   const bounds = hasBounds ? `[${minvalue}, ${maxvalue}]` : null;
 
-  const body = attributeIsScalar && attributeIsNumeric ? (
-    <form onSubmit={onSubmit}>
-      <div className="form-group">
-        <label for="write-value">Write Value {bounds}</label>
-        <input
-          name="write-value"
-          className={"form-control " + (isValid ? "is-valid" : "is-invalid")}
-          value={editValue}
-          onChange={onChange}
-        />
-        <div className="invalid-feedback">{warningMessage}</div>
-      </div>
-    </form>
-  ) : (
-    <div>Currently only numeric scalar attributes can be edited.</div>
-  );
+  const body =
+    attributeIsScalar && attributeIsNumeric ? (
+      <form onSubmit={onSubmit}>
+        <div className="form-group">
+          <label for="write-value">Write Value {bounds}</label>
+          <input
+            name="write-value"
+            className={cx("form-control", isValid ? "is-valid" : "is-invalid")}
+            value={editValue}
+            onChange={onChange}
+            autoComplete="off"
+          />
+          <div className="invalid-feedback">{warningMessage}</div>
+        </div>
+      </form>
+    ) : (
+      <div>Currently only numeric scalar attributes can be edited.</div>
+    );
 
   return (
     <Modal title={name}>
