@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Modal as BootstrapModal } from "react-bootstrap";
 
@@ -6,41 +6,33 @@ import "./Modal.css";
 
 const modalRoot = document.getElementById("modal");
 
-class ModalPortal extends Component {
-  constructor(props) {
-    super(props);
-    this.hostElement = document.createElement("div");
-  }
+function ModalPortal({ children }) {
+  const hostRef = useRef(document.createElement("div"));
 
-  componentDidMount() {
-    modalRoot.appendChild(this.hostElement);
-  }
+  useEffect(() => {
+    const element = hostRef.current;
+    modalRoot.appendChild(element);
+    return () => {
+      modalRoot.removeChild(element);
+    };
+  }, []);
 
-  componentWillUnmount() {
-    modalRoot.removeChild(this.hostElement);
-  }
-
-  render() {
-    return ReactDOM.createPortal(this.props.children, this.hostElement);
-  }
+  return ReactDOM.createPortal(children, hostRef.current);
 }
 
-export default class Modal extends Component {
-  render() {
-    const { title, children } = this.props;
-    return (
-      <ModalPortal>
-        <BootstrapModal.Dialog style={{zIndex: 100000}}>
-          {title && (
-            <BootstrapModal.Header>
-              <BootstrapModal.Title>{title}</BootstrapModal.Title>
-            </BootstrapModal.Header>
-          )}
-          {children}
-        </BootstrapModal.Dialog>
-      </ModalPortal>
-    );
-  }
+export default function Modal({ title, children }) {
+  return (
+    <ModalPortal>
+      <BootstrapModal.Dialog style={{ zIndex: 100000 }}>
+        {title && (
+          <BootstrapModal.Header>
+            <BootstrapModal.Title>{title}</BootstrapModal.Title>
+          </BootstrapModal.Header>
+        )}
+        {children}
+      </BootstrapModal.Dialog>
+    </ModalPortal>
+  );
 }
 
 Modal.Body = BootstrapModal.Body;
