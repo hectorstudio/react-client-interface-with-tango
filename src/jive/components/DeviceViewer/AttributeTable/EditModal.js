@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import cx from "classnames";
 
 import Modal from "../../../../shared/modal/components/Modal/Modal";
 
-export default function EditModal({ attribute, onClose, onWrite }) {
-  const { name, datatype, writeValue, minvalue, maxvalue } = attribute;
+function NumericInput({ attribute, onChange }) {
+  const { writeValue, minvalue, maxvalue } = attribute;
 
   const [editValue, setEditValue] = useState(writeValue);
 
@@ -16,6 +16,65 @@ export default function EditModal({ attribute, onClose, onWrite }) {
     isNumeric && hasBounds
       ? asNumber >= minvalue && asNumber <= maxvalue
       : true;
+
+  const warningMessage = !isNumeric
+    ? "The input value is not numeric."
+    : hasBounds && !isWithinBounds
+    ? "The input value is not in the permitted range."
+    : null;
+
+  const bounds = hasBounds ? `${minvalue}, ${maxvalue}` : null;
+  const isValid = isNumeric && (!hasBounds || isWithinBounds);
+
+  useEffect(() => {
+    onChange(asNumber, isValid);
+  }, [asNumber, isValid, onChange]);
+
+  return (
+    <>
+      <div className="form-group">
+        <label>Write Value:</label>
+        <input
+          className={cx("form-control", isValid ? "is-valid" : "is-invalid")}
+          value={editValue}
+          onChange={e => setEditValue(e.target.value)}
+          autoComplete="off"
+        />
+        <div className="invalid-feedback">{warningMessage}</div>
+      </div>
+      {bounds && (
+        <div className="alert alert-info">Permitted Range: {bounds}</div>
+      )}
+    </>
+  );
+}
+
+function BooleanInput({ attribute, onChange }) {
+  function onSelect(event) {
+    const value = event.target.value === "t";
+    onChange(value);
+  }
+
+  return (
+    <div className="form-group">
+      <label>Write Value:</label>
+      <select
+        className="form-control"
+        defaultValue={attribute.writeValue ? "t" : "f"}
+        onChange={onSelect}
+      >
+        <option value="t">true</option>
+        <option value="f">false</option>
+      </select>
+    </div>
+  );
+}
+
+export default function EditModal({ attribute, onClose, onWrite }) {
+  const { name, datatype } = attribute;
+
+  const [isValid, setIsValid] = useState(true);
+  const [value, setValue] = useState();
 
   const numericTypes = [
     "DevDouble",
@@ -30,55 +89,44 @@ export default function EditModal({ attribute, onClose, onWrite }) {
   ];
 
   const attributeIsNumeric = numericTypes.includes(datatype);
+  const attributeIsBoolean = datatype === "DevBoolean";
   const attributeIsScalar = attribute.dataformat === "SCALAR";
 
-  const isValid =
-    attributeIsNumeric && isNumeric && (!hasBounds || isWithinBounds);
+  function onChange(_value, _isValid) {
+    setValue(_value);
+    setIsValid(_isValid === undefined ? true : _isValid);
+  }
 
-  function onSubmit(event) {
+  function trigger() {
     if (isValid) {
-      event.preventDefault();
-      onWrite(asNumber);
+      onWrite(value);
     }
   }
 
-  function onChange(event) {
-    setEditValue(event.target.value);
+  function onSubmit(event) {
+    event.preventDefault();
+    trigger();
   }
 
   function onClick() {
-    onWrite(asNumber);
+    trigger();
   }
 
-  const warningMessage = !isNumeric
-    ? "The input value is not numeric."
-    : hasBounds && !isWithinBounds
-    ? "The input value is not in the permitted range."
-    : null;
+  const input =
+    attributeIsScalar &&
+    (attributeIsNumeric ? (
+      <NumericInput attribute={attribute} onChange={onChange} />
+    ) : attributeIsBoolean ? (
+      <BooleanInput attribute={attribute} onChange={onChange} />
+    ) : null);
 
-  const bounds = hasBounds ? `${minvalue}, ${maxvalue}` : null;
-
-  const body =
-    attributeIsScalar && attributeIsNumeric ? (
-      <form onSubmit={onSubmit}>
-        <div className="form-group">
-          <label for="write-value">Write Value:</label>
-          <input
-            name="write-value"
-            className={cx("form-control", isValid ? "is-valid" : "is-invalid")}
-            value={editValue}
-            onChange={onChange}
-            autoComplete="off"
-          />
-          <div className="invalid-feedback">{warningMessage}</div>
-        </div>
-        {bounds && <div className="alert alert-info">
-          Permitted Range: {bounds}
-        </div>}
-      </form>
-    ) : (
-      <div>Currently only numeric scalar attributes can be edited.</div>
-    );
+  const body = input ? (
+    <form onSubmit={onSubmit}>{input}</form>
+  ) : (
+    <div>
+      Currently only numeric and boolean scalar attributes can be edited.
+    </div>
+  );
 
   return (
     <Modal title={name}>
