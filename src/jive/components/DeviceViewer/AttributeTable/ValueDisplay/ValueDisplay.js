@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 // Spectrum visualisation is disabled for performance reasons until a more sustainable solution is found. For now, skip importing from reacharts in order to reduce bundle size.
 // import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 
-import AttributeInput from "../AttributeInput/AttributeInput";
 import { JSONTree } from "./JSONTree";
 
 import "./ValueDisplay.css";
@@ -20,25 +19,6 @@ function parseJSONObject(str) {
 
 function looksLikeMonospace(str) {
   return str.match(/(\n {2})|\t| {4}/);
-}
-
-function isNumeric(datatype) {
-  const numericTypes = [
-    "DevDouble",
-    "DevShort",
-    "DevFloat",
-    "DevLong",
-    "DevULong",
-    "DevULong64",
-    "DevUShort",
-    "DevLong64",
-    "DevUChar"
-  ];
-  return numericTypes.indexOf(datatype) !== -1;
-}
-
-function isWritable(writable) {
-  return ["READ_WRITE", "WRITE", "READ_WITH_WRITE"].indexOf(writable) !== -1;
 }
 
 const DevStringValueDisplay = ({ value }) => {

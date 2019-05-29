@@ -2,7 +2,7 @@
 //TODO: We should replace the 'links' that don't have a specific destination  with buttons
 //      to better signal intention to screen readers etc.
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
