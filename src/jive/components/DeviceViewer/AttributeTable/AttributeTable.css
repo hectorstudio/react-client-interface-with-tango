@@ -8,20 +8,21 @@
   padding-right: 1em;
 }
 
-.AttributeTable td:last-child {
-  padding-right: 0.5em;
-}
-
-.AttributeTable td.name,
-.AttributeTable td.description {
+.AttributeTable td.name {
   width: 1%;
   height: 3em; /* Unpretty way of making all rows equally high. Are there better methods? */
   padding-right: 3em;
 }
 
+.AttributeTable td.description {
+  width: 1%;
+  padding-right: 0.25em;
+}
+
 .AttributeTable td.quality {
   width: 7em;
-  padding-left: 0.25em;}
+  padding-left: 0.25em;
+}
 
 .AttributeTable td.edit {
   width: 1%;
