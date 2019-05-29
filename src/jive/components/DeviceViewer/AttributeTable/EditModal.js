@@ -28,6 +28,8 @@ export default function EditModal({ attribute, onClose, onWrite }) {
   ];
 
   const attributeIsNumeric = numericTypes.includes(datatype);
+  const attributeIsScalar = attribute.dataformat === "SCALAR";
+
   const isValid = isNumeric && (!hasBounds || isWithinBounds);
 
   function onSubmit(event) {
@@ -53,7 +55,7 @@ export default function EditModal({ attribute, onClose, onWrite }) {
 
   const bounds = hasBounds ? `[${minvalue}, ${maxvalue}]` : null;
 
-  const body = attributeIsNumeric ? (
+  const body = attributeIsScalar && attributeIsNumeric ? (
     <form onSubmit={onSubmit}>
       <div className="form-group">
         <label for="write-value">Write Value {bounds}</label>
@@ -67,7 +69,7 @@ export default function EditModal({ attribute, onClose, onWrite }) {
       </div>
     </form>
   ) : (
-    <div>Currently only numeric attributes can be edited.</div>
+    <div>Currently only numeric scalar attributes can be edited.</div>
   );
 
   return (
