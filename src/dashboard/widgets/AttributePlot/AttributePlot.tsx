@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Plot, { Trace } from "./Plot";
 import { WidgetProps } from "../types";
