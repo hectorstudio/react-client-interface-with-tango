@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useRef } from "react";
+import React, { Suspense, useRef } from "react";
 
 // In order to avoid importing the entire plotly.js library. Note that this mutates the global PlotlyCore object.
 import PlotlyCore from "plotly.js/lib/core";
@@ -55,7 +55,7 @@ export default function Plot(props: PlotProps) {
   const { traces, params } = props;
   const { staticMode, width, height, showZeroLine } = params;
 
-  const userLayout = useRef<object>({});
+  const userLayout = useRef<object>({}); // Use ref instad of state in order to avoid triggering a re-render, appearently causing an infinite loop
 
   const { data, range } = dataAndRange(traces, params);
   const xaxis = {
