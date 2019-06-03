@@ -8,10 +8,14 @@
   padding-right: 1em;
 }
 
-.AttributeTable td.name {
+/* .AttributeTable td.name {
   width: 1%;
-  height: 3em; /* Unpretty way of making all rows equally high. Are there better methods? */
-  padding-right: 3em;
+  height: 3em; /* Unpretty way of making all rows equally high. Are there better methods? * /
+} */
+
+.AttributeTable td.quality-name {
+  white-space: nowrap;
+  height: 2.5em;
 }
 
 .AttributeTable td.description {
@@ -40,6 +44,7 @@
   border-radius: 0.35em;
   padding: 0.25em;
   font-size: small;
+  margin-right: 0.25em;
 }
 
 .AttributeTable .QualityIndicator.valid {

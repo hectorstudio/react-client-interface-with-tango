@@ -75,7 +75,7 @@ const QualityIndicator = ({ quality }) => {
   );
 };
 
-const AttributeTableRow = ({ attribute, canEdit, onEdit }) => {
+const AttributeTableRow = ({ attribute, allowedToEdit, onEdit }) => {
   const {
     name,
     value,
@@ -91,15 +91,19 @@ const AttributeTableRow = ({ attribute, canEdit, onEdit }) => {
 
   return (
     <tr>
-      <td className="quality">
-        <QualityIndicator quality={quality} />
+      <td className="quality-name">
+        <QualityIndicator quality={quality} /> {name}
       </td>
-      <td className="name">{name}</td>
-      <td className="edit">
-        {!canEdit || writable === "READ" ? null : (
-          <i className="fa fa-pencil" onClick={() => onEdit && onEdit(name)} />
-        )}
-      </td>
+      {allowedToEdit && (
+        <td className="edit">
+          {writable === "READ" && (
+            <i
+              className="fa fa-pencil"
+              onClick={() => onEdit && onEdit(name)}
+            />
+          )}
+        </td>
+      )}
       <td className="value">
         <ValueDisplay
           name={name}
@@ -181,10 +185,10 @@ function AttributeTable(props) {
         <tbody>
           {filteredAttributes.map((attribute, i) => (
             <AttributeTableRow
-              key={i}
+              key={attribute.name}
               attribute={attribute}
               deviceName={deviceName}
-              canEdit={isLoggedIn}
+              allowedToEdit={isLoggedIn}
               onEdit={attribute => setEditingName(attribute)}
             />
           ))}
