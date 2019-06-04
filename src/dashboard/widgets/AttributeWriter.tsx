@@ -29,7 +29,7 @@ class AttributeWriter extends Component<Props, State> {
   public render() {
     const { mode, inputs } = this.props;
     const { attribute, showDevice, showAttribute } = inputs;
-    const { device, attribute: attributeName } = attribute;
+    const { device, writeValue, attribute: attributeName } = attribute;
 
     const unit = mode === "run" ? attribute.unit : "unit";
     const deviceLabel = device || "device";
@@ -71,6 +71,7 @@ class AttributeWriter extends Component<Props, State> {
             minWidth: "3em",
             ...invalidStyle
           }}
+          placeholder={writeValue || ""}
           value={this.state.input}
           onChange={e => this.setState({ input: e.target.value })}
         />
