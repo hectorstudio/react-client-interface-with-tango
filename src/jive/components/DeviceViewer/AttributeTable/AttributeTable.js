@@ -96,7 +96,7 @@ const AttributeTableRow = ({ attribute, allowedToEdit, onEdit }) => {
       </td>
       {allowedToEdit && (
         <td className="edit">
-          {writable === "READ" && (
+          {writable !== "READ" && (
             <i
               className="fa fa-pencil"
               onClick={() => onEdit && onEdit(name)}
