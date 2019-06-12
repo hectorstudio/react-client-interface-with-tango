@@ -115,6 +115,7 @@ class AttributeDial extends Component<Props> {
           width: 2 * radius,
           height: 2 * radius,
           userSelect: "none",
+          transform: "scale(0.95)",
           ...libraryProps
         }}
       >

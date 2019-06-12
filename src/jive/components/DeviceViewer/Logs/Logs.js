@@ -13,7 +13,7 @@ class Logs extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      limit: 100
+      limit: 5
     };
     this.reload = this.reload.bind(this);
     this.onLimitChange = this.onLimitChange.bind(this);

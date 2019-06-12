@@ -36,7 +36,7 @@ function AttributePlot(props: Props) {
   }
 
   if (mode === "library") {
-    const xValues = Array(120)
+    const xValues = Array(timeWindow)
       .fill(0)
       .map((_, i) => i);
     const sample1 = xValues.map(x => 8 * Math.sin(x / 6) * Math.sin(x / 20));
