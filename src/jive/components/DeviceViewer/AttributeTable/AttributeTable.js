@@ -92,8 +92,9 @@ const AttributeTableRow = ({ attribute, allowedToEdit, onEdit }) => {
   return (
     <tr>
       <td className="quality-name">
-        <QualityIndicator quality={quality} /> {name}
+        <QualityIndicator quality={quality} />
       </td>
+      <td>{name}</td>
       {allowedToEdit && (
         <td className="edit">
           {writable !== "READ" && (
