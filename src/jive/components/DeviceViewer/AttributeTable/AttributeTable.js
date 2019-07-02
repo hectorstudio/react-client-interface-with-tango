@@ -89,6 +89,8 @@ const AttributeTableRow = ({ attribute, allowedToEdit, onEdit }) => {
     quality
   } = attribute;
 
+  const isWritable = writable !== "READ";
+
   return (
     <tr>
       <td className="quality-name">
@@ -96,13 +98,11 @@ const AttributeTableRow = ({ attribute, allowedToEdit, onEdit }) => {
       </td>
       <td>{name}</td>
       {allowedToEdit && (
-        <td className="edit">
-          {writable !== "READ" && (
-            <i
-              className="fa fa-pencil"
-              onClick={() => onEdit && onEdit(name)}
-            />
-          )}
+        <td
+          className={classNames("edit", { writable: isWritable })}
+          onClick={() => isWritable && onEdit && onEdit(name)}
+        >
+          {isWritable && <i className="fa fa-pencil" />}
         </td>
       )}
       <td className="value">

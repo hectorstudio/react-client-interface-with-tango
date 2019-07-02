@@ -35,9 +35,12 @@
   color: lightgray;
 }
 
+.AttributeTable td.edit.writable:hover {
+  cursor: pointer;
+}
+
 .AttributeTable td.edit:hover i {
   color: black;
-  cursor: pointer;
 }
 
 .AttributeTable .QualityIndicator {
