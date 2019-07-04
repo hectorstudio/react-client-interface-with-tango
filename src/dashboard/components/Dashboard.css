@@ -3,7 +3,7 @@
   height: 100%;
   position: absolute;
   display: grid;
-  grid-template-rows: min-content auto;
+  grid-template-rows: 3em auto;
   grid-template-columns: auto 22em;
   font-family: Helvetica, Arial, sans-serif;
 }
@@ -74,27 +74,9 @@
   margin-top: -1px;
 }
 
-.Dashboard .TopBar {
-  padding: 0.33em;
-
-  background-color: #eee;
-  border-bottom: 1px solid #ccc;
-
+.Dashboard .Navbar {
   grid-row: 1;
   grid-column: -1 / 1;
-
-  display: flex;
-  justify-content: space-between;
-  place-items: center;
-}
-
-.Dashboard .TopBar .LogInOut {
-  margin-right: 0.25em;
-}
-
-.Dashboard .TopBar .FetchInfo {
-  margin-left: 0.5em;
-  color: #666;
 }
 
 .Dashboard .Sidebar {
