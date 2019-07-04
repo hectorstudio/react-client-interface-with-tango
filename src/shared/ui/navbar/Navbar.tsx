@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { Route, Link } from "react-router-dom";
+import { Route } from "react-router-dom";
 
 import LogInOut from "../../user/components/LogInOut/LogInOut";
 
