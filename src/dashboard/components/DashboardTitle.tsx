@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./DashboardTitle.css";
-import { connect, Dispatch } from "react-redux";
+import { connect } from "react-redux";
 import {
   getSelectedDashboard,
   getUserName,
@@ -12,6 +12,7 @@ import { Dashboard } from "../types";
 import { renameDashboard, cloneDashboard } from "../state/actionCreators";
 import { Notification } from "../types";
 import { DashboardAction } from "../state/actions";
+import { Dispatch } from "redux";
 
 interface Props {
   dashboard: Dashboard;

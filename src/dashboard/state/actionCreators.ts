@@ -32,7 +32,9 @@ import {
   DashboardLoadedAction,
   DashboardRenamedAction,
   SaveDashboardAction,
-  DashboardSavedAction
+  DashboardSavedAction,
+  RenameDashboardAction,
+  CloneDashboardAction
 } from "./actions";
 
 import { Widget, Dashboard } from "../types";
@@ -84,7 +86,7 @@ export function dashboardsLoaded(dashboards: Dashboard[]){
   return {type: DASHBOARDS_LOADED, dashboards};
 }
 
-export function renameDashboard(id: string, name: string) {
+export function renameDashboard(id: string, name: string): RenameDashboardAction {
   return { type: RENAME_DASHBOARD, id, name };
 }
 export function dashboardRenamed(id: string, name: string): DashboardRenamedAction {
@@ -96,7 +98,7 @@ export function deleteDashboard(id:string){
 export function dashboardDeleted(id:string){
   return {type: DASHBOARD_DELETED, id};
 }
-export function cloneDashboard(id:string, newUser:string){
+export function cloneDashboard(id:string, newUser:string): CloneDashboardAction {
   return {type: CLONE_DASHBOARD, id, newUser}
 }
 export function dashboardCloned(id:string){

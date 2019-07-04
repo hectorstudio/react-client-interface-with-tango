@@ -19,6 +19,8 @@ import {
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
   SAVE_DASHBOARD,
+  RENAME_DASHBOARD,
+  CLONE_DASHBOARD
 } from "./actionTypes";
 
 import { IndexPath, Widget, Dashboard, Notification } from "../types";
@@ -94,23 +96,35 @@ export interface DashboardsLoadedAction extends Action {
   dashboards: Dashboard[];
 }
 
-export interface DashboardRenamedAction extends Action{
-  type: typeof DASHBOARD_RENAMED;
-  id: string
+export interface RenameDashboardAction extends Action {
+  type: typeof RENAME_DASHBOARD;
+  id: string;
   name: string;
 }
 
-export interface DashboardDeletedAction extends Action{
+export interface DashboardRenamedAction extends Action {
+  type: typeof DASHBOARD_RENAMED;
+  id: string;
+  name: string;
+}
+
+export interface DashboardDeletedAction extends Action {
   type: typeof DASHBOARD_DELETED;
   id: string;
 }
 
-export interface DashboardClonedAction extends Action{
+export interface CloneDashboardAction extends Action {
+  type: typeof CLONE_DASHBOARD;
+  id: string;
+  newUser: string;
+}
+
+export interface DashboardClonedAction extends Action {
   type: typeof DASHBOARD_CLONED;
   id: string;
 }
 
-export interface DashboardLoadedAction extends Action{
+export interface DashboardLoadedAction extends Action {
   type: typeof DASHBOARD_LOADED;
   dashboard: Dashboard;
   widgets: Widget[];
@@ -123,19 +137,19 @@ export interface SaveDashboardAction extends Action {
   widgets: Widget[];
 }
 
-export interface DashboardSavedAction extends Action{
+export interface DashboardSavedAction extends Action {
   type: typeof DASHBOARD_SAVED;
   id: string;
   created: boolean;
   name: string;
 }
 
-export interface ShowNotificationAction extends Action{
+export interface ShowNotificationAction extends Action {
   type: typeof SHOW_NOTIFICATION;
   notification: Notification;
 }
 
-export interface HideNotificationAction extends Action{
+export interface HideNotificationAction extends Action {
   type: typeof HIDE_NOTIFICATION;
   notification: Notification;
 }
@@ -153,9 +167,12 @@ export type DashboardAction =
   | ToggleModeAction
   | DashboardLoadedAction
   | DashboardsLoadedAction
+  | RenameDashboardAction
   | DashboardRenamedAction
   | DashboardDeletedAction
   | DashboardClonedAction
   | DashboardSavedAction
   | ShowNotificationAction
-  | HideNotificationAction;
+  | HideNotificationAction
+  | CloneDashboardAction
+  | DashboardClonedAction;
