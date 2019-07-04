@@ -44,7 +44,7 @@ const MainView = ({ className }) => (
         );
       }}
     />
-    <Route path="/:tangoDB/" exact={true} component={HomeViewer} />
+    <Route path="/:tangoDB/devices" exact={true} component={HomeViewer} />
   </div>
 );
 

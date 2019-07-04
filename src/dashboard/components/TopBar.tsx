@@ -31,15 +31,17 @@ export default function TopBar(props: Props) {
 
   return (
     <Navbar>
-      <form className="form-inline" style={{ display: "inline-block" }}>
-        <ModeToggleButton
-          onClick={onToggleMode}
-          disabled={modeToggleDisabled}
-          mode={mode}
-        />
-      </form>
-      <DashboardTitle />
-      <FetchInfo />
+      <div style={{ width: "100%", padding: "0 1em" }}>
+        <form className="form-inline" style={{ display: "inline-block" }}>
+          <ModeToggleButton
+            onClick={onToggleMode}
+            disabled={modeToggleDisabled}
+            mode={mode}
+          />
+        </form>
+        <DashboardTitle />
+        <FetchInfo />
+      </div>
     </Navbar>
   );
 }

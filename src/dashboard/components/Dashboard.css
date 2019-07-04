@@ -74,7 +74,7 @@
   margin-top: -1px;
 }
 
-.Dashboard .layout-navbar {
+.Dashboard .Navbar {
   grid-row: 1;
   grid-column: -1 / 1;
 }

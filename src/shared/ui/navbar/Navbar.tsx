@@ -7,21 +7,35 @@ import "./Navbar.css";
 
 export function Navbar(props: PropsWithChildren<{}>) {
   return (
-    <div className="layout-navbar">
-      <Route
-        path="/:tangoDB/"
-        render={({ match, location }) => {
-          const tangoDB = match.params.tangoDB;
-          return (
-            <div className="page-links" style={{ fontSize: "0.75em" }}>
-              <Link to={{ ...location, pathname: `/${tangoDB}` }}>
-                Devices
-              </Link>
-              <a href={`/${tangoDB}/dashboard`}>Dashboards</a>
-            </div>
-          );
-        }}
-      />
+    <div className="Navbar">
+      <div className="navigation">
+        <Route
+          path="/:tangoDB/:section"
+          render={({ match }) => {
+            const { tangoDB, section } = match.params;
+            const sections = [
+              ["Devices", "devices"],
+              ["Dashboards", "dashboard"]
+            ];
+
+            const links = sections.map(([name, identifier]) => (
+              <a
+                key={identifier}
+                className={identifier === section ? "active" : ""}
+                href={`/${tangoDB}/${identifier}`}
+              >
+                {name}
+              </a>
+            ));
+
+            return (
+              <div className="page-links">
+                {links}
+              </div>
+            );
+          }}
+        />
+      </div>
       {props.children || null}
       <LogInOut />
     </div>
