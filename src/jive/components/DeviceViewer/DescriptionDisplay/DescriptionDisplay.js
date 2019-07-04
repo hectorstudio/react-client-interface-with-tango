@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import cx from "classnames";
+import Tooltip from "react-tooltip-lite";
 
 import Modal from "../../../../shared/modal/components/Modal/Modal";
 
@@ -26,13 +27,19 @@ function DescriptionDisplay({ name, description }) {
           </Modal.Footer>
         </Modal>
       )}
-      <i
-        className={cx("DescriptionDisplay fa fa-info-circle", {
-          "no-description": description === "No description"
-        })}
-        title={description}
-        onClick={() => setOnDisplay(true)}
-      />
+      <Tooltip
+        content={description}
+        useDefaultStyles={true}
+        hoverDelay={0}
+        direction="left"
+      >
+        <i
+          className={cx("DescriptionDisplay fa fa-info-circle", {
+            "no-description": description === "No description"
+          })}
+          onClick={() => setOnDisplay(true)}
+        />
+      </Tooltip>
     </>
   );
 }

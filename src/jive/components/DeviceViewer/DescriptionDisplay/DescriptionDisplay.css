@@ -1,7 +1,13 @@
 .DescriptionDisplay {
-    cursor: help;
+  cursor: help;
 }
 
 .DescriptionDisplay.no-description {
-    color: lightgray;
+  color: lightgray;
+}
+
+/* This changes the global appearance of the tooltip. Not an acute problem now, but it should be noted. */
+.react-tooltip-lite {
+  border-radius: 0.3em;
+  white-space: pre;
 }
