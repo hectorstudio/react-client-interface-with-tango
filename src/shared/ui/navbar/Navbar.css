@@ -1,0 +1,12 @@
+.layout-navbar {
+  background: #eee;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.5em;
+  align-items: center;
+}
+
+.layout-navbar a {
+  margin-right: 0.5em;
+}
