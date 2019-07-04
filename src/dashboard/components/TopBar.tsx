@@ -1,8 +1,8 @@
 import React from "react";
 import ModeToggleButton from "./ModeToggleButton";
 import DashboardTitle from "./DashboardTitle";
-import LogInOut from "../../shared/user/components/LogInOut/LogInOut";
 import { DeviceConsumer } from "./DevicesProvider";
+import { Navbar } from "../../shared/ui/navbar/Navbar";
 
 interface Props {
   mode: "edit" | "run";
@@ -30,19 +30,16 @@ export default function TopBar(props: Props) {
   const { mode, onToggleMode, modeToggleDisabled } = props;
 
   return (
-    <div className="TopBar">
-      <div>
-        <form className="form-inline" style={{ display: "inline-block" }}>
-          <ModeToggleButton
-            onClick={onToggleMode}
-            disabled={modeToggleDisabled}
-            mode={mode}
-          />
-        </form>
-        <DashboardTitle />
-        <FetchInfo />
-      </div>
-      <LogInOut />
-    </div>
+    <Navbar>
+      <form className="form-inline" style={{ display: "inline-block" }}>
+        <ModeToggleButton
+          onClick={onToggleMode}
+          disabled={modeToggleDisabled}
+          mode={mode}
+        />
+      </form>
+      <DashboardTitle />
+      <FetchInfo />
+    </Navbar>
   );
 }
