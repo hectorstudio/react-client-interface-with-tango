@@ -147,13 +147,22 @@ query FetchDevice($name: String!) {
   }
 }`;
 
-export const ATTRIBUTES_SUB = `
+export const ATTRIBUTES_SUB_WITH_VALUES = `
 subscription Attributes($fullNames: [String]!) {
   attributes(fullNames: $fullNames) {
     device
     attribute
     value
     writeValue
+    quality
+  }
+}`;
+
+export const ATTRIBUTES_SUB_WITHOUT_VALUES = `
+subscription Attributes($fullNames: [String]!) {
+  attributes(fullNames: $fullNames) {
+    device
+    attribute
     quality
   }
 }`;

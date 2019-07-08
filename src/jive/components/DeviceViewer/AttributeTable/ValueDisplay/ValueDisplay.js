@@ -108,76 +108,6 @@ SpectrumValueDisplay.propTypes = {
   datatype: PropTypes.string
 };
 
-class ImageValueDisplay extends React.Component {
-  imageWidth() {
-    return this.props.value[0].length;
-  }
-
-  imageHeight() {
-    return this.props.value.length;
-  }
-
-  imageMax() {
-    const max = arr => arr.reduce((a, b) => Math.max(a, b));
-    const maxes = this.props.value.map(max);
-    return max(maxes);
-  }
-
-  getIndicesForCoord(x, y) {
-    var index = y * this.imageWidth() * 4 + x * 4;
-    return index;
-  }
-
-  updateCanvas() {
-    const canvas = document.getElementById(this.props.name); // TODO: use ref instead
-    const context = canvas.getContext("2d");
-
-    const image = this.props.value;
-    const imgWidth = this.imageWidth();
-    const imgHeight = this.imageHeight();
-
-    const imgData = context.createImageData(imgWidth, imgHeight);
-    canvas.width = imgWidth;
-    canvas.height = imgHeight;
-
-    const max = this.imageMax();
-
-    image.forEach((outerArray, y) => {
-      outerArray.forEach((value, x) => {
-        const index = this.getIndicesForCoord(x, y, imgData.width);
-        const normal = 255 * (value / (max === 0 ? 1 : max));
-        imgData.data[index + 0] = normal;
-        imgData.data[index + 1] = normal;
-        imgData.data[index + 2] = normal;
-        imgData.data[index + 3] = 255;
-      });
-    });
-
-    context.putImageData(imgData, 0, 0);
-  }
-
-  componentDidMount() {
-    this.updateCanvas();
-  }
-
-  render() {
-    if (document.getElementById(this.props.name)) {
-      this.updateCanvas();
-    }
-    return <canvas id={this.props.name} />;
-  }
-}
-
-ImageValueDisplay.propTypes = {
-  datatype: PropTypes.string,
-  maxvalue: PropTypes.any,
-  minvalue: PropTypes.any,
-  name: PropTypes.string,
-  setDeviceAttribute: PropTypes.func,
-  value: PropTypes.any,
-  writable: PropTypes.string
-};
-
 const ValueDisplay = ({
   value,
   writeValue,
@@ -198,7 +128,6 @@ const ValueDisplay = ({
   }
 
   const InnerDisplay = {
-    IMAGE: ImageValueDisplay,
     SCALAR: ScalarValueDisplay,
     SPECTRUM: SpectrumValueDisplay
   }[dataformat];
