@@ -66,6 +66,7 @@ function ImageDisplay(props: ImageDisplayProps) {
 
 interface SpectrumDisplayProps {
   value: NumericSpectrum | BooleanSpectrum;
+  datatype: string;
 }
 
 function SpectumDisplay(props: SpectrumDisplayProps) {
@@ -93,6 +94,9 @@ function SpectumDisplay(props: SpectrumDisplayProps) {
     width
   };
 
+  /* "hv" produces a step chart where the y value in the beginning of each segment corresponds to the y value of the data point */
+  const shape = props.datatype === "DevBoolean" ? "hv" : "linear";
+
   return (
     <div ref={containerRef}>
       {width === 0 ? (
@@ -100,7 +104,7 @@ function SpectumDisplay(props: SpectrumDisplayProps) {
       ) : (
         <Plotly
           layout={layout}
-          data={[{ x, y }]}
+          data={[{ x, y, line: { shape } }]}
           config={{ displayModeBar: false }}
         />
       )}
@@ -148,7 +152,7 @@ export function NonScalarValueModal(props: Props) {
     ) : dataformat === "IMAGE" ? (
       <ImageDisplay value={value as any} /> /* TODO */
     ) : (
-      <SpectumDisplay value={value as any} /> /* TODO */
+      <SpectumDisplay value={value as any} datatype={datatype} /> /* TODO */
     );
 
   return (
