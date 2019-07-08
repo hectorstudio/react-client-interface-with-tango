@@ -32,7 +32,7 @@
 .AttributeTable td.edit {
   width: 1%;
   padding-left: 1em;
-  color: lightgray;
+  color: gray;
 }
 
 .AttributeTable td.edit.writable:hover {
@@ -41,6 +41,15 @@
 
 .AttributeTable td.edit:hover i {
   color: black;
+}
+
+.AttributeTable .view {
+  color: gray;
+}
+
+.AttributeTable .view:hover {
+  color: black;
+  cursor: pointer;
 }
 
 .AttributeTable .QualityIndicator {

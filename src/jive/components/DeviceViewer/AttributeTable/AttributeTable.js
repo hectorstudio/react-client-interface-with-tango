@@ -101,7 +101,7 @@ const AttributeTableRow = ({ tangoDB, deviceName, attribute, allowedToEdit, onEd
       <td>
         {dataformat !== "SCALAR" && (
           <i
-            className="fa fa-eye"
+            className="fa fa-eye view"
             style={{ marginRight: "1em" }}
             onClick={() => setNonScalarOnDisplay(name)}
           />
