@@ -3,7 +3,7 @@ import { Route } from "react-router-dom";
 
 import LogInOut from "../../user/components/LogInOut/LogInOut";
 
-import "./Navbar.scss";
+import "./Navbar.css";
 
 export function Navbar(props: PropsWithChildren<{}>) {
   return (
