@@ -110,14 +110,23 @@ export default function Plot(props: PlotProps) {
     ...addY2
   };
 
+  const overriding = {
+    ...addY1,
+    ...addY2,
+    width,
+    height
+  };
+
   return (
     <Suspense fallback={null}>
       <Plotly
         data={data}
-        layout={{ ...layout, ...userLayout.current }}
+        layout={{ ...layout, ...userLayout.current, ...overriding }}
         config={{ staticPlot: staticMode === true }}
         responsive={true}
-        onUpdate={({ layout }) => (userLayout.current = layout)}
+        onUpdate={({ layout: newLayout }) => {
+          userLayout.current = newLayout;
+        }}
       />
     </Suspense>
   );
