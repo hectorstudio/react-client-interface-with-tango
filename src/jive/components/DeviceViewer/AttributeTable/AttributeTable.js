@@ -25,6 +25,7 @@ import {
 
 import "./AttributeTable.css";
 import { getIsLoggedIn } from "../../../../shared/user/state/selectors";
+import { NonScalarValueModal } from "./NonScalarValueModal";
 
 const DataFormatChooser = ({ dataFormats, selected, onSelect }) => {
   const order = ["SCALAR", "SPECTRUM", "IMAGE"];
@@ -75,7 +76,7 @@ const QualityIndicator = ({ quality }) => {
   );
 };
 
-const AttributeTableRow = ({ attribute, allowedToEdit, onEdit }) => {
+const AttributeTableRow = ({ tangoDB, deviceName, attribute, allowedToEdit, onEdit }) => {
   const {
     name,
     value,
@@ -89,14 +90,24 @@ const AttributeTableRow = ({ attribute, allowedToEdit, onEdit }) => {
     quality
   } = attribute;
 
-  const isWritable = writable !== "READ";
+  const [nonScalarOnDisplay, setNonScalarOnDisplay] = useState(null);
+  const isWritable = dataformat === "SCALAR" && writable !== "READ";
 
   return (
     <tr>
       <td className="quality-name">
         <QualityIndicator quality={quality} />
       </td>
-      <td>{name}</td>
+      <td>
+        {dataformat !== "SCALAR" && (
+          <i
+            className="fa fa-eye"
+            style={{ marginRight: "1em" }}
+            onClick={() => setNonScalarOnDisplay(name)}
+          />
+        )}
+        {name}
+      </td>
       {allowedToEdit && (
         <td
           className={classNames("edit", { writable: isWritable })}
@@ -106,16 +117,27 @@ const AttributeTableRow = ({ attribute, allowedToEdit, onEdit }) => {
         </td>
       )}
       <td className="value">
-        <ValueDisplay
-          name={name}
-          value={value}
-          writeValue={writeValue}
-          datatype={datatype}
-          dataformat={dataformat}
-          writable={writable}
-          maxvalue={maxvalue}
-          minvalue={minvalue}
-        />
+        {dataformat === "SCALAR" ? (
+          <ValueDisplay
+            name={name}
+            value={value}
+            writeValue={writeValue}
+            datatype={datatype}
+            dataformat={dataformat}
+            writable={writable}
+            maxvalue={maxvalue}
+            minvalue={minvalue}
+          />
+        ) : nonScalarOnDisplay ? (
+          <NonScalarValueModal
+          tangoDB={tangoDB}
+            device={deviceName}
+            attribute={name}
+            dataformat={dataformat}
+            datatype={datatype}
+            onClose={() => setNonScalarOnDisplay(null)}
+          />
+        ) : null}
       </td>
       <td className="description">
         <DescriptionDisplay name={name} description={description} />
@@ -132,7 +154,8 @@ function AttributeTable(props) {
     deviceName,
     onSelectDataFormat,
     onSetDeviceAttribute,
-    isLoggedIn
+    isLoggedIn,
+    tangoDB
   } = props;
 
   const [editingName, setEditingName] = useState(null);
@@ -187,6 +210,7 @@ function AttributeTable(props) {
           {filteredAttributes.map((attribute, i) => (
             <AttributeTableRow
               key={attribute.name}
+              tangoDB={tangoDB}
               attribute={attribute}
               deviceName={deviceName}
               allowedToEdit={isLoggedIn}
