@@ -1,6 +1,8 @@
+@import "../../../variables.scss";
+
 .Navbar {
-  background: #eee;
-  border-bottom: 1px solid #ccc;
+  background: $navbarBackgroundColor;
+  border-bottom: 1px solid $navbarBorderColor;
   display: flex;
   justify-content: space-between;
   padding: 0 0.5em;
