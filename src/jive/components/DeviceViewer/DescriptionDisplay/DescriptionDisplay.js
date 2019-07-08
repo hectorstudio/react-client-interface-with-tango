@@ -14,7 +14,7 @@ function DescriptionDisplay({ name, description }) {
       {onDisplay && (
         <Modal title={name}>
           <Modal.Body>
-            <div style={{ whiteSpace: "pre" }}>{description}</div>
+            <div style={{ whiteSpace: "pre-wrap" }}>{description}</div>
           </Modal.Body>
           <Modal.Footer>
             <button
