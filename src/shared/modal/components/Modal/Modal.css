@@ -3,6 +3,10 @@
   animation: fadein 0.25s;
 }
 
+.modal .modal-title {
+  word-break: break-word;
+}
+
 @keyframes fadein {
   from {
     opacity: 0;

@@ -43,7 +43,7 @@
 }
 
 .DeviceViewer .StateIndicator.off,
-.DeviceViewer .StateIndicator.close,
+.DeviceViewer .StateIndicator.close-status,
 .DeviceViewer .StateIndicator.insert {
     background-color: white;
     border: 1px solid lightgray;
