@@ -16,25 +16,31 @@ export function move(widget: Widget, dx: number, dy: number) {
   const targetY = Math.max(0, y + dy);
   return { ...widget, x: targetX, y: targetY };
 }
-export function undo(history: DashboardEditHistory, widgets: Record<string, Widget>){
-  if (history.undoLength === 0){
-    return {history, widgets};
+export function undo(
+  history: DashboardEditHistory,
+  widgets: Record<string, Widget>
+) {
+  if (history.undoLength === 0) {
+    return { history, widgets };
   }
   //pull latest value from UNDO
-  history.undoIndex = history.undoIndex === 0 ? 9 : history.undoIndex -1;
+  history.undoIndex = history.undoIndex === 0 ? 9 : history.undoIndex - 1;
   const prevWidgets = history.undoActions[history.undoIndex];
   history.undoLength = history.undoLength === 0 ? 0 : history.undoLength - 1;
-  
+
   //push latest value from UNDO onto REDO
   history.redoLength = history.redoLength === 10 ? 10 : history.redoLength + 1;
   history.redoIndex = (history.redoIndex + 1) % 10;
   history.redoActions[history.redoIndex] = widgets;
-  return {history, widgets: prevWidgets};
+  return { history, widgets: prevWidgets };
 }
 
-export function redo(history: DashboardEditHistory, widgets: Record<string, Widget>){
-  if (history.redoLength === 0){
-    return {history, widgets};
+export function redo(
+  history: DashboardEditHistory,
+  widgets: Record<string, Widget>
+) {
+  if (history.redoLength === 0) {
+    return { history, widgets };
   }
   //push old widget as new action to UNDO
   history.undoLength = history.undoLength === 10 ? 10 : history.undoLength + 1;
@@ -42,19 +48,21 @@ export function redo(history: DashboardEditHistory, widgets: Record<string, Widg
   history.undoIndex = (history.undoIndex + 1) % 10;
 
   //pull, update and return from REDO
-  const prevWidgets = history.redoActions[history.redoIndex]
+  const prevWidgets = history.redoActions[history.redoIndex];
   history.redoLength = history.redoLength === 0 ? 0 : history.redoLength - 1;
-  history.redoIndex = history.redoIndex === 0 ? 9 : history.redoIndex -1;
-  
-  return {history, widgets: prevWidgets};
+  history.redoIndex = history.redoIndex === 0 ? 9 : history.redoIndex - 1;
+
+  return { history, widgets: prevWidgets };
 }
 
-
-export function pushToHistory(history:DashboardEditHistory, widgets: Record<string, Widget>){
+export function pushToHistory(
+  history: DashboardEditHistory,
+  widgets: Record<string, Widget>
+) {
   history.undoLength = history.undoLength === 10 ? 10 : history.undoLength + 1;
   history.undoActions[history.undoIndex] = widgets;
   history.undoIndex = (history.undoIndex + 1) % 10;
-  //invalidate redo stack at an UNDO
+  //invalidate REDO stack at a regular action
   history.redoLength = 0;
   return history;
 }

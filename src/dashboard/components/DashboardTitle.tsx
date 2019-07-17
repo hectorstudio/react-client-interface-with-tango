@@ -97,13 +97,13 @@ class DashboardTitle extends Component<Props, State> {
           onFocus={() => this.inputRef.select()}
         />
         <button
-        style={{
-          padding: "0.25em 0.5em",
-          borderRadius: "0.25em",
-          backgroundColor: "white",
-          border: "1px solid rgba(0, 0, 0, 0.2)",
-          cursor: undoDisabled ? "not-allowed" : "pointer",
-        }}
+          style={{
+            padding: "0.25em 0.5em",
+            borderRadius: "0.25em",
+            backgroundColor: "white",
+            border: "1px solid rgba(0, 0, 0, 0.2)",
+            cursor: undoDisabled ? "not-allowed" : "pointer"
+          }}
           title="Undo last action"
           onClick={this.props.onUndo}
           disabled={undoDisabled}
@@ -111,14 +111,14 @@ class DashboardTitle extends Component<Props, State> {
           <FontAwesomeIcon icon="undo" />
         </button>
         <button
-        style={{
-          padding: "0.25em 0.5em",
-          borderRadius: "0.25em",
-          backgroundColor: "white",
-          border: "1px solid rgba(0, 0, 0, 0.2)",
-          cursor: redoDisabled ? "not-allowed" : "pointer",
-        }}
-        title="Redo last action"
+          style={{
+            padding: "0.25em 0.5em",
+            borderRadius: "0.25em",
+            backgroundColor: "white",
+            border: "1px solid rgba(0, 0, 0, 0.2)",
+            cursor: redoDisabled ? "not-allowed" : "pointer"
+          }}
+          title="Redo last action"
           onClick={this.props.onRedo}
           disabled={redoDisabled}
         >
