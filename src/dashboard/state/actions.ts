@@ -1,5 +1,7 @@
 import { Action } from "redux";
 import {
+  UNDO,
+  REDO,
   ADD_WIDGET,
   MOVE_WIDGETS,
   SELECT_WIDGETS,
@@ -24,6 +26,14 @@ import {
 } from "./actionTypes";
 
 import { IndexPath, Widget, Dashboard, Notification } from "../types";
+
+export interface UndoAction extends Action {
+  type: typeof UNDO;
+}
+
+export interface RedoAction extends Action {
+  type: typeof REDO;
+}
 
 export interface AddWidgetAction extends Action {
   type: typeof ADD_WIDGET;
@@ -155,6 +165,8 @@ export interface HideNotificationAction extends Action {
 }
 
 export type DashboardAction =
+  | UndoAction
+  | RedoAction
   | AddWidgetAction
   | MoveWidgetsAction
   | ResizeWidgetAction

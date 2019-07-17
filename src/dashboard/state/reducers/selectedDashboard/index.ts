@@ -1,6 +1,8 @@
-import { Widget, Dashboard } from "../../../types";
+import { Widget, Dashboard, DashboardEditHistory } from "../../../types";
 
 import {
+  UNDO,
+  REDO,
   ADD_WIDGET,
   DELETE_WIDGET,
   SET_INPUT,
@@ -24,7 +26,10 @@ import {
   nestedDefault,
   validate,
   resize,
-  nextId
+  nextId,
+  pushToHistory,
+  undo,
+  redo
 } from "./lib";
 
 import { definitionForType, definitionForWidget } from "../../../widgets";
@@ -33,6 +38,7 @@ import { defaultInputs } from "../../../utils";
 export interface SelectedDashboardState extends Dashboard {
   widgets: Record<string, Widget>;
   selectedIds: string[];
+  history: DashboardEditHistory
 }
 
 const initialState = {
@@ -45,6 +51,14 @@ const initialState = {
   redirect: false,
   insertTime: null,
   updateTime: null,
+  history: {
+    undoActions: [],
+    redoActions: [],
+    undoIndex: 0,
+    redoIndex: 0,
+    undoLength: 0,
+    redoLength: 0,
+  }
 };
 
 export default function canvases(
@@ -52,6 +66,24 @@ export default function canvases(
   action: DashboardAction
 ): SelectedDashboardState {
   switch (action.type) {
+    case UNDO: {
+      const { history:oldHistory, widgets:oldWidgets } = state;
+      const {history, widgets} = undo(oldHistory, oldWidgets);
+      return {
+        ...state,
+        widgets,
+        history
+      };
+    }
+    case REDO: {
+      const { history:oldHistory, widgets:oldWidgets } = state;
+      const {history, widgets} = redo(oldHistory, oldWidgets);
+      return {
+        ...state,
+        widgets,
+        history
+      };
+    }
     case ADD_WIDGET: {
       const { x, y, canvas, widgetType: type } = action;
       const definition = definitionForType(type);
@@ -70,11 +102,13 @@ export default function canvases(
         inputs,
         valid: false
       });
-
+      const { history:oldHistory, widgets:oldWidgets } = state;
+      const history = pushToHistory(oldHistory, oldWidgets);
       return {
         ...state,
         widgets: { ...state.widgets, [id]: widget },
-        selectedIds: [id]
+        selectedIds: [id],
+        history
       };
     }
     case MOVE_WIDGETS: {
@@ -88,13 +122,17 @@ export default function canvases(
         }, {});
 
       const widgets = { ...state.widgets, ...moved };
-      return { ...state, widgets };
+      const { history:oldHistory, widgets:oldWidgets } = state;
+      const history = pushToHistory(oldHistory, oldWidgets);
+      return { ...state, widgets, history };
     }
     case RESIZE_WIDGET: {
       const { dx, dy, mx, my, id } = action;
       const newWidget = resize(state.widgets[id], mx, my, dx, dy);
       const widgets = { ...state.widgets, [id]: newWidget };
-      return { ...state, widgets };
+      const { history:oldHistory, widgets:oldWidgets } = state;
+      const history = pushToHistory(oldHistory, oldWidgets);
+      return { ...state, widgets, history };
     }
     case SELECT_WIDGETS: {
       const { ids } = action;
@@ -106,7 +144,9 @@ export default function canvases(
         .reduce((accum, id) => {
           return { ...accum, [id]: state.widgets[id] };
         }, {});
-      return { ...state, widgets, selectedIds: [] };
+        const { history:oldHistory, widgets:oldWidgets } = state;
+        const history = pushToHistory(oldHistory, oldWidgets);
+      return { ...state, widgets, selectedIds: [], history };
     }
     case SET_INPUT: {
       const { path, value } = action;
@@ -116,7 +156,9 @@ export default function canvases(
       }
       const newWidget = validate(setInput(state.widgets[id], path, value));
       const widgets = { ...state.widgets, [id]: newWidget };
-      return { ...state, widgets };
+      const { history:oldHistory, widgets:oldWidgets } = state;
+      const history = pushToHistory(oldHistory, oldWidgets);
+      return { ...state, widgets, history };
     }
     case ADD_INPUT: {
       const { path } = action;
@@ -131,7 +173,9 @@ export default function canvases(
         addInput(state.widgets[id], [...path, -1], value)
       );
       const widgets = { ...state.widgets, [id]: newWidget };
-      return { ...state, widgets };
+      const { history:oldHistory, widgets:oldWidgets } = state;
+      const history = pushToHistory(oldHistory, oldWidgets);
+      return { ...state, widgets, history };
     }
     case DELETE_INPUT: {
       const { path } = action;
@@ -141,7 +185,9 @@ export default function canvases(
       }
       const newWidget = validate(deleteInput(state.widgets[id], path));
       const widgets = { ...state.widgets, [id]: newWidget };
-      return { ...state, widgets };
+      const { history:oldHistory, widgets:oldWidgets } = state;
+      const history = pushToHistory(oldHistory, oldWidgets);
+      return { ...state, widgets, history };
     }
     case DASHBOARD_LOADED: {
       const { widgets, dashboard} = action;

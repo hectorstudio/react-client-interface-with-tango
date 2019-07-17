@@ -9,10 +9,16 @@ import {
 } from "../state/selectors";
 import { RootState } from "../state/reducers";
 import { Dashboard } from "../types";
-import { renameDashboard, cloneDashboard } from "../state/actionCreators";
+import {
+  renameDashboard,
+  cloneDashboard,
+  undo,
+  redo
+} from "../state/actionCreators";
 import { Notification } from "../types";
 import { DashboardAction } from "../state/actions";
 import { Dispatch } from "redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
   dashboard: Dashboard;
@@ -21,6 +27,8 @@ interface Props {
   mode: "edit" | "run";
   onTitleChange: (id: string, name: string) => void;
   onClone: (id: string, newUser: string) => void;
+  onUndo: () => void;
+  onRedo: () => void;
 }
 
 interface State {
@@ -57,9 +65,11 @@ class DashboardTitle extends Component<Props, State> {
       return (
         <div className="dashboard-menu">
           {id && <span style={{ marginLeft: "0.5em" }}>{dashboard.name}</span>}
-          {inEditMode && <span className="notification-msg ">
-            You need to be logged in to save dashboards
-          </span>}
+          {inEditMode && (
+            <span className="notification-msg ">
+              You need to be logged in to save dashboards
+            </span>
+          )}
         </div>
       );
     }
@@ -67,7 +77,8 @@ class DashboardTitle extends Component<Props, State> {
     const { wipName } = this.state;
     const name =
       wipName != null ? wipName : dashboard.name || "Untitled dashboard";
-
+    const redoDisabled = this.props.dashboard.history.redoLength === 0;
+    const undoDisabled = this.props.dashboard.history.undoLength === 0;
     return (
       <div className="dashboard-menu">
         <input
@@ -85,6 +96,34 @@ class DashboardTitle extends Component<Props, State> {
           onBlur={() => this.setState({ wipName: null })}
           onFocus={() => this.inputRef.select()}
         />
+        <button
+        style={{
+          padding: "0.25em 0.5em",
+          borderRadius: "0.25em",
+          backgroundColor: "white",
+          border: "1px solid rgba(0, 0, 0, 0.2)",
+          cursor: undoDisabled ? "not-allowed" : "pointer",
+        }}
+          title="Undo last action"
+          onClick={this.props.onUndo}
+          disabled={undoDisabled}
+        >
+          <FontAwesomeIcon icon="undo" />
+        </button>
+        <button
+        style={{
+          padding: "0.25em 0.5em",
+          borderRadius: "0.25em",
+          backgroundColor: "white",
+          border: "1px solid rgba(0, 0, 0, 0.2)",
+          cursor: redoDisabled ? "not-allowed" : "pointer",
+        }}
+        title="Redo last action"
+          onClick={this.props.onRedo}
+          disabled={redoDisabled}
+        >
+          <FontAwesomeIcon icon="redo" />
+        </button>
         {inEditMode && notificationMsg && !clonable && (
           <span className={`notification-msg " + ${level}`}>
             {notificationMsg}
@@ -122,6 +161,12 @@ function mapDispatchToProps(dispatch: Dispatch<DashboardAction>) {
     },
     onClone: (id: string, newUser: string) => {
       dispatch(cloneDashboard(id, newUser));
+    },
+    onUndo: () => {
+      dispatch(undo());
+    },
+    onRedo: () => {
+      dispatch(redo());
     }
   };
 }

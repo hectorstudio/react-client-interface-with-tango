@@ -22,7 +22,7 @@ import {
   getSelectedDashboard
 } from "../state/selectors";
 
-import { toggleMode } from "../state/actionCreators";
+import { toggleMode} from "../state/actionCreators";
 import { Widget, Canvas, Dashboard as DashboardInterface } from "../types";
 import { RootState } from "../state/reducers";
 

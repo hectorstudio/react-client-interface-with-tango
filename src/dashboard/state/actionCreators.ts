@@ -1,4 +1,6 @@
 import {
+  UNDO,
+  REDO,
   ADD_WIDGET,
   MOVE_WIDGETS,
   RESIZE_WIDGET,
@@ -22,6 +24,8 @@ import {
 } from "./actionTypes";
 
 import {
+  UndoAction,
+  RedoAction,
   AddWidgetAction,
   MoveWidgetsAction,
   ResizeWidgetAction,
@@ -38,6 +42,14 @@ import {
 } from "./actions";
 
 import { Widget, Dashboard } from "../types";
+
+export function undo(): UndoAction{
+  return {type: UNDO}
+}
+
+export function redo(): RedoAction{
+  return {type: REDO}
+}
 
 export function addWidget(
   x: number,

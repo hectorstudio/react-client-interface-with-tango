@@ -98,6 +98,15 @@ export interface Widget {
   inputs: InputMapping;
 }
 
+export interface DashboardEditHistory{
+  undoActions: Record<string, Widget>[],
+  redoActions: Record<string, Widget>[],
+  undoIndex: number,
+  redoIndex: number,
+  undoLength: number,
+  redoLength: number,
+}
+
 export interface Dashboard {
   id: string;
   name: string;
@@ -105,6 +114,7 @@ export interface Dashboard {
   redirect: boolean;
   insertTime: Date | null;
   updateTime: Date | null;
+  history: DashboardEditHistory;
 }
 
 export interface InputMapping {

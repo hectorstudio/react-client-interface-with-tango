@@ -1,3 +1,6 @@
+export const UNDO = "UNDO"
+export const REDO = "REDO"
+
 export const SELECT_WIDGETS = "SELECT_WIDGETS";
 export const DELETE_WIDGET = "DELETE_WIDGET";
 export const ADD_WIDGET = "ADD_WIDGET";
