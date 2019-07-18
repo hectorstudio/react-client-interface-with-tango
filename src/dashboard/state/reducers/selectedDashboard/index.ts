@@ -72,7 +72,8 @@ export default function canvases(
       return {
         ...state,
         widgets,
-        history
+        history,
+        selectedIds: []
       };
     }
     case REDO: {
@@ -81,7 +82,8 @@ export default function canvases(
       return {
         ...state,
         widgets,
-        history
+        history,
+        selectedIds: []
       };
     }
     case ADD_WIDGET: {

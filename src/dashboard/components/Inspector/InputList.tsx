@@ -64,7 +64,6 @@ export default class InputList extends Component<Props> {
         );
       } else if (inputDefinition.type === "string") {
         const value = inputs[inputName] as string;
-        console.log(inputDefinition);
         return (
           <tr key={inputName}>
             <td>{label}</td>
