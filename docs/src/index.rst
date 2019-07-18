@@ -47,6 +47,7 @@ For developers
     widget
     architecture
     led
+    command_writer
 
 Authors
 =====
@@ -62,6 +63,7 @@ WebJive was written by the KITS Group at MAX IV Laboratory .
    widget
    architecture
    led
+   command_writer
 
 
 Prerequsities
