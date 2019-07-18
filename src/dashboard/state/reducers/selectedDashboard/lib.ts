@@ -10,6 +10,8 @@ import {
 import { defaultInputs } from "../../../utils";
 import { definitionForWidget } from "../../../widgets";
 
+const HISTORY_SIZE = 100;
+
 export function move(widget: Widget, dx: number, dy: number) {
   const { x, y } = widget;
   const targetX = Math.max(0, x + dx);
@@ -24,13 +26,13 @@ export function undo(
     return { history, widgets };
   }
   //pull latest value from UNDO
-  history.undoIndex = history.undoIndex === 0 ? 9 : history.undoIndex - 1;
+  history.undoIndex = history.undoIndex === 0 ? (HISTORY_SIZE-1) : history.undoIndex - 1;
   const prevWidgets = history.undoActions[history.undoIndex];
   history.undoLength = history.undoLength === 0 ? 0 : history.undoLength - 1;
 
   //push latest value from UNDO onto REDO
-  history.redoLength = history.redoLength === 10 ? 10 : history.redoLength + 1;
-  history.redoIndex = (history.redoIndex + 1) % 10;
+  history.redoLength = history.redoLength === HISTORY_SIZE ? HISTORY_SIZE : history.redoLength + 1;
+  history.redoIndex = (history.redoIndex + 1) % HISTORY_SIZE;
   history.redoActions[history.redoIndex] = widgets;
   return { history, widgets: prevWidgets };
 }
@@ -43,14 +45,14 @@ export function redo(
     return { history, widgets };
   }
   //push old widget as new action to UNDO
-  history.undoLength = history.undoLength === 10 ? 10 : history.undoLength + 1;
+  history.undoLength = history.undoLength === HISTORY_SIZE ? HISTORY_SIZE : history.undoLength + 1;
   history.undoActions[history.undoIndex] = widgets;
-  history.undoIndex = (history.undoIndex + 1) % 10;
+  history.undoIndex = (history.undoIndex + 1) % HISTORY_SIZE;
 
   //pull, update and return from REDO
   const prevWidgets = history.redoActions[history.redoIndex];
   history.redoLength = history.redoLength === 0 ? 0 : history.redoLength - 1;
-  history.redoIndex = history.redoIndex === 0 ? 9 : history.redoIndex - 1;
+  history.redoIndex = history.redoIndex === 0 ? (HISTORY_SIZE-1) : history.redoIndex - 1;
 
   return { history, widgets: prevWidgets };
 }
@@ -59,9 +61,9 @@ export function pushToHistory(
   history: DashboardEditHistory,
   widgets: Record<string, Widget>
 ) {
-  history.undoLength = history.undoLength === 10 ? 10 : history.undoLength + 1;
+  history.undoLength = history.undoLength === HISTORY_SIZE ? HISTORY_SIZE : history.undoLength + 1;
   history.undoActions[history.undoIndex] = widgets;
-  history.undoIndex = (history.undoIndex + 1) % 10;
+  history.undoIndex = (history.undoIndex + 1) % HISTORY_SIZE;
   //invalidate REDO stack at a regular action
   history.redoLength = 0;
   return history;
