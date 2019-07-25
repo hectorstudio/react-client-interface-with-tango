@@ -48,8 +48,8 @@ query {
 `;
 
 const EXECUTE_COMMAND = `
-mutation ExecuteCommand($device: String!, $command: String!) {
-  executeCommand(device: $device, command: $command) {
+mutation ExecuteCommand($device: String!, $command: String!, $argin: ScalarTypes) {
+  executeCommand(device: $device, command: $command, argin: $argin) {
     ok
     output
   }
@@ -145,10 +145,11 @@ export async function fetchDeviceNames(tangoDB: string) {
 export async function executeCommand(
   tangoDB: string,
   device: string,
-  command: string
+  command: string,
+  argin?: any
 ) {
   try {
-    const args = { device, command };
+    const args = { device, command, argin };
     const data = await request(tangoDB, EXECUTE_COMMAND, args);
     const { ok, output } = data.executeCommand;
     return { ok, output };

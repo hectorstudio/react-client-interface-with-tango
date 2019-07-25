@@ -28,11 +28,7 @@ export function Navbar(props: PropsWithChildren<{}>) {
               </a>
             ));
 
-            return (
-              <div className="page-links">
-                {links}
-              </div>
-            );
+            return <div className="page-links">{links}</div>;
           }}
         />
       </div>

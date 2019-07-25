@@ -67,7 +67,7 @@ class LibraryWidget extends Component<Props> {
 
   public render() {
     const { definition, component } = this.props.bundle;
-    
+
     // Q: should defaults be determined and injected using enrichment instead?
     const withDefaults = defaultInputs(definition.inputs);
     const inputs = enrichedInputs(withDefaults, definition.inputs);

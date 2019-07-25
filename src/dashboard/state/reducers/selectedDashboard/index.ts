@@ -13,7 +13,7 @@ import {
   MOVE_WIDGETS,
   DASHBOARD_LOADED,
   DASHBOARD_RENAMED,
-  DASHBOARD_DELETED,
+  DASHBOARD_DELETED
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
@@ -192,24 +192,40 @@ export default function canvases(
       return { ...state, widgets, history };
     }
     case DASHBOARD_LOADED: {
-      const { widgets, dashboard} = action;
-      const {id, name, user, redirect, insertTime, updateTime} = dashboard;
+      const { widgets, dashboard } = action;
+      const { id, name, user, redirect, insertTime, updateTime } = dashboard;
       const newWidgets = widgets.reduce((accum, widget) => {
         return { ...accum, [widget.id]: validate(widget) };
       }, {});
 
-      return { ...state, widgets: newWidgets, id, name, user, redirect, insertTime, updateTime };
+      return {
+        ...state,
+        widgets: newWidgets,
+        id,
+        name,
+        user,
+        redirect,
+        insertTime,
+        updateTime
+      };
     }
-    case DASHBOARD_RENAMED:{
+    case DASHBOARD_RENAMED: {
       const { name } = action;
       return { ...state, name };
     }
-    case DASHBOARD_DELETED:{
-      const {id} = action;
-      if (id === state.id){
+    case DASHBOARD_DELETED: {
+      const { id } = action;
+      if (id === state.id) {
         // Clear the selectedDashboard state if we deleted the selected dashboard
-        return {...state, id: "", name: "", widgets:{}, selectedIds: [], redirect: true}
-      }else{
+        return {
+          ...state,
+          id: "",
+          name: "",
+          widgets: {},
+          selectedIds: [],
+          redirect: true
+        };
+      } else {
         return state;
       }
     }

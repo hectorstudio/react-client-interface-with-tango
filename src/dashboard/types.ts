@@ -8,10 +8,10 @@ export interface BaseInputDefinition<T> {
   required?: boolean;
 }
 
-export interface Notification{
-  level:string;
-  sourceAction:string;
-  msg:string;
+export interface Notification {
+  level: string;
+  sourceAction: string;
+  msg: string;
 }
 
 export interface BooleanInputDefinition extends BaseInputDefinition<boolean> {
@@ -158,6 +158,15 @@ export interface CommandInput<OutputT = any> {
   command: string;
   output: OutputT;
   execute: () => void;
+}
+
+export interface CommandInputWithParameter<OutputT = any> {
+  device: string;
+  command: string;
+  parameter: string;
+  dataType: string;
+  output: OutputT;
+  execute: (value: OutputT) => void;
 }
 
 export interface Canvas {
