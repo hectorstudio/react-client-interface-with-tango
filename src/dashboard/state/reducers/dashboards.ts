@@ -7,7 +7,7 @@ export interface DashboardsState {
 }
 
 const initialState: DashboardsState = {
-  dashboards: [],
+  dashboards: []
 };
 
 export default function dashboard(

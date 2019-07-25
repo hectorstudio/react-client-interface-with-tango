@@ -56,7 +56,12 @@ export default function user(
     case LOGIN_FAILED:
       return { ...state, awaitingResponse: false, loginFailed: true };
     case LOGIN_SUCCESS:
-      return { ...state, username: action.username, loginDialogVisible: false, awaitingResponse: false };
+      return {
+        ...state,
+        username: action.username,
+        loginDialogVisible: false,
+        awaitingResponse: false
+      };
     case PRELOAD_USER_SUCCESS:
       return { ...state, username: action.username, awaitingResponse: false };
     case PRELOAD_USER_FAILED:

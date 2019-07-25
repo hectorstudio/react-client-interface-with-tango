@@ -5,8 +5,10 @@ import attributeScatter from "./AttributeScatter";
 import label from "./Label";
 import spectrum from "./Spectrum";
 import commandExecutor from "./CommandExecutor";
+import commandWriter from "./CommandWriter";
 import attributeDial from "./AttributeDial";
 // import booleanDisplay from "./BooleanDisplay";
+import ledDisplay from "./LedDisplay";
 import sardanaMotor from "./SardanaMotor/SardanaMotor";
 
 import { Widget, WidgetDefinition, WidgetBundle } from "../types";
@@ -19,8 +21,10 @@ export const bundles: WidgetBundle[] = [
   attributeScatter,
   spectrum,
   commandExecutor,
+  commandWriter,
   attributeDial,
   // booleanDisplay,
+  ledDisplay,
   sardanaMotor
 ];
 

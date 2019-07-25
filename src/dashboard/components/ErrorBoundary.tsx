@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 
-export default class ErrorBoundary extends Component<{}, { error: Error | null }> {
+export default class ErrorBoundary extends Component<
+  {},
+  { error: Error | null }
+> {
   public constructor(props) {
     super(props);
     this.state = { error: null };

@@ -60,9 +60,7 @@ class CommandExecutor extends Component<Props, State> {
   private async handleExecute() {
     const { command, requireConfirmation, cooldown } = this.props.inputs;
 
-    const message = `Confirm executing "${command.command}" on "${
-      command.device
-    }"`;
+    const message = `Confirm executing "${command.command}" on "${command.device}"`;
 
     /* eslint-disable no-restricted-globals */
     if (!requireConfirmation || confirm(message)) {
@@ -113,7 +111,7 @@ const definition: WidgetDefinition = {
     title: {
       type: "string",
       label: "Title",
-      default: "",
+      default: ""
     },
     requireConfirmation: {
       type: "boolean",

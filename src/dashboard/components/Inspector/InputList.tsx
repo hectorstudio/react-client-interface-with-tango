@@ -1,10 +1,6 @@
 import React, { Component, Fragment } from "react";
 
-import {
-  InputDefinitionMapping,
-  InputMapping,
-  IndexPath
-} from "../../types";
+import { InputDefinitionMapping, InputMapping, IndexPath } from "../../types";
 
 import NumericInput from "./NumericInput";
 import AttributeSelect from "./AttributeSelect";

@@ -8,6 +8,6 @@ export function getCommandOutputState(state: IRootState) {
 export function getCommandOutputs(device) {
   return createSelector(
     getCommandOutputState,
-    outputs => outputs[device] || {}
+    outputs => outputs[device] || {}
   );
 }
