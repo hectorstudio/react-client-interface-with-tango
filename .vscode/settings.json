@@ -6,7 +6,7 @@
     { "language": "typescriptreact", "autoFix": true }
   ],
   "files.exclude": {
-    "node_modules/": true,
-    "build/": true
+    "build/": true,
+    "node_modules/": true
   }
 }

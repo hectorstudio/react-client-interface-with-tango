@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/free-solid-svg-icons": "^5.9.0",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "acorn": "^6.1.1",
     "alphanum-sort": "^1.0.2",
     "bootstrap": "^4.1.1",
@@ -13,7 +16,6 @@
     "jquery": "^3.4.1",
     "minimatch": "^3.0.4",
     "moment": "^2.24.0",
-    "nodemon": "^1.19.1",
     "plotly.js": "^1.48.3",
     "popper.js": "^1.14.7",
     "query-string": "5.0.0",
