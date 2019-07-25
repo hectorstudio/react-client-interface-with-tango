@@ -1,21 +1,21 @@
-import { createSelector } from 'reselect';
-import { IRootState } from '../reducers/rootReducer';
+import { createSelector } from "reselect";
+import { IRootState } from "../reducers/rootReducer";
 
 function getLoadingStatusState(state: IRootState) {
-    return state.loadingStatus;
+  return state.loadingStatus;
 }
 
 export const getDeviceIsLoading = createSelector(
-    getLoadingStatusState,
-    state => state.loadingDevice
+  getLoadingStatusState,
+  state => state.loadingDevice
 );
 
 export const getDeviceNamesAreLoading = createSelector(
-    getLoadingStatusState,
-    state => state.loadingNames
+  getLoadingStatusState,
+  state => state.loadingNames
 );
 
 export const getCommandOutputsLoading = createSelector(
-    getLoadingStatusState,
-    state => state.loadingOutput
+  getLoadingStatusState,
+  state => state.loadingOutput
 );

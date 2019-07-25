@@ -309,10 +309,19 @@ export default class RunCanvas extends Component<Props, State> {
     this.setState({ runtimeErrors, unrecoverableError: true });
   }
 
-  private async executeCommand(device: string, command: string): Promise<void> {
+  private async executeCommand(
+    device: string,
+    command: string,
+    parameter: string
+  ): Promise<void> {
     let result: any;
 
-    result = await TangoAPI.executeCommand(this.props.tangoDB, device, command);
+    result = await TangoAPI.executeCommand(
+      this.props.tangoDB,
+      device,
+      command,
+      parameter
+    );
     if (result == null || result.ok === false) {
       return this.reportRuntimeWarning(
         `Couldn't execute command "${command}" on device "${device}".`

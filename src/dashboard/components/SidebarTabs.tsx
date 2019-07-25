@@ -8,13 +8,14 @@ interface Props {
 
 export default class SidebarTabs extends Component<Props> {
   public render() {
-    const {onTabChange, selectedTab} = this.props;
+    const { onTabChange, selectedTab } = this.props;
     return (
       <div className="sidebar-tabs">
         <ul className="nav section-chooser">
           <li
             className={
-              "toggle-button toggle-button-left " + (selectedTab === "library" ? "toggle-button-selected" : "")
+              "toggle-button toggle-button-left " +
+              (selectedTab === "library" ? "toggle-button-selected" : "")
             }
             key="library"
             onClick={e => onTabChange("library")}
@@ -22,7 +23,10 @@ export default class SidebarTabs extends Component<Props> {
             Library
           </li>
           <li
-            className={"toggle-button toggle-button-right " + (selectedTab === "dashboards" ? "toggle-button-selected" : "")}
+            className={
+              "toggle-button toggle-button-right " +
+              (selectedTab === "dashboards" ? "toggle-button-selected" : "")
+            }
             key="dashboards"
             onClick={e => onTabChange("dashboards")}
           >

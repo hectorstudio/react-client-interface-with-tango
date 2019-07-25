@@ -1,5 +1,5 @@
-import { IRootState } from '../reducers/rootReducer';
+import { IRootState } from "../reducers/rootReducer";
 
 export function getLoggedActions(state: IRootState, device: string) {
-    return state.loggedActions[device];
+  return state.loggedActions[device];
 }

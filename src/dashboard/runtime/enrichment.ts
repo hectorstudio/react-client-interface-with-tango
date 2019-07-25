@@ -41,17 +41,9 @@ export type AttributeHistoryLookup = LookupFunction<AttributeValue[]>;
 export type CommandOutputLookup = LookupFunction<any>;
 export type DeviceMetadataLookup = LookupFunction<DeviceMetadata>;
 
-type OnWrite = (
-  device: string,
-  attribute: string,
-  value: any
-) => Promise<void>;
+type OnWrite = (device: string, attribute: string, value: any) => Promise<void>;
 
-type OnExecute = (
-  device: string,
-  command: string,
-  argin: any
-) => Promise<void>;
+type OnExecute = (device: string, command: string, argin: any) => Promise<void>;
 
 type OnInvalidate = (attributes: string[]) => void;
 

@@ -86,8 +86,7 @@ class DashboardSettings extends Component<Props, State> {
               )}
 
               <button
-                title={`Delete dashboard ${value.name ||
-                  "Untitled dashboard"}`}
+                title={`Delete dashboard ${value.name || "Untitled dashboard"}`}
                 className="delete-button"
                 onClick={() =>
                   this.setState({ deleteDashboardModalId: value.id })
@@ -101,9 +100,7 @@ class DashboardSettings extends Component<Props, State> {
               <DeleteDashboardModal
                 id={value.id}
                 name={value.name}
-                onClose={() =>
-                  this.setState({ deleteDashboardModalId: "" })
-                }
+                onClose={() => this.setState({ deleteDashboardModalId: "" })}
                 onDelete={this.handleDeleteProperty}
               />
             )}

@@ -30,19 +30,19 @@ interface Props {
   tangoDB: string;
   selectedWidgets: Widget[];
 }
-interface State{
+interface State {
   selectedTab: "dashboards" | "library";
 }
 
 export default class Sidebar extends Component<Props, State> {
-  constructor(props){
+  constructor(props) {
     super(props);
-    const {selectedTab} = this.props;
-    this.state = {selectedTab};
+    const { selectedTab } = this.props;
+    this.state = { selectedTab };
   }
   public render() {
     const { mode, selectedWidgets, tangoDB } = this.props;
-    const {selectedTab} = this.state;
+    const { selectedTab } = this.state;
     if (mode === "run") {
       return null;
     }
@@ -50,9 +50,9 @@ export default class Sidebar extends Component<Props, State> {
     return (
       <div className="Sidebar">
         {selectedWidgets.length === 0 ? (
-          <Library 
-          selectedTab={selectedTab}
-          onTabChange={(newVal) => this.setState({selectedTab: newVal})}
+          <Library
+            selectedTab={selectedTab}
+            onTabChange={newVal => this.setState({ selectedTab: newVal })}
           />
         ) : selectedWidgets.length === 1 ? (
           <Inspector

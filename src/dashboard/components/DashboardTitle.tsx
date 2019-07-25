@@ -57,9 +57,11 @@ class DashboardTitle extends Component<Props, State> {
       return (
         <div className="dashboard-menu">
           {id && <span style={{ marginLeft: "0.5em" }}>{dashboard.name}</span>}
-          {inEditMode && <span className="notification-msg ">
-            You need to be logged in to save dashboards
-          </span>}
+          {inEditMode && (
+            <span className="notification-msg ">
+              You need to be logged in to save dashboards
+            </span>
+          )}
         </div>
       );
     }
