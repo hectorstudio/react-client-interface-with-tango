@@ -93,7 +93,7 @@ Manifests itself as an input field where the user can enter a numeric value.
 
 | Key | Type | Description
 |-|-|-
-| nonNumeric? | boolean | If true, the user can't enter negative values.
+| nonNegative? | boolean | If true, the user can't enter negative values.
 
 ### Select Input Definition
 
