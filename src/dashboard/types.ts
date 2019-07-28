@@ -1,5 +1,4 @@
 import React from "react";
-//import { WidgetProps } from "./widgets/types";
 
 export interface BaseInputDefinition<T> {
   label?: string;
@@ -33,12 +32,14 @@ export interface ComplexInputDefinition extends BaseInputDefinition<null> {
   inputs: InputDefinitionMapping;
 }
 
+interface SelectInputDefinitionOption {
+  name: string;
+  value: any; // ?
+}
+
 export interface SelectInputDefinition extends BaseInputDefinition<string> {
   type: "select";
-  options: Array<{
-    name: string;
-    value: any;
-  }>;
+  options: SelectInputDefinitionOption[];
 }
 
 export interface AttributeInputDefinition
@@ -111,12 +112,12 @@ export interface InputMapping {
   [name: string]: any;
 }
 
-export interface WidgetDefinition {
+export interface WidgetDefinition<T = InputDefinitionMapping> {
   type: string;
   name: string;
   defaultWidth: number;
   defaultHeight: number;
-  inputs: InputDefinitionMapping;
+  inputs: T;
 }
 
 export interface WidgetBundle {
