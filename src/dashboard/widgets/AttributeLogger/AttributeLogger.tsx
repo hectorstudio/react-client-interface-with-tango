@@ -1,38 +1,7 @@
 import React, { Component, Fragment, CSSProperties, ReactNode } from "react";
 import { WidgetProps } from "../types";
 import { WidgetDefinition, AttributeInput } from "../../types";
-import Logs from "./Logs/Logs";
-
-//import { getDevice } from "../jive/component/state/reducers/devices"
-//import { getDevice } from "./Logs/devices"
-//import { getDeviceIsLoading } from "./Logs/loadingStatus";
-//import { getDisabledDisplevels } from "./Logs/deviceDetail";
-
-/*function LoggerContent() {
-  return <Logs tangoDB={tangoDB} deviceName={device.name}/>
-};*/
-
-/*//Check to see if can use Logs import correctly
-var  readLogToShow = Logs.displayName
-console.log(readLogToShow)
-*/
-
-/*
-function mapDispatchToProps(dispatch, ownProps) {
-  const { tangoDB } = ownProps;
-  return {
-    onRequireDevice: device => dispatch(fetchDevice(tangoDB, device)),
-    onDisplevelChange: (displevel, value) => {
-      const action = value
-        ? enableDisplevel(displevel)
-        : disableDisplevel(displevel);
-      dispatch(action);
-    }
-  };
-}
-
-logToDisplay = LoggerContent();
-*/
+import AttributeLog from "./Logs/Logs";
 
 
 interface Input {
@@ -48,16 +17,15 @@ class AttributeReadOnly extends Component<Props> {
     const { device, name } = this.deviceAndAttribute();
 
     const value = this.value();
+
     const style: CSSProperties = { padding: "0.5em", whiteSpace: "nowrap" };
     const inner = this.props.inputs.showDevice ? (
       <Fragment>
-         <Logs tangoDB="testdb" deviceName="sys/tg_test/1" />
-        {device}/{name}: {value}
+         <AttributeLog tangoDB="testdb" deviceName={device} values = {value} />
       </Fragment>
     ) : (
       <Fragment>
-        <Logs tangoDB="testdb" deviceName="sys/tg_test/1" />
-        {name}: {value}
+        <AttributeLog tangoDB="testdb" deviceName={device} values = {value} />
       </Fragment>
     );
 
@@ -80,6 +48,7 @@ class AttributeReadOnly extends Component<Props> {
     } else {
       result = value === undefined ? null : String(value);
     }
+
 
     const unitSuffix = unit ? ` ${unit} ` : "";
     return (
@@ -110,17 +79,6 @@ const definition: WidgetDefinition = {
       dataFormat: "scalar",
       required: true
     },
-    
-/*     precision: {
-      type: "number",
-      label: "Precision",
-      default: 2
-    }, */
-/*     showDevice: {
-      type: "boolean",
-      label: "Device Name",
-      default: true
-    } */
   }
 };
 

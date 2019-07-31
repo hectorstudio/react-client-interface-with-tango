@@ -10,7 +10,7 @@ import { getCommandOutputsLoading } from "../../../../jive/state/selectors/loadi
 
 const ENTER_KEY = 13;
 
-class Logs extends Component {
+class AttributeLog extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,7 +22,7 @@ class Logs extends Component {
   }
 
   render() {
-    const { logs, deviceName } = this.props;
+    const { logs, deviceName, values } = this.props;
     const { limit } = this.state;
     return (
       <div className="Logs">
@@ -51,7 +51,8 @@ class Logs extends Component {
           </div>
         </div>
         <div>
-          {logs && logs.length > 0 ? (
+          {values}
+          {values != null ? (
             <table className={"log-table"}>
               <tbody>
                 <tr>
@@ -62,26 +63,23 @@ class Logs extends Component {
                   <th>Action</th>
                   <th>Addtional info</th>
                 </tr>
-                {logs.map((value, key) => (
-                  <Fragment key={key}>
+                <Fragment values={values}>
                     <tr>
                       <td>
-                        {moment(new Date(value.timestamp)).format(
-                          "YYYY-MM-DD HH:mm:ss.SSS"
-                        )}
+                        time
                       </td>
-                      <td>{value.user}</td>
-                      {!deviceName && <td>{value.device}</td>}
-                      <td>{value.name}</td>
-                      <td>{getActionDescription(value)}</td>
-                      <td>{getAdditionalInfo(value)}</td>
+                      <td>{values}</td>
+                      {!deviceName && <td>{deviceName}</td>}
+                      <td>{values}</td>
+                      <td>{values}</td>
+                      <td>{values}</td>
                     </tr>
                   </Fragment>
-                ))}
+                  
               </tbody>
             </table>
           ) : (
-            <div className={"no-logs-message"}>No logs available</div>
+            <div className={"no-logs-message"}>No logs available </div>
           )}
         </div>
       </div>
@@ -127,7 +125,7 @@ function mapDispatchToProps(dispatch, ownProps) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Logs);
+)(AttributeLog);
 
 const getAdditionalInfo = log => {
   switch (log.__typename) {
