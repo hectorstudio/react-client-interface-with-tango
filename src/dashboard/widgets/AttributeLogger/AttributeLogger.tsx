@@ -51,10 +51,12 @@ class AttributeReadOnly extends Component<Props> {
     const style: CSSProperties = { padding: "0.5em", whiteSpace: "nowrap" };
     const inner = this.props.inputs.showDevice ? (
       <Fragment>
+         <Logs tangoDB="testdb" deviceName="sys/tg_test/1" />
         {device}/{name}: {value}
       </Fragment>
     ) : (
       <Fragment>
+        <Logs tangoDB="testdb" deviceName="sys/tg_test/1" />
         {name}: {value}
       </Fragment>
     );

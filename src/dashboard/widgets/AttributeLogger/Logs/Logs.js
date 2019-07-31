@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
-import { fetchLoggedActions } from "../../../state/actions/tango";
+import { fetchLoggedActions } from "../../../../jive/state/actions/tango";
 import * as moment from "moment";
-import { getLoggedActions } from "../../../state/selectors/loggedActions";
+import { getLoggedActions } from "../../../../jive/state/selectors/loggedActions";
 
 import "./Logs.css";
+import { getCommandOutputsLoading } from "../../../../jive/state/selectors/loadingStatus";
 
 const ENTER_KEY = 13;
 
@@ -86,11 +87,10 @@ class Logs extends Component {
       </div>
     );
   }
-/*   reload() {
+  reload() {
     const { limit } = this.state;
-    this.props.onFetchLoggedActions(limit); 
-  }*/
-  
+    this.props.onFetchLoggedActions(limit);
+  }
   onLimitChange(event) {
     if ([ENTER_KEY].includes(event.keyCode)) {
       this.reload();
@@ -101,9 +101,19 @@ class Logs extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
+  console.log("state e props"); 
+  console.log(state); 
+  console.log(ownProps); 
   return {
-    logs: getLoggedActions(state, ownProps.deviceName)
+    logs: mockGetLoggedActions(state, ownProps.deviceName)
   };
+}
+
+function mockGetLoggedActions(state, deviceName){
+  const obj = JSON.parse('{ "__typename": "ExcuteCommandUserAction", "timestamp": "2019-07-31T09:49:27.535031", "user": "user1", "device": "sys/tg_test/1", "name": "CrashFromOmniThread"}'); 
+  console.log("funzione mock"); 
+  console.log(obj); 
+  return obj
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
