@@ -12,24 +12,42 @@ interface Input {
 
 type Props = WidgetProps<Input>;
 
+let valueLog : string[] = [];  
+
 class AttributeReadOnly extends Component<Props> {
   public render() {
     const { device, name } = this.deviceAndAttribute();
 
     const value = this.value();
 
+    valueLog.push(this.logValue()); 
+
+    console.log(valueLog); 
+
     const style: CSSProperties = { padding: "0.5em", whiteSpace: "nowrap" };
     const inner = this.props.inputs.showDevice ? (
       <Fragment>
-         <AttributeLog tangoDB="testdb" deviceName={device} values = {value} />
+         <AttributeLog tangoDB="testdb" deviceName={device} values = {value} valueLog = {valueLog} />
       </Fragment>
     ) : (
       <Fragment>
-        <AttributeLog tangoDB="testdb" deviceName={device} values = {value} />
+        <AttributeLog tangoDB="testdb" deviceName={device} values = {value} valueLog = {valueLog} />
       </Fragment>
     );
 
     return <div style={style}>{inner}</div>;
+  }
+
+  private logValue(): string {
+    const {
+      attribute: { value, unit },
+      precision
+    } = this.props.inputs;
+
+    if(value)
+      return value;
+    else
+      return ""; 
   }
 
   private value(): ReactNode {

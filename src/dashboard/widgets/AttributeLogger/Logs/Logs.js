@@ -22,7 +22,8 @@ class AttributeLog extends Component {
   }
 
   render() {
-    const { logs, deviceName, values } = this.props;
+    const { deviceName, values, valueLog} = this.props;
+    console.log(valueLog); 
     const { limit } = this.state;
     return (
       <div className="Logs">
@@ -75,7 +76,19 @@ class AttributeLog extends Component {
                       <td>{values}</td>
                     </tr>
                   </Fragment>
-                  
+                  {valueLog.map((value, key) => (
+                  <Fragment key={key}>
+                    <tr>
+                      <td>
+                      </td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>{value}</td>
+                      <td>{value}</td>
+                    </tr>
+                  </Fragment>
+                ))}
               </tbody>
             </table>
           ) : (
