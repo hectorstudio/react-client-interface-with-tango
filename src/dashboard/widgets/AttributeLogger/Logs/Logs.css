@@ -1,3 +1,7 @@
+.Logs {
+  overflow-y: scroll;
+}
+
 .Logs select {
   outline: none;
   padding: 5px;
@@ -5,6 +9,7 @@
   border-radius: 0.25rem;
   background: white;
   height: 35px;
+  
 }
 .Logs .no-logs-message {
   font-style: italic;
@@ -22,6 +27,7 @@
   margin-top: 1em;
   width: 100%;
 }
+
 .Logs .log-table tr:nth-child(even) {
   background: #fafafa;
 }
@@ -39,14 +45,15 @@
   font-size: 1.25em;
   font-weight: bold;
 }
-.Logs .reload-panel {
+
+/*.Logs .reload-panel {
   float: right;
 }
-
+ 
 .Logs .nbr-entry-input {
   width: 50px;
   border: none;
   text-align: center;
   border-bottom: 1px solid #aaa;
   padding-bottom: 0px;
-}
+} */

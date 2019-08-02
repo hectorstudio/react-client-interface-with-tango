@@ -7,6 +7,7 @@ import { getLoggedActions } from "../../../../jive/state/selectors/loggedActions
 
 import "./Logs.css";
 import { getCommandOutputsLoading } from "../../../../jive/state/selectors/loadingStatus";
+import { timeout } from "q";
 
 const ENTER_KEY = 13;
 
@@ -20,7 +21,7 @@ class AttributeLog extends Component {
     this.onLimitChange = this.onLimitChange.bind(this);
     this.reload();
   }
-
+ 
   render() {
     const { deviceName, values, valueLog} = this.props;
     console.log(valueLog); 
@@ -30,29 +31,11 @@ class AttributeLog extends Component {
         <div>
           <div className={"title"}>
             Recent user actions {deviceName ? "on " + deviceName : ""}
-          </div>
-          <div className={"reload-panel"}>
-            Showing the latest{" "}
-            <input
-              className={"nbr-entry-input"}
-              defaultValue={limit}
-              onKeyUp={event => this.onLimitChange(event)}
-            />{" "}
-            entries
-            <button
-              style={{ height: "2.2em", marginLeft: "1em" }}
-              className={"btn btn-outline-secondary"}
-              type="button"
-              onClick={() => {
-                this.reload();
-              }}
-            >
-              Reload
-            </button>
-          </div>
+            <div>{values} </div>
+          </div>          
         </div>
         <div>
-          {values}
+          
           {values != null ? (
             <table className={"log-table"}>
               <tbody>
@@ -64,26 +47,13 @@ class AttributeLog extends Component {
                   <th>Action</th>
                   <th>Addtional info</th>
                 </tr>
-                <Fragment values={values}>
-                    <tr>
-                      <td>
-                        time
-                      </td>
-                      <td>{values}</td>
-                      {!deviceName && <td>{deviceName}</td>}
-                      <td>{values}</td>
-                      <td>{values}</td>
-                      <td>{values}</td>
-                    </tr>
-                  </Fragment>
                   {valueLog.map((value, key) => (
                   <Fragment key={key}>
                     <tr>
-                      <td>
-                      </td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      <td>{value}</td>
+                      <td>{value}</td>
+                      <td>{value}</td>
+                      <td>{value}</td>
                       <td>{value}</td>
                       <td>{value}</td>
                     </tr>
@@ -120,12 +90,12 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-function mockGetLoggedActions(state, deviceName){
+ function mockGetLoggedActions(state, deviceName){
   const obj = JSON.parse('{ "__typename": "ExcuteCommandUserAction", "timestamp": "2019-07-31T09:49:27.535031", "user": "user1", "device": "sys/tg_test/1", "name": "CrashFromOmniThread"}'); 
   console.log("funzione mock"); 
   console.log(obj); 
   return obj
-}
+} 
 
 function mapDispatchToProps(dispatch, ownProps) {
   const { tangoDB, deviceName } = ownProps;
