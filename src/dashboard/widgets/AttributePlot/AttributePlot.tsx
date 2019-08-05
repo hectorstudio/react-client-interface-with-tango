@@ -2,20 +2,9 @@ import React from "react";
 
 import Plot, { Trace } from "./Plot";
 import { WidgetProps } from "../types";
-import { AttributeInput } from "../../types";
+import { Inputs, AttributeComplexInput } from ".";
 
-interface AttributeComplexInput {
-  attribute: AttributeInput<number>;
-  yAxis: "left" | "right";
-}
-
-interface InputProps {
-  timeWindow: number;
-  showZeroLine: boolean;
-  attributes: AttributeComplexInput[];
-}
-
-type Props = WidgetProps<InputProps>;
+type Props = WidgetProps<Inputs>;
 
 function AttributePlot(props: Props) {
   const { mode, inputs, actualWidth, actualHeight } = props;

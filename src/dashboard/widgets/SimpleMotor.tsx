@@ -1,8 +1,18 @@
 import React, { Component } from "react";
-import { WidgetDefinition } from "../types";
+import { WidgetDefinition, DeviceInputDefinition, CommandInputDefinition, AttributeInputDefinition, InputDefinitionMapping } from "../types";
 import { WidgetProps } from "./types";
 
-class SimpleMotor extends Component<WidgetProps> {
+interface Inputs {
+  device: DeviceInputDefinition;
+  state: CommandInputDefinition;
+  status: CommandInputDefinition;
+  doubleScalar: AttributeInputDefinition;
+  ulongScalar: AttributeInputDefinition;
+}
+
+type Props = WidgetProps<Inputs>;
+
+class SimpleMotor extends Component<Props> {
   public render() {
     const { doubleScalar, ulongScalar } = this.props.inputs;
 
@@ -16,7 +26,7 @@ class SimpleMotor extends Component<WidgetProps> {
   }
 }
 
-const definition: WidgetDefinition = {
+const definition: WidgetDefinition<Inputs> = {
   type: "TEST_DEVICE",
   name: "Test Device",
   defaultHeight: 5,

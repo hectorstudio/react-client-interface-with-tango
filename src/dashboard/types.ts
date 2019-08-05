@@ -27,19 +27,20 @@ export interface StringInputDefinition extends BaseInputDefinition<string> {
   placeholder?: string;
 }
 
-export interface ComplexInputDefinition extends BaseInputDefinition<null> {
+export interface ComplexInputDefinition<T = any>
+  extends BaseInputDefinition<null> {
   type: "complex";
-  inputs: InputDefinitionMapping;
+  inputs: T;
 }
 
-interface SelectInputDefinitionOption {
+interface SelectInputDefinitionOption<T> {
   name: string;
-  value: any; // ?
+  value: T; // ?
 }
 
-export interface SelectInputDefinition extends BaseInputDefinition<string> {
+export interface SelectInputDefinition<T = unknown> extends BaseInputDefinition<string> {
   type: "select";
-  options: SelectInputDefinitionOption[];
+  options: SelectInputDefinitionOption<T>[];
 }
 
 export interface AttributeInputDefinition
@@ -159,6 +160,8 @@ export interface CommandInputWithParameter<OutputT = any> {
   output: OutputT;
   execute: (value: OutputT) => void;
 }
+
+export type ComplexInput<T> = any;
 
 export interface Canvas {
   id: string;

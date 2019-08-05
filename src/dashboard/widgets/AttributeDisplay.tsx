@@ -1,14 +1,45 @@
 import React, { Component, Fragment, CSSProperties, ReactNode } from "react";
 import { WidgetProps } from "./types";
-import { WidgetDefinition, AttributeInput } from "../types";
 
-interface Input {
-  showDevice: boolean;
-  precision: number;
-  attribute: AttributeInput;
+import {
+  WidgetDefinition,
+  BooleanInputDefinition,
+  NumberInputDefinition,
+  AttributeInputDefinition
+} from "../types";
+
+interface InputsDefinition {
+  showDevice: BooleanInputDefinition;
+  precision: NumberInputDefinition;
+  attribute: AttributeInputDefinition;
 }
 
-type Props = WidgetProps<Input>;
+const definition: WidgetDefinition<InputsDefinition> = {
+  type: "ATTRIBUTE_DISPLAY",
+  name: "Attribute Display",
+  defaultWidth: 10,
+  defaultHeight: 2,
+  inputs: {
+    attribute: {
+      type: "attribute",
+      label: "",
+      dataFormat: "scalar",
+      required: true
+    },
+    precision: {
+      type: "number",
+      label: "Precision",
+      default: 2
+    },
+    showDevice: {
+      type: "boolean",
+      label: "Device Name",
+      default: false
+    }
+  }
+};
+
+type Props = WidgetProps<InputsDefinition>;
 
 class AttributeReadOnly extends Component<Props> {
   public render() {
@@ -62,30 +93,5 @@ class AttributeReadOnly extends Component<Props> {
     return { device, name };
   }
 }
-
-const definition: WidgetDefinition = {
-  type: "ATTRIBUTE_DISPLAY",
-  name: "Attribute Display",
-  defaultWidth: 10,
-  defaultHeight: 2,
-  inputs: {
-    attribute: {
-      type: "attribute",
-      label: "",
-      dataFormat: "scalar",
-      required: true
-    },
-    precision: {
-      type: "number",
-      label: "Precision",
-      default: 2
-    },
-    showDevice: {
-      type: "boolean",
-      label: "Device Name",
-      default: false
-    }
-  }
-};
 
 export default { component: AttributeReadOnly, definition };
