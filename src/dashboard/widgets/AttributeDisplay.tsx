@@ -8,13 +8,13 @@ import {
   AttributeInputDefinition
 } from "../types";
 
-interface InputsDefinition {
+type Inputs = {
   showDevice: BooleanInputDefinition;
   precision: NumberInputDefinition;
   attribute: AttributeInputDefinition;
 }
 
-const definition: WidgetDefinition<InputsDefinition> = {
+const definition: WidgetDefinition<Inputs> = {
   type: "ATTRIBUTE_DISPLAY",
   name: "Attribute Display",
   defaultWidth: 10,
@@ -39,7 +39,7 @@ const definition: WidgetDefinition<InputsDefinition> = {
   }
 };
 
-type Props = WidgetProps<InputsDefinition>;
+type Props = WidgetProps<Inputs>;
 
 class AttributeReadOnly extends Component<Props> {
   public render() {

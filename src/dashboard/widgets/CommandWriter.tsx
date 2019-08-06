@@ -1,6 +1,13 @@
 import React, { Component, FormEvent, CSSProperties } from "react";
 import { WidgetProps } from "./types";
-import { WidgetDefinition, CommandInputWithParameter } from "../types";
+
+import {
+  WidgetDefinition,
+  NumberInputDefinition,
+  BooleanInputDefinition,
+  CommandInputDefinition,
+  StringInputDefinition
+} from "../types";
 
 function timeout(seconds) {
   return new Promise(resolve => {
@@ -8,15 +15,14 @@ function timeout(seconds) {
   });
 }
 
-interface Inputs {
-  command: CommandInputWithParameter;
-  showDevice: boolean;
-  showCommand: boolean;
-
-  title: string;
-  requireConfirmation: string;
-  displayOutput: boolean;
-  cooldown: number;
+type Inputs = {
+  command: CommandInputDefinition;
+  showDevice: BooleanInputDefinition;
+  showCommand: BooleanInputDefinition;
+  title: StringInputDefinition;
+  requireConfirmation: BooleanInputDefinition;
+  displayOutput: BooleanInputDefinition;
+  cooldown: NumberInputDefinition;
 }
 
 type Props = WidgetProps<Inputs>;
@@ -41,7 +47,8 @@ class CommandWriter extends Component<Props, State> {
   public render() {
     const { mode, inputs } = this.props;
     const { command, showDevice, showCommand } = inputs;
-    const { device, parameter, command: commandName } = command;
+    const { device, command: commandName } = command;
+    const parameter = undefined; // tmp
 
     //const unit = mode === "run" ? command.unit : "unit";
     const deviceLabel = device || "device";
@@ -62,7 +69,7 @@ class CommandWriter extends Component<Props, State> {
     ) {
       return (
         <div style={{ backgroundColor: "red", padding: "0.5em" }}>
-          {command.dataType} not implemented
+          {/*command.dataType*/} not implemented
         </div>
       );
     }
@@ -125,7 +132,9 @@ class CommandWriter extends Component<Props, State> {
     const { command, requireConfirmation, cooldown } = this.props.inputs;
     const { input } = this.state;
 
-    const message = `Confirm executing "${command.command}" on "${command.device}" with parameter "${input}"`;
+    const message = `Confirm executing "${command.command}" on "${
+      command.device
+    }" with parameter "${input}"`;
 
     /* eslint-disable no-restricted-globals */
     if (!requireConfirmation || confirm(message)) {
@@ -164,12 +173,16 @@ class CommandWriter extends Component<Props, State> {
   }
 } // class CommandWriter
 
-const definition: WidgetDefinition = {
+const definition: WidgetDefinition<Inputs> = {
   type: "COMMAND_WRITER",
   name: " Command Writer",
   defaultHeight: 2,
   defaultWidth: 15,
   inputs: {
+    title: {
+      type: "string",
+      label: "Title",
+    },
     command: {
       label: "",
       type: "command",

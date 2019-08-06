@@ -1,7 +1,14 @@
 import React, { Component, CSSProperties } from "react";
 
 import { WidgetProps } from "./types";
-import { WidgetDefinition, CommandInput } from "../types";
+
+import {
+  WidgetDefinition,
+  StringInputDefinition,
+  BooleanInputDefinition,
+  CommandInputDefinition,
+  NumberInputDefinition
+} from "../types";
 
 function timeout(seconds) {
   return new Promise(resolve => {
@@ -9,13 +16,13 @@ function timeout(seconds) {
   });
 }
 
-interface Inputs {
-  title: string;
-  requireConfirmation: string;
-  command: CommandInput;
-  displayOutput: boolean;
-  cooldown: number;
-}
+type Inputs = {
+  title: StringInputDefinition;
+  requireConfirmation: BooleanInputDefinition;
+  command: CommandInputDefinition;
+  displayOutput: BooleanInputDefinition;
+  cooldown: NumberInputDefinition;
+};
 
 type Props = WidgetProps<Inputs>;
 
@@ -60,7 +67,9 @@ class CommandExecutor extends Component<Props, State> {
   private async handleExecute() {
     const { command, requireConfirmation, cooldown } = this.props.inputs;
 
-    const message = `Confirm executing "${command.command}" on "${command.device}"`;
+    const message = `Confirm executing "${command.command}" on "${
+      command.device
+    }"`;
 
     /* eslint-disable no-restricted-globals */
     if (!requireConfirmation || confirm(message)) {
@@ -96,7 +105,7 @@ class CommandExecutor extends Component<Props, State> {
   }
 }
 
-const definition: WidgetDefinition = {
+const definition: WidgetDefinition<Inputs> = {
   type: "COMMAND_EXECUTOR",
   name: "Command Executor",
   defaultHeight: 2,

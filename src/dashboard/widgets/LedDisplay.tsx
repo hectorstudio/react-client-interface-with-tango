@@ -1,16 +1,22 @@
 import React, { Component, Fragment, CSSProperties } from "react";
 import { WidgetProps } from "./types";
-import { WidgetDefinition, AttributeInput } from "../types";
+import {
+  WidgetDefinition,
+  BooleanInputDefinition,
+  NumberInputDefinition,
+  AttributeInputDefinition,
+  SelectInputDefinition
+} from "../types";
 
-interface Input {
-  showDevice: boolean;
-  compare: number;
-  relation: string;
-  attribute: AttributeInput;
-  classColor: string;
+type Inputs = {
+  showDevice: BooleanInputDefinition;
+  compare: NumberInputDefinition;
+  relation: SelectInputDefinition;
+  attribute: AttributeInputDefinition;
+  classColor: SelectInputDefinition<"red-led" | "orange-led">;
 }
 
-type Props = WidgetProps<Input>;
+type Props = WidgetProps<Inputs>;
 
 function Led(props) {
   let classColor = "green-led";
@@ -39,11 +45,11 @@ export class LedReadOnly extends Component<Props> {
           condition={value}
           color={this.props.inputs.classColor}
           value={this.props.inputs.attribute.value}
-        ></Led>
+        />
       </Fragment>
     ) : (
       <Fragment>
-        <Led condition={value} color={this.props.inputs.classColor}></Led>
+        <Led condition={value} color={this.props.inputs.classColor} />
       </Fragment>
     );
 
@@ -93,7 +99,7 @@ export class LedReadOnly extends Component<Props> {
   }
 }
 
-export const definition: WidgetDefinition = {
+export const definition: WidgetDefinition<Inputs> = {
   type: "LED_DISPLAY",
   name: "Led Display",
   defaultWidth: 10,

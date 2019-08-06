@@ -6,13 +6,19 @@ import {
   CommandInputDefinition,
   SelectInputDefinition,
   ColorInputDefinition,
+  ComplexInputDefinition,
+  BooleanInputDefinition,
   CommandInput,
   AttributeInput,
-  ComplexInputDefinition,
-  BooleanInputDefinition
+  DeviceInput,
 } from "../types";
 
-type XYZ<T> = {
+// This type mapping makes an assumption that technically isn't in line with
+// the current design/docs: that _only_ complex inputs are repeated, and that
+// _all_ complex inputs are repeated. However, I think this makes sense for
+// almost all scenarios, and that it should be the general behaviour.
+
+type TypedInputs<T> = {
   [K in keyof T]: T[K] extends NumberInputDefinition
     ? number
     : T[K] extends StringInputDefinition
@@ -20,10 +26,7 @@ type XYZ<T> = {
     : T[K] extends BooleanInputDefinition
     ? boolean
     : T[K] extends DeviceInputDefinition
-    ? {
-        name: string;
-        alias: string;
-      }
+    ? DeviceInput
     : T[K] extends AttributeInputDefinition
     ? AttributeInput
     : T[K] extends CommandInputDefinition
@@ -33,12 +36,12 @@ type XYZ<T> = {
     : T[K] extends ColorInputDefinition
     ? string
     : T[K] extends ComplexInputDefinition<infer U>
-    ? Array<XYZ<U>>
+    ? Array<TypedInputs<U>>
     : never
 };
 
 export type WidgetProps<T> = {
-  inputs: XYZ<T>;
+  inputs: TypedInputs<T>;
   t0: number;
   mode: "run" | "edit" | "library";
   actualWidth: number;

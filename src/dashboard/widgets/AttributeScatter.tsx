@@ -1,6 +1,6 @@
 import React from "react";
 
-import { WidgetDefinition, AttributeInput } from "../types";
+import { WidgetDefinition, AttributeInput, AttributeInputDefinition } from "../types";
 import { WidgetProps } from "./types";
 
 // In order to avoid importing the entire plotly.js library. Note that this mutates the global PlotlyCore object.
@@ -10,7 +10,12 @@ import createPlotlyComponent from "react-plotly.js/factory";
 PlotlyCore.register([PlotlyScatter]);
 const Plotly = createPlotlyComponent(PlotlyCore);
 
-const definition: WidgetDefinition = {
+type Inputs = {
+  independent: AttributeInputDefinition;
+  dependent: AttributeInputDefinition;
+}
+
+const definition: WidgetDefinition<Inputs> = {
   type: "ATTRIBUTE_SCATTER",
   name: "Attribute Scatter",
   defaultWidth: 30,
@@ -32,11 +37,6 @@ const definition: WidgetDefinition = {
     }
   }
 };
-
-interface Inputs {
-  independent: AttributeInput<number>;
-  dependent: AttributeInput<number>;
-}
 
 type Props = WidgetProps<Inputs>;
 

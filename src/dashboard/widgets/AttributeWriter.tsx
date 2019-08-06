@@ -1,13 +1,17 @@
 import React, { Component, FormEvent } from "react";
 
 import { WidgetProps } from "./types";
-import { WidgetDefinition, AttributeInput } from "../types";
+import {
+  WidgetDefinition,
+  AttributeInputDefinition,
+  BooleanInputDefinition
+} from "../types";
 
-interface Inputs {
-  attribute: AttributeInput;
-  showDevice: boolean;
-  showAttribute: boolean;
-}
+type Inputs = {
+  attribute: AttributeInputDefinition;
+  showDevice: BooleanInputDefinition;
+  showAttribute: BooleanInputDefinition;
+};
 
 type Props = WidgetProps<Inputs>;
 
@@ -116,7 +120,7 @@ class AttributeWriter extends Component<Props, State> {
   }
 }
 
-const definition: WidgetDefinition = {
+const definition: WidgetDefinition<Inputs> = {
   type: "ATTRIBUTE_WRITER",
   name: " Attribute Writer",
   defaultHeight: 2,

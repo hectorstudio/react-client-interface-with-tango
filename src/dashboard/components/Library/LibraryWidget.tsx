@@ -27,7 +27,7 @@ function NameLabel({ name }: { name: string }) {
 }
 
 interface Props {
-  bundle: WidgetBundle;
+  bundle: WidgetBundle<{}>;
   connectDragSource: ConnectDragSource;
 }
 

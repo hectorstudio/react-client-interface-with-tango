@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { WidgetDefinition, DeviceInputDefinition, CommandInputDefinition, AttributeInputDefinition, InputDefinitionMapping } from "../types";
 import { WidgetProps } from "./types";
 
-interface Inputs {
+type Inputs = {
   device: DeviceInputDefinition;
   state: CommandInputDefinition;
   status: CommandInputDefinition;

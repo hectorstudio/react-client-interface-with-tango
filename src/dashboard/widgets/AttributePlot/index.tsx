@@ -13,7 +13,7 @@ export interface AttributeComplexInput {
   yAxis: SelectInputDefinition<"left" | "right">;
 }
 
-export interface Inputs {
+export type Inputs = {
   timeWindow: NumberInputDefinition;
   showZeroLine: BooleanInputDefinition;
   attributes: ComplexInputDefinition<AttributeComplexInput>;

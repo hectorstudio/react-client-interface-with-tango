@@ -38,7 +38,8 @@ interface SelectInputDefinitionOption<T> {
   value: T; // ?
 }
 
-export interface SelectInputDefinition<T = unknown> extends BaseInputDefinition<string> {
+export interface SelectInputDefinition<T = string>
+  extends BaseInputDefinition<string> {
   type: "select";
   options: SelectInputDefinitionOption<T>[];
 }
@@ -113,7 +114,7 @@ export interface InputMapping {
   [name: string]: any;
 }
 
-export interface WidgetDefinition<T = InputDefinitionMapping> {
+export interface WidgetDefinition<T extends InputDefinitionMapping> {
   type: string;
   name: string;
   defaultWidth: number;
@@ -121,8 +122,8 @@ export interface WidgetDefinition<T = InputDefinitionMapping> {
   inputs: T;
 }
 
-export interface WidgetBundle {
-  definition: WidgetDefinition;
+export interface WidgetBundle<T extends InputDefinitionMapping> {
+  definition: WidgetDefinition<T>;
   component: React.ElementType;
 }
 
@@ -149,7 +150,12 @@ export interface CommandInput<OutputT = any> {
   device: string;
   command: string;
   output: OutputT;
-  execute: () => void;
+  execute: (argin?: any) => void;
+}
+
+export interface DeviceInput {
+  name: string;
+  alias: string;
 }
 
 export interface CommandInputWithParameter<OutputT = any> {

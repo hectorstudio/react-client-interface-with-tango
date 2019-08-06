@@ -1,5 +1,17 @@
 import React from "react";
-import { WidgetDefinition } from "../types";
+import {
+  WidgetDefinition,
+  StringInputDefinition,
+  ColorInputDefinition
+} from "../types";
+import { WidgetProps } from "./types";
+
+type Inputs = {
+  text: StringInputDefinition;
+  backgroundColor: ColorInputDefinition;
+}
+
+type Props = WidgetProps<Inputs>;
 
 const Inner = ({ mode, text }) => {
   if (mode === "library") {
@@ -13,8 +25,10 @@ const Inner = ({ mode, text }) => {
   return text;
 };
 
-const Label = ({ mode, inputs, actualWidth, actualHeight }) => {
+const Label = (props: Props) => {
+  const { inputs, mode, actualWidth, actualHeight } = props;
   const { text, backgroundColor } = inputs;
+
   return (
     <div
       style={{
@@ -30,7 +44,7 @@ const Label = ({ mode, inputs, actualWidth, actualHeight }) => {
   );
 };
 
-const definition: WidgetDefinition = {
+const definition: WidgetDefinition<Inputs> = {
   type: "LABEL",
   name: "Label",
   defaultHeight: 2,

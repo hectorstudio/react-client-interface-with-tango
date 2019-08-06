@@ -17,11 +17,11 @@ const Plotly = createPlotlyComponent(PlotlyCore);
 // prettier-ignore
 const sampleData = [0, -2, 3, -2, 1, -5, 4, -3, -2, -4, 0, -4, 2, 2, -2, -2, 2, -5, -2, -3, 0];
 
-interface Inputs {
+type Inputs = {
   attribute: AttributeInputDefinition;
   showTitle: BooleanInputDefinition;
   inelastic: BooleanInputDefinition;
-}
+};
 
 interface State {
   min?: number;

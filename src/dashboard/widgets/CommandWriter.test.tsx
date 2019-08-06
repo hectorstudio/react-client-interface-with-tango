@@ -1,5 +1,5 @@
 import React from "react";
-import { CommandInputWithParameter } from "../types";
+import { CommandInputWithParameter, CommandInput } from "../types";
 
 import { configure, shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
@@ -8,15 +8,15 @@ import commandWriter from "./CommandWriter";
 configure({ adapter: new Adapter() });
 
 describe("CommandWriter", () => {
-  let myCommandInput: CommandInputWithParameter;
+  let myCommandInput: CommandInput; // CommandInputWithParameter;
 
   it("renders without crashing", () => {
     myCommandInput = {
       device: "sys/tg_test/1",
       command: "configureArray",
-      parameter: "",
+      // parameter: "",
       output: "",
-      dataType: "String",
+      // dataType: "String",
       execute: () => null
     };
 
@@ -27,7 +27,7 @@ describe("CommandWriter", () => {
       actualHeight: 100,
       inputs: {
         title: "Press this button",
-        requireConfirmation: "",
+        requireConfirmation: false,
         command: myCommandInput,
         displayOutput: true,
         cooldown: 0,
@@ -42,9 +42,9 @@ describe("CommandWriter", () => {
     myCommandInput = {
       device: "sys/tg_test/1",
       command: "DevString",
-      parameter: "hello world",
+      // parameter: "hello world",
       output: "",
-      dataType: "String",
+      // dataType: "String",
       execute: () => null
     };
 
@@ -55,7 +55,7 @@ describe("CommandWriter", () => {
       actualHeight: 100,
       inputs: {
         title: "Press this button",
-        requireConfirmation: "",
+        requireConfirmation: false,
         command: myCommandInput,
         displayOutput: true,
         cooldown: 0,
@@ -70,9 +70,9 @@ describe("CommandWriter", () => {
     myCommandInput = {
       device: "sys/tg_test/1",
       command: "DevString",
-      parameter: [1, 2, 3],
+      // parameter: [1, 2, 3],
       output: "",
-      dataType: "String",
+      // dataType: "String",
       execute: () => null
     };
 
@@ -83,7 +83,7 @@ describe("CommandWriter", () => {
       actualHeight: 100,
       inputs: {
         title: "Press this button",
-        requireConfirmation: "",
+        requireConfirmation: false,
         command: myCommandInput,
         displayOutput: true,
         cooldown: 0,

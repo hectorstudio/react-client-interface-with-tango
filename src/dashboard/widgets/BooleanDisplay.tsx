@@ -1,19 +1,22 @@
 import React, { Component, Fragment, CSSProperties } from "react";
 import { WidgetProps } from "./types";
-import { WidgetDefinition, AttributeInput } from "../types";
+import {
+  WidgetDefinition,
+  BooleanInputDefinition,
+  AttributeInputDefinition,
+  NumberInputDefinition,
+  SelectInputDefinition
+} from "../types";
 
-//TODO: It looks like eslint doesn't recognise 'number' is used as a type within the interface definition
-//      advice seems to be to put interfaces in their own file - need to check out later
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { number } from "prop-types";
+type Inputs = {
+  showDevice: BooleanInputDefinition;
+  attribute: AttributeInputDefinition;
+  relation: SelectInputDefinition<">" | "<" | "=" | ">=" | "<=">;
+  limitValue: NumberInputDefinition;
+};
 
-interface Input {
-  showDevice: boolean;
-  attribute: AttributeInput;
-  relation: string;
-  limitValue: number;
-}
-type Props = WidgetProps<Input>;
+type Props = WidgetProps<Inputs>;
+
 class BooleanDisplay extends Component<Props> {
   public render() {
     const { device, name } = this.deviceAndAttribute();
@@ -68,7 +71,8 @@ class BooleanDisplay extends Component<Props> {
     return { device, name };
   }
 }
-const definition: WidgetDefinition = {
+
+const definition: WidgetDefinition<Inputs> = {
   type: "BOOLEAN_DISPLAY",
   name: "Boolean Display",
   defaultWidth: 10,
@@ -119,4 +123,5 @@ const definition: WidgetDefinition = {
     }
   }
 };
+
 export default { component: BooleanDisplay, definition };

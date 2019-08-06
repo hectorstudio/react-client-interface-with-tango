@@ -16,7 +16,7 @@ import { AttributeAbsWriter } from "./AttributeAbsWriter";
 import { StateIndicatorLabel } from "../../../shared/ui/components/StateIndicatorLabel";
 import { WidgetProps } from "../types";
 
-interface Inputs {
+type Inputs = {
   device: DeviceInputDefinition;
   precision: NumberInputDefinition;
   stop: CommandInputDefinition;
@@ -24,7 +24,7 @@ interface Inputs {
   position: AttributeInputDefinition;
   power: AttributeInputDefinition;
   state: AttributeInputDefinition;
-}
+};
 
 type Props = WidgetProps<Inputs>;
 
