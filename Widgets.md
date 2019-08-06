@@ -81,7 +81,7 @@ Create a type alias for the component props using `WidgetProps` and `Inputs`:
 Now `Props` is a type alias corresponding to the props your component expects, with fairly high type accuracy. For example, if you type `props.inputs.pos`, your IDE will autocomplete to "position" and infer the right type. This is very helpful when developing and can reduce errors drastically. Use it the same way you would normally do with typed component props, i.e.
 
     class TheComponent extends React.Component<Props> {
-      constructor(props: Props) {
+      public constructor(props: Props) {
         // ...
       }
     }
