@@ -13,11 +13,6 @@ import {
   DeviceInput,
 } from "../types";
 
-// This type mapping makes an assumption that technically isn't in line with
-// the current design/docs: that _only_ complex inputs are repeated, and that
-// _all_ complex inputs are repeated. However, I think this makes sense for
-// almost all scenarios, and that it should be the general behaviour.
-
 type TypedInputs<T> = {
   [K in keyof T]: T[K] extends NumberInputDefinition
     ? number
@@ -36,7 +31,7 @@ type TypedInputs<T> = {
     : T[K] extends ColorInputDefinition
     ? string
     : T[K] extends ComplexInputDefinition<infer U>
-    ? Array<TypedInputs<U>>
+    ? Array<TypedInputs<U>> // Assumes that complex inputs are always repeated
     : never
 };
 
