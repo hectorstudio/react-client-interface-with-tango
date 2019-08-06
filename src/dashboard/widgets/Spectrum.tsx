@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 
 import { WidgetProps } from "./types";
-import { WidgetDefinition, AttributeInput } from "../types";
+import {
+  WidgetDefinition,
+  BooleanInputDefinition,
+  AttributeInputDefinition
+} from "../types";
 
 // In order to avoid importing the entire plotly.js library. Note that this mutates the global PlotlyCore object.
 import PlotlyCore from "plotly.js/lib/core";
@@ -13,11 +17,11 @@ const Plotly = createPlotlyComponent(PlotlyCore);
 // prettier-ignore
 const sampleData = [0, -2, 3, -2, 1, -5, 4, -3, -2, -4, 0, -4, 2, 2, -2, -2, 2, -5, -2, -3, 0];
 
-interface Inputs {
-  attribute: AttributeInput;
-  showTitle: boolean;
-  inelastic: boolean;
-}
+type Inputs = {
+  attribute: AttributeInputDefinition;
+  showTitle: BooleanInputDefinition;
+  inelastic: BooleanInputDefinition;
+};
 
 interface State {
   min?: number;
@@ -106,7 +110,7 @@ class Spectrum extends Component<Props, State> {
   }
 }
 
-const definition: WidgetDefinition = {
+const definition: WidgetDefinition<Inputs> = {
   type: "SPECTRUM",
   name: "Spectrum",
   defaultWidth: 30,

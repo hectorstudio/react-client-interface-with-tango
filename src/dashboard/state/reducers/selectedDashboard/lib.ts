@@ -147,13 +147,13 @@ export function setWithIndexPath(
 }
 
 export function defaultDimensions(
-  definition: WidgetDefinition
+  definition: WidgetDefinition<{}>
 ): { width: number; height: number } {
   const { defaultWidth: width, defaultHeight: height } = definition;
   return { width, height };
 }
 
-export function nestedDefault(definition: WidgetDefinition, path: IndexPath) {
+export function nestedDefault(definition: WidgetDefinition<{}>, path: IndexPath) {
   const initial = { inputs: definition.inputs };
   const leaf = path.reduce((accum, segment): {
     inputs: InputDefinitionMapping;

@@ -25,7 +25,7 @@ describe("CommandExecutor", () => {
       actualHeight: 100,
       inputs: {
         title: "Press this button",
-        requireConfirmation: "",
+        requireConfirmation: false,
         command: myCommandInput,
         displayOutput: true,
         cooldown: 0

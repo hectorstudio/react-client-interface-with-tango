@@ -1,5 +1,4 @@
 import React from "react";
-//import { WidgetProps } from "./widgets/types";
 
 export interface BaseInputDefinition<T> {
   label?: string;
@@ -28,17 +27,21 @@ export interface StringInputDefinition extends BaseInputDefinition<string> {
   placeholder?: string;
 }
 
-export interface ComplexInputDefinition extends BaseInputDefinition<null> {
+export interface ComplexInputDefinition<T = any>
+  extends BaseInputDefinition<null> {
   type: "complex";
-  inputs: InputDefinitionMapping;
+  inputs: T;
 }
 
-export interface SelectInputDefinition extends BaseInputDefinition<string> {
+interface SelectInputDefinitionOption<T> {
+  name: string;
+  value: T; // ?
+}
+
+export interface SelectInputDefinition<T = string>
+  extends BaseInputDefinition<string> {
   type: "select";
-  options: Array<{
-    name: string;
-    value: any;
-  }>;
+  options: SelectInputDefinitionOption<T>[];
 }
 
 export interface AttributeInputDefinition
@@ -121,16 +124,16 @@ export interface InputMapping {
   [name: string]: any;
 }
 
-export interface WidgetDefinition {
+export interface WidgetDefinition<T extends InputDefinitionMapping> {
   type: string;
   name: string;
   defaultWidth: number;
   defaultHeight: number;
-  inputs: InputDefinitionMapping;
+  inputs: T;
 }
 
-export interface WidgetBundle {
-  definition: WidgetDefinition;
+export interface WidgetBundle<T extends InputDefinitionMapping> {
+  definition: WidgetDefinition<T>;
   component: React.ElementType;
 }
 
@@ -157,7 +160,12 @@ export interface CommandInput<OutputT = any> {
   device: string;
   command: string;
   output: OutputT;
-  execute: () => void;
+  execute: (argin?: any) => void;
+}
+
+export interface DeviceInput {
+  name: string;
+  alias: string;
 }
 
 export interface CommandInputWithParameter<OutputT = any> {
@@ -168,6 +176,8 @@ export interface CommandInputWithParameter<OutputT = any> {
   output: OutputT;
   execute: (value: OutputT) => void;
 }
+
+export type ComplexInput<T> = any;
 
 export interface Canvas {
   id: string;
