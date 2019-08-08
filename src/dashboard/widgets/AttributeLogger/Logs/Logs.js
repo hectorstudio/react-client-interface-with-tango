@@ -7,7 +7,7 @@ class AttributeLog extends Component {
   render() {
 
 
-    const { deviceName, values, valueLog, linesDisplayed } = this.props;
+    const { deviceName, values, valueLog } = this.props;
     console.log(valueLog);
     return (
       <div className="Logs">
@@ -17,15 +17,24 @@ class AttributeLog extends Component {
             <div>{values} </div>
           </div>
         </div>
+        <div>
+        <hr/>
+        <table>
+            <tbody>
+              <tr>
+                <th>Time &nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+                  &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
+                <th>Log Message</th>
+              </tr>  
+            </tbody>
+          </table>       
+        </div>
+        <hr/>
         <div className={"log-table"}>
 
           {values != null ? (
             <table >
               <tbody>
-                <tr>
-                  <th>Time</th>
-                  <th>Log Message</th>
-                </tr>
                 {valueLog.map((value, key) => (
                   <Fragment key={key}>
                     <tr>
@@ -35,7 +44,6 @@ class AttributeLog extends Component {
                   </Fragment>
 
                 ))}
-                {this.createPaddingRows(linesDisplayed - valueLog.length)}
               </tbody>
             </table>
           ) : (
@@ -44,17 +52,6 @@ class AttributeLog extends Component {
         </div>
       </div>
     );
-  }
-
-  createPaddingRows = (nRows) => {
-    console.log(nRows)
-    let paddingRows = []
-    if (nRows > 0) {
-      for (let rowIndex = 0; rowIndex < nRows; rowIndex++){
-        paddingRows.push(<tr><td>&nbsp;</td><td>&nbsp;</td></tr>)
-      }
-    }
-    return paddingRows
   }
 }
 

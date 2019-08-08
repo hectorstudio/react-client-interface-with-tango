@@ -41,13 +41,11 @@ class AttributeLogger extends Component<Props> {
     //distinguish between showing the device name or not
     const inner = this.props.inputs.showDevice ? (
       <Fragment>
-        <AttributeLog tangoDB="testdb" deviceName={device} values={value} valueLog={this.state.valueLog}
-        linesDisplayed = {this.props.inputs.linesDisplayed} />
+        <AttributeLog tangoDB="testdb" deviceName={device} values={value} valueLog={this.state.valueLog}/>
       </Fragment>
     ) : (
         <Fragment>
-          <AttributeLog tangoDB="testdb" values={value} valueLog={this.state.valueLog}
-          linesDisplayed = {this.props.inputs.linesDisplayed} />
+          <AttributeLog tangoDB="testdb" values={value} valueLog={this.state.valueLog} />
         </Fragment>
       );
     return <div style={style}>{inner}</div>;

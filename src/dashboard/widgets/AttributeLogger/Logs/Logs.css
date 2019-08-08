@@ -1,4 +1,16 @@
 
+
+
+
+
+
+
+
+
+
+
+
+
 .Logs select {
   outline: none;
   padding: 5px;
@@ -21,9 +33,13 @@
   border-radius: 0.25rem;
 }
 .Logs .log-table {
-  margin-top: 1em;
   overflow-y: scroll;
   width: 100%;
+  height: 120px;
+}
+
+.Logs .log-table * {
+  overflow-anchor: none;
 }
 
 .Logs .log-table tr:nth-child(even) {
@@ -44,14 +60,9 @@
   font-weight: bold;
 }
 
-/*.Logs .reload-panel {
-  float: right;
+.Logs .log-table::after {
+  content: '';
+  display: block;
+  overflow-anchor: auto;
+  height: 1px;
 }
- 
-.Logs .nbr-entry-input {
-  width: 50px;
-  border: none;
-  text-align: center;
-  border-bottom: 1px solid #aaa;
-  padding-bottom: 0px;
-} */
