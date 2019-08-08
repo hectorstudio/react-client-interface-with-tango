@@ -1,6 +1,3 @@
-.Logs {
-  overflow-y: scroll;
-}
 
 .Logs select {
   outline: none;
@@ -25,6 +22,7 @@
 }
 .Logs .log-table {
   margin-top: 1em;
+  overflow-y: scroll;
   width: 100%;
 }
 
