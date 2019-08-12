@@ -99,14 +99,15 @@ class AttributeLogger extends Component<Props> {
     );
   }
 
+
+
+
   // this feels like a hack there should be a more elegant way to force
   // a reload of the log data *once* each time the attribute changes
   componentDidUpdate(prevProps) {
+
     if ((prevProps.inputs.attribute.timestamp !== this.props.inputs.attribute.timestamp) ||
     (prevProps.inputs.attribute.value !== this.props.inputs.attribute.value)){
-      console.log("---- triggering ---")
-      console.log(prevProps.inputs.attribute)
-      console.log(this.props.inputs.attribute)
       this.reloadLog();
     }
   }
@@ -160,8 +161,8 @@ const definition: WidgetDefinition = {
     },
     linesDisplayed: {
       type: "number",
-      label: "Lines Displayed",
-      default: 5
+      label: "Lines Logged",
+      default: 50
     },
     showDevice: {
       type: "boolean",
