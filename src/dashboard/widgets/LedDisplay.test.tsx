@@ -4,7 +4,6 @@ import { AttributeInput } from "../types";
 import { configure, shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import LedDisplay from "./LedDisplay";
-import { runInContext } from "vm";
 
 interface Input {
   showDevice: boolean;

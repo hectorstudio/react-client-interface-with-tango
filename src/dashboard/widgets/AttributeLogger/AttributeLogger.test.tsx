@@ -1,12 +1,10 @@
 import React from "react";
-import { WidgetProps } from "../types";
 import { AttributeInput } from "../../types";
 
-import { configure, shallow, render, mount } from "enzyme";
+import { configure, shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { AttributeLogger } from "./AttributeLogger";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
 import store from "../../state/store";
 
 configure({ adapter: new Adapter() });
@@ -15,6 +13,8 @@ describe("AttributeLogger", () => {
   React.useLayoutEffect = React.useEffect;
   const date = new Date();
   const timestamp = date.getTime();
+  const writeArray: any = []; 
+
   const myAttributeInput: AttributeInput = {
     device: "sys/tg_test/1",
     attribute: "short_scalar",
@@ -28,7 +28,7 @@ describe("AttributeLogger", () => {
     writeValue: "",
     timestamp: timestamp
   };
-  var writeArray: any = [];
+  
 
   it("renders without crashing", () => {
     const element = React.createElement(
@@ -103,6 +103,8 @@ describe("AttributeLogger", () => {
     const shallowLogger = shallow(attributeLogger);
     const instance = shallowLogger.instance();
 
+    expect(instance.componentDidUpdate)
+
     if (instance.componentDidUpdate) {
       instance.componentDidUpdate(prevProps, {});
 
@@ -113,8 +115,6 @@ describe("AttributeLogger", () => {
         message.timestamp === timestamp &&
           message.value === "This is not a love song"
       );
-    } else {
-      fail("Unable to call componentDidUpdate");
     }
   });
 });

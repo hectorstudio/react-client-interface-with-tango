@@ -47,7 +47,10 @@
     "test:debug": "CI=true react-scripts --inspect-brk test --runInBand --no-cache",
     "code-analysis": "./node_modules/.bin/eslint \"src/**\" --ignore-path .eslintignore",
     "fix-memory-limit": "cross-env LIMIT=2048 increase-memory-limit",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prettier:base": "prettier --parser typescript",
+    "prettier:check": "npm run prettier:base -- --list-different \"src/**/*.{ts,tsx}\"",
+    "prettier:write": "npm run prettier:base -- --write \"src/**/*.{ts,tsx}\""
   },
   "devDependencies": {
     "@types/classnames": "^2.2.7",
@@ -68,6 +71,7 @@
     "enzyme-to-json": "^3.3.5",
     "http-proxy-middleware": "^0.19.1",
     "increase-memory-limit": "^1.0.3",
+    "prettier": "^1.18.2",
     "raf": "^3.4.1",
     "react-scripts": "3.0.1",
     "redux-logger": "^3.0.6",
