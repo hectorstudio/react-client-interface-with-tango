@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import * as moment from "moment";
+import moment from "moment";
 import "./Logs.css";
 
-class AttributeLog extends Component {
+export class AttributeLog extends Component {
 
   //Assumes the heading rows are a similar dimension to the data rows.
   captureRowHeight = element => {
@@ -43,8 +43,6 @@ class AttributeLog extends Component {
 
   };
 
-
-
   render() {
     const { deviceName, values, valueLog } = this.props;
     return (
@@ -68,7 +66,6 @@ class AttributeLog extends Component {
         </div>
         <hr/>
         <div ref={this.adjustDimensions} className={"log-table"}>
-
           {values != null ? (
             <table >
               <tbody>

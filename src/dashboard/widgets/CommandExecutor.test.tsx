@@ -1,7 +1,7 @@
 import React from "react";
 import { CommandInput } from "../types";
 
-import { configure, shallow } from "enzyme";
+import { configure, shallow, render } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import commandExecutor from "./CommandExecutor";
 
@@ -31,6 +31,6 @@ describe("CommandExecutor", () => {
         cooldown: 0
       }
     });
-    expect(shallow(element).html()).toContain("Press this button");
+    expect(render(element).html()).toContain("Press this button");
   });
 });
