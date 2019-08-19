@@ -44,12 +44,12 @@ export class AttributeLog extends Component {
   };
 
   render() {
-    const { deviceName, values, valueLog } = this.props;
+    const { deviceName, values, valueLog, attributeName } = this.props;
     return (
       <div  className="Logs">
         <div>
           <div className={"title"}>
-            Recent user actions {deviceName ? "on " + deviceName : ""}
+            Recent {attributeName} {deviceName ? "on " + deviceName : ""}
             <div>{values} </div>
           </div>
         </div>

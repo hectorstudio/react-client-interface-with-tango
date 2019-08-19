@@ -26,6 +26,7 @@ export class AttributeLogger extends Component<Props> {
   public render() {
     const { attribute } = this.props.inputs;
     const device = attribute.device || "device";
+    const attributeName = attribute.attribute || "attribute"
 
     React.useLayoutEffect = React.useEffect;
 
@@ -50,13 +51,14 @@ export class AttributeLogger extends Component<Props> {
             values={value}
             valueLog={valueLog}
             deviceName={device}
+            attributeName={attributeName}
           />
         </Fragment>
       </div>
     ) : (
       <div style={style}>
         <Fragment>
-          <AttributeLog tangoDB="testdb" values={value} valueLog={valueLog} />
+          <AttributeLog tangoDB="testdb" values={value} attributeName={attributeName} valueLog={valueLog} />
         </Fragment>
       </div>
     );
@@ -140,16 +142,18 @@ export class AttributeLogger extends Component<Props> {
 
       // when switch between run and edit a single empty log line is added because render is called
       // this is a crude way to stop this hapopening
+      const timestamp = (attribute.timestamp * 1000)
+
       if (currMessage !== "") {
         if (this.props.inputs.linesDisplayed - valueLog.length > 0) {
           newLog = [
             ...valueLog,
-            { timestamp: attribute.timestamp, value: currMessage }
+            { timestamp: timestamp, value: currMessage }
           ];
         } else {
           newLog = [
             ...valueLog.slice(1),
-            { timestamp: attribute.timestamp, value: currMessage }
+            { timestamp: timestamp, value: currMessage }
           ];
         }
         this.setState({ valueLog: newLog });
