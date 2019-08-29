@@ -10,7 +10,7 @@
 
 .Dashboard .CanvasArea {
   grid-row: 2;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .Dashboard .CanvasArea.edit {

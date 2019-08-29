@@ -24,14 +24,13 @@ function Led(props) {
     classColor = props.color;
   }
   classColor = classColor + " led";
-
   if (props.value === undefined) {
     classColor = classColor + " led-blank";
   }
   return <span className={classColor}>{props.value}</span>;
 }
 
-export class LedReadOnly extends Component<Props> {
+class LedReadOnly extends Component<Props> {
   public render() {
     const { name } = this.deviceAndAttribute();
 
@@ -106,6 +105,7 @@ export const definition: WidgetDefinition<Inputs> = {
   defaultHeight: 2,
   inputs: {
     attribute: {
+      /* tslint:disable-next-line */
       type: "attribute",
       label: "",
       dataFormat: "scalar",

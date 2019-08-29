@@ -24,6 +24,7 @@ const proxies = {
   }
 };
 
+
 module.exports = function(app) {
   Object.entries(proxies).forEach(([endpoint, setting]) => {
     app.use(proxy(endpoint, setting));

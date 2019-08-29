@@ -1,0 +1,68 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+.Logs select {
+  outline: none;
+  padding: 5px;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  background: white;
+  height: 35px;
+  
+}
+.Logs .no-logs-message {
+  font-style: italic;
+  font-size: 1.1em;
+  padding: 1em;
+}
+
+.Logs input[type="text"] {
+  outline: none;
+  padding: 5px;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+.Logs .log-table {
+  overflow-y: scroll;
+  width: 100%;
+  height: 120px;
+}
+
+.Logs .log-table * {
+  overflow-anchor: none;
+}
+
+.Logs .log-table tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.Logs .log-table td {
+  padding: 4px 0px 2px 6px;
+}
+
+.Logs .log-table th {
+  padding: 4px 0px 2px 6px;
+}
+
+.Logs .title {
+  display: inline-block;
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+.Logs .log-table::after {
+  content: '';
+  display: block;
+  overflow-anchor: auto;
+  height: 1px;
+}
