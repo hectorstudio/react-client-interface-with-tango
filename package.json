@@ -3,17 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-<<<<<<< HEAD
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
     "@fortawesome/free-solid-svg-icons": "^5.10.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "acorn": "^6.3.0",
-=======
-    "@fortawesome/fontawesome-svg-core": "^1.2.19",
-    "@fortawesome/free-solid-svg-icons": "^5.9.0",
-    "@fortawesome/react-fontawesome": "^0.1.4",
-    "acorn": "^6.1.1",
->>>>>>> develop
     "alphanum-sort": "^1.0.2",
     "bootstrap": "^4.1.1",
     "box-intersect": "^1.0.2",
@@ -23,14 +16,9 @@
     "jquery": "^3.4.1",
     "minimatch": "^3.0.4",
     "moment": "^2.24.0",
-<<<<<<< HEAD
     "nodemon": "^1.19.1",
     "plotly.js": "^1.49.4",
     "popper.js": "^1.15.0",
-=======
-    "plotly.js": "^1.48.3",
-    "popper.js": "^1.14.7",
->>>>>>> develop
     "query-string": "5.0.0",
     "react": "^16.9.0",
     "react-autosuggest": "^9.4.3",

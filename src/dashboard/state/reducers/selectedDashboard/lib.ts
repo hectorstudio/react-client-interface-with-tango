@@ -57,23 +57,6 @@ export function redo(
   return { history, widgets: prevWidgets };
 }
 
-<<<<<<< HEAD
-// export function pushToHistory(
-//   history: DashboardEditHistory,
-//   widgets: Record<string, Widget>
-// ) {
-//   if (history === undefined){
-//     return history
-//   }
-   
-//   history.undoLength = history.undoLength === HISTORY_SIZE ? HISTORY_SIZE : history.undoLength + 1;
-//   history.undoActions[history.undoIndex] = widgets;
-//   history.undoIndex = (history.undoIndex + 1) % HISTORY_SIZE;
-//   //invalidate REDO stack at a regular action
-//   history.redoLength = 0;
-//   return history;
-// }
-=======
 export function pushToHistory(
   history: DashboardEditHistory,
   widgets: Record<string, Widget>
@@ -85,7 +68,6 @@ export function pushToHistory(
   history.redoLength = 0;
   return history;
 }
->>>>>>> develop
 export function resize(
   widget: Widget,
   mx: number,

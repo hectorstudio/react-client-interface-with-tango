@@ -120,11 +120,7 @@ class AttributeWriter extends Component<Props, State> {
   }
 }
 
-<<<<<<< HEAD
-const definition: WidgetDefinition <Inputs>= {
-=======
 const definition: WidgetDefinition<Inputs> = {
->>>>>>> develop
   type: "ATTRIBUTE_WRITER",
   name: " Attribute Writer",
   defaultHeight: 2,
