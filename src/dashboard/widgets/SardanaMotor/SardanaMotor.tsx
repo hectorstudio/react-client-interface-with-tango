@@ -1,16 +1,35 @@
 import React, { Component } from "react";
 import cx from "classnames";
 
-import { WidgetProps } from "../types";
-import { WidgetDefinition } from "../../types";
+import {
+  WidgetDefinition,
+  DeviceInputDefinition,
+  NumberInputDefinition,
+  CommandInputDefinition,
+  AttributeInputDefinition
+} from "../../types";
+
 import "./SardanaMotor.css";
 // import { MultiDialWriter } from "./MultiDialWriter";
 // import { AttributeStepWriter } from "./AttributeStepWriter";
 import { AttributeAbsWriter } from "./AttributeAbsWriter";
 import { StateIndicatorLabel } from "../../../shared/ui/components/StateIndicatorLabel";
+import { WidgetProps } from "../types";
 
-class SardanaMotor extends Component<WidgetProps> {
-  constructor(props: WidgetProps) {
+type Inputs = {
+  device: DeviceInputDefinition;
+  precision: NumberInputDefinition;
+  stop: CommandInputDefinition;
+  limits: AttributeInputDefinition;
+  position: AttributeInputDefinition;
+  power: AttributeInputDefinition;
+  state: AttributeInputDefinition;
+};
+
+type Props = WidgetProps<Inputs>;
+
+class SardanaMotor extends Component<Props> {
+  constructor(props: Props) {
     super(props);
     this.handleStop = this.handleStop.bind(this);
     this.setPower = this.setPower.bind(this);
@@ -148,7 +167,7 @@ class SardanaMotor extends Component<WidgetProps> {
   }
 }
 
-const definition: WidgetDefinition = {
+const definition: WidgetDefinition<Inputs> = {
   type: "SARDANA_MOTOR",
   name: "Sardana Motor",
   defaultHeight: 2,

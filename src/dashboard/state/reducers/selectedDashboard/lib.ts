@@ -16,6 +16,21 @@ export function move(widget: Widget, dx: number, dy: number) {
   return { ...widget, x: targetX, y: targetY };
 }
 
+// export function pushToHistory(
+//   history: DashboardEditHistory,
+//   widgets: Record<string, Widget>
+// ) {
+//   if (history === undefined){
+//     return history
+//   }
+   
+//   history.undoLength = history.undoLength === HISTORY_SIZE ? HISTORY_SIZE : history.undoLength + 1;
+//   history.undoActions[history.undoIndex] = widgets;
+//   history.undoIndex = (history.undoIndex + 1) % HISTORY_SIZE;
+//   //invalidate REDO stack at a regular action
+//   history.redoLength = 0;
+//   return history;
+// }
 export function resize(
   widget: Widget,
   mx: number,
@@ -95,13 +110,13 @@ export function setWithIndexPath(
 }
 
 export function defaultDimensions(
-  definition: WidgetDefinition
+  definition: WidgetDefinition<{}>
 ): { width: number; height: number } {
   const { defaultWidth: width, defaultHeight: height } = definition;
   return { width, height };
 }
 
-export function nestedDefault(definition: WidgetDefinition, path: IndexPath) {
+export function nestedDefault(definition: WidgetDefinition<{}>, path: IndexPath) {
   const initial = { inputs: definition.inputs };
   const leaf = path.reduce((accum, segment): {
     inputs: InputDefinitionMapping;

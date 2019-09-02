@@ -14,7 +14,7 @@ import attributeLogger from "./AttributeLogger/AttributeLogger";
 
 import { Widget, WidgetDefinition, WidgetBundle } from "../types";
 
-export const bundles: WidgetBundle[] = [
+export const bundles: WidgetBundle<{}>[] = [
   label,
   attributeDisplay,
   attributeWriter,
@@ -40,7 +40,7 @@ function bundleForType(type: string) {
   return bundle;
 }
 
-export function definitionForType(type: string): WidgetDefinition {
+export function definitionForType(type: string): WidgetDefinition<{}> {
   const bundle = bundleForType(type);
   return bundle.definition;
 }

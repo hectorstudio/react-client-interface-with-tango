@@ -27,18 +27,21 @@ export interface StringInputDefinition extends BaseInputDefinition<string> {
   type: "string";
   placeholder?: string;
 }
-
-export interface ComplexInputDefinition extends BaseInputDefinition<null> {
+export interface ComplexInputDefinition<T = any>
+  extends BaseInputDefinition<null> {
   type: "complex";
-  inputs: InputDefinitionMapping;
+  inputs: T;
 }
 
-export interface SelectInputDefinition extends BaseInputDefinition<string> {
+interface SelectInputDefinitionOption<T> {
+  name: string;
+  value: T; // ?
+}
+
+export interface SelectInputDefinition<T = string>
+  extends BaseInputDefinition<string> {
   type: "select";
-  options: Array<{
-    name: string;
-    value: any;
-  }>;
+  options: SelectInputDefinitionOption<T>[];
 }
 
 export interface AttributeInputDefinition
@@ -69,6 +72,16 @@ export interface CommandInputDefinition extends BaseInputDefinition<null> {
   command?: string;
   intype?: string;
   invalidates?: string[];
+  parameter?: string;
+}
+
+export interface CommandInputWithParameterDefinition extends BaseInputDefinition<null> {
+  type: "command";
+  device?: string;
+  command?: string;
+  intype?: string;
+  invalidates?: string[];
+  parameter?: string;
 }
 
 export type InputDefinition =
@@ -111,16 +124,16 @@ export interface InputMapping {
   [name: string]: any;
 }
 
-export interface WidgetDefinition {
+export interface WidgetDefinition<T extends InputDefinitionMapping> {
   type: string;
   name: string;
   defaultWidth: number;
   defaultHeight: number;
-  inputs: InputDefinitionMapping;
+  inputs: T;
 }
 
-export interface WidgetBundle {
-  definition: WidgetDefinition;
+export interface WidgetBundle<T extends InputDefinitionMapping> {
+  definition: WidgetDefinition<T>;
   component: React.ElementType;
 }
 
@@ -146,18 +159,27 @@ export interface AttributeInput<ValueT = any> extends AttributeValue<ValueT> {
 export interface CommandInput<OutputT = any> {
   device: string;
   command: string;
+  parameter?: string;
+  dataType?: string;
   output: OutputT;
-  execute: () => void;
+  execute: (argin?: any) => void;
 }
+
+export interface DeviceInput {
+  name: string;
+  alias: string;
+}
+
 
 export interface CommandInputWithParameter<OutputT = any> {
   device: string;
   command: string;
-  parameter: string;
-  dataType: string;
+  parameter?: string;
+  dataType?: string;
   output: OutputT;
   execute: (value: OutputT) => void;
 }
+
 
 export interface Canvas {
   id: string;

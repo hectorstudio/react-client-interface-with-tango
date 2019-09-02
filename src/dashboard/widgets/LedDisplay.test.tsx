@@ -10,7 +10,7 @@ interface Input {
   compare: number;
   relation: string;
   attribute: AttributeInput;
-  classColor: string;
+  classColor: SelectInputDefinitionOption<"red-led" | "orange-led">;
 }
 
 configure({ adapter: new Adapter() });
@@ -152,7 +152,7 @@ describe("LedReadOnly", () => {
   });
 
   it("hide the attribute name if showDevice is not set", () => {
-    let myInput = {
+    myInput = {
       classColor: "orange-led",
       relation: "<",
       compare: 20,
@@ -166,7 +166,6 @@ describe("LedReadOnly", () => {
         timestamp: 123456,
         unit: "",
         value: 100,
-        compare: 20,
         writeValue: "",
         history: [],
         write: writeArray
@@ -184,7 +183,7 @@ describe("LedReadOnly", () => {
   });
 
   it("displays the attribute name if showDevice is set", () => {
-    let myInput = {
+    myInput = {
       classColor: "orange-led",
       relation: "<",
       compare: 20,
@@ -215,7 +214,7 @@ describe("LedReadOnly", () => {
   });
 
   it("displays green-led if condition is not met", () => {
-    let myInput = {
+    myInput = {
       classColor: "orange-led",
       relation: "=",
       compare: 19,
@@ -247,7 +246,7 @@ describe("LedReadOnly", () => {
   });
 
   it("displays an orange led if condition is met", () => {
-    let myInput = {
+    myInput = {
       classColor: "orange-led",
       relation: ">=",
       compare: 10,
@@ -279,7 +278,7 @@ describe("LedReadOnly", () => {
   });
 
   it("it handles an undefined relation", () => {
-    let myInput = {
+    myInput = {
       classColor: "red-led",
       relation: "¯_(ツ)_/¯",
       compare: 20,
@@ -311,7 +310,7 @@ describe("LedReadOnly", () => {
   });
 
   it("displays an red led if less than or equal condition is met", () => {
-    let myInput = {
+    myInput = {
       classColor: "red-led",
       relation: "<=",
       compare: 20,
@@ -342,7 +341,7 @@ describe("LedReadOnly", () => {
     expect(shallow(element).html()).toContain("red-led");
   });
   it("displays an red led if greater than  condition is met", () => {
-    let myInput = {
+    myInput = {
       classColor: "red-led",
       relation: ">",
       compare: 5,
@@ -374,7 +373,7 @@ describe("LedReadOnly", () => {
   });
 
   it("it handles an undefined value", () => {
-    let myInput = {
+    myInput = {
       classColor: "red-led",
       relation: "<=",
       compare: 20,
@@ -406,7 +405,7 @@ describe("LedReadOnly", () => {
   });
 
   it("it handles a null value", () => {
-    let myInput = {
+    myInput = {
       classColor: "red-led",
       relation: ">",
       compare: 20,
@@ -420,7 +419,6 @@ describe("LedReadOnly", () => {
         timestamp: 123456,
         unit: "",
         value: null,
-        compare: 20,
         writeValue: "",
         history: [],
         write: writeArray
@@ -438,7 +436,7 @@ describe("LedReadOnly", () => {
   });
 
   it("it handles an undefined relation", () => {
-    let myInput = {
+    myInput = {
       classColor: "red-led",
       relation: "¯_(ツ)_/¯",
       compare: 20,
@@ -452,7 +450,6 @@ describe("LedReadOnly", () => {
         timestamp: 123456,
         unit: "",
         value: 10,
-        compare: 20,
         writeValue: "",
         history: [],
         write: writeArray

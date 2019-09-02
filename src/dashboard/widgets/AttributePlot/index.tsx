@@ -1,7 +1,25 @@
 import AttributePlot from "./AttributePlot";
-import { WidgetDefinition } from "../../../dashboard/types";
+import {
+  WidgetDefinition,
+  NumberInputDefinition,
+  BooleanInputDefinition,
+  ComplexInputDefinition,
+  AttributeInputDefinition,
+  SelectInputDefinition
+} from "../../../dashboard/types";
 
-const definition: WidgetDefinition = {
+export interface AttributeComplexInput {
+  attribute: AttributeInputDefinition;
+  yAxis: SelectInputDefinition<"left" | "right">;
+}
+
+export type Inputs = {
+  timeWindow: NumberInputDefinition;
+  showZeroLine: BooleanInputDefinition;
+  attributes: ComplexInputDefinition<AttributeComplexInput>;
+}
+
+const definition: WidgetDefinition<Inputs> = {
   type: "ATTRIBUTE_PLOT",
   name: "Attribute Plot",
   defaultWidth: 30,

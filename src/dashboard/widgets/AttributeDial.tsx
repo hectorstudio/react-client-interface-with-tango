@@ -1,16 +1,24 @@
 import React, { Component } from "react";
 import { WidgetProps } from "./types";
-import { WidgetDefinition, AttributeInput } from "../types";
 
-interface Input {
-  attribute: AttributeInput;
-  min: number;
-  max: number;
-  label: string;
-  showWriteValue: boolean;
-}
+import {
+  WidgetDefinition,
+  AttributeInputDefinition,
+  NumberInputDefinition,
+  SelectInputDefinition,
+  BooleanInputDefinition
+} from "../types";
 
-type Props = WidgetProps<Input>;
+type Inputs = {
+  attribute: AttributeInputDefinition;
+  min: NumberInputDefinition;
+  max: NumberInputDefinition;
+  label: SelectInputDefinition<"attribute" | "device">;
+  showWriteValue: BooleanInputDefinition;
+};
+
+
+type Props = WidgetProps<Inputs>;
 
 function normalizeWithFlex(
   value: number,
@@ -209,7 +217,7 @@ class AttributeDial extends Component<Props> {
   }
 }
 
-const definition: WidgetDefinition = {
+const definition: WidgetDefinition<Inputs> = {
   type: "ATTRIBUTE_DIAL",
   name: "Attribute Dial",
   defaultWidth: 10,
