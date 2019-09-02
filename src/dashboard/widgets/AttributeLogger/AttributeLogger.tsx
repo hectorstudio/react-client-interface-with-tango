@@ -1,18 +1,18 @@
 import React, { Component, Fragment, CSSProperties, ReactNode } from "react";
 import { WidgetProps } from "../types";
-import { WidgetDefinition, AttributeInput } from "../../types";
+import { WidgetDefinition, AttributeInputDefinition, BooleanInputDefinition, NumberInputDefinition} from "../../types";
 import AttributeLog from "./Logs/Logs";
 
 //This interface is how parameters are passed from the WidgetDefinition
 //into the widget - if you expand or change the widget definition this
 //will most likely need to change as well
-interface Input {
-  showDevice: boolean;
-  logIfChanged: boolean;
-  linesDisplayed: number;
-  attribute: AttributeInput;
+type Inputs =  {
+  showDevice: BooleanInputDefinition;
+  logIfChanged: BooleanInputDefinition;
+  linesDisplayed: NumberInputDefinition;
+  attribute: AttributeInputDefinition;
 }
-type Props = WidgetProps<Input>;
+type Props = WidgetProps<Inputs>;
 
 export class AttributeLogger extends Component<Props> {
   // adding in state as we need to store the log that is specific
@@ -163,7 +163,7 @@ export class AttributeLogger extends Component<Props> {
 }
 
 // defines the inputs on the RHS used to manage the widget
-const definition: WidgetDefinition = {
+const definition: WidgetDefinition<Inputs> = {
   type: "ATTRIBUTE_LOGGER",
   name: "Attribute Logger",
   defaultWidth: 50,

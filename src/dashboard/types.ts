@@ -26,7 +26,6 @@ export interface StringInputDefinition extends BaseInputDefinition<string> {
   type: "string";
   placeholder?: string;
 }
-
 export interface ComplexInputDefinition<T = any>
   extends BaseInputDefinition<null> {
   type: "complex";
@@ -72,6 +71,16 @@ export interface CommandInputDefinition extends BaseInputDefinition<null> {
   command?: string;
   intype?: string;
   invalidates?: string[];
+  parameter?: string;
+}
+
+export interface CommandInputWithParameterDefinition extends BaseInputDefinition<null> {
+  type: "command";
+  device?: string;
+  command?: string;
+  intype?: string;
+  invalidates?: string[];
+  parameter?: string;
 }
 
 export type InputDefinition =
@@ -159,6 +168,8 @@ export interface AttributeInput<ValueT = any> extends AttributeValue<ValueT> {
 export interface CommandInput<OutputT = any> {
   device: string;
   command: string;
+  parameter?: string;
+  dataType?: string;
   output: OutputT;
   execute: (argin?: any) => void;
 }
@@ -168,11 +179,12 @@ export interface DeviceInput {
   alias: string;
 }
 
+
 export interface CommandInputWithParameter<OutputT = any> {
   device: string;
   command: string;
-  parameter: string;
-  dataType: string;
+  parameter?: string;
+  dataType?: string;
   output: OutputT;
   execute: (value: OutputT) => void;
 }

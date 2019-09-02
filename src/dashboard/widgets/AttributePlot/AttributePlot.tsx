@@ -2,10 +2,25 @@ import React from "react";
 
 import Plot, { Trace } from "./Plot";
 import { WidgetProps } from "../types";
+<<<<<<< HEAD
+import { AttributeInput } from "../../types";
 import { Inputs } from ".";
 
 type Props = WidgetProps<Inputs>;
 type AttributeEntries = Props["inputs"]["attributes"];
+
+
+interface AttributeComplexInput {
+  attribute: AttributeInput<number>;
+  yAxis: "left" | "right";
+}
+
+=======
+import { Inputs } from ".";
+
+type Props = WidgetProps<Inputs>;
+type AttributeEntries = Props["inputs"]["attributes"];
+>>>>>>> develop
 
 function AttributePlot(props: Props) {
   const { mode, inputs, actualWidth, actualHeight } = props;
@@ -79,5 +94,6 @@ function tracesFromAttributeInputs(
     return { fullName, x, y, axisLocation: yAxis };
   });
 }
+
 
 export default AttributePlot;

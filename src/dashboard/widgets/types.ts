@@ -13,6 +13,14 @@ import {
   DeviceInput,
 } from "../types";
 
+<<<<<<< HEAD
+// This type mapping makes an assumption that technically isn't in line with
+// the current design/docs: that _only_ complex inputs are repeated, and that
+// _all_ complex inputs are repeated. However, I think this makes sense for
+// almost all scenarios, and that it should be the general behaviour.
+
+=======
+>>>>>>> develop
 type TypedInputs<T> = {
   [K in keyof T]: T[K] extends NumberInputDefinition
     ? number
@@ -31,12 +39,23 @@ type TypedInputs<T> = {
     : T[K] extends ColorInputDefinition
     ? string
     : T[K] extends ComplexInputDefinition<infer U>
+<<<<<<< HEAD
+    ? Array<TypedInputs<U>>
+    : never
+}
+
+
+export interface WidgetProps<T = Record<string, any>> {
+  inputs: TypedInputs<T>;
+  mode: "run" | "edit" | "library";
+=======
     ? Array<TypedInputs<U>> // Assumes that complex inputs are always repeated
     : never
 };
 
 export type WidgetProps<T> = {
   inputs: TypedInputs<T>;
+>>>>>>> develop
   t0: number;
   mode: "run" | "edit" | "library";
   actualWidth: number;

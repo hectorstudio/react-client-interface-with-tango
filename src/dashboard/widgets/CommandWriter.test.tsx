@@ -1,5 +1,9 @@
 import React from "react";
+<<<<<<< HEAD
+import { CommandInput } from "../types";
+=======
 import { CommandInputWithParameter, CommandInput } from "../types";
+>>>>>>> develop
 
 import { configure, shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
@@ -8,7 +12,11 @@ import commandWriter from "./CommandWriter";
 configure({ adapter: new Adapter() });
 
 describe("CommandWriter", () => {
+<<<<<<< HEAD
+  let myCommandInput: CommandInput;
+=======
   let myCommandInput: CommandInput; // CommandInputWithParameter;
+>>>>>>> develop
 
   it("renders without crashing", () => {
     myCommandInput = {
@@ -27,7 +35,11 @@ describe("CommandWriter", () => {
       actualHeight: 100,
       inputs: {
         title: "Press this button",
+<<<<<<< HEAD
+        requireConfirmation: true,
+=======
         requireConfirmation: false,
+>>>>>>> develop
         command: myCommandInput,
         displayOutput: true,
         cooldown: 0,
@@ -55,7 +67,11 @@ describe("CommandWriter", () => {
       actualHeight: 100,
       inputs: {
         title: "Press this button",
+<<<<<<< HEAD
+        requireConfirmation: true,
+=======
         requireConfirmation: false,
+>>>>>>> develop
         command: myCommandInput,
         displayOutput: true,
         cooldown: 0,
@@ -66,6 +82,8 @@ describe("CommandWriter", () => {
     expect(shallow(element).html()).toContain("hello world");
   }); //renders with parameter
 
+<<<<<<< HEAD
+=======
   it("renders with bad parameter", () => {
     myCommandInput = {
       device: "sys/tg_test/1",
@@ -94,6 +112,7 @@ describe("CommandWriter", () => {
     expect(shallow(element).html()).toContain("not implemented");
   }); //renders with bad parameter
 
+>>>>>>> develop
   it("calls onSubmit prop function when form is submitted", () => {
     const onSubmitFn = jest.fn();
     const wrapper = mount(<form onSubmit={onSubmitFn} />);

@@ -47,8 +47,7 @@ class CommandWriter extends Component<Props, State> {
   public render() {
     const { mode, inputs } = this.props;
     const { command, showDevice, showCommand } = inputs;
-    const { device, command: commandName } = command;
-    const parameter = undefined; // tmp
+    const { device, command: commandName, parameter=undefined} = command;
 
     //const unit = mode === "run" ? command.unit : "unit";
     const deviceLabel = device || "device";

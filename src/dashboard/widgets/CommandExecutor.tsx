@@ -1,7 +1,6 @@
 import React, { Component, CSSProperties } from "react";
 
 import { WidgetProps } from "./types";
-
 import {
   WidgetDefinition,
   StringInputDefinition,

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { WidgetDefinition, DeviceInputDefinition, CommandInputDefinition, AttributeInputDefinition, InputDefinitionMapping } from "../types";
+import { WidgetDefinition, DeviceInputDefinition, CommandInputDefinition, AttributeInputDefinition} from "../types";
 import { WidgetProps } from "./types";
 
 type Inputs = {

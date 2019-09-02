@@ -71,7 +71,6 @@ class BooleanDisplay extends Component<Props> {
     return { device, name };
   }
 }
-
 const definition: WidgetDefinition<Inputs> = {
   type: "BOOLEAN_DISPLAY",
   name: "Boolean Display",

@@ -6,6 +6,10 @@ import {
   BooleanInputDefinition,
   AttributeInputDefinition
 } from "../types";
+<<<<<<< HEAD
+
+=======
+>>>>>>> develop
 
 // In order to avoid importing the entire plotly.js library. Note that this mutates the global PlotlyCore object.
 import PlotlyCore from "plotly.js/lib/core";
@@ -22,6 +26,10 @@ type Inputs = {
   showTitle: BooleanInputDefinition;
   inelastic: BooleanInputDefinition;
 };
+<<<<<<< HEAD
+
+=======
+>>>>>>> develop
 
 interface State {
   min?: number;
