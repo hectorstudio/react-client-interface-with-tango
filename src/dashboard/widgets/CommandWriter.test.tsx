@@ -42,7 +42,7 @@ describe("CommandWriter", () => {
     myCommandInput = {
       device: "sys/tg_test/1",
       command: "DevString",
-      // parameter: "hello world",
+      parameter: "hello world",
       output: "",
       // dataType: "String",
       execute: () => null
@@ -65,34 +65,6 @@ describe("CommandWriter", () => {
     });
     expect(shallow(element).html()).toContain("hello world");
   }); //renders with parameter
-
-  it("renders with bad parameter", () => {
-    myCommandInput = {
-      device: "sys/tg_test/1",
-      command: "DevString",
-      // parameter: [1, 2, 3],
-      output: "",
-      // dataType: "String",
-      execute: () => null
-    };
-
-    const element = React.createElement(commandWriter.component, {
-      mode: "run",
-      t0: 1,
-      actualWidth: 100,
-      actualHeight: 100,
-      inputs: {
-        title: "Press this button",
-        requireConfirmation: false,
-        command: myCommandInput,
-        displayOutput: true,
-        cooldown: 0,
-        showDevice: true,
-        showCommand: true
-      }
-    });
-    expect(shallow(element).html()).toContain("not implemented");
-  }); //renders with bad parameter
 
   it("calls onSubmit prop function when form is submitted", () => {
     const onSubmitFn = jest.fn();
