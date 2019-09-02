@@ -68,6 +68,7 @@ export function pushToHistory(
   history.redoLength = 0;
   return history;
 }
+
 export function resize(
   widget: Widget,
   mx: number,

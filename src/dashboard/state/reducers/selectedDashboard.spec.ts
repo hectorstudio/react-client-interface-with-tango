@@ -16,7 +16,15 @@ const basicState = {
   user: "",
   redirect: false,
   insertTime: null,
-  updateTime: null
+  updateTime: null,
+  history: {
+    undoActions: [],
+    redoActions: [],
+    undoIndex: 0,
+    redoIndex: 0,
+    undoLength: 0,
+    redoLength: 0,
+  }
 };
 
 const savedState = {
