@@ -16,6 +16,7 @@ type Inputs = {
 };
 
 type Props = WidgetProps<Inputs>;
+
 class BooleanDisplay extends Component<Props> {
   public render() {
     const { device, name } = this.deviceAndAttribute();
@@ -121,4 +122,5 @@ const definition: WidgetDefinition<Inputs> = {
     }
   }
 };
+
 export default { component: BooleanDisplay, definition };

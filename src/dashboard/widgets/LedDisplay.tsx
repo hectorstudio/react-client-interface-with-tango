@@ -8,7 +8,6 @@ import {
   SelectInputDefinition
 } from "../types";
 
-
 type Inputs = {
   showDevice: BooleanInputDefinition;
   compare: NumberInputDefinition;
@@ -16,7 +15,6 @@ type Inputs = {
   attribute: AttributeInputDefinition;
   classColor: SelectInputDefinition<"red-led" | "orange-led">;
 }
-
 
 type Props = WidgetProps<Inputs>;
 
@@ -46,11 +44,11 @@ class LedReadOnly extends Component<Props> {
           condition={value}
           color={this.props.inputs.classColor}
           value={this.props.inputs.attribute.value}
-        ></Led>
+        />
       </Fragment>
     ) : (
       <Fragment>
-        <Led condition={value} color={this.props.inputs.classColor}></Led>
+        <Led condition={value} color={this.props.inputs.classColor} />
       </Fragment>
     );
 

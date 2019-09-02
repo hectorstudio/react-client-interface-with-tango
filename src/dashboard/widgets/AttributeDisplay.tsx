@@ -1,7 +1,6 @@
 import React, { Component, Fragment, CSSProperties, ReactNode } from "react";
 import { WidgetProps } from "./types";
 
-
 import {
   WidgetDefinition,
   BooleanInputDefinition,
@@ -16,30 +15,29 @@ type Inputs = {
 }
 
 const definition: WidgetDefinition<Inputs> = {
-    type: "ATTRIBUTE_DISPLAY",
-    name: "Attribute Display",
-    defaultWidth: 10,
-    defaultHeight: 2,
-    inputs: {
-      attribute: {
-        type: "attribute",
-        label: "",
-        dataFormat: "scalar",
-        required: true
-      },
-      precision: {
-        type: "number",
-        label: "Precision",
-        default: 2
-      },
-      showDevice: {
-        type: "boolean",
-        label: "Device Name",
-        default: false
-      }
+  type: "ATTRIBUTE_DISPLAY",
+  name: "Attribute Display",
+  defaultWidth: 10,
+  defaultHeight: 2,
+  inputs: {
+    attribute: {
+      type: "attribute",
+      label: "",
+      dataFormat: "scalar",
+      required: true
+    },
+    precision: {
+      type: "number",
+      label: "Precision",
+      default: 2
+    },
+    showDevice: {
+      type: "boolean",
+      label: "Device Name",
+      default: false
     }
-  };
-  
+  }
+};
 
 type Props = WidgetProps<Inputs>;
 

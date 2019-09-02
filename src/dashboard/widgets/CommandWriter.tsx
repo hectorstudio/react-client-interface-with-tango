@@ -68,7 +68,7 @@ class CommandWriter extends Component<Props, State> {
     ) {
       return (
         <div style={{ backgroundColor: "red", padding: "0.5em" }}>
-          {command.dataType} not implemented
+          {/*command.dataType*/} not implemented
         </div>
       );
     }
@@ -131,7 +131,9 @@ class CommandWriter extends Component<Props, State> {
     const { command, requireConfirmation, cooldown } = this.props.inputs;
     const { input } = this.state;
 
-    const message = `Confirm executing "${command.command}" on "${command.device}" with parameter "${input}"`;
+    const message = `Confirm executing "${command.command}" on "${
+      command.device
+    }" with parameter "${input}"`;
 
     /* eslint-disable no-restricted-globals */
     if (!requireConfirmation || confirm(message)) {

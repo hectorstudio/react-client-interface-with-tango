@@ -1,5 +1,4 @@
 import React from "react";
-//import { WidgetProps } from "./widgets/types";
 
 export interface BaseInputDefinition<T> {
   label?: string;
@@ -111,6 +110,15 @@ export interface Widget {
   inputs: InputMapping;
 }
 
+export interface DashboardEditHistory{
+  undoActions: Record<string, Widget>[],
+  redoActions: Record<string, Widget>[],
+  undoIndex: number,
+  redoIndex: number,
+  undoLength: number,
+  redoLength: number,
+}
+
 export interface Dashboard {
   id: string;
   name: string;
@@ -118,6 +126,7 @@ export interface Dashboard {
   redirect: boolean;
   insertTime: Date | null;
   updateTime: Date | null;
+  history: DashboardEditHistory;
 }
 
 export interface InputMapping {
@@ -180,6 +189,7 @@ export interface CommandInputWithParameter<OutputT = any> {
   execute: (value: OutputT) => void;
 }
 
+export type ComplexInput<T> = any;
 
 export interface Canvas {
   id: string;

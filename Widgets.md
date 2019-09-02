@@ -57,6 +57,43 @@ The render method of the component implementation may look something like this:
       );
     }
 
+## Type-Safe Widget Props
+
+If widgets are implemented in TypeScript, type-safe component props, including widget inputs, can be obtained using the `WidgetProps` type mapping. The following steps illustrate how to adapt the widget described in the example above to TypeScript.
+
+Create a type alias for the input definitions. Note that it's important that you use the `type` keyword; an interface won't work due to current limitations in TypeScript.
+
+    type Inputs = {
+      device: DeviceInputDefinition;
+      position: AttributeInputDefinition;
+      turnRight: CommandInputDefinition;
+      turnLeft: CommandInputDefinition;
+    }
+
+Add the following type annotation to your `widgetDefinition`:
+
+    const definition: WidgetDefinition<Inputs> = { // ...
+
+Create a type alias for the component props using `WidgetProps` and `Inputs`:
+
+    type Props = WidgetProps<Inputs>;
+
+Now `Props` is a type alias corresponding to the props your component expects, with fairly high type accuracy. For example, if you type `props.inputs.pos`, your IDE will autocomplete to "position" and infer the right type. This is very helpful when developing and can reduce errors drastically. Use it the same way you would normally do with typed component props, i.e.
+
+    class TheComponent extends React.Component<Props> {
+      public constructor(props: Props) {
+        // ...
+      }
+    }
+
+for class-based components, or
+
+    function TheComponent(props: Props) {
+      // ....
+    }
+
+for function-based components.
+
 ## Widget Definition
 
 | Key | Type | Description
@@ -93,7 +130,7 @@ Manifests itself as an input field where the user can enter a numeric value.
 
 | Key | Type | Description
 |-|-|-
-| nonNumeric? | boolean | If true, the user can't enter negative values.
+| nonNegative? | boolean | If true, the user can't enter negative values.
 
 ### Select Input Definition
 

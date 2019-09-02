@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { WidgetProps } from "./types";
-
 import {
   WidgetDefinition,
   AttributeInputDefinition,
@@ -16,7 +15,6 @@ type Inputs = {
   label: SelectInputDefinition<"attribute" | "device">;
   showWriteValue: BooleanInputDefinition;
 };
-
 
 type Props = WidgetProps<Inputs>;
 

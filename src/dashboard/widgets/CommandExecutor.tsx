@@ -9,7 +9,6 @@ import {
   NumberInputDefinition
 } from "../types";
 
-
 function timeout(seconds) {
   return new Promise(resolve => {
     setTimeout(() => resolve(), seconds);
@@ -67,7 +66,9 @@ class CommandExecutor extends Component<Props, State> {
   private async handleExecute() {
     const { command, requireConfirmation, cooldown } = this.props.inputs;
 
-    const message = `Confirm executing "${command.command}" on "${command.device}"`;
+    const message = `Confirm executing "${command.command}" on "${
+      command.device
+    }"`;
 
     /* eslint-disable no-restricted-globals */
     if (!requireConfirmation || confirm(message)) {

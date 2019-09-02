@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   WidgetDefinition,
   StringInputDefinition,
@@ -14,7 +13,6 @@ type Inputs = {
 
 type Props = WidgetProps<Inputs>;
 
-
 const Inner = ({ mode, text }) => {
   if (mode === "library") {
     return "Label";
@@ -27,8 +25,10 @@ const Inner = ({ mode, text }) => {
   return text;
 };
 
-const Label = ({ mode, inputs, actualWidth, actualHeight }) => {
+const Label = (props: Props) => {
+  const { inputs, mode, actualWidth, actualHeight } = props;
   const { text, backgroundColor } = inputs;
+
   return (
     <div
       style={{
