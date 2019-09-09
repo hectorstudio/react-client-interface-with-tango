@@ -40,7 +40,8 @@
     "redux-saga": "^1.0.5",
     "reselect": "^4.0.0",
     "scroll-into-view": "^1.9.3",
-    "static-eval": "^2.0.2"
+    "static-eval": "^2.0.2",
+    "universal-cookie": "^4.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
