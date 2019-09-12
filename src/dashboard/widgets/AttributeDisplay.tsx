@@ -10,9 +10,11 @@ import {
 
 type Inputs = {
   showDevice: BooleanInputDefinition;
+  showAttribute: BooleanInputDefinition;
+  scientificNotation: BooleanInputDefinition;
   precision: NumberInputDefinition;
   attribute: AttributeInputDefinition;
-}
+};
 
 const definition: WidgetDefinition<Inputs> = {
   type: "ATTRIBUTE_DISPLAY",
@@ -35,6 +37,16 @@ const definition: WidgetDefinition<Inputs> = {
       type: "boolean",
       label: "Device Name",
       default: false
+    },
+    showAttribute: {
+      type: "boolean",
+      label: "Attribute Name",
+      default: false
+    },
+    scientificNotation: {
+      type: "boolean",
+      label: "Scientific Notation",
+      default: false
     }
   }
 };
@@ -44,20 +56,17 @@ type Props = WidgetProps<Inputs>;
 class AttributeReadOnly extends Component<Props> {
   public render() {
     const { device, name } = this.deviceAndAttribute();
-
+    const { showDevice, showAttribute } = this.props.inputs;
     const value = this.value();
     const style: CSSProperties = { padding: "0.5em", whiteSpace: "nowrap" };
-    const inner = this.props.inputs.showDevice ? (
-      <Fragment>
-        {device}/{name}: {value}
-      </Fragment>
-    ) : (
-      <Fragment>
-        {name}: {value}
-      </Fragment>
+    return (
+      <div style={style}>
+        {showDevice ? device : ""}
+        {showDevice && showAttribute && "/"}
+        {showAttribute ? name : ""}
+        {(showDevice || showAttribute) && ": "} {value}
+      </div>
     );
-
-    return <div style={style}>{inner}</div>;
   }
 
   private value(): ReactNode {
@@ -67,12 +76,17 @@ class AttributeReadOnly extends Component<Props> {
 
     const {
       attribute: { value, unit },
-      precision
+      precision,
+      scientificNotation
     } = this.props.inputs;
 
     let result: ReactNode;
     if (Number(parseFloat(value)) === value) {
-      result = value.toFixed(precision);
+      if (scientificNotation) {
+        result = value.toExponential(precision);
+      } else {
+        result = value.toFixed(precision);
+      }
     } else {
       result = value === undefined ? null : String(value);
     }
