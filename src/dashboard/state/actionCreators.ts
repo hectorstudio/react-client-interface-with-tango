@@ -20,7 +20,8 @@ import {
   SAVE_DASHBOARD,
   DASHBOARD_SAVED,
   SHOW_NOTIFICATION,
-  HIDE_NOTIFICATION
+  HIDE_NOTIFICATION,
+  DUPLICATE_WIDGET,
 } from "./actionTypes";
 
 import {
@@ -38,7 +39,8 @@ import {
   SaveDashboardAction,
   DashboardSavedAction,
   RenameDashboardAction,
-  CloneDashboardAction
+  CloneDashboardAction,
+  DuplicateWidgetAction,
 } from "./actions";
 
 import { Widget, Dashboard } from "../types";
@@ -51,6 +53,9 @@ export function redo(): RedoAction{
   return {type: REDO}
 }
 
+export function duplicateWidget(): DuplicateWidgetAction{
+  return {type: DUPLICATE_WIDGET}
+}
 export function addWidget(
   x: number,
   y: number,

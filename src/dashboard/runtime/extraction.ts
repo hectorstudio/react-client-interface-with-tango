@@ -80,6 +80,9 @@ function* extractDeviceNamesFromInputsGen(
   const inputNames = Object.keys(inputs);
   for (const name of inputNames) {
     const inputDefinition = inputDefinitions[name];
+    if (!inputDefinition){
+      return;
+    }
     const input = inputs[name];
     const { type, repeat } = inputDefinition;
 

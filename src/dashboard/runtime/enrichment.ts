@@ -227,15 +227,16 @@ export function enrichedInputs(
   return names.reduce((accum, name) => {
     const subInput = inputs[name];
     const subDefinition = inputDefinitions[name];
-
-    const value = enrichedInput(
-      subInput,
-      subDefinition,
-      published,
-      contextWithDefaults,
-      onInvalidate
-    );
-
+    let value = "";
+    if (subDefinition){
+      value = enrichedInput(
+        subInput,
+        subDefinition,
+        published,
+        contextWithDefaults,
+        onInvalidate
+      );
+    }
     return { ...accum, [name]: value };
   }, {});
 }

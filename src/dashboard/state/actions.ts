@@ -22,7 +22,8 @@ import {
   HIDE_NOTIFICATION,
   SAVE_DASHBOARD,
   RENAME_DASHBOARD,
-  CLONE_DASHBOARD
+  CLONE_DASHBOARD,
+  DUPLICATE_WIDGET,
 } from "./actionTypes";
 
 import { IndexPath, Widget, Dashboard, Notification } from "../types";
@@ -33,6 +34,10 @@ export interface UndoAction extends Action {
 
 export interface RedoAction extends Action {
   type: typeof REDO;
+}
+
+export interface DuplicateWidgetAction extends Action {
+  type: typeof DUPLICATE_WIDGET;
 }
 
 export interface AddWidgetAction extends Action {
@@ -167,6 +172,7 @@ export interface HideNotificationAction extends Action {
 export type DashboardAction =
   | UndoAction
   | RedoAction
+  | DuplicateWidgetAction
   | AddWidgetAction
   | MoveWidgetsAction
   | ResizeWidgetAction

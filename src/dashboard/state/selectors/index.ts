@@ -31,6 +31,10 @@ export const getRedirect = createSelector(
   getSelectedDashboardState,
   state => state.redirect
 );
+export const hasSelectedWidgets = createSelector(
+  getSelectedDashboardState,
+  state => state.selectedIds.length > 0
+);
 export const getUserName = createSelector(
   getUserState,
   state => state.username
