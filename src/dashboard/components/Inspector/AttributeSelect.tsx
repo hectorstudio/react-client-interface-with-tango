@@ -77,22 +77,22 @@ export default class AttributeSelect extends Component<Props, State> {
 
               <select
                 className="form-control"
-                value={attribute}
-                disabled={hasAttributes === false}
+                disabled={!hasAttributes}
                 onChange={this.handleSelectAttribute}
+                defaultValue={attribute || ""}
               >
-                {hasDevice === false && (
-                  <option selected={true} value="">
+                {!hasDevice && (
+                  <option value="">
                     Pick a device first
                   </option>
                 )}
-                {hasDevice && hasAttributes === false && (
-                  <option value="" selected={true}>
+                {hasDevice && !hasAttributes && (
+                  <option value="">
                     No attributes
                   </option>
                 )}
                 {hasDevice && hasAttributes && (
-                  <option value="" disabled={true} selected={true}>
+                  <option value="" disabled={true}>
                     Select attribute...
                   </option>
                 )}

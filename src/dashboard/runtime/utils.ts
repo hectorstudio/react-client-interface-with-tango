@@ -22,8 +22,9 @@ export function publishedDevices(
   const result = {};
 
   for (const name of inputNames) {
+
     const definition = definitions[name];
-    if (definition.type === "device") {
+    if (definition && definition.type === "device") {
       const { publish } = definition;
 
       if (publish == null) {

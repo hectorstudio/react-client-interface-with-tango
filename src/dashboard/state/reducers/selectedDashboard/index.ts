@@ -13,7 +13,8 @@ import {
   MOVE_WIDGETS,
   DASHBOARD_LOADED,
   DASHBOARD_RENAMED,
-  DASHBOARD_DELETED
+  DASHBOARD_DELETED,
+  DUPLICATE_WIDGET
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
@@ -102,7 +103,7 @@ export default function canvases(
         height,
         type,
         inputs,
-        valid: false
+        valid: false,
       });
       const { history:oldHistory, widgets:oldWidgets } = state;
       const history = pushToHistory(oldHistory, oldWidgets);
@@ -139,6 +140,28 @@ export default function canvases(
     case SELECT_WIDGETS: {
       const { ids } = action;
       return { ...state, selectedIds: ids };
+    }
+    case DUPLICATE_WIDGET: {
+      let newId = parseInt(nextId(state.widgets));
+      const newWidgets = Object.assign({}, state.widgets);
+      const newIds:string[] = [];
+      state.selectedIds.forEach(id => {
+        const newWidget = Object.assign({}, state.widgets[id]);
+        newWidget.x += 1;
+        newWidget.y += 1;
+        newWidget.id = newId.toString();
+        newWidgets[newId.toString()] = newWidget;
+        newIds.push(newId.toString())
+        newId++;
+      });
+      const { history:oldHistory, widgets:oldWidgets } = state;
+      const history = pushToHistory(oldHistory, oldWidgets);
+      return {
+        ...state,
+        widgets: newWidgets,
+        selectedIds: newIds,
+        history
+      };
     }
     case DELETE_WIDGET: {
       const widgets = Object.keys(state.widgets)
@@ -194,6 +217,19 @@ export default function canvases(
     case DASHBOARD_LOADED: {
       const { widgets, dashboard } = action;
       const { id, name, user, redirect, insertTime, updateTime } = dashboard;
+
+      //in case the widget is missing fields present in its definition, add those with their default values
+      widgets.forEach(widget => {
+        const definition = definitionForWidget(widget);
+        for (const key of Object.keys(definition.inputs)) {
+          if (!(key in widget.inputs) &&  ('default' in definition.inputs[key])){
+            widget.inputs[key] = definition.inputs[key].default;
+          }
+        }
+      })
+      
+
+
       const newWidgets = widgets.reduce((accum, widget) => {
         return { ...accum, [widget.id]: validate(widget) };
       }, {});

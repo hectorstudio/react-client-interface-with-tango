@@ -5,7 +5,8 @@ import {
   getSelectedDashboard,
   getUserName,
   getNotification,
-  getMode
+  getMode,
+  hasSelectedWidgets
 } from "../state/selectors";
 import { RootState } from "../state/reducers";
 import { Dashboard } from "../types";
@@ -13,7 +14,8 @@ import {
   renameDashboard,
   cloneDashboard,
   undo,
-  redo
+  redo,
+  duplicateWidget
 } from "../state/actionCreators";
 import { Notification } from "../types";
 import { DashboardAction } from "../state/actions";
@@ -25,8 +27,10 @@ interface Props {
   loggedInUser: string;
   notification: Notification;
   mode: "edit" | "run";
+  hasSelectedWidgets: boolean;
   onTitleChange: (id: string, name: string) => void;
   onClone: (id: string, newUser: string) => void;
+  onDuplicateWidget: () => void;
   onUndo: () => void;
   onRedo: () => void;
 }
@@ -101,6 +105,7 @@ class DashboardTitle extends Component<Props, State> {
             padding: "0.25em 0.5em",
             borderRadius: "0.25em",
             backgroundColor: "white",
+            margin: "0em 0.1em",
             border: "1px solid rgba(0, 0, 0, 0.2)",
             cursor: undoDisabled ? "not-allowed" : "pointer"
           }}
@@ -115,6 +120,7 @@ class DashboardTitle extends Component<Props, State> {
             padding: "0.25em 0.5em",
             borderRadius: "0.25em",
             backgroundColor: "white",
+            margin: "0em 0.1em",
             border: "1px solid rgba(0, 0, 0, 0.2)",
             cursor: redoDisabled ? "not-allowed" : "pointer"
           }}
@@ -123,6 +129,21 @@ class DashboardTitle extends Component<Props, State> {
           disabled={redoDisabled}
         >
           <FontAwesomeIcon icon="redo" />
+        </button>
+        <button
+          style={{
+            padding: "0.25em 0.5em",
+            borderRadius: "0.25em",
+            backgroundColor: "white",
+            margin: "0em 0.1em",
+            border: "1px solid rgba(0, 0, 0, 0.2)",
+            cursor: hasSelectedWidgets ?  "pointer": "not-allowed",
+          }}
+          title="Duplicate currently selected widgets"
+          onClick={this.props.onDuplicateWidget}
+          disabled={!this.props.hasSelectedWidgets}
+        >
+          <FontAwesomeIcon icon="clone" />
         </button>
         {inEditMode && notificationMsg && !clonable && (
           <span className={`notification-msg " + ${level}`}>
@@ -150,6 +171,7 @@ function mapStateToProps(state: RootState) {
     dashboard: getSelectedDashboard(state),
     loggedInUser: getUserName(state),
     notification: getNotification(state),
+    hasSelectedWidgets: hasSelectedWidgets(state),
     mode: getMode(state)
   };
 }
@@ -167,6 +189,9 @@ function mapDispatchToProps(dispatch: Dispatch<DashboardAction>) {
     },
     onRedo: () => {
       dispatch(redo());
+    },
+    onDuplicateWidget: () => {
+      dispatch(duplicateWidget());
     }
   };
 }
