@@ -9,6 +9,7 @@ import { WidgetProps } from "./types";
 type Inputs = {
   text: StringInputDefinition;
   backgroundColor: ColorInputDefinition;
+  textColor: ColorInputDefinition;
 }
 
 type Props = WidgetProps<Inputs>;
@@ -27,13 +28,14 @@ const Inner = ({ mode, text }) => {
 
 const Label = (props: Props) => {
   const { inputs, mode, actualWidth, actualHeight } = props;
-  const { text, backgroundColor } = inputs;
+  const { text, backgroundColor, textColor } = inputs;
 
   return (
     <div
       style={{
         padding: "0.5em",
         backgroundColor,
+        color: textColor,
         wordBreak: "break-word",
         height: actualHeight,
         width: actualWidth
@@ -55,11 +57,17 @@ const definition: WidgetDefinition<Inputs> = {
       type: "string",
       default: ""
     },
+    textColor: {
+      label: "Text Color",
+      type: "color",
+      default: "#000"
+    },
     backgroundColor: {
       label: "Background Color",
       type: "color",
       default: "#ffffff"
-    }
+    },
+
   }
 };
 
