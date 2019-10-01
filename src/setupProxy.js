@@ -1,13 +1,13 @@
 const proxy = require("http-proxy-middleware");
 
 const proxies = {
-  "/kitslab/socket": {
+  "/testdb/socket": {
     target: "http://localhost:22484",
     secure: false,
     changeOrigin: true,
     ws: true
   },
-  "/kitslab/db": {
+  "/testdb/db": {
     target: "http://localhost:22484",
     secure: false,
     changeOrigin: true
