@@ -3,12 +3,17 @@ import NotLoggedIn from "../../jive/components/DeviceViewer/NotLoggedIn/NotLogge
 import { connect } from "react-redux";
 import { getIsLoggedIn } from "../../shared/user/state/selectors";
 import "./DashboardSettings.css";
-import { getDashboards, getSelectedDashboard } from "../state/selectors";
+import {
+  getDashboards,
+  getSelectedDashboard,
+} from "../state/selectors";
 import { RootState } from "../state/reducers";
 import { deleteDashboard } from "../state/actionCreators";
 import DeleteDashboardModal from "./modals/DeleteDashboardModal";
 import { Dashboard } from "../types";
 import { Route } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Dispatch } from "redux";
 
 interface Props {
   dashboards: Dashboard[];
@@ -84,16 +89,24 @@ class DashboardSettings extends Component<Props, State> {
               ) : (
                 <span>{value.name || "Untitled dashboard"}</span>
               )}
-
-              <button
-                title={`Delete dashboard ${value.name || "Untitled dashboard"}`}
-                className="delete-button"
-                onClick={() =>
-                  this.setState({ deleteDashboardModalId: value.id })
-                }
+              <div
+                style={{
+                  width: "6.5em",
+                  textAlign: "right",
+                  alignSelf: "flex-start"
+                }}
               >
-                <i className="fa fa-trash " />
-              </button>
+                <button
+                  title={`Delete dashboard '${value.name ||
+                    "Untitled dashboard"}'`}
+                  className="delete-button"
+                  onClick={() =>
+                    this.setState({ deleteDashboardModalId: value.id })
+                  }
+                >
+                  <FontAwesomeIcon icon="trash" />
+                </button>
+              </div>
             </div>
 
             {this.state.deleteDashboardModalId === value.id && (
@@ -124,16 +137,15 @@ function mapStateToProps(state: RootState) {
   return {
     dashboards: getDashboards(state),
     isLoggedIn: getIsLoggedIn(state),
-    selectedDashboard: getSelectedDashboard(state)
+    selectedDashboard: getSelectedDashboard(state),
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Dispatch) {
   return {
     onDeleteProperty: (id: string) => dispatch(deleteDashboard(id))
   };
 }
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps

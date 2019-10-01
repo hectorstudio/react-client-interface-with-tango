@@ -16,6 +16,7 @@ export interface AttributeComplexInput {
 export type Inputs = {
   timeWindow: NumberInputDefinition;
   showZeroLine: BooleanInputDefinition;
+  logarithmic: BooleanInputDefinition;
   attributes: ComplexInputDefinition<AttributeComplexInput>;
 }
 
@@ -34,6 +35,11 @@ const definition: WidgetDefinition<Inputs> = {
       type: "boolean",
       default: true,
       label: "Show Zero Line"
+    },
+    logarithmic: {
+      type: "boolean",
+      default: false,
+      label: "Log y axis"
     },
     attributes: {
       label: "Graphs",

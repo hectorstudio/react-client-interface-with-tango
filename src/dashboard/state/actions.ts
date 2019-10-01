@@ -24,6 +24,8 @@ import {
   RENAME_DASHBOARD,
   CLONE_DASHBOARD,
   DUPLICATE_WIDGET,
+  SHARE_DASHBOARD,
+  DASHBOARD_SHARED,
 } from "./actionTypes";
 
 import { IndexPath, Widget, Dashboard, Notification } from "../types";
@@ -133,10 +135,20 @@ export interface CloneDashboardAction extends Action {
   id: string;
   newUser: string;
 }
-
 export interface DashboardClonedAction extends Action {
   type: typeof DASHBOARD_CLONED;
   id: string;
+}
+export interface ShareDashboardAction extends Action{
+  type: typeof SHARE_DASHBOARD;
+  id: string;
+  group: string;
+}
+
+export interface DashboardSharedAction extends Action{
+  type: typeof DASHBOARD_SHARED;
+  id: string;
+  group: string;
 }
 
 export interface DashboardLoadedAction extends Action {
@@ -189,6 +201,8 @@ export type DashboardAction =
   | DashboardRenamedAction
   | DashboardDeletedAction
   | DashboardClonedAction
+  | ShareDashboardAction
+  | DashboardSharedAction
   | DashboardSavedAction
   | ShowNotificationAction
   | HideNotificationAction

@@ -56,6 +56,16 @@ export async function cloneDashboard(dashboardId) {
   return res.json();
 }
 
+export async function shareDashboard(dashboardId, group) {
+  const res = await fetch("/dashboards/" + dashboardId + "/share", {
+    method: "POST",
+    credentials: "include",
+    headers,
+    body: JSON.stringify({group})
+  });
+  return res.json();
+}
+
 export async function renameDashboard(id, newName) {
   const res = await fetch("/dashboards/" + id + "/rename", {
     method: "POST",

@@ -22,6 +22,8 @@ import {
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
   DUPLICATE_WIDGET,
+  SHARE_DASHBOARD,
+  DASHBOARD_SHARED
 } from "./actionTypes";
 
 import {
@@ -120,6 +122,12 @@ export function deleteDashboard(id: string) {
 }
 export function dashboardDeleted(id: string) {
   return { type: DASHBOARD_DELETED, id };
+}
+export function shareDashboard(id: string, group: string){
+  return { type: SHARE_DASHBOARD, id, group}
+}
+export function dashboardShared(id: string, group: string){
+  return { type: DASHBOARD_SHARED, id, group}
 }
 export function cloneDashboard(
   id: string,

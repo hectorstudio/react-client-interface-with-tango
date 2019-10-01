@@ -31,6 +31,7 @@ import {
 
 interface IUser {
   username: string;
+  userGroups: string[];
 }
 
 export function login(username: string, password: string) {
@@ -39,7 +40,8 @@ export function login(username: string, password: string) {
 
 export function loginSuccess(user: IUser): ILoginSuccessAction {
   const username = user.username;
-  return { type: LOGIN_SUCCESS, username };
+  const userGroups = user.userGroups;
+  return { type: LOGIN_SUCCESS, username, userGroups };
 }
 
 export function loginFailed(): ILoginFailedAction {
@@ -51,8 +53,8 @@ export function preloadUser(): IPreloadUserAction {
 }
 
 export function preloadUserSuccess(user: IUser): IPreloadUserSuccessAction {
-  const username = user.username;
-  return { type: PRELOAD_USER_SUCCESS, username };
+  const {username, userGroups} = user;
+  return { type: PRELOAD_USER_SUCCESS, username, userGroups};
 }
 
 export function preloadUserFailed(): IPreloadUserFailedAction {

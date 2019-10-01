@@ -6,9 +6,9 @@ import Dashboard from "./components/Dashboard";
 import { BrowserRouter, Route } from "react-router-dom";
 import UserAware from "../shared/user/components/UserAware";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUndo, faRedo, faClone } from '@fortawesome/free-solid-svg-icons'
+import { faUndo, faRedo, faClone, faShareAlt, faTrash } from '@fortawesome/free-solid-svg-icons'
 
-library.add( faUndo, faRedo, faClone)
+library.add( faUndo, faRedo, faClone, faShareAlt, faTrash)
 
 export default class App extends Component {
   render() {

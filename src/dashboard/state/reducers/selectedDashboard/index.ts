@@ -14,7 +14,8 @@ import {
   DASHBOARD_LOADED,
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
-  DUPLICATE_WIDGET
+  DUPLICATE_WIDGET,
+  DASHBOARD_SHARED
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
@@ -39,7 +40,7 @@ import { defaultInputs } from "../../../utils";
 export interface SelectedDashboardState extends Dashboard {
   widgets: Record<string, Widget>;
   selectedIds: string[];
-  history: DashboardEditHistory
+  history: DashboardEditHistory;
 }
 
 const initialState = {
@@ -49,6 +50,8 @@ const initialState = {
   id: "",
   name: "Untitled dashboard",
   user: "",
+  group: "",
+  lastUpdatedBy: "",
   redirect: false,
   insertTime: null,
   updateTime: null,
@@ -58,7 +61,7 @@ const initialState = {
     undoIndex: 0,
     redoIndex: 0,
     undoLength: 0,
-    redoLength: 0,
+    redoLength: 0
   }
 };
 
@@ -68,8 +71,8 @@ export default function canvases(
 ): SelectedDashboardState {
   switch (action.type) {
     case UNDO: {
-      const { history:oldHistory, widgets:oldWidgets } = state;
-      const {history, widgets} = undo(oldHistory, oldWidgets);
+      const { history: oldHistory, widgets: oldWidgets } = state;
+      const { history, widgets } = undo(oldHistory, oldWidgets);
       return {
         ...state,
         widgets,
@@ -78,8 +81,8 @@ export default function canvases(
       };
     }
     case REDO: {
-      const { history:oldHistory, widgets:oldWidgets } = state;
-      const {history, widgets} = redo(oldHistory, oldWidgets);
+      const { history: oldHistory, widgets: oldWidgets } = state;
+      const { history, widgets } = redo(oldHistory, oldWidgets);
       return {
         ...state,
         widgets,
@@ -103,9 +106,9 @@ export default function canvases(
         height,
         type,
         inputs,
-        valid: false,
+        valid: false
       });
-      const { history:oldHistory, widgets:oldWidgets } = state;
+      const { history: oldHistory, widgets: oldWidgets } = state;
       const history = pushToHistory(oldHistory, oldWidgets);
       return {
         ...state,
@@ -125,7 +128,7 @@ export default function canvases(
         }, {});
 
       const widgets = { ...state.widgets, ...moved };
-      const { history:oldHistory, widgets:oldWidgets } = state;
+      const { history: oldHistory, widgets: oldWidgets } = state;
       const history = pushToHistory(oldHistory, oldWidgets);
       return { ...state, widgets, history };
     }
@@ -133,7 +136,7 @@ export default function canvases(
       const { dx, dy, mx, my, id } = action;
       const newWidget = resize(state.widgets[id], mx, my, dx, dy);
       const widgets = { ...state.widgets, [id]: newWidget };
-      const { history:oldHistory, widgets:oldWidgets } = state;
+      const { history: oldHistory, widgets: oldWidgets } = state;
       const history = pushToHistory(oldHistory, oldWidgets);
       return { ...state, widgets, history };
     }
@@ -144,17 +147,17 @@ export default function canvases(
     case DUPLICATE_WIDGET: {
       let newId = parseInt(nextId(state.widgets));
       const newWidgets = Object.assign({}, state.widgets);
-      const newIds:string[] = [];
+      const newIds: string[] = [];
       state.selectedIds.forEach(id => {
         const newWidget = Object.assign({}, state.widgets[id]);
         newWidget.x += 1;
         newWidget.y += 1;
         newWidget.id = newId.toString();
         newWidgets[newId.toString()] = newWidget;
-        newIds.push(newId.toString())
+        newIds.push(newId.toString());
         newId++;
       });
-      const { history:oldHistory, widgets:oldWidgets } = state;
+      const { history: oldHistory, widgets: oldWidgets } = state;
       const history = pushToHistory(oldHistory, oldWidgets);
       return {
         ...state,
@@ -169,8 +172,8 @@ export default function canvases(
         .reduce((accum, id) => {
           return { ...accum, [id]: state.widgets[id] };
         }, {});
-        const { history:oldHistory, widgets:oldWidgets } = state;
-        const history = pushToHistory(oldHistory, oldWidgets);
+      const { history: oldHistory, widgets: oldWidgets } = state;
+      const history = pushToHistory(oldHistory, oldWidgets);
       return { ...state, widgets, selectedIds: [], history };
     }
     case SET_INPUT: {
@@ -181,7 +184,7 @@ export default function canvases(
       }
       const newWidget = validate(setInput(state.widgets[id], path, value));
       const widgets = { ...state.widgets, [id]: newWidget };
-      const { history:oldHistory, widgets:oldWidgets } = state;
+      const { history: oldHistory, widgets: oldWidgets } = state;
       const history = pushToHistory(oldHistory, oldWidgets);
       return { ...state, widgets, history };
     }
@@ -198,7 +201,7 @@ export default function canvases(
         addInput(state.widgets[id], [...path, -1], value)
       );
       const widgets = { ...state.widgets, [id]: newWidget };
-      const { history:oldHistory, widgets:oldWidgets } = state;
+      const { history: oldHistory, widgets: oldWidgets } = state;
       const history = pushToHistory(oldHistory, oldWidgets);
       return { ...state, widgets, history };
     }
@@ -210,25 +213,44 @@ export default function canvases(
       }
       const newWidget = validate(deleteInput(state.widgets[id], path));
       const widgets = { ...state.widgets, [id]: newWidget };
-      const { history:oldHistory, widgets:oldWidgets } = state;
+      const { history: oldHistory, widgets: oldWidgets } = state;
       const history = pushToHistory(oldHistory, oldWidgets);
       return { ...state, widgets, history };
     }
+    case DASHBOARD_SHARED: {
+      const { id, group } = action;
+      if (id === state.id){
+        return {
+          ...state,
+          group
+        };
+      }else{
+        return state;
+      }
+      
+    }
     case DASHBOARD_LOADED: {
       const { widgets, dashboard } = action;
-      const { id, name, user, redirect, insertTime, updateTime } = dashboard;
+      const {
+        id,
+        name,
+        user,
+        redirect,
+        insertTime,
+        updateTime,
+        group,
+        lastUpdatedBy,
+      } = dashboard;
 
       //in case the widget is missing fields present in its definition, add those with their default values
       widgets.forEach(widget => {
         const definition = definitionForWidget(widget);
         for (const key of Object.keys(definition.inputs)) {
-          if (!(key in widget.inputs) &&  ('default' in definition.inputs[key])){
+          if (!(key in widget.inputs) && "default" in definition.inputs[key]) {
             widget.inputs[key] = definition.inputs[key].default;
           }
         }
-      })
-      
-
+      });
 
       const newWidgets = widgets.reduce((accum, widget) => {
         return { ...accum, [widget.id]: validate(widget) };
@@ -242,7 +264,9 @@ export default function canvases(
         user,
         redirect,
         insertTime,
-        updateTime
+        updateTime,
+        group,
+        lastUpdatedBy,
       };
     }
     case DASHBOARD_RENAMED: {

@@ -126,6 +126,8 @@ export interface Dashboard {
   redirect: boolean;
   insertTime: Date | null;
   updateTime: Date | null;
+  group: string | null;
+  lastUpdatedBy: string | null;
   history: DashboardEditHistory;
 }
 
