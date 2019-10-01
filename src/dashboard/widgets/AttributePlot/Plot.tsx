@@ -13,6 +13,7 @@ export interface PlotParams {
   staticMode?: boolean;
   timeWindow: number;
   showZeroLine?: boolean;
+  logarithmic?: boolean;
 }
 
 export interface Trace {
@@ -53,7 +54,7 @@ function dataAndRange(traces: Trace[], params: PlotParams) {
 
 export default function Plot(props: PlotProps) {
   const { traces, params } = props;
-  const { staticMode, width, height, showZeroLine } = params;
+  const { staticMode, width, height, showZeroLine, logarithmic } = params;
 
   const userLayout = useRef<object>({}); // Use ref instad of state in order to avoid triggering a re-render, appearently causing an infinite loop
 
@@ -75,7 +76,8 @@ export default function Plot(props: PlotProps) {
         yaxis: {
           side: "left",
           showgrid: false,
-          zeroline
+          zeroline,
+          type: (logarithmic ? "log" : ""),
         }
       }
     : {};

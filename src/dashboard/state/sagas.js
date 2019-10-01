@@ -20,7 +20,8 @@ import {
   dashboardSaved,
   showNotification,
   hideNotification,
-  saveDashboard as saveDashboardAction
+  dashboardShared,
+  saveDashboard as saveDashboardAction,
 } from "./actionCreators";
 import {
   PRELOAD_USER_SUCCESS,
@@ -30,9 +31,11 @@ import {
   RENAME_DASHBOARD,
   DELETE_DASHBOARD,
   CLONE_DASHBOARD,
+  SHARE_DASHBOARD,
   LOAD_DASHBOARD,
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
+  DASHBOARD_SHARED,
   DASHBOARD_CLONED,
   SAVE_DASHBOARD,
   DASHBOARD_SAVED,
@@ -52,7 +55,9 @@ export default function* sagas() {
   yield fork(notifyOnSave);
   yield fork(notifyOnClone);
   yield fork(notifyOnDelete);
+  yield fork(notifyOnShare);
   yield fork(hideNotificationAfterDelay);
+  yield fork(shareDashboard)
 }
 
 function* loadDashboards() {
@@ -63,7 +68,7 @@ function* loadDashboards() {
       DASHBOARD_RENAMED,
       DASHBOARD_DELETED,
       DASHBOARD_CLONED,
-      DASHBOARD_SAVED
+      DASHBOARD_SAVED,
     ]);
     try {
       const result = yield call(API.loadUserDashboards);
@@ -71,6 +76,14 @@ function* loadDashboards() {
     } catch (exception) {
       console.log(exception);
     }
+  }
+}
+
+function* shareDashboard() {
+  while (true) {
+    const { id, group } = yield take(SHARE_DASHBOARD);
+    yield call(API.shareDashboard, id, group);
+    yield put(dashboardShared(id, group));
   }
 }
 
@@ -115,7 +128,7 @@ function* loadDashboard() {
     ]);
     const { id, type } = payload;
     try {
-      const { widgets, name, user, insertTime, updateTime } = yield call(
+      const { widgets, name, user, insertTime, updateTime, group, lastUpdatedBy } = yield call(
         API.load,
         id
       );
@@ -129,7 +142,7 @@ function* loadDashboard() {
         type === DASHBOARD_CLONED || (type === DASHBOARD_SAVED && created);
       yield put(
         dashboardLoaded(
-          { id, name, user, redirect, insertTime, updateTime },
+          { id, name, user, redirect, insertTime, updateTime, group, lastUpdatedBy },
           widgets
         )
       );
@@ -175,6 +188,14 @@ function* notifyOnSave() {
         showNotification("INFO", DASHBOARD_CREATED, "Dashboard created")
       );
     }
+  }
+}
+
+function* notifyOnShare() {
+  while (true) {
+    const { group } = yield take(DASHBOARD_SHARED);
+    const msg = group ? "Dashboard shared with " + group : "Dashboard unshared"
+    yield put(showNotification("INFO", DASHBOARD_SHARED, msg))
   }
 }
 

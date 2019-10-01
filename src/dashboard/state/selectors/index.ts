@@ -51,6 +51,10 @@ export const getSelectedDashboard = createSelector(
     return dashboard;
   }
 );
+export const getUserGroups = createSelector(
+  getUserState,
+  state => state.userGroups || []
+)
 
 const getWidgetsObject = createSelector(
   getSelectedDashboardState,

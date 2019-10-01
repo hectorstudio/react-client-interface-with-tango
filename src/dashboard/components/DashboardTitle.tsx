@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import moment from "moment";
 import "./DashboardTitle.css";
 import { connect } from "react-redux";
 import {
@@ -6,7 +7,8 @@ import {
   getUserName,
   getNotification,
   getMode,
-  hasSelectedWidgets
+  hasSelectedWidgets,
+  getUserGroups
 } from "../state/selectors";
 import { RootState } from "../state/reducers";
 import { Dashboard } from "../types";
@@ -15,12 +17,13 @@ import {
   cloneDashboard,
   undo,
   redo,
-  duplicateWidget
+  duplicateWidget,
+  shareDashboard
 } from "../state/actionCreators";
 import { Notification } from "../types";
-import { DashboardAction } from "../state/actions";
 import { Dispatch } from "redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ShareDashboardModal from "./modals/ShareDashboardModal";
 
 interface Props {
   dashboard: Dashboard;
@@ -33,10 +36,13 @@ interface Props {
   onDuplicateWidget: () => void;
   onUndo: () => void;
   onRedo: () => void;
+  onShareDashboard: (id: string, group: string) => void;
+  userGroups: string[];
 }
 
 interface State {
   wipName: string | null;
+  showShareModal: boolean;
 }
 
 // TODO: displaying notifications is outside of the scope of this component and should be factored out at some point, e.g. to TopBar
@@ -46,7 +52,8 @@ class DashboardTitle extends Component<Props, State> {
 
   constructor(props) {
     super(props);
-    this.state = { wipName: null };
+    this.handleShareDashboard = this.handleShareDashboard.bind(this);
+    this.state = { wipName: null, showShareModal: false };
   }
 
   public componentWillReceiveProps(nextProps) {
@@ -55,16 +62,27 @@ class DashboardTitle extends Component<Props, State> {
     }
   }
 
-  public render() {
-    const { dashboard, loggedInUser, mode } = this.props;
-    const { id, user: owner } = dashboard;
+  private handleShareDashboard(id: string, group: string) {
+    this.props.onShareDashboard(id, group);
+    this.setState({ showShareModal: false });
+  }
 
+  public render() {
+    const { dashboard, loggedInUser, mode, userGroups } = this.props;
+    const { id, user: owner, group, lastUpdatedBy, updateTime } = dashboard;
     const isMine = loggedInUser === owner;
     const inEditMode = mode === "edit";
-    const editable = (isMine || !owner) && inEditMode;
+    const showRecentlyEditedMessage =
+      wasRecently(updateTime) && lastUpdatedBy && lastUpdatedBy !== loggedInUser;
+    const editableTitle = (isMine || !owner) && inEditMode;
+    const isSharedWithMe = userGroups.includes(group || "") && !isMine;
+
+    const showNotEditableMessage = !isMine && !isSharedWithMe && owner;
+    const showSharedMessage = isSharedWithMe;
     const clonable = !isMine && owner;
     const { level, msg: notificationMsg } = this.props.notification;
-
+    const shareButtonColor =
+      isMine && group ? "#17a6b7" : isMine ? "inherit" : "greytext";
     if (!loggedInUser) {
       return (
         <div className="dashboard-menu">
@@ -84,86 +102,117 @@ class DashboardTitle extends Component<Props, State> {
     const redoDisabled = this.props.dashboard.history.redoLength === 0;
     const undoDisabled = this.props.dashboard.history.undoLength === 0;
     return (
-      <div className="dashboard-menu">
-        <input
-          ref={ref => (this.inputRef = ref)}
-          type="text"
-          value={name}
-          disabled={!editable}
-          onChange={e => this.setState({ wipName: e.target.value })}
-          onKeyPress={e => {
-            if (e.key === "Enter" && wipName != null) {
-              this.props.onTitleChange(id, wipName);
-              e.currentTarget.blur();
-            }
-          }}
-          onBlur={() => this.setState({ wipName: null })}
-          onFocus={() => this.inputRef.select()}
-        />
-        <button
-          style={{
-            padding: "0.25em 0.5em",
-            borderRadius: "0.25em",
-            backgroundColor: "white",
-            margin: "0em 0.1em",
-            border: "1px solid rgba(0, 0, 0, 0.2)",
-            cursor: undoDisabled ? "not-allowed" : "pointer"
-          }}
-          title="Undo last action"
-          onClick={this.props.onUndo}
-          disabled={undoDisabled}
-        >
-          <FontAwesomeIcon icon="undo" />
-        </button>
-        <button
-          style={{
-            padding: "0.25em 0.5em",
-            borderRadius: "0.25em",
-            backgroundColor: "white",
-            margin: "0em 0.1em",
-            border: "1px solid rgba(0, 0, 0, 0.2)",
-            cursor: redoDisabled ? "not-allowed" : "pointer"
-          }}
-          title="Redo last action"
-          onClick={this.props.onRedo}
-          disabled={redoDisabled}
-        >
-          <FontAwesomeIcon icon="redo" />
-        </button>
-        <button
-          style={{
-            padding: "0.25em 0.5em",
-            borderRadius: "0.25em",
-            backgroundColor: "white",
-            margin: "0em 0.1em",
-            border: "1px solid rgba(0, 0, 0, 0.2)",
-            cursor: hasSelectedWidgets ?  "pointer": "not-allowed",
-          }}
-          title="Duplicate currently selected widgets"
-          onClick={this.props.onDuplicateWidget}
-          disabled={!this.props.hasSelectedWidgets}
-        >
-          <FontAwesomeIcon icon="clone" />
-        </button>
-        {inEditMode && notificationMsg && !clonable && (
-          <span className={`notification-msg " + ${level}`}>
-            {notificationMsg}
-          </span>
+      <>
+        {this.state.showShareModal && (
+          <ShareDashboardModal
+            id={dashboard.id}
+            name={dashboard.name}
+            userGroups={userGroups}
+            current={dashboard.group}
+            onClose={() => this.setState({ showShareModal: false })}
+            onShare={this.handleShareDashboard}
+          />
         )}
-        {clonable && (
-          <span style={{ fontStyle: "italic" }}>
-            This dashboard is owned by {owner} and cannot be edited
+        <div className="dashboard-menu">
+          <input
+            ref={ref => (this.inputRef = ref)}
+            type="text"
+            value={name}
+            disabled={!editableTitle}
+            onChange={e => this.setState({ wipName: e.target.value })}
+            onKeyPress={e => {
+              if (e.key === "Enter" && wipName != null) {
+                this.props.onTitleChange(id, wipName);
+                e.currentTarget.blur();
+              }
+            }}
+            onBlur={() => this.setState({ wipName: null })}
+            onFocus={() => this.inputRef.select()}
+          />
+          <button
+            className="dashboard-menu-button"
+            title="Undo last action"
+            onClick={this.props.onUndo}
+            disabled={undoDisabled}
+          >
+            <FontAwesomeIcon icon="undo" />
+          </button>
+          <button
+            className="dashboard-menu-button"
+            title="Redo last action"
+            onClick={this.props.onRedo}
+            disabled={redoDisabled}
+          >
+            <FontAwesomeIcon icon="redo" />
+          </button>
+          <button
+            className="dashboard-menu-button"
+            title="Duplicate currently selected widgets"
+            onClick={this.props.onDuplicateWidget}
+            disabled={!this.props.hasSelectedWidgets}
+          >
+            <FontAwesomeIcon icon="clone" />
+          </button>
+          {userGroups && userGroups.length > 0 && (
+            <button
+              className="dashboard-menu-button"
+              style={{
+                color: shareButtonColor
+              }}
+              disabled={!dashboard.id || !isMine}
+              title={
+                dashboard.group
+                  ? "This dashboard is shared with the group '" +
+                    dashboard.group +
+                    "'"
+                  : "Share this dashboard with a user group"
+              }
+              onClick={() => this.setState({ showShareModal: true })}
+            >
+              <FontAwesomeIcon icon="share-alt" />
+            </button>
+          )}
+          {inEditMode && notificationMsg && !clonable && (
+            <span className={`notification-msg " + ${level}`}>
+              {notificationMsg}
+            </span>
+          )}
+          {showNotEditableMessage && (
+            <span style={{ fontStyle: "italic" }}>
+              This dashboard is owned by {owner} and cannot be edited
+            </span>
+          )}
+          {showSharedMessage && (
+            <span style={{ fontStyle: "italic" }}>
+              This dashboard is owned by {owner} and shared with{" "}
+              {dashboard.group}
+            </span>
+          )}
+          {showRecentlyEditedMessage && (
+            <span style={{ fontStyle: "italic" }}>
+              This dashboard is currently being edited by {lastUpdatedBy}
+            </span>
+          )}
+          {clonable && (
             <button
               onClick={() => this.props.onClone(id, loggedInUser)}
               className="btn-clone"
             >
               Clone Dashboard
             </button>
-          </span>
-        )}
-      </div>
+          )}
+        </div>
+      </>
     );
   }
+}
+function wasRecently(timestamp: Date | null) {
+  if (!moment(timestamp || "").isValid()) {
+    return false;
+  }
+  const diffInSeconds = moment().diff(moment(timestamp || "")) / 1000;
+  console.log("Diff in seconds: " + diffInSeconds);
+  return diffInSeconds < 60;
 }
 
 function mapStateToProps(state: RootState) {
@@ -172,11 +221,12 @@ function mapStateToProps(state: RootState) {
     loggedInUser: getUserName(state),
     notification: getNotification(state),
     hasSelectedWidgets: hasSelectedWidgets(state),
+    userGroups: getUserGroups(state),
     mode: getMode(state)
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch<DashboardAction>) {
+function mapDispatchToProps(dispatch: Dispatch) {
   return {
     onTitleChange: (id: string, name: string) => {
       dispatch(renameDashboard(id, name));
@@ -192,7 +242,9 @@ function mapDispatchToProps(dispatch: Dispatch<DashboardAction>) {
     },
     onDuplicateWidget: () => {
       dispatch(duplicateWidget());
-    }
+    },
+    onShareDashboard: (id: string, group: string) =>
+      dispatch(shareDashboard(id, group))
   };
 }
 

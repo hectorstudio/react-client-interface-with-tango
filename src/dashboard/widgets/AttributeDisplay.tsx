@@ -1,4 +1,4 @@
-import React, { Component, Fragment, CSSProperties, ReactNode } from "react";
+import React, { Component, CSSProperties, ReactNode } from "react";
 import { WidgetProps } from "./types";
 
 import {

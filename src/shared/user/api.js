@@ -5,6 +5,9 @@ export default {
     try {
       const res = await fetch("/auth/user", {credentials: 'include'});
       const user = await res.json();
+      if (!user.groups){
+        user.groups = [];
+      }
       return user;
     } catch (err) {
       return null;
@@ -25,7 +28,11 @@ export default {
       const json = await res.json()
       const cookies = new Cookies();
       cookies.set("webjive_jwt", json.webjive_jwt, { path: "/"});
-      return res.ok ? username : null;
+      let groups = [];
+      try{
+        groups = JSON.parse(window.atob(json.webjive_jwt.split('.')[1])).groups;
+      }catch(err){}
+      return res.ok ? {username, groups} : null;
     } catch (err) {
       return null;
     }

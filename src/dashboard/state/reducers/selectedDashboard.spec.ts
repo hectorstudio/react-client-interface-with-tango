@@ -14,6 +14,8 @@ const basicState = {
   id: "",
   name: "",
   user: "",
+  group: "",
+  lastUpdatedBy: "",
   redirect: false,
   insertTime: null,
   updateTime: null,

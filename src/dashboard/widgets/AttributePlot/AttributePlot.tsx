@@ -9,13 +9,14 @@ type AttributeEntries = Props["inputs"]["attributes"];
 
 function AttributePlot(props: Props) {
   const { mode, inputs, actualWidth, actualHeight } = props;
-  const { attributes, timeWindow, showZeroLine } = inputs;
+  const { attributes, timeWindow, showZeroLine, logarithmic } = inputs;
 
   const runParams = {
     width: actualWidth,
     height: actualHeight,
     timeWindow,
-    showZeroLine
+    showZeroLine,
+    logarithmic
   };
 
   const staticParams = { ...runParams, staticMode: true };

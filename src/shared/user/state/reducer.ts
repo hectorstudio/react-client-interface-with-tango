@@ -24,6 +24,7 @@ import {
 
 export interface IUserState {
   username?: string;
+  userGroups?: string[];
   awaitingResponse: boolean;
   loginFailed: boolean;
   loginDialogVisible: boolean;
@@ -59,11 +60,12 @@ export default function user(
       return {
         ...state,
         username: action.username,
+        userGroups: action.userGroups,
         loginDialogVisible: false,
         awaitingResponse: false
       };
     case PRELOAD_USER_SUCCESS:
-      return { ...state, username: action.username, awaitingResponse: false };
+      return { ...state, username: action.username, userGroups: action.userGroups, awaitingResponse: false };
     case PRELOAD_USER_FAILED:
       return { ...state, awaitingResponse: false };
     case LOGOUT:
