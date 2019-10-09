@@ -80,6 +80,7 @@ export default class AttributeSelect extends Component<Props, State> {
                 disabled={!hasAttributes}
                 onChange={this.handleSelectAttribute}
                 defaultValue={attribute || ""}
+                value={attribute || ""}
               >
                 {!hasDevice && (
                   <option value="">

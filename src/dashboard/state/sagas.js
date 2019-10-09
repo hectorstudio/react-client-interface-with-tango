@@ -1,13 +1,4 @@
-import {
-  take,
-  fork,
-  put,
-  call,
-  select,
-  race,
-  delay
-} from "redux-saga/effects";
-// import delay from "@redux-saga/delay-p";
+import { take, fork, put, call, select, race, delay } from "redux-saga/effects";
 
 import createUserSaga from "../../shared/user/state/saga";
 import * as API from "../dashboardRepo";
@@ -21,7 +12,7 @@ import {
   showNotification,
   hideNotification,
   dashboardShared,
-  saveDashboard as saveDashboardAction,
+  saveDashboard as saveDashboardAction
 } from "./actionCreators";
 import {
   PRELOAD_USER_SUCCESS,
@@ -57,7 +48,7 @@ export default function* sagas() {
   yield fork(notifyOnDelete);
   yield fork(notifyOnShare);
   yield fork(hideNotificationAfterDelay);
-  yield fork(shareDashboard)
+  yield fork(shareDashboard);
 }
 
 function* loadDashboards() {
@@ -67,8 +58,7 @@ function* loadDashboards() {
       LOGIN_SUCCESS,
       DASHBOARD_RENAMED,
       DASHBOARD_DELETED,
-      DASHBOARD_CLONED,
-      DASHBOARD_SAVED,
+      DASHBOARD_CLONED
     ]);
     try {
       const result = yield call(API.loadUserDashboards);
@@ -128,10 +118,15 @@ function* loadDashboard() {
     ]);
     const { id, type } = payload;
     try {
-      const { widgets, name, user, insertTime, updateTime, group, lastUpdatedBy } = yield call(
-        API.load,
-        id
-      );
+      const {
+        widgets,
+        name,
+        user,
+        insertTime,
+        updateTime,
+        group,
+        lastUpdatedBy
+      } = yield call(API.load, id);
       //We want to redirect the dashboard component to the url with the dashboard id if the
       //dashboard was just created
       let created = false;
@@ -140,12 +135,23 @@ function* loadDashboard() {
       }
       const redirect =
         type === DASHBOARD_CLONED || (type === DASHBOARD_SAVED && created);
-      yield put(
-        dashboardLoaded(
-          { id, name, user, redirect, insertTime, updateTime, group, lastUpdatedBy },
-          widgets
-        )
-      );
+      if (!(type === DASHBOARD_SAVED && !created)) {
+        yield put(
+          dashboardLoaded(
+            {
+              id,
+              name,
+              user,
+              redirect,
+              insertTime,
+              updateTime,
+              group,
+              lastUpdatedBy
+            },
+            widgets
+          )
+        );
+      }
     } catch (exception) {
       // Replace with failure action and write saga that reacts on it and puts a notification action
       yield put(
@@ -194,8 +200,8 @@ function* notifyOnSave() {
 function* notifyOnShare() {
   while (true) {
     const { group } = yield take(DASHBOARD_SHARED);
-    const msg = group ? "Dashboard shared with " + group : "Dashboard unshared"
-    yield put(showNotification("INFO", DASHBOARD_SHARED, msg))
+    const msg = group ? "Dashboard shared with " + group : "Dashboard unshared";
+    yield put(showNotification("INFO", DASHBOARD_SHARED, msg));
   }
 }
 
@@ -226,7 +232,7 @@ function* hideNotificationAfterDelay() {
         break;
       }
     }
-    
+
     yield put(hideNotification());
   }
 }
