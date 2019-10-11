@@ -23,7 +23,8 @@ import {
   HIDE_NOTIFICATION,
   DUPLICATE_WIDGET,
   SHARE_DASHBOARD,
-  DASHBOARD_SHARED
+  DASHBOARD_SHARED,
+  DASHBOARD_EDITED
 } from "./actionTypes";
 
 import {
@@ -43,9 +44,11 @@ import {
   RenameDashboardAction,
   CloneDashboardAction,
   DuplicateWidgetAction,
+  dashboardEditedAction,
 } from "./actions";
 
 import { Widget, Dashboard } from "../types";
+import { SelectedDashboardState } from "./reducers/selectedDashboard";
 
 export function undo(): UndoAction{
   return {type: UNDO}
@@ -162,7 +165,11 @@ export function saveDashboard(
 ): SaveDashboardAction {
   return { type: SAVE_DASHBOARD, id, name, widgets };
 }
-
+export function dashboardEdited(
+  dashboard: SelectedDashboardState
+):dashboardEditedAction{
+  return {type: DASHBOARD_EDITED, dashboard}
+}
 export function showNotification(level: string, action: string, msg: string) {
   return { type: SHOW_NOTIFICATION, notification: { level, action, msg } };
 }

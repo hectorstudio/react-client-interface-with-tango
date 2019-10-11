@@ -73,11 +73,13 @@ class DashboardTitle extends Component<Props, State> {
     const isMine = loggedInUser === owner;
     const inEditMode = mode === "edit";
     const showRecentlyEditedMessage =
-      wasRecently(updateTime) && lastUpdatedBy && lastUpdatedBy !== loggedInUser;
+      wasRecently(updateTime) &&
+      lastUpdatedBy &&
+      lastUpdatedBy !== loggedInUser;
     const editableTitle = (isMine || !owner) && inEditMode;
     const isSharedWithMe = userGroups.includes(group || "") && !isMine;
 
-    const showNotEditableMessage = !isMine && !isSharedWithMe && owner;
+    const showOwnedByMsg = !isMine && owner;
     const showSharedMessage = isSharedWithMe;
     const clonable = !isMine && owner;
     const { level, msg: notificationMsg } = this.props.notification;
@@ -129,31 +131,35 @@ class DashboardTitle extends Component<Props, State> {
             onBlur={() => this.setState({ wipName: null })}
             onFocus={() => this.inputRef.select()}
           />
-          <button
-            className="dashboard-menu-button"
-            title="Undo last action"
-            onClick={this.props.onUndo}
-            disabled={undoDisabled}
-          >
-            <FontAwesomeIcon icon="undo" />
-          </button>
-          <button
-            className="dashboard-menu-button"
-            title="Redo last action"
-            onClick={this.props.onRedo}
-            disabled={redoDisabled}
-          >
-            <FontAwesomeIcon icon="redo" />
-          </button>
-          <button
-            className="dashboard-menu-button"
-            title="Duplicate currently selected widgets"
-            onClick={this.props.onDuplicateWidget}
-            disabled={!this.props.hasSelectedWidgets}
-          >
-            <FontAwesomeIcon icon="clone" />
-          </button>
-          {userGroups && userGroups.length > 0 && (
+          {inEditMode && (
+            <>
+              <button
+                className="dashboard-menu-button"
+                title="Undo last action"
+                onClick={this.props.onUndo}
+                disabled={undoDisabled}
+              >
+                <FontAwesomeIcon icon="undo" />
+              </button>
+              <button
+                className="dashboard-menu-button"
+                title="Redo last action"
+                onClick={this.props.onRedo}
+                disabled={redoDisabled}
+              >
+                <FontAwesomeIcon icon="redo" />
+              </button>
+              <button
+                className="dashboard-menu-button"
+                title="Duplicate currently selected widgets"
+                onClick={this.props.onDuplicateWidget}
+                disabled={!this.props.hasSelectedWidgets}
+              >
+                <FontAwesomeIcon icon="clone" />
+              </button>
+            </>
+          )}
+          {inEditMode && userGroups && userGroups.length > 0 && (
             <button
               className="dashboard-menu-button"
               style={{
@@ -177,28 +183,27 @@ class DashboardTitle extends Component<Props, State> {
               {notificationMsg}
             </span>
           )}
-          {showNotEditableMessage && (
-            <span style={{ fontStyle: "italic" }}>
-              This dashboard is owned by {owner} and cannot be edited
+          {showOwnedByMsg && inEditMode && (
+            <span className="notification-msg " title={`This dashboard is owned by ${owner}`}>
+              <FontAwesomeIcon icon="user" /> {owner}</span>
+          )}
+          {showSharedMessage &&  inEditMode && (
+            <span  className="notification-msg " title={`This dashboard is shared for edit with the group ${dashboard.group}`}>
+              <FontAwesomeIcon icon="share-alt" /> {dashboard.group}
             </span>
           )}
-          {showSharedMessage && (
-            <span style={{ fontStyle: "italic" }}>
-              This dashboard is owned by {owner} and shared with{" "}
-              {dashboard.group}
+          {showRecentlyEditedMessage &&  inEditMode && (
+            <span  className="notification-msg " title={`This dashboard is currently being edited by ${lastUpdatedBy}`}>
+               <FontAwesomeIcon icon="user-edit" />  {lastUpdatedBy}
             </span>
           )}
-          {showRecentlyEditedMessage && (
-            <span style={{ fontStyle: "italic" }}>
-              This dashboard is currently being edited by {lastUpdatedBy}
-            </span>
-          )}
-          {clonable && (
+          {clonable &&  inEditMode && (
             <button
               onClick={() => this.props.onClone(id, loggedInUser)}
               className="btn-clone"
+              title="Clone this dashboard to your personal dashboard library"
             >
-              Clone Dashboard
+              Clone
             </button>
           )}
         </div>
@@ -211,7 +216,6 @@ function wasRecently(timestamp: Date | null) {
     return false;
   }
   const diffInSeconds = moment().diff(moment(timestamp || "")) / 1000;
-  console.log("Diff in seconds: " + diffInSeconds);
   return diffInSeconds < 60;
 }
 

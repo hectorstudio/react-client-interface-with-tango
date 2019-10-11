@@ -47,8 +47,7 @@ export const getDashboards = createSelector(
 export const getSelectedDashboard = createSelector(
   getSelectedDashboardState,
   state => {
-    const { selectedIds, widgets, ...dashboard } = state;
-    return dashboard;
+    return state;
   }
 );
 export const getUserGroups = createSelector(
