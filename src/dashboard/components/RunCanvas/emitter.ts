@@ -31,7 +31,9 @@ function socketUrl(tangoDB: string) {
 }
 
 function createSocket(tangoDB: string) {
-  return new WebSocket(socketUrl(tangoDB), "graphql-ws");
+  var wsUri = "ws://127.0.0.1:1234";
+  //return new WebSocket(socketUrl(tangoDB), "graphql-ws");
+  return new WebSocket(wsUri);
 }
 
 export function attributeEmitter(

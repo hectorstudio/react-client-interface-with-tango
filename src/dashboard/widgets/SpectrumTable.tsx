@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, CSSProperties } from "react";
 
 import { WidgetProps } from "./types";
 import {
@@ -8,7 +8,7 @@ import {
 } from "../types";
 
 // prettier-ignore
-const sampleData = [0, -2, 3, -2, 1, -5, 4, -3, -2, -4, 0, -4, 2, 2, -2, -2, 2, -5, -2, -3, 0];
+const sampleData = [0, 1, 2, 3, 4];
 
 type Inputs = {
   attribute: AttributeInputDefinition;
@@ -22,6 +22,25 @@ interface State {
 
 type Props = WidgetProps<Inputs>;
 
+function Table(props) {
+  
+  const { mode, inputs } = props.props;
+  const { attribute, showTitle} = inputs;
+
+  let value = mode === "run" ? attribute.value : mode === "library" || mode === "edit" ? sampleData : [];
+  const length = value === undefined ? 0 : value.length;
+
+  value = value === undefined ? [null] : value;
+  const style: CSSProperties = { padding: "0.5em", whiteSpace: "nowrap", border: "1px solid black" };
+  return <table ><tbody>
+  { 
+    value.map((item, i) => {
+      return [ <td style={style}>{item}</td> ];
+    })
+  }
+</tbody></table>;
+}
+
 class SpectrumTable extends Component<Props, State> {
   public constructor(props: Props) {
     super(props);
@@ -32,18 +51,11 @@ class SpectrumTable extends Component<Props, State> {
     if (this.props.mode !== "run") {
       return;
     }
-
-    const { value } = this.props.inputs.attribute;
   }
 
   public render() {
-    const { mode, inputs } = this.props;
-    const { attribute, showTitle} = inputs;
-  
     return (
-      <div>
-        Spectrum Table
-      </div>
+      <Table props={this.props}> </Table>
     );
   }
 }
