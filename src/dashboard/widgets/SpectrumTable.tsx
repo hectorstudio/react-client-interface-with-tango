@@ -35,9 +35,12 @@ function Table(props) {
   const tdStyle: CSSProperties = { marginLeft: "5px",padding: "0.5em", whiteSpace: "nowrap", border: "1px solid black" };
   const spanStyle: CSSProperties = { marginLeft: "5px", display: "inline"};
 
-  return inputs.showDevice ? ( 
+  let spanText = inputs.showDevice === true ? attribute.device+"/" : "";
+  spanText += inputs.showAttribute === true ? attribute.attribute+":" : "";
+
+  return inputs.showDevice || inputs.showAttribute ? ( 
   <div>
-    <span style={spanStyle}>{attribute.device}/{attribute.attribute}:</span> 
+    <span style={spanStyle}>{spanText}</span> 
     <table>
       { 
       value.map((item, i) => {
