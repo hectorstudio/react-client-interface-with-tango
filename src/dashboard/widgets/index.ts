@@ -11,6 +11,7 @@ import attributeDial from "./AttributeDial";
 import ledDisplay from "./LedDisplay";
 import sardanaMotor from "./SardanaMotor/SardanaMotor";
 import attributeLogger from "./AttributeLogger/AttributeLogger";
+import spectrumTable from "./SpectrumTable";
 
 import { Widget, WidgetDefinition, WidgetBundle } from "../types";
 
@@ -27,7 +28,8 @@ export const bundles: WidgetBundle<{}>[] = [
   // booleanDisplay,
   ledDisplay,
   sardanaMotor,
-  attributeLogger
+  attributeLogger,
+  spectrumTable,
 ];
 
 function bundleForType(type: string) {
