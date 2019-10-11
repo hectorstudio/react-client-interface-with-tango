@@ -84,13 +84,6 @@ class Dashboard extends Component<Props> {
     ) {
       return;
     }
-    if (this.props.isLoggedIn) {
-      this.props.saveDashboard(
-        id,
-        this.props.selectedDashboard.name,
-        this.props.widgets
-      );
-    }
   }
 
   public render() {

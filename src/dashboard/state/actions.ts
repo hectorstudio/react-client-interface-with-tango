@@ -26,9 +26,11 @@ import {
   DUPLICATE_WIDGET,
   SHARE_DASHBOARD,
   DASHBOARD_SHARED,
+  DASHBOARD_EDITED,
 } from "./actionTypes";
 
 import { IndexPath, Widget, Dashboard, Notification } from "../types";
+import { SelectedDashboardState } from "./reducers/selectedDashboard";
 
 export interface UndoAction extends Action {
   type: typeof UNDO;
@@ -181,6 +183,12 @@ export interface HideNotificationAction extends Action {
   notification: Notification;
 }
 
+export interface dashboardEditedAction extends Action {
+  type: typeof DASHBOARD_EDITED;
+  dashboard: SelectedDashboardState
+
+}
+
 export type DashboardAction =
   | UndoAction
   | RedoAction
@@ -207,4 +215,5 @@ export type DashboardAction =
   | ShowNotificationAction
   | HideNotificationAction
   | CloneDashboardAction
-  | DashboardClonedAction;
+  | DashboardClonedAction
+  | dashboardEditedAction;

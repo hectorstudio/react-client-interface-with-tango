@@ -1,13 +1,4 @@
-import {
-  take,
-  fork,
-  put,
-  call,
-  select,
-  race,
-  delay
-} from "redux-saga/effects";
-// import delay from "@redux-saga/delay-p";
+import { take, fork, put, call, select, race, delay } from "redux-saga/effects";
 
 import createUserSaga from "../../shared/user/state/saga";
 import * as API from "../dashboardRepo";
@@ -22,11 +13,26 @@ import {
   hideNotification,
   dashboardShared,
   saveDashboard as saveDashboardAction,
+  dashboardEdited
 } from "./actionCreators";
 import {
   PRELOAD_USER_SUCCESS,
   LOGIN_SUCCESS
 } from "../../shared/user/state/actionTypes";
+import {
+  move,
+  setInput,
+  deleteInput,
+  addInput,
+  defaultDimensions,
+  nestedDefault,
+  validate,
+  resize,
+  nextId,
+  pushToHistory,
+  undo,
+  redo
+} from "./reducers/selectedDashboard/lib.ts";
 import {
   RENAME_DASHBOARD,
   DELETE_DASHBOARD,
@@ -40,9 +46,22 @@ import {
   SAVE_DASHBOARD,
   DASHBOARD_SAVED,
   DASHBOARD_CREATED,
-  SHOW_NOTIFICATION
+  SHOW_NOTIFICATION,
+  ADD_WIDGET,
+  MOVE_WIDGETS,
+  RESIZE_WIDGET,
+  DELETE_WIDGET,
+  UNDO,
+  REDO,
+  DUPLICATE_WIDGET,
+  SET_INPUT,
+  DELETE_INPUT,
+  ADD_INPUT
 } from "./actionTypes";
-import { getWidgets } from "./selectors";
+import { getWidgets, getSelectedDashboard } from "./selectors";
+import { definitionForType, definitionForWidget } from "../widgets";
+import { defaultInputs } from "../utils";
+
 
 export default function* sagas() {
   yield fork(createUserSaga());
@@ -57,7 +76,192 @@ export default function* sagas() {
   yield fork(notifyOnDelete);
   yield fork(notifyOnShare);
   yield fork(hideNotificationAfterDelay);
-  yield fork(shareDashboard)
+  yield fork(shareDashboard);
+  yield fork(editWidget);
+}
+
+function* editWidget() {
+  while (true) {
+    const { type, ...payload } = yield take([
+      ADD_WIDGET,
+      MOVE_WIDGETS,
+      RESIZE_WIDGET,
+      DELETE_WIDGET,
+      UNDO,
+      REDO,
+      DUPLICATE_WIDGET,
+      SET_INPUT,
+      DELETE_INPUT,
+      ADD_INPUT
+    ]);
+    const state = yield select(getSelectedDashboard);
+    let newState = {};
+    switch (type) {
+      case UNDO:
+        {
+          const { history: oldHistory, widgets: oldWidgets } = state;
+          const { history, widgets } = undo(oldHistory, oldWidgets);
+          newState = {
+            ...state,
+            widgets,
+            history,
+            selectedIds: []
+          };
+        }
+        break;
+      case REDO: {
+        const { history: oldHistory, widgets: oldWidgets } = state;
+        const { history, widgets } = redo(oldHistory, oldWidgets);
+        newState = {
+          ...state,
+          widgets,
+          history,
+          selectedIds: []
+        };
+        break;
+      }
+      case ADD_WIDGET: {
+        const { x, y, canvas, widgetType: type } = payload;
+        const definition = definitionForType(type);
+        const inputs = defaultInputs(definition.inputs);
+        const { width, height } = defaultDimensions(definition);
+        const id = nextId(state.widgets);
+
+        const widget = validate({
+          id,
+          x,
+          y,
+          canvas,
+          width,
+          height,
+          type,
+          inputs,
+          valid: false
+        });
+        const { history: oldHistory, widgets: oldWidgets } = state;
+        const history = pushToHistory(oldHistory, oldWidgets);
+        newState = {
+          ...state,
+          widgets: { ...state.widgets, [id]: widget },
+          selectedIds: [id],
+          history
+        };
+        break;
+      }
+      case MOVE_WIDGETS: {
+        const { dx, dy, ids } = payload;
+
+        const moved = ids
+          .map(id => state.widgets[id])
+          .map(widget => move(widget, dx, dy))
+          .reduce((accum, widget) => {
+            return { ...accum, [widget.id]: widget };
+          }, {});
+
+        const widgets = { ...state.widgets, ...moved };
+        const { history: oldHistory, widgets: oldWidgets } = state;
+        const history = pushToHistory(oldHistory, oldWidgets);
+        newState = { ...state, widgets, history };
+        break;
+      }
+      case RESIZE_WIDGET: {
+        const { dx, dy, mx, my, id } = payload;
+        const newWidget = resize(state.widgets[id], mx, my, dx, dy);
+        const widgets = { ...state.widgets, [id]: newWidget };
+        const { history: oldHistory, widgets: oldWidgets } = state;
+        const history = pushToHistory(oldHistory, oldWidgets);
+        newState = { ...state, widgets, history };
+        break;
+      }
+      case DUPLICATE_WIDGET: {
+        let newId = parseInt(nextId(state.widgets));
+        const newWidgets = Object.assign({}, state.widgets);
+        const newIds = [];
+        state.selectedIds.forEach(id => {
+          const newWidget = Object.assign({}, state.widgets[id]);
+          newWidget.x += 1;
+          newWidget.y += 1;
+          newWidget.id = newId.toString();
+          newWidgets[newId.toString()] = newWidget;
+          newIds.push(newId.toString());
+          newId++;
+        });
+        const { history: oldHistory, widgets: oldWidgets } = state;
+        const history = pushToHistory(oldHistory, oldWidgets);
+        newState = {
+          ...state,
+          widgets: newWidgets,
+          selectedIds: newIds,
+          history
+        };
+        break;
+      }
+      case DELETE_WIDGET: {
+        const widgets = Object.keys(state.widgets)
+          .filter(id => state.selectedIds.indexOf(id) === -1)
+          .reduce((accum, id) => {
+            return { ...accum, [id]: state.widgets[id] };
+          }, {});
+        const { history: oldHistory, widgets: oldWidgets } = state;
+        const history = pushToHistory(oldHistory, oldWidgets);
+        newState = { ...state, widgets, selectedIds: [], history };
+        break;
+      }
+      case SET_INPUT: {
+        const { path, value } = payload;
+        const id = state.selectedIds[0];
+        if (id == null) {
+          newState = state;
+        }
+        const newWidget = validate(setInput(state.widgets[id], path, value));
+        const widgets = { ...state.widgets, [id]: newWidget };
+        const { history: oldHistory, widgets: oldWidgets } = state;
+        const history = pushToHistory(oldHistory, oldWidgets);
+        newState = { ...state, widgets, history };
+        break;
+      }
+      case ADD_INPUT: {
+        const { path } = payload;
+        const id = state.selectedIds[0];
+        if (id == null) {
+          newState = state;
+        }
+        const oldWidget = state.widgets[id];
+        const definition = definitionForWidget(oldWidget);
+        const value = nestedDefault(definition, path);
+        const newWidget = validate(
+          addInput(state.widgets[id], [...path, -1], value)
+        );
+        const widgets = { ...state.widgets, [id]: newWidget };
+        const { history: oldHistory, widgets: oldWidgets } = state;
+        const history = pushToHistory(oldHistory, oldWidgets);
+        newState = { ...state, widgets, history };
+        break;
+      }
+      case DELETE_INPUT: {
+        const { path } = payload;
+        const id = state.selectedIds[0];
+        if (id == null) {
+          newState = state;
+        }
+        const newWidget = validate(deleteInput(state.widgets[id], path));
+        const widgets = { ...state.widgets, [id]: newWidget };
+        const { history: oldHistory, widgets: oldWidgets } = state;
+        const history = pushToHistory(oldHistory, oldWidgets);
+        newState = { ...state, widgets, history };
+        break;
+      }
+      default: {
+        newState = state;
+      }
+    }
+    yield put(dashboardEdited(newState));
+    const widgetArray = Object.keys(newState.widgets).map(key => newState.widgets[key])
+      yield put(
+        saveDashboardAction(newState.id, newState.name, widgetArray)
+      );
+    
+  }
 }
 
 function* loadDashboards() {
@@ -67,8 +271,7 @@ function* loadDashboards() {
       LOGIN_SUCCESS,
       DASHBOARD_RENAMED,
       DASHBOARD_DELETED,
-      DASHBOARD_CLONED,
-      DASHBOARD_SAVED,
+      DASHBOARD_CLONED
     ]);
     try {
       const result = yield call(API.loadUserDashboards);
@@ -128,10 +331,15 @@ function* loadDashboard() {
     ]);
     const { id, type } = payload;
     try {
-      const { widgets, name, user, insertTime, updateTime, group, lastUpdatedBy } = yield call(
-        API.load,
-        id
-      );
+      const {
+        widgets,
+        name,
+        user,
+        insertTime,
+        updateTime,
+        group,
+        lastUpdatedBy
+      } = yield call(API.load, id);
       //We want to redirect the dashboard component to the url with the dashboard id if the
       //dashboard was just created
       let created = false;
@@ -140,12 +348,23 @@ function* loadDashboard() {
       }
       const redirect =
         type === DASHBOARD_CLONED || (type === DASHBOARD_SAVED && created);
-      yield put(
-        dashboardLoaded(
-          { id, name, user, redirect, insertTime, updateTime, group, lastUpdatedBy },
-          widgets
-        )
-      );
+      if (!(type === DASHBOARD_SAVED && !created)) {
+        yield put(
+          dashboardLoaded(
+            {
+              id,
+              name,
+              user,
+              redirect,
+              insertTime,
+              updateTime,
+              group,
+              lastUpdatedBy
+            },
+            widgets
+          )
+        );
+      }
     } catch (exception) {
       // Replace with failure action and write saga that reacts on it and puts a notification action
       yield put(
@@ -194,8 +413,8 @@ function* notifyOnSave() {
 function* notifyOnShare() {
   while (true) {
     const { group } = yield take(DASHBOARD_SHARED);
-    const msg = group ? "Dashboard shared with " + group : "Dashboard unshared"
-    yield put(showNotification("INFO", DASHBOARD_SHARED, msg))
+    const msg = group ? "Dashboard shared with " + group : "Dashboard unshared";
+    yield put(showNotification("INFO", DASHBOARD_SHARED, msg));
   }
 }
 
@@ -226,7 +445,7 @@ function* hideNotificationAfterDelay() {
         break;
       }
     }
-    
+
     yield put(hideNotification());
   }
 }
