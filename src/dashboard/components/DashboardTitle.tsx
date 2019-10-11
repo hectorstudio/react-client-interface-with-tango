@@ -79,7 +79,7 @@ class DashboardTitle extends Component<Props, State> {
     const editableTitle = (isMine || !owner) && inEditMode;
     const isSharedWithMe = userGroups.includes(group || "") && !isMine;
 
-    const showOwnedByMsg = !isMine && owner;
+    const showOwnedByElseMsg = !isMine && owner;
     const showSharedMessage = isSharedWithMe;
     const clonable = !isMine && owner;
     const { level, msg: notificationMsg } = this.props.notification;
@@ -183,7 +183,7 @@ class DashboardTitle extends Component<Props, State> {
               {notificationMsg}
             </span>
           )}
-          {showOwnedByMsg && inEditMode && (
+          {showOwnedByElseMsg && inEditMode && (
             <span className="notification-msg " title={`This dashboard is owned by ${owner}`}>
               <FontAwesomeIcon icon="user" /> {owner}</span>
           )}

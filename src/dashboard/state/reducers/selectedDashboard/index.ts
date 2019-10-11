@@ -1,19 +1,16 @@
 import { Widget, Dashboard, DashboardEditHistory } from "../../../types";
 
 import {
-
-   SELECT_WIDGETS,
+  SELECT_WIDGETS,
   DASHBOARD_LOADED,
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
   DASHBOARD_SHARED,
-  DASHBOARD_EDITED,
+  DASHBOARD_EDITED
 } from "../../actionTypes";
 
 import { DashboardAction } from "../../actions";
-import {
-  validate,
-} from "./lib";
+import { validate } from "./lib";
 
 import { definitionForWidget } from "../../../widgets";
 
@@ -50,27 +47,25 @@ export default function canvases(
   action: DashboardAction
 ): SelectedDashboardState {
   switch (action.type) {
-   
     case SELECT_WIDGETS: {
       const { ids } = action;
       return { ...state, selectedIds: ids };
     }
-    
+
     case DASHBOARD_EDITED: {
-      const {dashboard} = action;
-      return {...dashboard}
+      const { dashboard } = action;
+      return { ...dashboard };
     }
     case DASHBOARD_SHARED: {
       const { id, group } = action;
-      if (id === state.id){
+      if (id === state.id) {
         return {
           ...state,
           group
         };
-      }else{
+      } else {
         return state;
       }
-      
     }
     case DASHBOARD_LOADED: {
       const { widgets, dashboard } = action;
@@ -82,7 +77,7 @@ export default function canvases(
         insertTime,
         updateTime,
         group,
-        lastUpdatedBy,
+        lastUpdatedBy
       } = dashboard;
 
       //in case the widget is missing fields present in its definition, add those with their default values
@@ -109,7 +104,7 @@ export default function canvases(
         insertTime,
         updateTime,
         group,
-        lastUpdatedBy,
+        lastUpdatedBy
       };
     }
     case DASHBOARD_RENAMED: {
