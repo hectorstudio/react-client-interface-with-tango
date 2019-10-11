@@ -45,7 +45,6 @@ interface State {
   showShareModal: boolean;
 }
 
-// TODO: displaying notifications is outside of the scope of this component and should be factored out at some point, e.g. to TopBar
 
 class DashboardTitle extends Component<Props, State> {
   public inputRef: any;
@@ -178,11 +177,6 @@ class DashboardTitle extends Component<Props, State> {
               <FontAwesomeIcon icon="share-alt" />
             </button>
           )}
-          {inEditMode && notificationMsg && !clonable && (
-            <span className={`notification-msg " + ${level}`}>
-              {notificationMsg}
-            </span>
-          )}
           {showOwnedByElseMsg && inEditMode && (
             <span className="notification-msg " title={`This dashboard is owned by ${owner}`}>
               <FontAwesomeIcon icon="user" /> {owner}</span>
@@ -205,6 +199,11 @@ class DashboardTitle extends Component<Props, State> {
             >
               Clone
             </button>
+          )}
+          {inEditMode && notificationMsg && (
+            <span className={`notification-msg " + ${level}`}>
+              {notificationMsg}
+            </span>
           )}
         </div>
       </>
