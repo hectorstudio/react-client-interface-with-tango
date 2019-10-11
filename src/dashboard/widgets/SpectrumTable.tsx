@@ -11,6 +11,8 @@ import {
 const sampleData = [0, 1, 2, 3, 4];
 
 type Inputs = {
+  showDevice: BooleanInputDefinition;
+  showAttribute: BooleanInputDefinition;
   attribute: AttributeInputDefinition;
   showTitle: BooleanInputDefinition;
 };
@@ -23,22 +25,38 @@ interface State {
 type Props = WidgetProps<Inputs>;
 
 function Table(props) {
-  
+  console.log(props);
   const { mode, inputs } = props.props;
-  const { attribute, showTitle} = inputs;
+  const { attribute} = inputs;
 
   let value = mode === "run" ? attribute.value : mode === "library" || mode === "edit" ? sampleData : [];
-  const length = value === undefined ? 0 : value.length;
-
   value = value === undefined ? [null] : value;
-  const style: CSSProperties = { padding: "0.5em", whiteSpace: "nowrap", border: "1px solid black" };
-  return <table ><tbody>
-  { 
-    value.map((item, i) => {
-      return [ <td style={style}>{item}</td> ];
-    })
-  }
-</tbody></table>;
+
+  const tdStyle: CSSProperties = { marginLeft: "5px",padding: "0.5em", whiteSpace: "nowrap", border: "1px solid black" };
+  const spanStyle: CSSProperties = { marginLeft: "5px", display: "inline"};
+
+  return inputs.showDevice ? ( 
+  <div>
+    <span style={spanStyle}>{attribute.device}/{attribute.attribute}:</span> 
+    <table>
+      { 
+      value.map((item, i) => {
+        return [ <td style={tdStyle}>{item}</td> ];
+      })
+      }
+    </table>
+  </div>
+  ) : (
+  <div>
+    <table >
+      { 
+      value.map((item, i) => {
+        return [ <td style={tdStyle}>{item}</td> ];
+      })
+      }
+    </table>
+  </div>
+  );
 }
 
 class SpectrumTable extends Component<Props, State> {
@@ -77,7 +95,17 @@ const definition: WidgetDefinition<Inputs> = {
       type: "boolean",
       label: "Show Title",
       default: true
-    }
+    },
+    showDevice: {
+      type: "boolean",
+      label: "Show Device",
+      default: false
+    },
+    showAttribute: {
+      type: "boolean",
+      label: "Show Attribute",
+      default: false
+    },
   }
 };
 
