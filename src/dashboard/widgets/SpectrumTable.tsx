@@ -33,13 +33,14 @@ function Table(props) {
   value = value === undefined ? [null] : value;
 
   const tdStyle: CSSProperties = { marginLeft: "5px",padding: "0.5em", whiteSpace: "nowrap", border: "1px solid black" };
-  const spanStyle: CSSProperties = { marginLeft: "5px", display: "inline"};
+  const spanStyle: CSSProperties = { marginLeft: "5px", display: "inline", overflow: "auto"};
+  const divStyle: CSSProperties = { overflow: "auto"};
 
   let spanText = inputs.showDevice === true ? attribute.device+"/" : "";
   spanText += inputs.showAttribute === true ? attribute.attribute+":" : "";
 
   return inputs.showDevice || inputs.showAttribute ? ( 
-  <div>
+  <div style={divStyle}>
     <span style={spanStyle}>{spanText}</span> 
     <table>
       { 
@@ -50,7 +51,7 @@ function Table(props) {
     </table>
   </div>
   ) : (
-  <div>
+  <div style={divStyle}>
     <table >
       { 
       value.map((item, i) => {
