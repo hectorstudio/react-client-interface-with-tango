@@ -14,7 +14,6 @@ type Inputs = {
   showDevice: BooleanInputDefinition;
   showAttribute: BooleanInputDefinition;
   attribute: AttributeInputDefinition;
-  showTitle: BooleanInputDefinition;
 };
 
 interface State {
@@ -30,7 +29,7 @@ function Table(props) {
   const { attribute} = inputs;
 
   let value = mode === "run" ? attribute.value : mode === "library" || mode === "edit" ? sampleData : [];
-  value = value === undefined ? [null] : value;
+  value = value === undefined || value === null ? [null] : value;
 
   const tdStyle: CSSProperties = { marginLeft: "5px",padding: "0.5em", whiteSpace: "nowrap", border: "1px solid black" };
   const spanStyle: CSSProperties = { marginLeft: "5px", display: "inline", overflow: "auto"};
@@ -43,21 +42,29 @@ function Table(props) {
   <div style={divStyle}>
     <span style={spanStyle}>{spanText}</span> 
     <table>
-      { 
-      value.map((item, i) => {
-        return [ <td style={tdStyle}>{item}</td> ];
-      })
-      }
+      <tbody>
+        <tr>
+          {
+          value.map((item, i) => {
+            return [ <td style={tdStyle} key={i}>{item}</td> ];
+          })
+          }
+        </tr>
+      </tbody>
     </table>
   </div>
   ) : (
   <div style={divStyle}>
     <table >
-      { 
-      value.map((item, i) => {
-        return [ <td style={tdStyle}>{item}</td> ];
-      })
-      }
+      <tbody>
+        <tr>
+          {
+          value.map((item, i) => {
+            return [ <td style={tdStyle}  key={i}>{item}</td> ];
+          })
+          }
+        </tr>
+      </tbody>
     </table>
   </div>
   );
@@ -94,11 +101,6 @@ const definition: WidgetDefinition<Inputs> = {
       dataFormat: "spectrum",
       dataType: "numeric",
       required: true
-    },
-    showTitle: {
-      type: "boolean",
-      label: "Show Title",
-      default: true
     },
     showDevice: {
       type: "boolean",
