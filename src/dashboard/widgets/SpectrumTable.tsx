@@ -4,16 +4,22 @@ import { WidgetProps } from "./types";
 import {
   WidgetDefinition,
   BooleanInputDefinition,
-  AttributeInputDefinition
+  AttributeInputDefinition,
+  SelectInputDefinition,
+  NumberInputDefinition
 } from "../types";
 
 // prettier-ignore
-const sampleData = [0, 1, 2, 3, 4];
+const sampleData = [10, 25, 38, 135, 9856];
 
 type Inputs = {
   showDevice: BooleanInputDefinition;
   showAttribute: BooleanInputDefinition;
   attribute: AttributeInputDefinition;
+  showIndex: BooleanInputDefinition;
+  showLable: BooleanInputDefinition;
+  fontSize: NumberInputDefinition;
+  layout: SelectInputDefinition<"horizontal" | "vertical">;
 };
 
 interface State {
@@ -24,49 +30,39 @@ interface State {
 type Props = WidgetProps<Inputs>;
 
 function Table(props) {
-  console.log(props);
+  
   const { mode, inputs } = props.props;
   const { attribute} = inputs;
 
   let value = mode === "run" ? attribute.value : mode === "library" || mode === "edit" ? sampleData : [];
   value = value === undefined || value === null ? [null] : value;
 
-  const tdStyle: CSSProperties = { marginLeft: "5px",padding: "0.5em", whiteSpace: "nowrap", border: "1px solid black" };
-  const spanStyle: CSSProperties = { marginLeft: "5px", display: "inline", overflow: "auto"};
-  const divStyle: CSSProperties = { overflow: "auto"};
+  const tdStyle: CSSProperties = { marginLeft: "5px", padding: "0.5em", whiteSpace: "nowrap", border: "1px solid black", textAlign: "center" };
+  const mainDivStyle: CSSProperties = { marginLeft: "5px", fontSize: inputs.fontSize+"px"};
+  const spanStyle: CSSProperties = { marginLeft: "5px", display: "inline"};
 
   let spanText = inputs.showDevice === true ? attribute.device+"/" : "";
   spanText += inputs.showAttribute === true ? attribute.attribute+":" : "";
 
-  return inputs.showDevice || inputs.showAttribute ? ( 
-  <div style={divStyle}>
-    <span style={spanStyle}>{spanText}</span> 
-    <table>
-      <tbody>
-        <tr>
-          {
-          value.map((item, i) => {
-            return [ <td style={tdStyle} key={i}>{item}</td> ];
-          })
-          }
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  ) : (
-  <div style={divStyle}>
-    <table >
-      <tbody>
-        <tr>
-          {
-          value.map((item, i) => {
-            return [ <td style={tdStyle}  key={i}>{item}</td> ];
-          })
-          }
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  return (
+    <div style={mainDivStyle}>
+      { inputs.showDevice || inputs.showAttribute ? <span style={spanStyle}>{spanText}</span> : null }
+      <table>
+        { 
+          inputs.layout === 'horizontal' ? 
+         <tbody>{inputs.showIndex === true ? <tr>{inputs.showLable === true ? <td style={tdStyle}>Index:</td> : null}
+         {value.map((item, i) => { return [<td style={tdStyle}  key={i}>{i}</td>];})}</tr> : null}
+          <tr>{inputs.showLable === true ? <td style={tdStyle}>Value:</td> : null}
+          {value.map((item, i) => { return [<th style={tdStyle}  key={i}>{item}</th>];})}</tr></tbody>  
+          : //vertical
+          <tbody>
+          {inputs.showLable === true ? <tr>{inputs.showIndex === true ? <td style={tdStyle}>Index:</td>: null}
+          <td style={tdStyle}>Value:</td></tr> : null}
+          {value.map((item, i) => { return [<tr key={i}>{inputs.showIndex === true ? <td style={tdStyle}>{i}</td> : null}
+          <th style={tdStyle}>{item}</th></tr>];})}</tbody> 
+        }
+      </table>
+    </div>
   );
 }
 
@@ -102,6 +98,21 @@ const definition: WidgetDefinition<Inputs> = {
       dataType: "numeric",
       required: true
     },
+    layout: {
+      type: "select",
+      label: "Layout",
+      default: "horizontal",
+      options: [
+        {
+          name: "Horizontal",
+          value: "horizontal"
+        },
+        {
+          name: "Vertical",
+          value: "vertical"
+        }
+      ]
+    },
     showDevice: {
       type: "boolean",
       label: "Show Device",
@@ -111,6 +122,22 @@ const definition: WidgetDefinition<Inputs> = {
       type: "boolean",
       label: "Show Attribute",
       default: false
+    },
+    showIndex: {
+      type: "boolean",
+      label: "Show Index",
+      default: false
+    },
+    showLable: {
+      type: "boolean",
+      label: "Show Lables",
+      default: false
+    },
+    fontSize: {
+      type: "number",
+      label: "Font Size (px)",
+      default: 16,
+      nonNegative: true
     },
   }
 };
