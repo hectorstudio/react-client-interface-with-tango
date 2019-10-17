@@ -1,15 +1,18 @@
 import React from "react";
-import { AttributeInput } from "../types";
+import {AttributeInput} from "../types";
 
 import { configure, shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import SpectrumTable from "./SpectrumTable";
-import LedDisplay from "./LedDisplay";
 
 interface Input {
   showDevice: boolean;
   showAttribute: boolean;
   attribute: AttributeInput;
+  showIndex: boolean;
+  showLabel: boolean;
+  fontSize: number;
+  layout: "horizontal" | "vertical";
 }
 
 configure({ adapter: new Adapter() });
@@ -39,7 +42,11 @@ describe("SpectrumTable", () => {
     myInput = {
         showDevice: true,
         showAttribute: true,
-        attribute: myAttributeInput
+        attribute: myAttributeInput,
+        showIndex: true,
+        showLabel: true,
+        fontSize: 12,
+        layout: "horizontal"
     };
 
     const element = React.createElement(SpectrumTable.component, {
@@ -52,7 +59,7 @@ describe("SpectrumTable", () => {
     expect(shallow(element).html()).toContain( "54");
   });
 
-  it("renders all elements in the array into a table", () => {
+  it("renders all elements horizontally when layout is set to horizontal", () => {
     myAttributeInput = {
       device: "sys/tg_test/1",
       attribute: "double_spectrum",
@@ -70,7 +77,11 @@ describe("SpectrumTable", () => {
     myInput = {
         showDevice: true,
         showAttribute: true,
-        attribute: myAttributeInput
+        attribute: myAttributeInput,
+        showIndex: false,
+        showLabel: true,
+        fontSize: 12,
+        layout: "horizontal"
     };
 
     const element = React.createElement(SpectrumTable.component, {
@@ -80,7 +91,114 @@ describe("SpectrumTable", () => {
       actualHeight: 100,
       inputs: myInput
     });
-    expect((shallow(element).html().match(/<td/g) || []).length).toEqual(3);
+    expect((shallow(element).html().match(/<th/g) || []).length).toEqual(3);
+    expect((shallow(element).html().match(/<tr/g) || []).length).toEqual(1);
+  });
+
+  it("renders all elements vertically when layout is set to vertical", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "double_spectrum",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      write: writeArray,
+      value: [34, 54, 65],
+      writeValue: "",
+      timestamp: timestamp
+    };
+
+    myInput = {
+        showDevice: true,
+        showAttribute: true,
+        attribute: myAttributeInput,
+        showIndex: true,
+        showLabel: false,
+        fontSize: 12,
+        layout: "vertical"
+    };
+
+    const element = React.createElement(SpectrumTable.component, {
+      mode: "run",
+      t0: 1,
+      actualWidth: 100,
+      actualHeight: 100,
+      inputs: myInput
+    });
+    expect((shallow(element).html().match(/<tr/g) || []).length).toEqual(3);
+  });
+
+  it("renders labels when showLabel is set", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "double_spectrum",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      write: writeArray,
+      value: [34],
+      writeValue: "",
+      timestamp: timestamp
+    };
+
+    myInput = {
+        showDevice: true,
+        showAttribute: true,
+        attribute: myAttributeInput,
+        showIndex: true,
+        showLabel: true,
+        fontSize: 12,
+        layout: "horizontal"
+    };
+
+    const element = React.createElement(SpectrumTable.component, {
+      mode: "run",
+      t0: 1,
+      actualWidth: 100,
+      actualHeight: 100,
+      inputs: myInput
+    });
+    expect(shallow(element).html()).toContain("Index");
+    expect(shallow(element).html()).toContain("Value");
+  });
+
+  it("renders indices when showIndex is set but showLabel is not set", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "double_spectrum",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      write: writeArray,
+      value: [34],
+      writeValue: "",
+      timestamp: timestamp
+    };
+
+    myInput = {
+        showDevice: true,
+        showAttribute: true,
+        attribute: myAttributeInput,
+        showIndex: true,
+        showLabel: false,
+        fontSize: 12,
+        layout: "horizontal"
+    };
+
+    const element = React.createElement(SpectrumTable.component, {
+      mode: "run",
+      t0: 1,
+      actualWidth: 100,
+      actualHeight: 100,
+      inputs: myInput
+    });
+    expect(shallow(element).html()).toContain("0");
   });
 
   it("renders empty array in run mode", () => {
@@ -101,7 +219,11 @@ describe("SpectrumTable", () => {
     myInput = {
         showDevice: true,
         showAttribute: true,
-        attribute: myAttributeInput
+        attribute: myAttributeInput,
+        showIndex: true,
+        showLabel: true,
+        fontSize: 12,
+        layout: "horizontal"
     };
 
     const element = React.createElement(SpectrumTable.component, {
@@ -132,7 +254,11 @@ describe("SpectrumTable", () => {
     myInput = {
       showDevice: true,
       showAttribute: true,
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      showIndex: true,
+      showLabel: true,
+      fontSize: 12,
+      layout: "horizontal"
     };
     const element = React.createElement(SpectrumTable.component, {
       mode: "edit",
@@ -161,7 +287,11 @@ describe("SpectrumTable", () => {
     myInput = {
       showDevice: true,
       showAttribute: true,
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      showIndex: true,
+      showLabel: true,
+      fontSize: 12,
+      layout: "horizontal"
     };
     const element = React.createElement(SpectrumTable.component, {
       mode: "edit",
@@ -191,7 +321,11 @@ describe("SpectrumTable", () => {
     myInput = {
         showDevice: false,
         showAttribute: false,
-        attribute: myAttributeInput
+        attribute: myAttributeInput,
+        showIndex: true,
+        showLabel: true,
+        fontSize: 12,
+        layout: "horizontal"
     };
 
     const element = React.createElement(SpectrumTable.component, {
@@ -222,7 +356,11 @@ describe("SpectrumTable", () => {
     myInput = {
         showDevice: true,
         showAttribute: true,
-        attribute: myAttributeInput
+        attribute: myAttributeInput,
+        showIndex: true,
+        showLabel: true,
+        fontSize: 12,
+        layout: "horizontal"
     };
 
     const element = React.createElement(SpectrumTable.component, {
@@ -253,7 +391,11 @@ describe("SpectrumTable", () => {
     myInput = {
         showDevice: true,
         showAttribute: true,
-        attribute: myAttributeInput
+        attribute: myAttributeInput,
+        showIndex: true,
+        showLabel: true,
+        fontSize: 12,
+        layout: "horizontal"
     };
 
     const element = React.createElement(SpectrumTable.component, {

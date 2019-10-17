@@ -53,13 +53,13 @@ function Table(props) {
          <tbody>{inputs.showIndex === true ? <tr>{inputs.showLabel === true ? <td style={tdStyle}>Index:</td> : null}
          {value.map((item, i) => { return [<td style={tdStyle}  key={i}>{i}</td>];})}</tr> : null}
           <tr>{inputs.showLabel === true ? <td style={tdStyle}>Value:</td> : null}
-          {value.map((item, i) => { return [<th style={tdStyle}  key={i}>{item}</th>];})}</tr></tbody>  
+          {value.map((item, i) => { return [<th style={tdStyle}  key={i}>{item}</th>];})}</tr></tbody>
           : //vertical
           <tbody>
           {inputs.showLabel === true ? <tr>{inputs.showIndex === true ? <td style={tdStyle}>Index:</td>: null}
           <td style={tdStyle}>Value:</td></tr> : null}
           {value.map((item, i) => { return [<tr key={i}>{inputs.showIndex === true ? <td style={tdStyle}>{i}</td> : null}
-          <th style={tdStyle}>{item}</th></tr>];})}</tbody> 
+          <th style={tdStyle}>{item}</th></tr>];})}</tbody>
         }
       </table>
     </div>
@@ -70,12 +70,6 @@ class SpectrumTable extends Component<Props, State> {
   public constructor(props: Props) {
     super(props);
     this.state = {};
-  }
-
-  public componentDidUpdate() {
-    if (this.props.mode !== "run") {
-      return;
-    }
   }
 
   public render() {
