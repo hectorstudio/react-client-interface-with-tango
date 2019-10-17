@@ -17,7 +17,7 @@ type Inputs = {
   showAttribute: BooleanInputDefinition;
   attribute: AttributeInputDefinition;
   showIndex: BooleanInputDefinition;
-  showLable: BooleanInputDefinition;
+  showLabel: BooleanInputDefinition;
   fontSize: NumberInputDefinition;
   layout: SelectInputDefinition<"horizontal" | "vertical">;
 };
@@ -50,13 +50,13 @@ function Table(props) {
       <table>
         { 
           inputs.layout === 'horizontal' ? 
-         <tbody>{inputs.showIndex === true ? <tr>{inputs.showLable === true ? <td style={tdStyle}>Index:</td> : null}
+         <tbody>{inputs.showIndex === true ? <tr>{inputs.showLabel === true ? <td style={tdStyle}>Index:</td> : null}
          {value.map((item, i) => { return [<td style={tdStyle}  key={i}>{i}</td>];})}</tr> : null}
-          <tr>{inputs.showLable === true ? <td style={tdStyle}>Value:</td> : null}
+          <tr>{inputs.showLabel === true ? <td style={tdStyle}>Value:</td> : null}
           {value.map((item, i) => { return [<th style={tdStyle}  key={i}>{item}</th>];})}</tr></tbody>  
           : //vertical
           <tbody>
-          {inputs.showLable === true ? <tr>{inputs.showIndex === true ? <td style={tdStyle}>Index:</td>: null}
+          {inputs.showLabel === true ? <tr>{inputs.showIndex === true ? <td style={tdStyle}>Index:</td>: null}
           <td style={tdStyle}>Value:</td></tr> : null}
           {value.map((item, i) => { return [<tr key={i}>{inputs.showIndex === true ? <td style={tdStyle}>{i}</td> : null}
           <th style={tdStyle}>{item}</th></tr>];})}</tbody> 
@@ -128,9 +128,9 @@ const definition: WidgetDefinition<Inputs> = {
       label: "Show Index",
       default: false
     },
-    showLable: {
+    showLabel: {
       type: "boolean",
-      label: "Show Lables",
+      label: "Show Labels",
       default: false
     },
     fontSize: {
