@@ -29,9 +29,9 @@ interface State {
 
 type Props = WidgetProps<Inputs>;
 
-function Table(props) {
+function Table(props:Props) {
   
-  const { mode, inputs } = props.props;
+  const { mode, inputs } = props;
   const { attribute} = inputs;
 
   let value = mode === "run" ? attribute.value : mode === "library" || mode === "edit" ? sampleData : [];
@@ -74,7 +74,7 @@ class SpectrumTable extends Component<Props, State> {
 
   public render() {
     return (
-      <Table props={this.props}> </Table>
+      <Table {...this.props}>> </Table>
     );
   }
 }
