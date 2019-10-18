@@ -10,7 +10,7 @@ interface Input {
   compare: number;
   relation: string;
   attribute: AttributeInput;
-  classColor: SelectInputDefinitionOption<"red-led" | "orange-led">;
+  classColor: "red-led" | "orange-led";
 }
 
 configure({ adapter: new Adapter() });
@@ -197,7 +197,6 @@ describe("LedReadOnly", () => {
         timestamp: 123456,
         unit: "",
         value: 100,
-        compare: 20,
         writeValue: "",
         history: [],
         write: writeArray
@@ -228,7 +227,6 @@ describe("LedReadOnly", () => {
         timestamp: 123456,
         unit: "",
         value: 100,
-        compare: 20,
         writeValue: "",
         history: [],
         write: writeArray
@@ -260,7 +258,6 @@ describe("LedReadOnly", () => {
         timestamp: 123456,
         unit: "",
         value: 10,
-        compare: 20,
         writeValue: "",
         history: [],
         write: writeArray
@@ -292,7 +289,6 @@ describe("LedReadOnly", () => {
         timestamp: 123456,
         unit: "",
         value: 10,
-        compare: 20,
         writeValue: "",
         history: [],
         write: writeArray
@@ -324,7 +320,6 @@ describe("LedReadOnly", () => {
         timestamp: 123456,
         unit: "",
         value: 10,
-        compare: 20,
         writeValue: "",
         history: [],
         write: writeArray
@@ -355,7 +350,6 @@ describe("LedReadOnly", () => {
         timestamp: 123456,
         unit: "",
         value: 10,
-        compare: 20,
         writeValue: "",
         history: [],
         write: writeArray
@@ -387,7 +381,6 @@ describe("LedReadOnly", () => {
         timestamp: 123456,
         unit: "",
         value: undefined,
-        compare: 20,
         writeValue: "",
         history: [],
         write: writeArray

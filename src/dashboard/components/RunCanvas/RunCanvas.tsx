@@ -251,7 +251,7 @@ export default class RunCanvas extends Component<Props, State> {
                 top,
                 width: actualWidth,
                 height: actualHeight,
-                overflow: "hidden"
+                overflow: "auto"
               }}
             >
               <ErrorBoundary>{element}</ErrorBoundary>
