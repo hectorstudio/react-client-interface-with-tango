@@ -27,6 +27,7 @@ export interface AttributeMetadata {
   readonly dataFormat?: string;
   readonly dataType?: string;
   readonly unit?: string;
+  readonly enumlabels?: any;
 }
 
 export interface DeviceMetadata {
@@ -87,7 +88,7 @@ function enrichedInput(
 
     const attribute = input.attribute || inputDefinition.attribute;
     const fullName = `${resolvedDevice}/${attribute}`;
-    const { dataType, dataFormat, unit } = context.attributeMetadataLookup(
+    const { dataType, dataFormat, unit, enumlabels } = context.attributeMetadataLookup(
       fullName
     );
     const isNumeric = dataType != null && numericTypes.indexOf(dataType) !== -1;
@@ -100,6 +101,7 @@ function enrichedInput(
       ...values,
       history,
       dataType,
+      enumlabels,
       dataFormat,
       isNumeric,
       unit,

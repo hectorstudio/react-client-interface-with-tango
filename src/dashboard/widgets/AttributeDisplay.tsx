@@ -58,6 +58,8 @@ class AttributeReadOnly extends Component<Props> {
     const { device, name } = this.deviceAndAttribute();
     const { showDevice, showAttribute } = this.props.inputs;
     const value = this.value();
+    let enum_lable = this.props.inputs.attribute.enumlabels;
+    console.log(enum_lable);
     const style: CSSProperties = { padding: "0.5em", whiteSpace: "nowrap" };
     return (
       <div style={style}>
