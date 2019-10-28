@@ -97,9 +97,9 @@ export default class AttributeSelect extends Component<Props, State> {
                     Select attribute...
                   </option>
                 )}
-                {attributes.map(({ name }, i) => (
+                {attributes.map(({ name, datatype }, i) => (
                   <option key={i} value={name}>
-                    {name}
+                    {name} {datatype === "DevEnum" ? '[...]' : null}
                   </option>
                 ))}
               </select>

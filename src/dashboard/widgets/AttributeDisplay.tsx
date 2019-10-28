@@ -5,7 +5,7 @@ import {
   WidgetDefinition,
   BooleanInputDefinition,
   NumberInputDefinition,
-  AttributeInputDefinition
+  AttributeInputDefinition,
 } from "../types";
 
 type Inputs = {
@@ -13,6 +13,7 @@ type Inputs = {
   showAttribute: BooleanInputDefinition;
   scientificNotation: BooleanInputDefinition;
   precision: NumberInputDefinition;
+  showEnumLables: BooleanInputDefinition;
   attribute: AttributeInputDefinition;
 };
 
@@ -47,6 +48,11 @@ const definition: WidgetDefinition<Inputs> = {
       type: "boolean",
       label: "Scientific Notation",
       default: false
+    },
+    showEnumLables: {
+      type: "boolean",
+      label: "Show Enum Lables",
+      default: false
     }
   }
 };
@@ -56,17 +62,18 @@ type Props = WidgetProps<Inputs>;
 class AttributeReadOnly extends Component<Props> {
   public render() {
     const { device, name } = this.deviceAndAttribute();
-    const { showDevice, showAttribute } = this.props.inputs;
-    const value = this.value();
-    let enum_lable = this.props.inputs.attribute.enumlabels;
-    console.log(enum_lable);
+    const { showDevice, showAttribute, showEnumLables, attribute } = this.props.inputs;
+    const { value } = attribute;
+    const valueG = this.value();
+    let enumLable = this.props.inputs.attribute.enumlabels;
     const style: CSSProperties = { padding: "0.5em", whiteSpace: "nowrap" };
     return (
       <div style={style}>
         {showDevice ? device : ""}
         {showDevice && showAttribute && "/"}
         {showAttribute ? name : ""}
-        {(showDevice || showAttribute) && ": "} {value}
+        {(showDevice || showAttribute) && ": "} 
+        {(showEnumLables && enumLable !== undefined) ? enumLable[value] : valueG}
       </div>
     );
   }
