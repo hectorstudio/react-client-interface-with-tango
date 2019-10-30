@@ -73,7 +73,7 @@ class AttributeReadOnly extends Component<Props> {
         {showDevice && showAttribute && "/"}
         {showAttribute ? name : ""}
         {(showDevice || showAttribute) && ": "} 
-        {(showEnumLables && enumLable !== undefined) ? enumLable[value] : valueG}
+        {(showEnumLables && enumLable !== undefined && enumLable.length > 0 ) ? enumLable[value] : valueG}
       </div>
     );
   }
