@@ -30,7 +30,7 @@ Widget options
 +--------------------+----------------------------------------------------+
 |Scientific Notation |Boolean for displaying scientific notation          |
 +--------------------+----------------------------------------------------+
-|Show Enum Lables    |Boolean for displaying enum lables                  |
+|Show Enum Labels    |Boolean for displaying enum labels                  |
 +--------------------+----------------------------------------------------+
 
 

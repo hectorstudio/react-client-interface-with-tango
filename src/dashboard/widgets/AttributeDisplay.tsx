@@ -13,7 +13,7 @@ type Inputs = {
   showAttribute: BooleanInputDefinition;
   scientificNotation: BooleanInputDefinition;
   precision: NumberInputDefinition;
-  showEnumLables: BooleanInputDefinition;
+  showEnumLabels: BooleanInputDefinition;
   attribute: AttributeInputDefinition;
 };
 
@@ -49,9 +49,9 @@ const definition: WidgetDefinition<Inputs> = {
       label: "Scientific Notation",
       default: false
     },
-    showEnumLables: {
+    showEnumLabels: {
       type: "boolean",
-      label: "Show Enum Lables",
+      label: "Show Enum Labels",
       default: false
     }
   }
@@ -62,7 +62,7 @@ type Props = WidgetProps<Inputs>;
 class AttributeReadOnly extends Component<Props> {
   public render() {
     const { device, name } = this.deviceAndAttribute();
-    const { showDevice, showAttribute, showEnumLables, attribute } = this.props.inputs;
+    const { showDevice, showAttribute, showEnumLabels, attribute } = this.props.inputs;
     const { value } = attribute;
     const valueG = this.value();
     let enumLable = this.props.inputs.attribute.enumlabels;
@@ -73,7 +73,7 @@ class AttributeReadOnly extends Component<Props> {
         {showDevice && showAttribute && "/"}
         {showAttribute ? name : ""}
         {(showDevice || showAttribute) && ": "} 
-        {(showEnumLables && enumLable !== undefined && enumLable.length > 0 ) ? enumLable[value] : valueG}
+        {(showEnumLabels && enumLable !== undefined && enumLable.length > 0 ) ? enumLable[value] : valueG}
       </div>
     );
   }
