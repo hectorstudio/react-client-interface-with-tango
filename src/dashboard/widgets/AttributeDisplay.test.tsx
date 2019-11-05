@@ -161,7 +161,7 @@ describe("AttributeDisplayTests", () => {
     expect(shallow(element).html()).not.toContain("sys/tg_test/1");
   });
 
-  it("does not display the device name if showAttribute is not set", () => {
+  it("does not display the device attribute if showAttribute is not set", () => {
     myAttributeInput = {
       device: "sys/tg_test/1",
       attribute: "double_spectrum",
