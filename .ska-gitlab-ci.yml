@@ -34,6 +34,7 @@ stages:
   - dependencies
   - test
   - deploy
+  - dashboard
 
 # The YAML file defines a set of jobs with constraints stating when they should be run.
 # You can specify an unlimited number of jobs which are defined as top-level elements with an arbitrary name and always have to contain at least the script clause.
@@ -148,9 +149,9 @@ build_deploy:
     paths:
       - public
     expire_in: 30 days
-    
+
 create_ci_metrics:
-  stage: .post
+  stage: dashboard
   image: nexus.engageska-portugal.pt/ska-docker/ska-python-buildenv:latest
   when: always
   tags:
