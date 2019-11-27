@@ -403,34 +403,39 @@ export default class RunCanvas extends Component<Props, State> {
     };
 
     const attributeHistory = attributeHistories[fullName];
-    const newHistory = [...attributeHistory, valueRecord];
 
-    if (attributeHistory.length > 0) {
-      const lastFrame = attributeHistory.slice(-1)[0];
+    if(attributeHistory !== undefined)
+    {
+      const newHistory = [...attributeHistory, valueRecord];
 
-      if (lastFrame.timestamp == null) {
-        throw new Error("timestamp is missing");
+      if (attributeHistory.length > 0) {
+        const lastFrame = attributeHistory.slice(-1)[0];
+
+        if (lastFrame.timestamp == null) {
+          throw new Error("timestamp is missing");
+        }
+
+        if (lastFrame.timestamp >= timestamp) {
+          return;
+        }
       }
 
-      if (lastFrame.timestamp >= timestamp) {
-        return;
-      }
+      const shortenedHistory =
+        newHistory.length > HISTORY_LIMIT
+          ? newHistory.slice(-HISTORY_LIMIT)
+          : newHistory;
+
+      const newAttributeHistories = {
+        ...attributeHistories,
+        [fullName]: shortenedHistory
+      };
+      
+
+      this.setState({
+        attributeValues: newAttributeValues,
+        attributeHistories: newAttributeHistories
+      });
     }
-
-    const shortenedHistory =
-      newHistory.length > HISTORY_LIMIT
-        ? newHistory.slice(-HISTORY_LIMIT)
-        : newHistory;
-
-    const newAttributeHistories = {
-      ...attributeHistories,
-      [fullName]: shortenedHistory
-    };
-
-    this.setState({
-      attributeValues: newAttributeValues,
-      attributeHistories: newAttributeHistories
-    });
   }
 
   private handleNewFrame(frame: EmittedFrame): void {

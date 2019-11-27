@@ -74,6 +74,7 @@ query FetchAttributeMetadata($fullNames: [String]!) {
     device
     dataformat
     datatype
+    enumLabels
     unit
   }
 }`;
@@ -176,13 +177,14 @@ export async function fetchAttributeMetadata(
   const result = {};
 
   for (const attribute of data.attributes) {
-    const { device, name, dataformat, datatype, unit } = attribute;
+    const { device, name, dataformat, datatype, enumLabels, unit } = attribute;
 
     const fullName = device + "/" + name;
     const dataFormat = dataformat.toLowerCase();
     const dataType = datatype;
+    const enumlabels = enumLabels;
 
-    result[fullName] = { dataFormat, dataType, unit };
+    result[fullName] = { dataFormat, dataType, unit, enumlabels };
   }
 
   return result;
