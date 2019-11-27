@@ -87,7 +87,6 @@ const sampleY = [-3.59, -3.84, -2.64, -2.28, -2.38, -1.04, -0.99, -0.87, 0.07, 0
 function AttributeScatter(props: Props) {
   const { mode, inputs, actualWidth, actualHeight } = props;
   const staticMode = mode !== "run";
-  const height = mode === "library" ? 200 : actualHeight;
 
   const { dependent, independent } = inputs;
   const independentName =
@@ -99,14 +98,13 @@ function AttributeScatter(props: Props) {
 
   const layout = {
     font: { family: "Helvetica, Arial, sans-serif" },
-    width: actualWidth,
-    height,
     margin: {
       l: 45,
       r: 15,
       t: 15,
       b: 35
     },
+    autosize: true,
     hovermode: "closest",
     xaxis: {
       title: independentName,
@@ -157,6 +155,7 @@ function AttributeScatter(props: Props) {
       layout={layout}
       config={{ staticPlot: staticMode === true }}
       responsive={true}
+      style={{ width: actualWidth, height: mode === "library" ? 200 : actualHeight}}
     />
   );
 }
