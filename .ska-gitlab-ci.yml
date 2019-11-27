@@ -182,4 +182,5 @@ create_ci_metrics:
     # Gitlab CI badges creation: END
   artifacts:
     paths:
+      - public
       - ./build
