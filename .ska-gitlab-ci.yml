@@ -79,7 +79,7 @@ test_and_coverage:
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
     paths:
-      - htmlcov
+      - build/
 
 # list the current top level dependencies for the project
 # TODO We could write a script to convert the json and
