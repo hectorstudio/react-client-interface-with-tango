@@ -10,6 +10,9 @@ junit.xml
 # production
 /build
 
+# docs
+/docs/build
+
 # misc
 .DS_Store
 .env.local

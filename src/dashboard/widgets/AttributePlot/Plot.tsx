@@ -101,8 +101,7 @@ export default function Plot(props: PlotProps) {
       t: 15,
       b: 35
     },
-    width,
-    height,
+    autosize: true,
     showlegend: true,
     legend: {
       y: 1.2,
@@ -129,6 +128,7 @@ export default function Plot(props: PlotProps) {
         onUpdate={({ layout: newLayout }) => {
           userLayout.current = newLayout;
         }}
+        style={{ width: '100%', height: '100%' }}
       />
     </Suspense>
   );

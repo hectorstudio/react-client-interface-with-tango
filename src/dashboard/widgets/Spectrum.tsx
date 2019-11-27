@@ -81,8 +81,7 @@ class Spectrum extends Component<Props, State> {
         t: 15 + (showTitle ? 20 : 0),
         b: 20
       },
-      width: this.props.actualWidth,
-      height: mode !== "library" ? this.props.actualHeight : 200,
+      autosize: true,
       yaxis
     };
 
@@ -93,6 +92,7 @@ class Spectrum extends Component<Props, State> {
           layout={layout}
           config={{ staticPlot: true }}
           responsive={true}
+          style={{ width: this.props.actualWidth, height: mode === "library" ? 200 : this.props.actualHeight}}
         />
       </div>
     );

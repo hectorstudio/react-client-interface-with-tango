@@ -162,6 +162,7 @@ export interface AttributeInput<ValueT = any> extends AttributeValue<ValueT> {
   history: Array<AttributeValue<ValueT>>;
   dataType: string;
   dataFormat: string;
+  enumlabels: Array<string>;
   isNumeric: boolean;
   unit: string;
   write: (value: ValueT) => void;

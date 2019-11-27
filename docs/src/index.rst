@@ -46,6 +46,7 @@ For developers
 .. toctree::
     widget
     architecture
+    display
     led
     command_writer
 
@@ -62,6 +63,7 @@ WebJive was written by the KITS Group at MAX IV Laboratory .
 
    widget
    architecture
+   display
    led
    command_writer
 

@@ -23,6 +23,7 @@ describe("AttributeLogger", () => {
     dataFormat: "",
     isNumeric: true,
     unit: "",
+    enumlabels: [],
     write: writeArray,
     value: "This is not a love song",
     writeValue: "",
