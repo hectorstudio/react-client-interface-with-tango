@@ -2,7 +2,9 @@ import React from "react";
 import {
   WidgetDefinition,
   StringInputDefinition,
-  ColorInputDefinition
+  ColorInputDefinition,
+  NumberInputDefinition,
+  SelectInputDefinition
 } from "../types";
 import { WidgetProps } from "./types";
 
@@ -10,25 +12,34 @@ type Inputs = {
   text: StringInputDefinition;
   backgroundColor: ColorInputDefinition;
   textColor: ColorInputDefinition;
+  linkTo: StringInputDefinition;
+  size: NumberInputDefinition;
+  font: SelectInputDefinition;
 }
 
 type Props = WidgetProps<Inputs>;
 
-const Inner = ({ mode, text }) => {
+const Inner = ({ mode, text, linkTo, size, font}) => {
   if (mode === "library") {
-    return "Label";
+    return <span>Label</span>;
   }
 
   if (text === "" && mode === "edit") {
     return <span style={{ fontStyle: "italic" }}>Empty</span>;
   }
+  const style = {fontSize: size + "em"}
+  if (font){
+    style["fontFamily"] = font;
+  }
 
-  return text;
+  const content = linkTo? <a href={'//' + linkTo} target="_blank" rel="noopener noreferrer">{text}</a> : text;
+  return <span title={`Visit ${linkTo}`} style={style}>{content}</span>
+  
 };
 
 const Label = (props: Props) => {
   const { inputs, mode, actualWidth, actualHeight } = props;
-  const { text, backgroundColor, textColor } = inputs;
+  const { text, backgroundColor, textColor, linkTo, size, font } = inputs;
 
   return (
     <div
@@ -41,7 +52,7 @@ const Label = (props: Props) => {
         width: actualWidth
       }}
     >
-      <Inner mode={mode} text={text} />
+      <Inner mode={mode} text={text} linkTo={linkTo} size={size} font={font} />
     </div>
   );
 };
@@ -67,7 +78,33 @@ const definition: WidgetDefinition<Inputs> = {
       type: "color",
       default: "#ffffff"
     },
-
+    size: {
+      label: "Size (in units)",
+      type: "number",
+      default: 1,
+      nonNegative: true,
+    },
+    font: {
+      type: "select",
+      default: "Default (Helvetica)",
+      label: "Font type",
+      options: [
+        {
+          name: "Default (Helvetica)",
+          value: "Helvetica"
+        },
+        {
+          name: "Monospaced (Courier new)",
+          value: "Courier new"
+        }
+      ]
+    },
+    linkTo: {
+      label: "Link to",
+      type: "string",
+      default: "",
+      placeholder: "Optional link URL"
+    }
   }
 };
 
