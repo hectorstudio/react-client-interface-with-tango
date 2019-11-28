@@ -15,9 +15,9 @@ services:
 
   # cache is used to specify a list of files and directories which should be cached between jobs. You can only use paths that are within the project workspace.
 # If cache is defined outside the scope of jobs, it means it is set globally and all jobs will use that definition
-# cache:
-#   paths:
-#     - node_modules/
+cache:
+  paths:
+    - build
 
 # before_script is used to define the command that should be run before all jobs, including deploy jobs, but after the restoration of artifacts.
 # This can be an array or a multi-line string. In this case node install will install all our dependencies including the scripts
@@ -34,6 +34,7 @@ stages:
   - dependencies
   - test
   - deploy
+  - image
 
 # The YAML file defines a set of jobs with constraints stating when they should be run.
 # You can specify an unlimited number of jobs which are defined as top-level elements with an arbitrary name and always have to contain at least the script clause.
@@ -67,16 +68,18 @@ test_and_coverage:
       - node_modules/
     policy: pull
   script:
-    - CI=true npm test -- --coverage
-    - mkdir htmlcov
-    - cp -r coverage/lcov-report/* htmlcov
-    - cp coverage/clover.xml htmlcov
-    - cp coverage/coverage-final.json htmlcov
+    - mkdir -p build/reports
+    - npm run test
+    - npm run code-analysis
+    - npm run test:coverage
+    - mv junit.xml build/reports/unit-tests.xml
+    - mv linting.xml build/reports/linting.xml
+    - mv build/coverage/cobertura-coverage.xml build/reports/code-coverage.xml
 
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
     paths:
-      - htmlcov
+      - build/
 
 # list the current top level dependencies for the project
 # TODO We could write a script to convert the json and
@@ -138,13 +141,46 @@ build_deploy:
     - npm install -g increase-memory-limit
     - npm install # Install all dependencies
     - CI=false npm run build --prod # Build for prod
-    - cp public/index.html public/404.html # Not necessary, but helps with https://medium.com/@pshrmn/demystifying-single-page-applications-3068d0555d46
-    - mv public _public # CRA and gitlab pages both use the public folder. Only do this in a build pipeline.
-    - mv build public # Move build files to public dir for Gitlab Pages
-    - cp -r htmlcov/* public #move coverage reports to public
-    - cp gl-code-quality-report.json public 
-    - cp -r .public/* public
+
   artifacts:
     paths:
       - public
     expire_in: 30 days
+
+build_image:
+  stage: image
+  image: docker:stable
+  before_script:
+  - docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY_HOST
+  script:
+    - docker build . -t nexus.engageska-portugal.pt/ska-docker/webjive-develop_auth:master --label GIT_COMMIT=$CI_COMMIT_SHA
+    - docker push nexus.engageska-portugal.pt/ska-docker/webjive-develop_auth:master
+  only:
+    - master
+
+  stage: image
+  image: docker:stable
+  before_script:
+  - docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY_HOST
+  script:
+    - docker build . -t nexus.engageska-portugal.pt/ska-docker/webjive-develop:develop --label GIT_COMMIT=$CI_COMMIT_SHA
+    - docker push nexus.engageska-portugal.pt/ska-docker/webjive-develop:develop
+  only:
+    - develop
+
+create_ci_metrics:
+  stage: .post
+  image: nexus.engageska-portugal.pt/ska-docker/ska-python-buildenv:latest
+  when: always
+  tags:
+    - docker-executor
+  script:
+    # Gitlab CI badges creation: START
+    - apt-get -y update
+    - apt-get install -y curl --no-install-recommends
+    - curl -s https://gitlab.com/ska-telescope/ci-metrics-utilities/raw/master/scripts/ci-badges-func.sh | sh
+    # Gitlab CI badges creation: END
+  artifacts:
+    paths:
+      - public
+      - ./build
