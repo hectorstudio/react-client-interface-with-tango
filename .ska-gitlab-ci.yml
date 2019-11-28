@@ -170,7 +170,7 @@ build_image:
 
 create_ci_metrics:
   stage: .post
-  image: nexus.engageska-portugal.pt/ska-docker/ska-python-buildenv:latest
+  image: nexus.engageska-portugal.pt/ska-docker/webjive-develop:develop
   when: always
   tags:
     - docker-executor
