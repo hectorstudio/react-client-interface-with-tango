@@ -266,19 +266,24 @@ function* editWidget() {
 
 function* loadDashboards() {
   while (true) {
-    yield take([
+    const payload = yield take([
       PRELOAD_USER_SUCCESS,
       LOGIN_SUCCESS,
       DASHBOARD_RENAMED,
       DASHBOARD_DELETED,
-      DASHBOARD_CLONED
+      DASHBOARD_CLONED,
+      DASHBOARD_SAVED,
     ]);
-    try {
-      const result = yield call(API.loadUserDashboards);
-      yield put(dashboardsLoaded(result));
-    } catch (exception) {
-      console.log(exception);
+    //in the case of DASHBOARD_SAVED, only load dashboards if it was created
+    if (payload.type !== DASHBOARD_SAVED || payload.created) {
+      try {
+        const result = yield call(API.loadUserDashboards);
+        yield put(dashboardsLoaded(result));
+      } catch (exception) {
+        console.log(exception);
+      }
     }
+   
   }
 }
 
