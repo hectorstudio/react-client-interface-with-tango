@@ -141,7 +141,7 @@ class InputField extends Component {
     }else{
      this.props.onExecute(this.props.name, this.state.value)
     }
-    this.setState({value: '', valid: false });
+    this.setState({value: '' });
   }
 
   render() {
