@@ -6,6 +6,8 @@ import {
   BooleanInputDefinition,
   NumberInputDefinition,
   AttributeInputDefinition,
+  ColorInputDefinition,
+  SelectInputDefinition
 } from "../types";
 
 type Inputs = {
@@ -15,6 +17,10 @@ type Inputs = {
   precision: NumberInputDefinition;
   showEnumLabels: BooleanInputDefinition;
   attribute: AttributeInputDefinition;
+  textColor: ColorInputDefinition;
+  backgroundColor: ColorInputDefinition;
+  size: NumberInputDefinition;
+  font: SelectInputDefinition;
 };
 
 const definition: WidgetDefinition<Inputs> = {
@@ -53,6 +59,37 @@ const definition: WidgetDefinition<Inputs> = {
       type: "boolean",
       label: "Show Enum Labels",
       default: false
+    },
+    textColor: {
+      label: "Text Color",
+      type: "color",
+      default: "#000"
+    },
+    backgroundColor: {
+      label: "Background Color",
+      type: "color",
+      default: "#ffffff"
+    },
+    size: {
+      label: "Text size (in units)",
+      type: "number",
+      default: 1,
+      nonNegative: true
+    },
+    font: {
+      type: "select",
+      default: "Helvetica",
+      label: "Font type",
+      options: [
+        {
+          name: "Default (Helvetica)",
+          value: "Helvetica"
+        },
+        {
+          name: "Monospaced (Courier new)",
+          value: "Courier new"
+        }
+      ]
     }
   }
 };
@@ -62,18 +99,38 @@ type Props = WidgetProps<Inputs>;
 class AttributeReadOnly extends Component<Props> {
   public render() {
     const { device, name } = this.deviceAndAttribute();
-    const { showDevice, showAttribute, showEnumLabels, attribute } = this.props.inputs;
+    const {
+      showDevice,
+      showAttribute,
+      showEnumLabels,
+      attribute,
+      backgroundColor,
+      textColor,
+      size,
+      font
+    } = this.props.inputs;
     const { value } = attribute;
     const valueG = this.value();
     let enumLable = this.props.inputs.attribute.enumlabels;
-    const style: CSSProperties = { padding: "0.5em", whiteSpace: "nowrap" };
+    const style: CSSProperties = {
+      padding: "0.5em",
+      whiteSpace: "nowrap",
+      backgroundColor,
+      color: textColor,
+      fontSize: size + "em"
+    };
+    if (font){
+      style["fontFamily"] = font;
+    }
     return (
       <div id="AttributeDisplay" style={style}>
         {showDevice ? device : ""}
         {showDevice && showAttribute && "/"}
         {showAttribute ? name : ""}
-        {(showDevice || showAttribute) && ": "} 
-        {(showEnumLabels && enumLable !== undefined && enumLable.length > 0 ) ? enumLable[value] : valueG}
+        {(showDevice || showAttribute) && ": "}
+        {showEnumLabels && enumLable !== undefined && enumLable.length > 0
+          ? enumLable[value]
+          : valueG}
       </div>
     );
   }

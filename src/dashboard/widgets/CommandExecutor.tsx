@@ -6,7 +6,9 @@ import {
   StringInputDefinition,
   BooleanInputDefinition,
   CommandInputDefinition,
-  NumberInputDefinition
+  NumberInputDefinition,
+  ColorInputDefinition,
+  SelectInputDefinition
 } from "../types";
 
 function timeout(seconds) {
@@ -21,6 +23,10 @@ type Inputs = {
   command: CommandInputDefinition;
   displayOutput: BooleanInputDefinition;
   cooldown: NumberInputDefinition;
+  textColor: ColorInputDefinition;
+  backgroundColor: ColorInputDefinition;
+  size: NumberInputDefinition;
+  font: SelectInputDefinition;
 };
 
 type Props = WidgetProps<Inputs>;
@@ -38,15 +44,20 @@ class CommandExecutor extends Component<Props, State> {
 
   public render() {
     const { mode, inputs } = this.props;
-    const { title, command } = inputs;
+    const { title, command, backgroundColor, textColor, size, font } = inputs;
     const actualTitle = title || command.command || "command";
 
     const extraStyle = mode === "library" ? { margin: "0.25em" } : {};
     const containerStyle: CSSProperties = {
       padding: "0.25em",
+      backgroundColor,
+      color: textColor,
+      fontSize: size + "em",
       ...extraStyle
     };
-
+    if (font){
+      containerStyle["fontFamily"] = font;
+    }
     const [output, outputStyle] = this.outputAndStyle();
     const fullOutputStyle: CSSProperties = {
       marginLeft: "0.5em",
@@ -55,7 +66,7 @@ class CommandExecutor extends Component<Props, State> {
 
     return (
       <div style={containerStyle}>
-        <button disabled={this.state.cooldown} onClick={this.handleExecute}>
+        <button style={{border: "none", borderRadius: "2px", color: backgroundColor, backgroundColor: textColor}} disabled={this.state.cooldown} onClick={this.handleExecute}>
           {actualTitle}
         </button>
         <span style={fullOutputStyle}>{output}</span>
@@ -66,9 +77,7 @@ class CommandExecutor extends Component<Props, State> {
   private async handleExecute() {
     const { command, requireConfirmation, cooldown } = this.props.inputs;
 
-    const message = `Confirm executing "${command.command}" on "${
-      command.device
-    }"`;
+    const message = `Confirm executing "${command.command}" on "${command.device}"`;
 
     /* eslint-disable no-restricted-globals */
     if (!requireConfirmation || confirm(message)) {
@@ -136,6 +145,37 @@ const definition: WidgetDefinition<Inputs> = {
       label: "Cooldown (s)",
       default: 0,
       nonNegative: true
+    },
+    textColor: {
+      label: "Text Color",
+      type: "color",
+      default: "#000"
+    },
+    backgroundColor: {
+      label: "Background Color",
+      type: "color",
+      default: "#ffffff"
+    },
+    size: {
+      label: "Text size (in units)",
+      type: "number",
+      default: 1,
+      nonNegative: true
+    },
+    font: {
+      type: "select",
+      default: "Helvetica",
+      label: "Font type",
+      options: [
+        {
+          name: "Default (Helvetica)",
+          value: "Helvetica"
+        },
+        {
+          name: "Monospaced (Courier new)",
+          value: "Courier new"
+        }
+      ]
     }
   }
 };
