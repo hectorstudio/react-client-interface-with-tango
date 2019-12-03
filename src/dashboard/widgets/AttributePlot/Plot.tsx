@@ -1,4 +1,4 @@
-import React, { Suspense, useRef } from "react";
+import React, { Suspense, useState } from "react";
 
 // In order to avoid importing the entire plotly.js library. Note that this mutates the global PlotlyCore object.
 import PlotlyCore from "plotly.js/lib/core";
@@ -28,7 +28,7 @@ interface PlotProps {
   params: PlotParams;
 }
 
-function dataAndRange(traces: Trace[], params: PlotParams) {
+function dataAndRange(traces: Trace[], params: PlotParams, mode: String) {
   const { timeWindow } = params;
   const data = traces.map((trace: Trace) => {
     const yaxis = trace.axisLocation === "left" ? "y1" : "y2";
@@ -41,24 +41,27 @@ function dataAndRange(traces: Trace[], params: PlotParams) {
   });
 
   const latestX = traces
-    .map(({ x }) => x)
-    .filter(x => x != null)
-    .map(x => (x == null || x.length === 0 ? [0] : x))
-    .reduce((all, x) => [...all, ...x], [])
-    .reduce((x1, x2) => Math.max(x1, x2), 0);
+  .map(({ x }) => x) //select all the data point arrays of the x axis (more than one in case on multiple plots)
+  .map(x => (x === null || x === undefined) ? 0 : x.length) //for each data point array x, replace x with its length
+  .reduce((maxLength, currentLength) => Math.max(maxLength, currentLength), 0); //find the max length
 
   const offset = Math.max(0, latestX - timeWindow);
-  const range = [offset, offset + timeWindow];
+  let range;
+  if (mode === "TIME_WINDOW"){
+    range = [offset, offset + timeWindow];
+  }else{
+    range = [0, latestX]
+  }
+
   return { data, range };
 }
 
 export default function Plot(props: PlotProps) {
+  const [mode, setMode] = useState("TIME_WINDOW")
   const { traces, params } = props;
   const { staticMode, width, height, showZeroLine, logarithmic } = params;
 
-  const userLayout = useRef<object>({}); // Use ref instad of state in order to avoid triggering a re-render, appearently causing an infinite loop
-
-  const { data, range } = dataAndRange(traces, params);
+  const { data, range } = dataAndRange(traces, params, mode);
   const xaxis = {
     range,
     title: "Time (s)",
@@ -117,17 +120,14 @@ export default function Plot(props: PlotProps) {
     width,
     height
   };
-
   return (
     <Suspense fallback={null}>
       <Plotly
+        onRelayout={(e:any) =>  e["xaxis.autorange"] ? setMode("HISTORY") : setMode("TIME_WINDOW")}
         data={data}
-        layout={{ ...layout, ...userLayout.current, ...overriding }}
+        layout={{ ...layout, ...overriding }}
         config={{ staticPlot: staticMode === true }}
         responsive={true}
-        onUpdate={({ layout: newLayout }) => {
-          userLayout.current = newLayout;
-        }}
         style={{ width: '100%', height: '100%' }}
       />
     </Suspense>
