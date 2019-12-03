@@ -1,7 +1,7 @@
 import React from "react";
 import { CommandInput } from "../types";
 
-import { configure, render } from "enzyme";
+import { configure, shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import commandExecutor from "./CommandExecutor";
 
@@ -28,9 +28,19 @@ describe("CommandExecutor", () => {
         requireConfirmation: false,
         command: myCommandInput,
         displayOutput: true,
-        cooldown: 0
+        cooldown: 0,
+        textColor: "black",
+        backgroundColor: "white",
+        size: 1,
+        font: "Helvetica"
       }
     });
-    expect(render(element).html()).toContain("Press this button");
+    const tmp = shallow(element).html()  || ""
+    const elemNoWhiteSpace = tmp.replace(/\s/g, '');
+    expect(elemNoWhiteSpace).toContain("background-color:black");
+    expect(elemNoWhiteSpace).toContain("background-color:white");
+    expect(elemNoWhiteSpace).toContain("font-size:1em");
+    expect(elemNoWhiteSpace).toContain("font-family:Helvetica");
+    expect(elemNoWhiteSpace).toContain("Pressthisbutton");
   });
 });

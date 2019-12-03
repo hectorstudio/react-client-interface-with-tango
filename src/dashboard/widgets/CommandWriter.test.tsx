@@ -32,10 +32,20 @@ describe("CommandWriter", () => {
         displayOutput: true,
         cooldown: 0,
         showDevice: true,
-        showCommand: true
+        showCommand: true,
+        textColor: "black",
+        backgroundColor: "white",
+        size: 1.7,
+        font: "Helvetica"
       }
     });
-    expect(shallow(element).html()).toContain("sys/tg_test/1/configureArray");
+    const elemNoWhiteSpace = shallow(element).html().replace(/\s/g, '');
+    expect(elemNoWhiteSpace).toContain("sys/tg_test/1/configureArray");
+    expect(elemNoWhiteSpace).toContain("background-color:white");
+    expect(elemNoWhiteSpace).toContain("font-size:1.7em");
+    expect(elemNoWhiteSpace).toContain("font-family:Helvetica");
+    
+    
   }); //renders without crashing
 
   it("renders with parameter", () => {
@@ -60,10 +70,18 @@ describe("CommandWriter", () => {
         displayOutput: true,
         cooldown: 0,
         showDevice: true,
-        showCommand: true
+        showCommand: true,
+        textColor: "black",
+        backgroundColor: "white",
+        size: 1.5,
+        font: "Helvetica"
       }
     });
-    expect(shallow(element).html()).toContain("hello world");
+    const elemNoWhilteSpace = shallow(element).html().replace(/\s/g, '');
+    expect(elemNoWhilteSpace).toContain("helloworld");
+    expect(elemNoWhilteSpace).toContain("background-color:white");
+    expect(elemNoWhilteSpace).toContain("font-size:1.5em");
+    expect(elemNoWhilteSpace).toContain("font-family:Helvetica");
   }); //renders with parameter
 
   it("calls onSubmit prop function when form is submitted", () => {

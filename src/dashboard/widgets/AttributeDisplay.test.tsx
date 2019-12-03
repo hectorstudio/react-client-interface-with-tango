@@ -12,6 +12,11 @@ interface Input {
   precision: number;
   showEnumLables: boolean;
   attribute: AttributeInput;
+  textColor: string;
+  backgroundColor: string;
+  size: number;
+  font: string;
+  showEnumLabels: boolean;
 }
 
 configure({ adapter: new Adapter() });
@@ -45,7 +50,12 @@ describe("AttributeDisplayTests", () => {
       scientificNotation: false,
       precision: 2,
       showEnumLables: false,
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      textColor: "",
+      backgroundColor: "",
+      size: 1,
+      font: "",
+      showEnumLabels: false,
     };
 
     const element = React.createElement(AttributeDisplay.component, {
@@ -80,7 +90,12 @@ describe("AttributeDisplayTests", () => {
       scientificNotation: true,
       precision: 2,
       showEnumLables: true,
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      textColor: "black",
+      backgroundColor: "white",
+      size: 1,
+      font: "Helvetica",
+      showEnumLabels: false,
     };
 
     const element = React.createElement(AttributeDisplay.component, {
@@ -114,7 +129,12 @@ describe("AttributeDisplayTests", () => {
       scientificNotation: true,
       precision: 2,
       showEnumLables: true,
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      textColor: "black",
+      backgroundColor: "white",
+      size: 1,
+      font: "Helvetica",
+      showEnumLabels: false,
     };
     const element = React.createElement(AttributeDisplay.component, {
       mode: "edit",
@@ -148,7 +168,12 @@ describe("AttributeDisplayTests", () => {
       scientificNotation: true,
       precision: 2,
       showEnumLables: true,
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      textColor: "black",
+      backgroundColor: "white",
+      size: 1,
+      font: "Helvetica",
+      showEnumLabels: false,
     };
 
     const element = React.createElement(AttributeDisplay.component, {
@@ -183,7 +208,12 @@ describe("AttributeDisplayTests", () => {
       scientificNotation: true,
       precision: 2,
       showEnumLables: true,
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      textColor: "black",
+      backgroundColor: "white",
+      size: 1,
+      font: "Helvetica",
+      showEnumLabels: false,
     };
 
     const element = React.createElement(AttributeDisplay.component, {
@@ -218,7 +248,12 @@ describe("AttributeDisplayTests", () => {
       scientificNotation: true,
       precision: 2,
       showEnumLables: true,
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      textColor: "black",
+      backgroundColor: "white",
+      size: 1,
+      font: "Helvetica",
+      showEnumLabels: false,
     };
 
     const element = React.createElement(AttributeDisplay.component, {
@@ -253,7 +288,12 @@ describe("AttributeDisplayTests", () => {
       scientificNotation: true,
       precision: 2,
       showEnumLables: true,
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      textColor: "black",
+      backgroundColor: "white",
+      size: 1,
+      font: "Helvetica",
+      showEnumLabels: false,
     };
 
     const element = React.createElement(AttributeDisplay.component, {
@@ -265,5 +305,4 @@ describe("AttributeDisplayTests", () => {
     });
     expect(shallow(element).html()).toContain("sys/tg_test/1/double_spectrum");
   });
-
 });
