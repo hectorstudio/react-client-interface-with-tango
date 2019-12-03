@@ -1,16 +1,23 @@
-import React, { Component, FormEvent } from "react";
+import React, { Component, FormEvent, CSSProperties } from "react";
 
 import { WidgetProps } from "./types";
 import {
   WidgetDefinition,
   AttributeInputDefinition,
-  BooleanInputDefinition
+  BooleanInputDefinition,
+  ColorInputDefinition,
+  NumberInputDefinition,
+  SelectInputDefinition
 } from "../types";
 
 type Inputs = {
   attribute: AttributeInputDefinition;
   showDevice: BooleanInputDefinition;
   showAttribute: BooleanInputDefinition;
+  textColor: ColorInputDefinition;
+  backgroundColor: ColorInputDefinition;
+  size: NumberInputDefinition;
+  font: SelectInputDefinition;
 };
 
 type Props = WidgetProps<Inputs>;
@@ -32,7 +39,15 @@ class AttributeWriter extends Component<Props, State> {
 
   public render() {
     const { mode, inputs } = this.props;
-    const { attribute, showDevice, showAttribute } = inputs;
+    const {
+      attribute,
+      showDevice,
+      showAttribute,
+      backgroundColor,
+      textColor,
+      size,
+      font
+    } = inputs;
     const { device, writeValue, attribute: attributeName } = attribute;
 
     const unit = mode === "run" ? attribute.unit : "unit";
@@ -55,14 +70,20 @@ class AttributeWriter extends Component<Props, State> {
 
     const isInvalid = dataType === "numeric" && isNaN(Number(this.state.input));
     const invalidStyle = isInvalid ? { outline: "1px solid red" } : {};
-
+    const style: CSSProperties = {
+      display: "flex",
+      alignItems: "center",
+      padding: "0.25em 0.5em",
+      backgroundColor,
+      color: textColor,
+      fontSize: size + "em"
+    }
+    if (font){
+      style["fontFamily"] = font;
+    }
     return (
       <form
-        style={{
-          display: "flex",
-          alignItems: "center",
-          padding: "0.25em 0.5em"
-        }}
+        style={style}
         onSubmit={this.handleSubmit}
       >
         {label && (
@@ -140,6 +161,37 @@ const definition: WidgetDefinition<Inputs> = {
       type: "boolean",
       label: "Show Attribute Name",
       default: true
+    },
+    textColor: {
+      label: "Text Color",
+      type: "color",
+      default: "#000"
+    },
+    backgroundColor: {
+      label: "Background Color",
+      type: "color",
+      default: "#ffffff"
+    },
+    size: {
+      label: "Text size (in units)",
+      type: "number",
+      default: 1,
+      nonNegative: true
+    },
+    font: {
+      type: "select",
+      default: "Helvetica",
+      label: "Font type",
+      options: [
+        {
+          name: "Default (Helvetica)",
+          value: "Helvetica"
+        },
+        {
+          name: "Monospaced (Courier new)",
+          value: "Courier new"
+        }
+      ]
     }
   }
 };

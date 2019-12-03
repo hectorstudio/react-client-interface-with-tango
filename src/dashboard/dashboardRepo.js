@@ -29,6 +29,24 @@ export async function load(id) {
   return res.json();
 }
 
+export async function getGroupDashboardCount(){
+  const res = await fetch("/dashboards/group/dashboardsCount", {
+    method: "GET",
+    credentials: "include",
+    headers
+  })
+  return res.json();
+}
+
+export async function getGroupDashboards(groupName){
+  const res = await fetch("/dashboards/group/dashboards?group=" + groupName, {
+    method: "GET",
+    credentials: "include",
+    headers
+  })
+  return res.json();
+}
+
 export async function loadUserDashboards() {
   const res = await fetch("/dashboards/user/dashboards/", {
     method: "GET",

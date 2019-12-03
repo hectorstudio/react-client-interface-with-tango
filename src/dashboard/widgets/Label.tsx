@@ -79,14 +79,14 @@ const definition: WidgetDefinition<Inputs> = {
       default: "#ffffff"
     },
     size: {
-      label: "Size (in units)",
+      label: "Text size (in units)",
       type: "number",
       default: 1,
       nonNegative: true,
     },
     font: {
       type: "select",
-      default: "Default (Helvetica)",
+      default: "Helvetica",
       label: "Font type",
       options: [
         {

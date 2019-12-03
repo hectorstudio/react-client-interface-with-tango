@@ -6,7 +6,9 @@ import {
   NumberInputDefinition,
   BooleanInputDefinition,
   CommandInputDefinition,
-  StringInputDefinition
+  StringInputDefinition,
+  ColorInputDefinition,
+  SelectInputDefinition
 } from "../types";
 
 function timeout(seconds) {
@@ -23,7 +25,11 @@ type Inputs = {
   requireConfirmation: BooleanInputDefinition;
   displayOutput: BooleanInputDefinition;
   cooldown: NumberInputDefinition;
-}
+  textColor: ColorInputDefinition;
+  backgroundColor: ColorInputDefinition;
+  size: NumberInputDefinition;
+  font: SelectInputDefinition;
+};
 
 type Props = WidgetProps<Inputs>;
 
@@ -46,8 +52,16 @@ class CommandWriter extends Component<Props, State> {
 
   public render() {
     const { mode, inputs } = this.props;
-    const { command, showDevice, showCommand } = inputs;
-    const { device, command: commandName, parameter=undefined} = command;
+    const {
+      command,
+      showDevice,
+      showCommand,
+      backgroundColor,
+      textColor,
+      size,
+      font
+    } = inputs;
+    const { device, command: commandName, parameter = undefined } = command;
 
     //const unit = mode === "run" ? command.unit : "unit";
     const deviceLabel = device || "device";
@@ -68,7 +82,7 @@ class CommandWriter extends Component<Props, State> {
     ) {
       return (
         <div style={{ backgroundColor: "red", padding: "0.5em" }}>
-          {/*command.dataType*/} not implemented
+          not implemented
         </div>
       );
     }
@@ -82,14 +96,20 @@ class CommandWriter extends Component<Props, State> {
       fontSize: "80%",
       ...outputStyle
     };
-
+    const style: CSSProperties = {
+      display: "flex",
+          alignItems: "center",
+          padding: "0.25em 0.5em",
+          backgroundColor,
+          color: textColor,
+          fontSize: size + "em"
+    }
+    if (font){
+      style["fontFamily"] = font;
+    }
     return (
       <form
-        style={{
-          display: "flex",
-          alignItems: "center",
-          padding: "0.25em 0.5em"
-        }}
+        style={style}
         onSubmit={this.handleExecute}
       >
         {label && (
@@ -131,9 +151,7 @@ class CommandWriter extends Component<Props, State> {
     const { command, requireConfirmation, cooldown } = this.props.inputs;
     const { input } = this.state;
 
-    const message = `Confirm executing "${command.command}" on "${
-      command.device
-    }" with parameter "${input}"`;
+    const message = `Confirm executing "${command.command}" on "${command.device}" with parameter "${input}"`;
 
     /* eslint-disable no-restricted-globals */
     if (!requireConfirmation || confirm(message)) {
@@ -180,7 +198,7 @@ const definition: WidgetDefinition<Inputs> = {
   inputs: {
     title: {
       type: "string",
-      label: "Title",
+      label: "Title"
     },
     command: {
       label: "",
@@ -213,6 +231,37 @@ const definition: WidgetDefinition<Inputs> = {
       label: "Cooldown (s)",
       default: 0,
       nonNegative: true
+    },
+    textColor: {
+      label: "Text Color",
+      type: "color",
+      default: "#000"
+    },
+    backgroundColor: {
+      label: "Background Color",
+      type: "color",
+      default: "#ffffff"
+    },
+    size: {
+      label: "Text size (in units)",
+      type: "number",
+      default: 1,
+      nonNegative: true
+    },
+    font: {
+      type: "select",
+      default: "Helvetica",
+      label: "Font type",
+      options: [
+        {
+          name: "Default (Helvetica)",
+          value: "Helvetica"
+        },
+        {
+          name: "Monospaced (Courier new)",
+          value: "Courier new"
+        }
+      ]
     }
   }
 };
