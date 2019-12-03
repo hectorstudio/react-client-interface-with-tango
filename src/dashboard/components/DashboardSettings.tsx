@@ -19,7 +19,7 @@ interface Props {
   dashboards: Dashboard[];
   isLoggedIn: boolean;
   selectedDashboard: Dashboard;
-  onDeleteProperty: (id: string) => void;
+  onDeleteDashboard: (id: string) => void;
 }
 
 interface State {
@@ -33,7 +33,7 @@ class DashboardSettings extends Component<Props, State> {
       deleteDashboardModalId: ""
     };
 
-    this.handleDeleteProperty = this.handleDeleteProperty.bind(this);
+    this.handleDeleteDashboard = this.handleDeleteDashboard.bind(this);
   }
   public render() {
     const { dashboards, isLoggedIn } = this.props;
@@ -114,7 +114,7 @@ class DashboardSettings extends Component<Props, State> {
                 id={value.id}
                 name={value.name}
                 onClose={() => this.setState({ deleteDashboardModalId: "" })}
-                onDelete={this.handleDeleteProperty}
+                onDelete={this.handleDeleteDashboard}
               />
             )}
           </Fragment>
@@ -128,8 +128,8 @@ class DashboardSettings extends Component<Props, State> {
     );
   }
 
-  private handleDeleteProperty(id: string) {
-    this.props.onDeleteProperty(id);
+  private handleDeleteDashboard(id: string) {
+    this.props.onDeleteDashboard(id);
     this.setState({ deleteDashboardModalId: "" });
   }
 }
@@ -143,7 +143,7 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
-    onDeleteProperty: (id: string) => dispatch(deleteDashboard(id))
+    onDeleteDashboard: (id: string) => dispatch(deleteDashboard(id))
   };
 }
 export default connect(
