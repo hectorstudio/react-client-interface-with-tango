@@ -1,5 +1,5 @@
 import convert from "color-convert";
-import { RGB } from "color-convert/conversions";
+import { RGB, HSL } from "color-convert/conversions";
 
 /**
  * Converts a CSS color string to an RGB format acceptable by color-convert
@@ -45,14 +45,25 @@ export const RGBtoCSS = (rgb: RGB): string => {
     colorChannelToHex(rgb[2])
   );
 };
-function colorChannelToHex(c) {
+function colorChannelToHex(c: number): string {
   var hex = c.toString(16);
   return hex.length === 1 ? "0" + hex : hex;
 }
-export const CSStoHSL = (cssColor: string) => {
+
+/**
+ * converts a css color to HSL 
+ */
+export const CSStoHSL = (cssColor: string): HSL => {
   const rgb = CSStoRGB(cssColor);
   return convert.rgb.hsl(rgb);
 };
+
+/**
+ * converts HSL to a css color
+ */
+export const HSLtoCSS = (hsl: HSL): string => {
+    return RGBtoCSS(convert.hsl.rgb(hsl));
+}
 
 /**
  * Increases the brightness of a cssColor with brighnessDelta. Brightness is capped at the interval [0, 100] where 0 is black and 100 is white

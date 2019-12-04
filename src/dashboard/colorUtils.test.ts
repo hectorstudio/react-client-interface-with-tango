@@ -1,4 +1,4 @@
-import {CSStoHSL, RGBtoCSS, CSStoRGB, brighten, saturate, shiftHue} from "./colorUtils";
+import {CSStoHSL, RGBtoCSS, CSStoRGB, brighten, saturate, shiftHue, HSLtoCSS} from "./colorUtils";
 
 it("correctly parses css strings to HSL", () => {
   expect(CSStoHSL("#ffffff")).toEqual([0,0,100])
@@ -8,12 +8,20 @@ it("correctly parses css strings to HSL", () => {
   expect(CSStoHSL("white")).toEqual([0,0,100])
 });
 
-it("correctly parses css strings to HSL, and back to css", () => {
+it("correctly parses css strings to rgb, and back to css again", () => {
   expect(RGBtoCSS(CSStoRGB("#ffffff"))).toEqual("#ffffff")
   expect(RGBtoCSS(CSStoRGB("#fff"))).toEqual("#ffffff")
   expect(RGBtoCSS(CSStoRGB("rgb(255,255,255)"))).toEqual("#ffffff")
   expect(RGBtoCSS(CSStoRGB("rgba(255,255,255, 1)"))).toEqual("#ffffff")
   expect(RGBtoCSS(CSStoRGB("white"))).toEqual("#ffffff")
+});
+
+it("correctly parses css strings to hsl, and back to css again", () => {
+  expect(HSLtoCSS(CSStoHSL("#ffffff"))).toEqual("#ffffff")
+  expect(HSLtoCSS(CSStoHSL("#fff"))).toEqual("#ffffff")
+  expect(HSLtoCSS(CSStoHSL("rgb(255,255,255)"))).toEqual("#ffffff")
+  expect(HSLtoCSS(CSStoHSL("rgba(255,255,255, 1)"))).toEqual("#ffffff")
+  expect(HSLtoCSS(CSStoHSL("white"))).toEqual("#ffffff")
 });
 
 it("can brighten colors", () => {
@@ -34,6 +42,8 @@ it("can brighten colors", () => {
   expect(brighten("#a95cb6", 0)).toEqual("#a95db6") //rounding error, green channel is off by 1!
   expect(brighten("#a95cb6", 25)).toEqual("#d8b5de")
   expect(brighten("#a95cb6", 50)).toEqual("#ffffff")
+
+  expect(brighten("#a95cb6", 200)).toEqual("#ffffff")
 
 });
 
@@ -59,7 +69,7 @@ it("can shift hue", () => {
   expect(shiftHue("#6ebad0", 120)).toEqual("#d06dba")
   expect(shiftHue("#6ebad0", 160)).toEqual("#d06d78")
 
-
+  expect(shiftHue("#6ebad0", -720)).toEqual("#6dbad0")
 
 
 });
