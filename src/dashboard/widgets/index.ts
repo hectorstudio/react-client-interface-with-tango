@@ -14,6 +14,7 @@ import attributeLogger from "./AttributeLogger/AttributeLogger";
 import spectrumTable from "./SpectrumTable";
 
 import { Widget, WidgetDefinition, WidgetBundle } from "../types";
+import DeviceStatus from "./DeviceStatus";
 
 export const bundles: WidgetBundle<{}>[] = [
   label,
@@ -26,6 +27,7 @@ export const bundles: WidgetBundle<{}>[] = [
   commandWriter,
   attributeDial,
   // booleanDisplay,
+  DeviceStatus,
   ledDisplay,
   sardanaMotor,
   attributeLogger,
