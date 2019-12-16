@@ -1,7 +1,6 @@
 import { deleteWidget } from "./actionCreators";
 import sagas from "./sagas";
 import { runSaga, stdChannel } from "redux-saga";
-import { RootState } from ".";
 
 const basicState = {
   widgets: {},
@@ -24,7 +23,7 @@ const basicState = {
   }
 };
 
-test("DELETE_WIDGETS", async () => {
+test("DELETE_WIDGETS", () => {
   const ids = ["1", "2", "3", "4", "5"];
   const widgets = ids.reduce((accum, id) => {
     return {
@@ -52,10 +51,10 @@ test("DELETE_WIDGETS", async () => {
   const channel = stdChannel();
   const fakeStore = {
     dispatch: (action) => dpActions.push(action),
-    getState: () => ({ selectedDashboard: withSelection } as RootState),
-    channel,
+    getState: () => ({ selectedDashboard: withSelection }),
+    channel
   };
-  runSaga(fakeStore, sagas, deleteWidget());
+  runSaga(fakeStore, sagas);
   channel.put(deleteWidget());
   channel.close();
   const dashboardEditedAction = dpActions.find(function(a) {
