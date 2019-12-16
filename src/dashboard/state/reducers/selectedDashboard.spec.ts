@@ -43,38 +43,6 @@ test("SELECT_WIDGETS", () => {
   const state = reducer(basicState, action);
   expect(state.selectedIds).toEqual(ids);
 });
-/*
-test("DELETE_WIDGETS", () => {
-  const ids = ["1", "2", "3", "4", "5"];
-  const widgets = ids.reduce((accum, id) => {
-    return {
-      ...accum,
-      [id]: {
-        id,
-        type: "",
-        valid: true,
-        x: 0,
-        y: 0,
-        canvas: "",
-        width: 0,
-        height: 0,
-        inputs: []
-      }
-    };
-  }, {});
-
-  const withWidgets = { ...basicState, widgets };
-  const selectWidgetsValue = selectWidgets(["1", "2", "3"]);
-  const withSelection = reducer(withWidgets, selectWidgetsValue);
-  const state = reducer(withSelection, deleteWidget());
-  const widgetsAfter = getWidgets({ selectedDashboard: state } as RootState);
-  
-  const idsAfter = widgetsAfter.map(({ id }) => id);
-
-  expect(idsAfter).toEqual(["4", "5"]);
-  expect(state.selectedIds).toEqual([]);
-});
-*/
 
 test("DASHBOARD_RENAMED", () => {
   const newName = "new name";
