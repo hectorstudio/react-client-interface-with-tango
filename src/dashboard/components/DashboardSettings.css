@@ -6,6 +6,10 @@
 }
 .dashboard-settings .dashboard-link{
     color:#0087db;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
 
 }
 .dashboard-settings .float-right{
@@ -30,6 +34,7 @@
 }
 
 .dashboard-settings .dashboard-row{
+    outline: none;
     padding: 0.2em 0.5em;
     font-size: 1.1em;
     border-bottom: 1px solid #eee;

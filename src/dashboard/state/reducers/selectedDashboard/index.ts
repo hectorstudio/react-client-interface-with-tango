@@ -29,7 +29,6 @@ const initialState = {
   user: "",
   group: "",
   lastUpdatedBy: "",
-  redirect: false,
   insertTime: null,
   updateTime: null,
   history: {
@@ -73,7 +72,6 @@ export default function canvases(
         id,
         name,
         user,
-        redirect,
         insertTime,
         updateTime,
         group,
@@ -100,7 +98,6 @@ export default function canvases(
         id,
         name,
         user,
-        redirect,
         insertTime,
         updateTime,
         group,
@@ -121,7 +118,6 @@ export default function canvases(
           name: "",
           widgets: {},
           selectedIds: [],
-          redirect: true
         };
       } else {
         return state;

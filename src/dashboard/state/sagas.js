@@ -345,22 +345,12 @@ function* loadDashboard() {
         group,
         lastUpdatedBy
       } = yield call(API.load, id);
-      //We want to redirect the dashboard component to the url with the dashboard id if the
-      //dashboard was just created
-      let created = false;
-      if (type === DASHBOARD_SAVED) {
-        created = payload.created;
-      }
-      const redirect =
-        type === DASHBOARD_CLONED || (type === DASHBOARD_SAVED && created);
-      if (!(type === DASHBOARD_SAVED && !created)) {
         yield put(
           dashboardLoaded(
             {
               id,
               name,
               user,
-              redirect,
               insertTime,
               updateTime,
               group,
@@ -369,7 +359,6 @@ function* loadDashboard() {
             widgets
           )
         );
-      }
     } catch (exception) {
       // Replace with failure action and write saga that reacts on it and puts a notification action
       yield put(
