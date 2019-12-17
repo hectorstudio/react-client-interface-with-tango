@@ -110,6 +110,17 @@ export interface Widget {
   inputs: InputMapping;
 }
 
+//meta information about available group dashboards, with count and whether it has been loade for each group
+export interface AvailableGroupDashboards{
+  [group: string]: {
+    count: number,
+    loaded: boolean,
+  }
+}
+export interface SharedDashboards{
+  dashboards: Dashboard[];
+  availableGroupDashboards: AvailableGroupDashboards;
+}
 export interface DashboardEditHistory{
   undoActions: Record<string, Widget>[],
   redoActions: Record<string, Widget>[],

@@ -70,7 +70,7 @@ type Props = WidgetProps<Inputs>;
 
 class DeviceStatus extends Component<Props> {
   public render() {
-    const { inputs, mode } = this.props;
+    const { inputs } = this.props;
     return (
       <div style={{display: "table-cell"}}>
         <Text {...inputs} />
