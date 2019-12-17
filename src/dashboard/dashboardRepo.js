@@ -30,7 +30,7 @@ export async function load(id) {
 }
 
 export async function getGroupDashboardCount(){
-  const res = await fetch("/dashboards/group/dashboardsCount", {
+  const res = await fetch("/dashboards/group/dashboardsCount?excludeCurrentUser=true", {
     method: "GET",
     credentials: "include",
     headers
@@ -39,7 +39,7 @@ export async function getGroupDashboardCount(){
 }
 
 export async function getGroupDashboards(groupName){
-  const res = await fetch("/dashboards/group/dashboards?group=" + groupName, {
+  const res = await fetch("/dashboards/group/dashboards?excludeCurrentUser=true&group=" + groupName, {
     method: "GET",
     credentials: "include",
     headers

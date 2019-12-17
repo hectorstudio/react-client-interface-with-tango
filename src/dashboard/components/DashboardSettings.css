@@ -47,3 +47,15 @@
 .dashboard-settings .selected{
     background: #ffffe2;
 }
+.dashboard-settings-title{
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-top: 1em;
+    color: #666;
+    padding: 0.2em 0.5em;
+    border-bottom: 1px solid #eee;
+}
+.subtitle{
+    font-weight: normal;
+    margin-top: 0.2em;
+}
