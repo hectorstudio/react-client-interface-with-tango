@@ -134,7 +134,6 @@ export interface Dashboard {
   id: string;
   name: string;
   user: string;
-  redirect: boolean;
   insertTime: Date | null;
   updateTime: Date | null;
   group: string | null;

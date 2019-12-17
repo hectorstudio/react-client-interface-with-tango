@@ -55,34 +55,22 @@ class Dashboard extends Component<Props> {
   }
 
   public async componentDidMount() {
-    const redirectId = this.props.selectedDashboard.redirect;
-    const id = redirectId ? this.props.selectedDashboard.id : this.parseId();
-    if (id) {
+    const id = this.parseId();
+    if (id){
       this.props.loadDashboard(id);
     }
   }
 
-  public async componentDidUpdate(prevProps) {
-    // update if url currently is missing and the selcted one has one?
-    const redirect = this.props.selectedDashboard.redirect;
+  public async componentDidUpdate() {
     const currentId = this.props.selectedDashboard.id;
     const id = this.parseId();
-
-    if (redirect && currentId !== id) {
-      // The state has been updated with a flag indicating that we should navigate
-      // to a new dashboard.
-      this.props.history.replace("?id=" + this.props.selectedDashboard.id);
-      return;
-    }
-    const justLoggedInOnAnonymous =
-      this.props.isLoggedIn && this.props.widgets.length > 0 && !id;
-
-    if (
-      JSON.stringify(prevProps.widgets) ===
-        JSON.stringify(this.props.widgets) &&
-      !justLoggedInOnAnonymous
-    ) {
-      return;
+    if (currentId !== id) {
+      if (currentId){
+        this.props.history.replace("?id=" + currentId);
+      }else{
+        this.props.history.replace("?");
+      }
+      
     }
   }
 
@@ -110,7 +98,7 @@ class Dashboard extends Component<Props> {
           <div className={classNames("CanvasArea", mode)}>{canvasContents}</div>
           <Sidebar
             mode={mode}
-            selectedTab="library"
+            selectedTab="dashboards"
             tangoDB={tangoDB}
             selectedWidgets={selectedWidgets}
           />

@@ -1,12 +1,8 @@
 import reducer from "./selectedDashboard";
 import {
   selectWidgets,
-  deleteWidget,
   dashboardRenamed
 } from "../actionCreators";
-import { getWidgets } from "../selectors";
-import { RootState } from ".";
-//import { Dashboard } from "../../types";
 
 const basicState = {
   widgets: {},
@@ -16,7 +12,6 @@ const basicState = {
   user: "",
   group: "",
   lastUpdatedBy: "",
-  redirect: false,
   insertTime: null,
   updateTime: null,
   history: {

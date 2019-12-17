@@ -7,11 +7,11 @@ import { getDashboards, getSelectedDashboard } from "../state/selectors";
 import { RootState } from "../state/reducers";
 import { deleteDashboard } from "../state/actionCreators";
 import DeleteDashboardModal from "./modals/DeleteDashboardModal";
-import { Dashboard, SharedDashboards } from "../types";
-import { Route } from "react-router-dom";
+import { Dashboard, SharedDashboards, Widget } from "../types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch } from "redux";
 import { Button } from "react-bootstrap";
+import { loadDashboard, saveDashboard } from "../state/actionCreators";
 import { getGroupDashboards } from "../dashboardRepo";
 
 interface Props {
@@ -21,6 +21,8 @@ interface Props {
   sharedDashboards: SharedDashboards;
   onSharedDashboardLoad: (sharedDashboards: SharedDashboards) => void;
   onDeleteDashboard: (id: string) => void;
+  loadDashboard: (id: string) => void;
+  saveDashboard: (id: string, name: string, widgets: Widget[]) => void;
 }
 
 interface State {
@@ -58,21 +60,13 @@ class DashboardSettings extends Component<Props, State> {
       <div className="dashboard-settings">
         <div className="dashboard-settings-title">My dashboards</div>
         <div className="dashboard-row">
-          <div>
-            {" "}
-            <Route
-              path="/:tangoDB/dashboard"
-              render={({ match }) => (
-                <a
-                  className="dashboard-link float-right"
-                  href={`${match.url}`}
-                  title="Create a new dashboard"
-                >
-                  New
-                </a>
-              )}
-            />
-          </div>
+          <button
+            title="Create a new dashboard"
+            onClick={() => this.setSelectedDashboard("")}
+            className="dashboard-link"
+          >
+            New
+          </button>
         </div>
         {dashboards.map(dashboard => this.DashboardRow(dashboard, false))}
         {/* SHARED DASHBOARDS */}
@@ -160,7 +154,16 @@ class DashboardSettings extends Component<Props, State> {
       expandedGroups: { ...expandedGroups, [groupName]: false }
     });
   };
-  DashboardRow = (dashboard: Dashboard, shared:boolean) => {
+  setSelectedDashboard = (id: string) => {
+    if (id){
+      this.props.loadDashboard(id);
+    }else{
+      //creates a new dashboard, loads it, and selects it
+      this.props.saveDashboard("", "Untitled dashboard", []);
+    }
+    
+  };
+  DashboardRow = (dashboard: Dashboard, shared: boolean) => {
     const { id: selectedDashboardId } = this.props.selectedDashboard;
     return (
       <Fragment key={dashboard.id}>
@@ -171,19 +174,12 @@ class DashboardSettings extends Component<Props, State> {
           }
         >
           {selectedDashboardId !== dashboard.id ? (
-            <Route
-              path="/:tangoDB/dashboard"
-              render={({ match }) => (
-                <a
-                  title={`View dashboard ${dashboard.name ||
-                    "Untitled dashboard"}`}
-                  className="dashboard-link"
-                  href={`${match.url}?id=${dashboard.id}`}
-                >
-                  {dashboard.name || "Untitled dashboard"}
-                </a>
-              )}
-            />
+            <button
+              onClick={() => this.setSelectedDashboard(dashboard.id)}
+              className="dashboard-link"
+            >
+              {dashboard.name || "Untitled dashboard"}
+            </button>
           ) : (
             <span>{dashboard.name || "Untitled dashboard"}</span>
           )}
@@ -194,17 +190,30 @@ class DashboardSettings extends Component<Props, State> {
               alignSelf: "flex-start"
             }}
           >
-            {!shared && <button
-              title={`Delete dashboard '${dashboard.name ||
-                "Untitled dashboard"}'`}
-              className="delete-button"
-              onClick={() =>
-                this.setState({ deleteDashboardModalId: dashboard.id })
-              }
-            >
-              <FontAwesomeIcon icon="trash" />
-            </button>}
-            {shared && <span title={"This dashboard is owned by " + dashboard.user} style={{color: "#666", fontSize: "0.8em", fontStyle: "italic"}}><FontAwesomeIcon icon="user" />{" "}{dashboard.user}</span>}
+            {!shared && (
+              <button
+                title={`Delete dashboard '${dashboard.name ||
+                  "Untitled dashboard"}'`}
+                className="delete-button"
+                onClick={() =>
+                  this.setState({ deleteDashboardModalId: dashboard.id })
+                }
+              >
+                <FontAwesomeIcon icon="trash" />
+              </button>
+            )}
+            {shared && (
+              <span
+                title={"This dashboard is owned by " + dashboard.user}
+                style={{
+                  color: "#666",
+                  fontSize: "0.8em",
+                  fontStyle: "italic"
+                }}
+              >
+                <FontAwesomeIcon icon="user" /> {dashboard.user}
+              </span>
+            )}
           </div>
         </div>
 
@@ -235,7 +244,10 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
-    onDeleteDashboard: (id: string) => dispatch(deleteDashboard(id))
+    saveDashboard: (id: string, name: string, widgets: Widget[]) =>
+    dispatch(saveDashboard(id, name, widgets)),
+    onDeleteDashboard: (id: string) => dispatch(deleteDashboard(id)),
+    loadDashboard: (id: string) => dispatch(loadDashboard(id))
   };
 }
 export default connect(
