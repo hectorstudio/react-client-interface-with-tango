@@ -1,4 +1,4 @@
-import { DASHBOARDS_LOADED, DASHBOARD_SHARED } from "../actionTypes";
+import { DASHBOARDS_LOADED } from "../actionTypes";
 import { DashboardAction } from "../actions";
 import { Dashboard } from "../../types";
 

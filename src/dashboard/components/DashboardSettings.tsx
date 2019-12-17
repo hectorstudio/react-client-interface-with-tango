@@ -74,7 +74,7 @@ class DashboardSettings extends Component<Props, State> {
             />
           </div>
         </div>
-        {dashboards.map(dashboard => this.DashboardRow(dashboard))}
+        {dashboards.map(dashboard => this.DashboardRow(dashboard, false))}
         {/* SHARED DASHBOARDS */}
         <div className="dashboard-settings-title">Shared dashboards</div>
 
@@ -89,7 +89,7 @@ class DashboardSettings extends Component<Props, State> {
               {this.state.expandedGroups[groupName] &&
                 groupDashboards
                   .filter(dashboard => dashboard.group === groupName)
-                  .map(dashboard => this.DashboardRow(dashboard))}
+                  .map(dashboard => this.DashboardRow(dashboard, true))}
             </Fragment>
           );
         })}
@@ -160,7 +160,7 @@ class DashboardSettings extends Component<Props, State> {
       expandedGroups: { ...expandedGroups, [groupName]: false }
     });
   };
-  DashboardRow = (dashboard: Dashboard) => {
+  DashboardRow = (dashboard: Dashboard, shared:boolean) => {
     const { id: selectedDashboardId } = this.props.selectedDashboard;
     return (
       <Fragment key={dashboard.id}>
@@ -194,7 +194,7 @@ class DashboardSettings extends Component<Props, State> {
               alignSelf: "flex-start"
             }}
           >
-            <button
+            {!shared && <button
               title={`Delete dashboard '${dashboard.name ||
                 "Untitled dashboard"}'`}
               className="delete-button"
@@ -203,7 +203,8 @@ class DashboardSettings extends Component<Props, State> {
               }
             >
               <FontAwesomeIcon icon="trash" />
-            </button>
+            </button>}
+            {shared && <span title={"This dashboard is owned by " + dashboard.user} style={{color: "#666", fontSize: "0.8em", fontStyle: "italic"}}><FontAwesomeIcon icon="user" />{" "}{dashboard.user}</span>}
           </div>
         </div>
 
