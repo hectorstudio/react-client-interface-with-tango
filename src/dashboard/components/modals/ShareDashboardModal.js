@@ -9,9 +9,9 @@ const ShareDashboardModal = ({ name, id, onShare, userGroups, current, onClose }
     <Modal>
       <Modal.Body>
         <h3>Share dashboard</h3>
-        <p>
+        <div style={{marginBottom: "0.5em"}}>
           Share <span style={{ fontStyle: "italic" }}>{name}</span> with
-        </p>
+        </div>
         <select
           className="form-control"
           onChange={e => setSelectedGroup(e.target.value)}
@@ -26,6 +26,7 @@ const ShareDashboardModal = ({ name, id, onShare, userGroups, current, onClose }
             );
           })}
         </select>
+        <div style={{marginTop: "1em", fontSize: "0.8em"}}>Note that the dashboard will be shared for <b>Edit</b> with the selected group. To share a read-only version of this dashboard, simply copy the URL and share that.</div>
       </Modal.Body>
 
       <Modal.Footer>

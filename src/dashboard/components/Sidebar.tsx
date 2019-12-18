@@ -57,7 +57,7 @@ export default class Sidebar extends Component<Props, State> {
         ) : selectedWidgets.length === 1 ? (
           <Inspector
             widget={selectedWidgets[0]}
-            isRootCanvas={/*this.isRootCanvas()*/ true}
+            isRootCanvas={true}
             tangoDB={tangoDB}
           />
         ) : (

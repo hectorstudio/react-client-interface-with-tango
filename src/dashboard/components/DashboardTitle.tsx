@@ -187,7 +187,7 @@ class DashboardTitle extends Component<Props, State> {
             </span>
           )}
           {showRecentlyEditedMessage &&  inEditMode && (
-            <span  className="notification-msg " title={`This dashboard is currently being edited by ${lastUpdatedBy}`}>
+            <span  className="notification-msg ERROR " title={`This dashboard is currently being edited by ${lastUpdatedBy}`}>
                <FontAwesomeIcon icon="user-edit" />  {lastUpdatedBy}
             </span>
           )}
