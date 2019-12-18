@@ -1,25 +1,25 @@
 import React, { Component, Fragment } from "react";
-import NotLoggedIn from "../../jive/components/DeviceViewer/NotLoggedIn/NotLoggedIn";
+import NotLoggedIn from "../../../jive/components/DeviceViewer/NotLoggedIn/NotLoggedIn";
 import { connect } from "react-redux";
-import { getIsLoggedIn } from "../../shared/user/state/selectors";
-import "./DashboardSettings.css";
-import { getDashboards, getSelectedDashboard } from "../state/selectors";
-import { RootState } from "../state/reducers";
-import { deleteDashboard } from "../state/actionCreators";
-import DeleteDashboardModal from "./modals/DeleteDashboardModal";
-import { Dashboard, SharedDashboards, Widget } from "../types";
+import { getIsLoggedIn } from "../../../shared/user/state/selectors";
+import "./DashboardLibrary.css";
+import { getDashboards, getSelectedDashboard } from "../../state/selectors";
+import { RootState } from "../../state/reducers";
+import { deleteDashboard } from "../../state/actionCreators";
+import DeleteDashboardModal from "../modals/DeleteDashboardModal";
+import { Dashboard, SharedDashboards, Widget } from "../../types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch } from "redux";
 import { Button } from "react-bootstrap";
-import { loadDashboard, saveDashboard } from "../state/actionCreators";
-import { getGroupDashboards } from "../dashboardRepo";
+import { loadDashboard, saveDashboard } from "../../state/actionCreators";
+import { getGroupDashboards, getGroupDashboardCount } from "../../dashboardRepo";
 
 interface Props {
+
+  render:boolean;
   dashboards: Dashboard[];
   isLoggedIn: boolean;
   selectedDashboard: Dashboard;
-  sharedDashboards: SharedDashboards;
-  onSharedDashboardLoad: (sharedDashboards: SharedDashboards) => void;
   onDeleteDashboard: (id: string) => void;
   loadDashboard: (id: string) => void;
   saveDashboard: (id: string, name: string, widgets: Widget[]) => void;
@@ -28,23 +28,49 @@ interface Props {
 interface State {
   deleteDashboardModalId: string;
   expandedGroups: { [group: string]: boolean };
+  sharedDashboards: SharedDashboards;
 }
 
-class DashboardSettings extends Component<Props, State> {
-  constructor(props) {
+class DashboardLibrary extends Component<Props, State> {
+  constructor(props:Props) {
     super(props);
     this.handleDeleteDashboard = this.handleDeleteDashboard.bind(this);
     this.state = {
       deleteDashboardModalId: "",
-      expandedGroups: {}
+      expandedGroups: {},
+      sharedDashboards: {
+        dashboards: [],
+        availableGroupDashboards: {}
+      }
     };
   }
+
+  public async componentDidMount() {
+    const meta = await getGroupDashboardCount();
+    const keys = Object.keys(meta);
+    const sharedDashboards: SharedDashboards = {
+      dashboards: [],
+      availableGroupDashboards: {}
+    };
+    keys.forEach(key => {
+      sharedDashboards.availableGroupDashboards[key] = {
+        count: meta[key],
+        loaded: false
+      };
+    });
+    this.setState({ sharedDashboards });
+  }
+  onSharedDashboardLoad = (sharedDashboards:SharedDashboards) => this.setState({sharedDashboards})
+  
   public render() {
+    if (!this.props.render){
+      return null;
+    }
     const { dashboards, isLoggedIn } = this.props;
     const {
       dashboards: groupDashboards,
       availableGroupDashboards
-    } = this.props.sharedDashboards;
+    } = this.state.sharedDashboards;
     const groupsWithSharedDashboards = Object.keys(
       availableGroupDashboards
     ).filter(group => availableGroupDashboards[group].count > 0);
@@ -131,19 +157,19 @@ class DashboardSettings extends Component<Props, State> {
     const {
       availableGroupDashboards,
       dashboards
-    } = this.props.sharedDashboards;
+    } = this.state.sharedDashboards;
     const loaded = availableGroupDashboards[groupName].loaded;
     let groupDashboards: Dashboard[] = [];
     if (!loaded) {
       groupDashboards = await getGroupDashboards(groupName);
       availableGroupDashboards[groupName].loaded = true;
       dashboards.push(...groupDashboards);
-      this.props.onSharedDashboardLoad({
+      this.setState({sharedDashboards:{
         availableGroupDashboards,
         dashboards: dashboards.filter(
           (value, index, self) => self.indexOf(value) === index
         )
-      });
+      }});
     }
     const { expandedGroups } = this.state;
     this.setState({ expandedGroups: { ...expandedGroups, [groupName]: true } });
@@ -253,4 +279,4 @@ function mapDispatchToProps(dispatch: Dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(DashboardSettings);
+)(DashboardLibrary);

@@ -20,7 +20,7 @@ export default class SidebarTabs extends Component<Props> {
             key="library"
             onClick={e => onTabChange("library")}
           >
-            Library
+            Widgets
           </li>
           <li
             className={

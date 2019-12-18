@@ -62,7 +62,6 @@ import { getWidgets, getSelectedDashboard } from "./selectors";
 import { definitionForType, definitionForWidget } from "../widgets";
 import { defaultInputs } from "../utils";
 
-
 export default function* sagas() {
   yield fork(createUserSaga());
   yield fork(loadDashboards);
@@ -256,11 +255,10 @@ function* editWidget() {
       }
     }
     yield put(dashboardEdited(newState));
-    const widgetArray = Object.keys(newState.widgets).map(key => newState.widgets[key])
-      yield put(
-        saveDashboardAction(newState.id, newState.name, widgetArray)
-      );
-    
+    const widgetArray = Object.keys(newState.widgets).map(
+      key => newState.widgets[key]
+    );
+    yield put(saveDashboardAction(newState.id, newState.name, widgetArray));
   }
 }
 
@@ -272,9 +270,11 @@ function* loadDashboards() {
       DASHBOARD_RENAMED,
       DASHBOARD_DELETED,
       DASHBOARD_CLONED,
-      DASHBOARD_SAVED,
+      DASHBOARD_SAVED
     ]);
-    //in the case of DASHBOARD_SAVED, only load dashboards if it was created
+    //in the case of DASHBOARD_SAVED, only load the dashboard from the db if it was created.
+    //Loading the dashboard on every save becomes very sluggish, e.g. when trying to type text
+    //in a widget label
     if (payload.type !== DASHBOARD_SAVED || payload.created) {
       try {
         const result = yield call(API.loadUserDashboards);
@@ -283,7 +283,6 @@ function* loadDashboards() {
         console.log(exception);
       }
     }
-   
   }
 }
 
@@ -335,16 +334,22 @@ function* loadDashboard() {
       DASHBOARD_SAVED
     ]);
     const { id, type } = payload;
-    try {
-      const {
-        widgets,
-        name,
-        user,
-        insertTime,
-        updateTime,
-        group,
-        lastUpdatedBy
-      } = yield call(API.load, id);
+    //In the case of dashboard_saved, only load dashboard if the dashboard was just created (we need the ID)
+    let created = false;
+    if (type === DASHBOARD_SAVED) {
+      created = payload.created;
+    }
+    if (!(type === DASHBOARD_SAVED && !created)) {
+      try {
+        const {
+          widgets,
+          name,
+          user,
+          insertTime,
+          updateTime,
+          group,
+          lastUpdatedBy
+        } = yield call(API.load, id);
         yield put(
           dashboardLoaded(
             {
@@ -359,11 +364,11 @@ function* loadDashboard() {
             widgets
           )
         );
-    } catch (exception) {
-      // Replace with failure action and write saga that reacts on it and puts a notification action
-      yield put(
-        showNotification("ERROR", LOAD_DASHBOARD, "Dashboard not found")
-      );
+      } catch (exception) {
+        yield put(
+          showNotification("ERROR", LOAD_DASHBOARD, "Dashboard not found")
+        );
+      }
     }
   }
 }
@@ -379,9 +384,8 @@ function* saveDashboard() {
         widgets,
         name || ""
       );
-      yield put(dashboardSaved(newId, created, name)); // Should take name from response, but API doesn't support it at time of writing
+      yield put(dashboardSaved(newId, created, name));
     } catch (exception) {
-      // Replace with failure action and write saga that reacts on it and puts a notification action
       yield put(
         showNotification(
           "ERROR",
