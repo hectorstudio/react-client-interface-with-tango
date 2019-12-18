@@ -46,7 +46,6 @@ describe("DeviceStatus", () => {
       }
     });
     const elemNoWhiteSpace = shallow(element).html().replace(/\s/g, '');
-    console.log(elemNoWhiteSpace)
     expect(elemNoWhiteSpace).toContain("sys/tg_test/1");
     expect(elemNoWhiteSpace).toContain("RUNNING");
     expect(elemNoWhiteSpace).toContain("darkgreen");
