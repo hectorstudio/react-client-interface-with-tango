@@ -44,8 +44,13 @@ class DashboardLibrary extends Component<Props, State> {
       }
     };
   }
-
-  public async componentDidMount() {
+  public async componentDidUpdate(prevProp){
+    //if we just logged in, fetch dashboard count
+    if (this.props.isLoggedIn && !prevProp.isLoggedIn){
+      this.loadGroupDashboardCount();
+    }
+  }
+  public async loadGroupDashboardCount(){
     const meta = await getGroupDashboardCount();
     const keys = Object.keys(meta);
     const sharedDashboards: SharedDashboards = {
@@ -59,6 +64,9 @@ class DashboardLibrary extends Component<Props, State> {
       };
     });
     this.setState({ sharedDashboards });
+  }
+  public async componentDidMount() {
+    this.loadGroupDashboardCount();
   }
   onSharedDashboardLoad = (sharedDashboards:SharedDashboards) => this.setState({sharedDashboards})
   
