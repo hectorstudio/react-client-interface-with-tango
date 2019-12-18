@@ -10,6 +10,7 @@
     border: none;
     outline: none;
     padding: 0;
+    text-align: left;
 
 }
 .dashboard-settings .float-right{
