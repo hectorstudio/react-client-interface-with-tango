@@ -40,8 +40,8 @@ export default {
 
   async logout() {
     try {
-      const init = { method: "POST" };
-      await fetch("/auth/logout", {credentials: 'include'}, init);
+      const init = { method: "POST", credentials: 'include' };
+      await fetch("/auth/logout", init);
       const cookies = new Cookies();
       cookies.set("webjive_jwt", "", { path: "/"});
       return true;
@@ -52,8 +52,8 @@ export default {
 
   async extendLogin() {
     try {
-      const init = { method: "POST" };
-      await fetch("/auth/extend", {credentials: 'include'}, init);
+      const init = { method: "POST", credentials: 'include' };
+      await fetch("/auth/extend", init);
       return true;
     } catch (err) {
       return false;
