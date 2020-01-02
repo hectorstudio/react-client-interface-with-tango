@@ -31,8 +31,8 @@ const Inner = ({ mode, text, linkTo, size, font}) => {
   if (font){
     style["fontFamily"] = font;
   }
-
-  const content = linkTo? <a href={'//' + linkTo} target="_blank" rel="noopener noreferrer">{text}</a> : text;
+  const prefix = linkTo.toLowerCase().startsWith("http") ? "" : "http://"
+  const content = linkTo? <a href={prefix + linkTo} target="_blank" rel="noopener noreferrer">{text}</a> : text;
   return <span title={`Visit ${linkTo}`} style={style}>{content}</span>
   
 };
