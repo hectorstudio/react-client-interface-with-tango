@@ -12,7 +12,12 @@ export async function save(id, widgets, name) {
     method: "POST",
     headers,
     credentials: "include",
-    body: JSON.stringify({ id, widgets: withoutValid, name })
+    body: JSON.stringify({
+      id,
+      widgets: withoutValid,
+      name,
+      tangoDB: getTangoDB()
+    })
   });
   if (!res.ok) {
     throw res;
@@ -29,30 +34,43 @@ export async function load(id) {
   return res.json();
 }
 
-export async function getGroupDashboardCount(){
-  const res = await fetch("/dashboards/group/dashboardsCount?excludeCurrentUser=true", {
-    method: "GET",
-    credentials: "include",
-    headers
-  })
+export async function getGroupDashboardCount() {
+  const res = await fetch(
+    "/dashboards/group/dashboardsCount?excludeCurrentUser=true&tangoDB=" +
+      getTangoDB(),
+    {
+      method: "GET",
+      credentials: "include",
+      headers
+    }
+  );
   return res.json();
 }
 
-export async function getGroupDashboards(groupName){
-  const res = await fetch("/dashboards/group/dashboards?excludeCurrentUser=true&group=" + groupName, {
-    method: "GET",
-    credentials: "include",
-    headers
-  })
+export async function getGroupDashboards(groupName) {
+  const res = await fetch(
+    "/dashboards/group/dashboards?excludeCurrentUser=true&group=" +
+      groupName +
+      "&tangoDB=" +
+      getTangoDB(),
+    {
+      method: "GET",
+      credentials: "include",
+      headers
+    }
+  );
   return res.json();
 }
 
 export async function loadUserDashboards() {
-  const res = await fetch("/dashboards/user/dashboards/", {
-    method: "GET",
-    credentials: "include",
-    headers
-  });
+  const res = await fetch(
+    "/dashboards/user/dashboards?tangoDB=" + getTangoDB(),
+    {
+      method: "GET",
+      credentials: "include",
+      headers
+    }
+  );
   return res.json();
 }
 
@@ -79,7 +97,7 @@ export async function shareDashboard(dashboardId, group) {
     method: "POST",
     credentials: "include",
     headers,
-    body: JSON.stringify({group})
+    body: JSON.stringify({ group })
   });
   return res.json();
 }
@@ -92,4 +110,12 @@ export async function renameDashboard(id, newName) {
     body: JSON.stringify({ newName })
   });
   return res.json();
+}
+
+function getTangoDB() {
+  try {
+    return window.location.pathname.split("/")[1];
+  } catch (e) {
+    return "";
+  }
 }

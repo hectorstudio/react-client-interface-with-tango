@@ -35,7 +35,7 @@ interface State {
 }
 
 export default class Sidebar extends Component<Props, State> {
-  constructor(props) {
+  constructor(props:Props) {
     super(props);
     const { selectedTab } = this.props;
     this.state = { selectedTab };
