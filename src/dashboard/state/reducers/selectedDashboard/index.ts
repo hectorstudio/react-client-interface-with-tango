@@ -101,7 +101,8 @@ export default function canvases(
         insertTime,
         updateTime,
         group,
-        lastUpdatedBy
+        lastUpdatedBy,
+        selectedIds: []
       };
     }
     case DASHBOARD_RENAMED: {

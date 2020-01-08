@@ -155,7 +155,7 @@ function AttributeScatter(props: Props) {
       layout={layout}
       config={{ staticPlot: staticMode === true }}
       responsive={true}
-      style={{ width: actualWidth, height: mode === "library" ? 200 : actualHeight}}
+      style={{ width: actualWidth, height: mode === "library" ? 150 : actualHeight}}
     />
   );
 }
