@@ -47,7 +47,7 @@ function AttributePlot(props: Props) {
       }
     ];
 
-    return <Plot traces={traces} params={{ ...staticParams, height: 200 }} />;
+    return <Plot traces={traces} params={{ ...staticParams, height: 150 }} />;
   } else {
     const traces = attributes.map(attributeInput => {
       const { device, attribute } = attributeInput.attribute;

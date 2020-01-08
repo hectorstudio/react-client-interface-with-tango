@@ -93,7 +93,7 @@ class AttributeDial extends Component<Props> {
     const { min, max, attribute, label, showWriteValue } = inputs;
 
     const radius =
-      mode === "library" ? 60 : Math.min(actualHeight, actualWidth) / 2;
+      mode === "library" ? 30 : Math.min(actualHeight, actualWidth) / 2;
     const libraryProps = mode === "library" ? { margin: "0.5em" } : {};
 
     const value = attribute.value || 0;

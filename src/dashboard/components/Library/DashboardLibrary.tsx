@@ -104,7 +104,7 @@ class DashboardLibrary extends Component<Props, State> {
         </div>
         {dashboards.map(dashboard => this.DashboardRow(dashboard, false))}
         {/* SHARED DASHBOARDS */}
-        <div className="dashboard-settings-title">Shared dashboards</div>
+        <div className="dashboard-settings-title" style={{marginTop: "0.5em"}}>Shared dashboards</div>
 
         {groupsWithSharedDashboards.map(groupName => {
           return (

@@ -1,0 +1,24 @@
+.card-header{
+    cursor: pointer;
+    transition-property: background;
+    transition-duration: 0.5s;
+}
+.card-header:hover{
+    background: #f0f0f0;
+}
+.card{
+    margin-bottom: 0.2em;
+}
+.card-body{
+    padding: 0.5em !important;
+}
+.card-header-disabled{
+    cursor: default;
+    
+}
+.card-header-disabled:hover{
+    background-color: rgba(0,0,0,.03);
+}
+.card-header-empty{
+    color: #777;
+}

@@ -30,6 +30,8 @@ import "./Dashboard.css";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
 import { getIsLoggedIn } from "../../shared/user/state/selectors";
+import NewSideBar from "./NewSideBar";
+
 
 interface Match {
   tangoDB: string;
@@ -56,7 +58,7 @@ class Dashboard extends Component<Props> {
 
   public async componentDidMount() {
     const id = this.parseId();
-    if (id){
+    if (id) {
       this.props.loadDashboard(id);
     }
   }
@@ -65,12 +67,11 @@ class Dashboard extends Component<Props> {
     const currentId = this.props.selectedDashboard.id;
     const id = this.parseId();
     if (currentId !== id) {
-      if (currentId){
+      if (currentId) {
         this.props.history.replace("?id=" + currentId);
-      }else{
+      } else {
         this.props.history.replace("?");
       }
-      
     }
   }
 
@@ -96,6 +97,13 @@ class Dashboard extends Component<Props> {
             modeToggleDisabled={disabled}
           />
           <div className={classNames("CanvasArea", mode)}>{canvasContents}</div>
+          {/* <NewSideBar
+            mode={mode}
+            selectedMenu="DASHBOARD_LIBRARY"
+            tangoDB={tangoDB}
+            selectedWidgets={selectedWidgets}
+            widgets={widgets}
+          ></NewSideBar> */}
           <Sidebar
             mode={mode}
             selectedTab="dashboards"

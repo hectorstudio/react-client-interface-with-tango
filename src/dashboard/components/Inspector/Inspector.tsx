@@ -12,6 +12,7 @@ interface Props {
   tangoDB: string;
   widget: Widget;
   isRootCanvas: boolean;
+  nbrSelectedWidgets: number;
   onSetInput: (path: IndexPath, value: any) => void;
   onDeleteInput: (path: IndexPath) => void;
   onAddInput: (path: IndexPath) => void;
@@ -19,6 +20,12 @@ interface Props {
 
 class Inspector extends Component<Props> {
   public render() {
+    if (this.props.nbrSelectedWidgets === 0){
+      return <div>No widget selected</div>
+    }
+    if (this.props.nbrSelectedWidgets !== 1){
+      return <div>Multiple widgets selected</div>
+    }
     const { widget, tangoDB } = this.props;
     const definitions = bundles.map(bundle => bundle.definition);
     const definition = definitions.find(({ type }) => type === widget.type);

@@ -49,7 +49,7 @@ const Label = (props: Props) => {
         color: textColor,
         wordBreak: "break-word",
         height: actualHeight,
-        width: actualWidth
+        width: (mode === "library" ? "100%" : actualWidth),
       }}
     >
       <Inner mode={mode} text={text} linkTo={linkTo} size={size} font={font} />

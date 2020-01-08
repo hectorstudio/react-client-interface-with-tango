@@ -35,7 +35,7 @@ interface State {
 }
 
 export default class Sidebar extends Component<Props, State> {
-  constructor(props:Props) {
+  constructor(props: Props) {
     super(props);
     const { selectedTab } = this.props;
     this.state = { selectedTab };
@@ -56,6 +56,7 @@ export default class Sidebar extends Component<Props, State> {
           />
         ) : selectedWidgets.length === 1 ? (
           <Inspector
+            nbrSelectedWidgets={selectedWidgets.length}
             widget={selectedWidgets[0]}
             isRootCanvas={true}
             tangoDB={tangoDB}
