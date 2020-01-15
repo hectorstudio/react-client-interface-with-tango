@@ -1,0 +1,35 @@
+.arrow-button {
+  background: none;
+  outline: none;
+  color: rgba(0, 0, 0, 0.2) !important;
+  display: block !important;
+  padding: 0 !important;
+  outline: none;
+}
+
+.arrow-button:hover {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+.arrow-button:disabled {
+  visibility: hidden !important;
+}
+.arrow-button:focus {
+  box-shadow: none !important;
+}
+.widget-layer {
+  padding: 0.4em;
+  margin: 0.1em 0em;
+  background: white;
+}
+.selected {
+  background: #fbfbec;
+}
+.label {
+  font-size: 0.8em;
+  color: #0087db;
+  font-family: "courier new";
+}
+.layer-content{
+  margin-right: 2em;
+  cursor: pointer;
+}

@@ -20,6 +20,7 @@ import {
   DASHBOARD_SAVED,
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
+  REORDER_WIDGETS,
   SAVE_DASHBOARD,
   RENAME_DASHBOARD,
   CLONE_DASHBOARD,
@@ -158,7 +159,10 @@ export interface DashboardLoadedAction extends Action {
   dashboard: Dashboard;
   widgets: Widget[];
 }
-
+export interface ReorderWidgetsAction extends Action{
+  type: typeof REORDER_WIDGETS;
+  widgets: Widget[];
+}
 export interface SaveDashboardAction extends Action {
   type: typeof SAVE_DASHBOARD;
   id: string;

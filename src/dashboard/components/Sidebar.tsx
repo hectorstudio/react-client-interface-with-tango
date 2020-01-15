@@ -60,6 +60,7 @@ export default class Sidebar extends Component<Props, State> {
             widget={selectedWidgets[0]}
             isRootCanvas={true}
             tangoDB={tangoDB}
+            render={true}
           />
         ) : (
           <MultipleSelection />

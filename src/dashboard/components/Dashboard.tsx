@@ -102,7 +102,6 @@ class Dashboard extends Component<Props> {
             selectedMenu="DASHBOARD_LIBRARY"
             tangoDB={tangoDB}
             selectedWidgets={selectedWidgets}
-            widgets={widgets}
           ></NewSideBar> */}
           <Sidebar
             mode={mode}

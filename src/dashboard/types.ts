@@ -138,6 +138,7 @@ export interface Dashboard {
   updateTime: Date | null;
   group: string | null;
   lastUpdatedBy: string | null;
+  selectedIds: string[];
   history: DashboardEditHistory;
 }
 
