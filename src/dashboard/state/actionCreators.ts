@@ -24,7 +24,8 @@ import {
   DUPLICATE_WIDGET,
   SHARE_DASHBOARD,
   DASHBOARD_SHARED,
-  DASHBOARD_EDITED
+  DASHBOARD_EDITED,
+  REORDER_WIDGETS
 } from "./actionTypes";
 
 import {
@@ -45,6 +46,7 @@ import {
   CloneDashboardAction,
   DuplicateWidgetAction,
   dashboardEditedAction,
+  ReorderWidgetsAction,
 } from "./actions";
 
 import { Widget, Dashboard } from "../types";
@@ -157,7 +159,11 @@ export function dashboardSaved(
 ): DashboardSavedAction {
   return { type: DASHBOARD_SAVED, id, created, name };
 }
-
+export function reorderWidgets(
+  widgets:Widget[],
+):ReorderWidgetsAction {
+  return { type: REORDER_WIDGETS, widgets };
+}
 export function saveDashboard(
   id: string,
   name: string,

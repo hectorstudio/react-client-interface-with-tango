@@ -56,7 +56,8 @@ import {
   DUPLICATE_WIDGET,
   SET_INPUT,
   DELETE_INPUT,
-  ADD_INPUT
+  ADD_INPUT,
+  REORDER_WIDGETS
 } from "./actionTypes";
 import { getWidgets, getSelectedDashboard } from "./selectors";
 import { definitionForType, definitionForWidget } from "../widgets";
@@ -91,6 +92,7 @@ function* editWidget() {
       DUPLICATE_WIDGET,
       SET_INPUT,
       DELETE_INPUT,
+      REORDER_WIDGETS,
       ADD_INPUT
     ]);
     const state = yield select(getSelectedDashboard);
@@ -250,6 +252,19 @@ function* editWidget() {
         newState = { ...state, widgets, history };
         break;
       }
+      case REORDER_WIDGETS: {
+        // const { widgets, selectedIds } = payload;
+        // const newIds = {}
+        // selectedIds.forEach(element => {
+        //   newIds[element.id] = element;
+        // });
+        // const { history: oldHistory, widgets: oldWidgets } = state;
+        // const history = pushToHistory(oldHistory, oldWidgets);
+        // newState = { ...state, widgets, newIds, history };
+
+        newState = state;
+        break;
+      }
       default: {
         newState = state;
       }
@@ -376,7 +391,7 @@ function* loadDashboard() {
 function* saveDashboard() {
   while (true) {
     const { id, widgets, name } = yield take(SAVE_DASHBOARD);
-
+    
     try {
       const { id: newId, created } = yield call(
         API.save,

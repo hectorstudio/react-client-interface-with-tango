@@ -12,7 +12,6 @@ interface Props {
   tangoDB: string;
   selectedWidgets: Widget[];
   selectedMenu: string;
-  widgets: Widget[];
 }
 interface State {
   selectedMenus: { [menu: string]: boolean };
@@ -45,26 +44,26 @@ export default class NewSideBar extends Component<Props, State> {
   };
 
   static getDerivedStateFromProps(props, state) {
-      return {
-        selectedMenus: {
-          ...state.selectedMenus,
-          SELECTED_WIDGET: props.selectedWidgets && props.selectedWidgets.length > 0
-        }
-      };
+    return {
+      selectedMenus: {
+        ...state.selectedMenus,
+        SELECTED_WIDGET:
+          props.selectedWidgets && props.selectedWidgets.length > 0
+      }
+    };
   }
   public render() {
-    const { mode, selectedWidgets, tangoDB, widgets } = this.props;
+    const { mode, selectedWidgets, tangoDB } = this.props;
     const { selectedMenus } = this.state;
-    const selectedWidgetCssClass = selectedWidgets.length > 0 ? "" : "card-header-empty"
+    const selectedWidgetCssClass =
+      selectedWidgets.length > 0 ? "" : "card-header-empty";
     if (mode === "run") {
       return null;
     }
     return (
       <div className="Sidebar">
         <Card>
-          <CardHeader
-            onClick={() => this.toggleMenu("DASHBOARD_LIBRARY")}
-          >
+          <CardHeader onClick={() => this.toggleMenu("DASHBOARD_LIBRARY")}>
             Dashboard Library
           </CardHeader>
           <Collapse isOpen={selectedMenus["DASHBOARD_LIBRARY"]}>
@@ -75,9 +74,7 @@ export default class NewSideBar extends Component<Props, State> {
         </Card>
 
         <Card>
-          <CardHeader
-            onClick={() => this.toggleMenu("WIDGET_LIBRARY")}
-          >
+          <CardHeader onClick={() => this.toggleMenu("WIDGET_LIBRARY")}>
             Widget Library
           </CardHeader>
           <Collapse isOpen={selectedMenus["WIDGET_LIBRARY"]}>
@@ -87,13 +84,29 @@ export default class NewSideBar extends Component<Props, State> {
           </Collapse>
         </Card>
         <Card>
-          <CardHeader
-            onClick={() => this.toggleMenu("SELECTED_DASHBOARD")}
-          >
+          <CardHeader onClick={() => this.toggleMenu("SELECTED_DASHBOARD")}>
             Selected dashboard
           </CardHeader>
           <Collapse isOpen={selectedMenus["SELECTED_DASHBOARD"]}>
-            <CardBody><DashboardLayers widgets={widgets}/></CardBody>
+            <CardBody style={{background: "#f0f0f0"}}>
+              <DashboardLayers />
+            </CardBody>
+          </Collapse>
+        </Card>
+        <Card>
+          <CardHeader className={selectedWidgetCssClass}>
+            Selected Widget
+          </CardHeader>
+          <Collapse isOpen={selectedMenus["SELECTED_WIDGET"]}>
+            <CardBody>
+              <Inspector
+                nbrSelectedWidgets={selectedWidgets.length}
+                widget={selectedWidgets[0]}
+                isRootCanvas={true}
+                tangoDB={tangoDB}
+                render={selectedMenus["SELECTED_WIDGET"]}
+              />
+            </CardBody>
           </Collapse>
         </Card>
       </div>
