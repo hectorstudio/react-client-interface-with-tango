@@ -33,7 +33,6 @@ export default class LoginModal extends Component<IProps, IState> {
   }
 
   public componentDidMount() {
-    // TODO: figure out why this hack is needed
     setTimeout(() => {
       if (this.usernameInput) {
         this.usernameInput.focus();

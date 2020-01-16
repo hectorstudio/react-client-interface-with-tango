@@ -48,7 +48,6 @@ type OnExecute = (device: string, command: string, argin: any) => Promise<void>;
 
 type OnInvalidate = (attributes: string[]) => void;
 
-// TODO (?) make as many as possible of the members optional
 export interface ExecutionContext {
   readonly deviceMetadataLookup: DeviceMetadataLookup;
   readonly attributeMetadataLookup: AttributeMetadataLookup;

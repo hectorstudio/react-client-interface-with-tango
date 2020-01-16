@@ -108,6 +108,7 @@ export interface Widget {
   width: number;
   height: number;
   inputs: InputMapping;
+  order: number;
 }
 
 //meta information about available group dashboards, with count and whether it has been loade for each group

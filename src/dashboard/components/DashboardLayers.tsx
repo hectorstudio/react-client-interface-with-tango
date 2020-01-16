@@ -12,6 +12,7 @@ import {
   deleteWidget
 } from "../state/actionCreators";
 import { getWidgets, getSelectedDashboard } from "../state/selectors";
+import { moveSingleOrderIndex } from "../state/reducers/selectedDashboard/lib";
 
 interface Props {
   selectedDashboard: Dashboard;
@@ -39,10 +40,10 @@ class DashboardLayers extends Component<Props> {
             </a>
           </i>
         </small>
-        <div style={{ maxHeight: "400px", overflow: "scroll" }}>
+        <div style={{ maxHeight: "400px", overflow: "scroll", overflowX: "hidden" }}>
           {widgets
-            //.sort((a, b) => parseInt(a.id) - parseInt(b.id))
-            .map((widget, index) => (
+            .sort((a, b) => a.order - b.order)
+            .map((widget) => (
               <this.WidgetLayer
                 key={widget.id}
                 id={widget.id}
@@ -55,8 +56,7 @@ class DashboardLayers extends Component<Props> {
           title="Delete selected layers"
           onClick={this.props.onDeleteWidget}
           disabled={selectedDashboard.selectedIds.length === 0}
-          className="btn btn-outline-secondary btn-sm"
-          style={{ fontSize: "1.2em", marginRight: "0.5em", border: "none" }}
+          className="btn btn-outline-secondary btn-sm btn-layer-action"
         >
           <FontAwesomeIcon icon="trash" />{" "}
         </Button>
@@ -64,28 +64,13 @@ class DashboardLayers extends Component<Props> {
           title="Group selected layers"
           onClick={() => window.alert("not implemented yet")}
           disabled={selectedDashboard.selectedIds.length < 2}
-          className="btn btn-outline-secondary btn-sm"
-          style={{ fontSize: "1.2em", marginRight: "0.5em", border: "none" }}
+          className="btn btn-outline-secondary btn-sm btn-layer-action"
         >
           <FontAwesomeIcon icon="layer-group" />{" "}
         </Button>
       </div>
     );
   }
-  // findNearest = (id: string, up: boolean) => {
-  //   const { widgets } = this.props;
-  //   const sortedObjects = widgets
-  //     .map(widget => parseInt(widget.id))
-  //     .sort((a, b) => a - b);
-  //   const indexOfId = sortedObjects.findIndex(x => x === parseInt(id));
-  //   if (up && sortedObjects[indexOfId - 1]) {
-  //     return sortedObjects[indexOfId - 1].toString();
-  //   }
-  //   if (!up && sortedObjects[indexOfId + 1]) {
-  //     return sortedObjects[indexOfId + 1].toString();
-  //   }
-  //   return "-1";
-  // };
   selectLayer = (e: any, id: string) => {
     const { selectedIds } = this.props.selectedDashboard;
     let ids: string[] = [];
@@ -101,40 +86,12 @@ class DashboardLayers extends Component<Props> {
       }
     }
     this.props.onSelectWidgets(ids);
-    this.setState({ selectedLayers: ids });
   };
-  // moveWidget = (id: string, up: boolean) => {
-  //   const { widgets, selectedDashboard } = this.props;
-  //   const sourceIndex = widgets.findIndex(widget => widget.id === id);
-  //   const targetId = up
-  //     ? this.findNearest(id, true)
-  //     : this.findNearest(id, false);
-  //   const targetIndex = widgets.findIndex(widget => widget.id === targetId);
-  //   if (!widgets[targetIndex]) {
-  //     return;
-  //   }
-  //   widgets[sourceIndex].id = targetId;
-  //   widgets[targetIndex].id = id;
-
-  //   //selection should alway be copied between layers:
-  //   const { selectedIds } = selectedDashboard;
-  //   const isSourceSelected = selectedIds.includes(id);
-  //   const isTargetSelected = selectedIds.includes(targetId);
-  //   let newSelectedIds = [...selectedIds]
-  //   if (!isSourceSelected){
-  //     newSelectedIds = newSelectedIds.filter(x => x !== targetId)
-  //   }
-  //   if (isSourceSelected && !newSelectedIds.includes(targetId)){
-  //     newSelectedIds.push(targetId);
-  //   }
-  //   if (!isTargetSelected){
-  //     newSelectedIds = newSelectedIds.filter(x => x !== id)
-  //   }
-  //   if (isTargetSelected && !newSelectedIds.includes(id)){
-  //     newSelectedIds.push(id);
-  //   }
-  //   this.props.onReorderWidget(widgets, newSelectedIds);
-  // };
+  moveWidget = (order: number, up: boolean) => {
+    const { widgets } = this.props;
+    const newWidgets = moveSingleOrderIndex(widgets, order, up);
+    this.props.onReorderWidget(newWidgets);
+  };
   WidgetLayer = ({ id, widget, selected }) => {
     const label = widget.type.split("_").join(" ");
     let renderString = "";
@@ -171,24 +128,14 @@ class DashboardLayers extends Component<Props> {
           <Button
             title="Move this layer up"
             className="btn arrow-button"
-            // onClick={() => this.moveWidget(id, true)}
-            onClick={() =>
-              window.alert(
-                "Need to add order:int to database before implementing this"
-              )
-            }
+            onClick={() => this.moveWidget(widget.order, true)}
           >
             <FontAwesomeIcon icon="arrow-alt-circle-up" />{" "}
           </Button>
           <Button
             title="Move this layers down"
             className="btn arrow-button"
-            onClick={() =>
-              window.alert(
-                "Need to add order:int to database before implementing this"
-              )
-            }
-            // onClick={() => this.moveWidget(id, false)}
+            onClick={() => this.moveWidget(widget.order, false)}
           >
             <FontAwesomeIcon icon="arrow-alt-circle-down" />{" "}
           </Button>

@@ -31,7 +31,9 @@ import {
   nextId,
   pushToHistory,
   undo,
-  redo
+  redo,
+  nextOrderIndex,
+  reorderIndex
 } from "./reducers/selectedDashboard/lib.ts";
 import {
   RENAME_DASHBOARD,
@@ -137,7 +139,8 @@ function* editWidget() {
           height,
           type,
           inputs,
-          valid: false
+          valid: false,
+          order: nextOrderIndex(state.widgets)
         });
         const { history: oldHistory, widgets: oldWidgets } = state;
         const history = pushToHistory(oldHistory, oldWidgets);
@@ -176,6 +179,7 @@ function* editWidget() {
       }
       case DUPLICATE_WIDGET: {
         let newId = parseInt(nextId(state.widgets));
+        let newOrderIndex = nextOrderIndex(state.widgets);
         const newWidgets = Object.assign({}, state.widgets);
         const newIds = [];
         state.selectedIds.forEach(id => {
@@ -183,9 +187,11 @@ function* editWidget() {
           newWidget.x += 1;
           newWidget.y += 1;
           newWidget.id = newId.toString();
+          newWidget.order = newOrderIndex;
           newWidgets[newId.toString()] = newWidget;
           newIds.push(newId.toString());
           newId++;
+          newOrderIndex++;
         });
         const { history: oldHistory, widgets: oldWidgets } = state;
         const history = pushToHistory(oldHistory, oldWidgets);
@@ -205,7 +211,7 @@ function* editWidget() {
           }, {});
         const { history: oldHistory, widgets: oldWidgets } = state;
         const history = pushToHistory(oldHistory, oldWidgets);
-        newState = { ...state, widgets, selectedIds: [], history };
+        newState = { ...state, widgets: reorderIndex(widgets), selectedIds: [], history };
         break;
       }
       case SET_INPUT: {
@@ -253,14 +259,10 @@ function* editWidget() {
         break;
       }
       case REORDER_WIDGETS: {
-        // const { widgets, selectedIds } = payload;
-        // const newIds = {}
-        // selectedIds.forEach(element => {
-        //   newIds[element.id] = element;
-        // });
-        // const { history: oldHistory, widgets: oldWidgets } = state;
-        // const history = pushToHistory(oldHistory, oldWidgets);
-        // newState = { ...state, widgets, newIds, history };
+        const { widgets } = payload;
+        const { history: oldHistory, widgets: oldWidgets } = state;
+        const history = pushToHistory(oldHistory, oldWidgets);
+        newState = { ...state, widgets, history };
 
         newState = state;
         break;

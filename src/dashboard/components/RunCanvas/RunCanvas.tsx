@@ -213,7 +213,7 @@ export default class RunCanvas extends Component<Props, State> {
 
     const widgetsToRender = unrecoverableError
       ? []
-      : widgets.map(widget => {
+      : widgets.sort((a, b) => b.order - a.order).map(widget => {
           const { component, definition } = bundleForWidget(widget);
           const { x, y, id, width, height } = widget;
 
