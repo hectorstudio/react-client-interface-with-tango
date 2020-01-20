@@ -1,7 +1,8 @@
 import { createSelector } from "reselect";
 import { RootState } from "../reducers";
+import { SelectedDashboardState } from "../reducers/selectedDashboard";
 
-function getSelectedDashboardState(state: RootState) {
+function getSelectedDashboardState(state: RootState):SelectedDashboardState {
   return state.selectedDashboard;
 }
 

@@ -148,11 +148,11 @@ export function NonScalarValueModal(props: Props) {
     value == null ? (
       "Loading..."
     ) : datatype === "DevString" ? (
-      <StringDisplay value={value as any} /> /* TODO */
+      <StringDisplay value={value as any} /> 
     ) : dataformat === "IMAGE" ? (
-      <ImageDisplay value={value as any} /> /* TODO */
+      <ImageDisplay value={value as any} /> 
     ) : (
-      <SpectumDisplay value={value as any} datatype={datatype} /> /* TODO */
+      <SpectumDisplay value={value as any} datatype={datatype} />
     );
 
   return (

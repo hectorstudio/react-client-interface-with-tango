@@ -234,3 +234,53 @@ export function nextId(widgets: Record<string, Widget>): string {
   const highest = ids.reduce((max, id) => Math.max(max, id), 0);
   return String(1 + highest);
 }
+
+export function nextOrderIndex(widgets: Record<string, Widget>){
+  const orders = Object.values(widgets).map(value => {
+    if (!value.hasOwnProperty("order")){
+      return -1;
+    }
+    return value.order;
+  });
+  return orders.reduce((max, current) => Math.max(max, current), -1) + 1;
+}
+
+/**
+ * Reassigns all order indexes after the removal of 1 or more layers
+ * @param widgets 
+ */
+export function reorderIndex(widgets: Record<string, Widget>){
+  let currentIndex = 0;
+  Object.values(widgets).sort((a,b) => a.order - b.order).forEach(widget => {
+    widget.order = currentIndex;
+    currentIndex++;
+ });
+ return widgets;
+}
+/**
+ * Flips the order index of the layer with the order sourceIndex with the layer above (up === true) or the layer below (up === false)
+ * Does nothing if asked to move top layer up or bottom layer down.
+ * @param widgets 
+ * @param sourceIndex 
+ * @param up 
+ */
+export function moveSingleOrderIndex(widgets: Widget[], sourceIndex:number, up:boolean ){
+  if (up){
+    widgets.forEach(widget => {
+      if (widget.order === sourceIndex && widget.order > 0){
+        widget.order = widget.order - 1;
+      }else if (widget.order === sourceIndex -1){
+        widget.order = sourceIndex;
+      }
+    })
+  }else{//switching with layer below
+    widgets.forEach(widget => {
+      if (widget.order === sourceIndex && widget.order < (widgets.length -1)){
+        widget.order = widget.order + 1;
+      }else if (widget.order === sourceIndex + 1){
+        widget.order = sourceIndex;
+      }
+    })
+  }
+  return widgets;
+}

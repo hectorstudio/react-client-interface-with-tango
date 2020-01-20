@@ -2,6 +2,21 @@ const headers = {
   "Content-Type": "application/json; charset=utf-8"
 };
 
+/**
+ * [backwards compatibility] In case we loaded a dashboard with widgets that don't have 
+ * order set on them, we assign them a incrementing integer order starting with zero here
+ * Assuming the dashboard is edited in some way, this order will get saved to the database as well
+ */
+function ensureProperOrdering(widgets){
+  let highest = widgets.reduce((max, current) => Math.max(max, current.order || -1), -1);
+  widgets.forEach(widget => {
+    if (!widget.hasOwnProperty("order")){
+      highest++;
+      widget.order = highest;
+    }
+  });
+}
+
 export async function save(id, widgets, name) {
   const withoutValid = widgets.map(widget => {
     const { valid, ...theRest } = widget;
@@ -31,7 +46,9 @@ export async function load(id) {
     credentials: "include",
     headers
   });
-  return res.json();
+  const dashboard = await res.json();
+  ensureProperOrdering(dashboard.widgets);
+  return dashboard;
 }
 
 export async function getGroupDashboardCount() {
