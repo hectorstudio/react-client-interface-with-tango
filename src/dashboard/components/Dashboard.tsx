@@ -63,8 +63,9 @@ class Dashboard extends Component<Props> {
     }
   }
 
-  public async componentDidUpdate() {
-    const currentId = this.props.selectedDashboard.id;
+  public async componentDidUpdate(prevProps) {
+    const {id:currentId, name} = this.props.selectedDashboard;
+    const {name:oldName} = prevProps;
     const id = this.parseId();
     if (currentId !== id) {
       if (currentId) {
@@ -72,6 +73,9 @@ class Dashboard extends Component<Props> {
       } else {
         this.props.history.replace("?");
       }
+    }
+    if (name && name !== oldName){
+      document.title = name + " - Webjive";
     }
   }
 
