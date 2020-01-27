@@ -97,28 +97,10 @@
 /*DASHBOARD LED WIDGET*/ 
 
 .led{
-    min-width: 40px; 
-    height: 30px;
+    width: 2em; 
+    height: 2em;
+    line-height: 2em;
+    text-align: center;
     border: solid 2px black; 
     border-radius: 3px; 
-    padding: 3px;
-}
-
-.led-blank{
-    padding-left: 20px;
-}
-
-.red-led{
-    background-color:red; 
-    color: white; 
-}
-
-.green-led{
-    background-color:green; 
-    color: white; 
-}
-
-.orange-led{
-    background-color:orange; 
-    color: black; 
 }

@@ -5,72 +5,94 @@ import {
   BooleanInputDefinition,
   NumberInputDefinition,
   AttributeInputDefinition,
-  SelectInputDefinition
+  SelectInputDefinition,
+  ColorInputDefinition
 } from "../types";
+import { isDark } from "../colorUtils";
 
 type Inputs = {
-  showDevice: BooleanInputDefinition;
+  showAttributeValue: BooleanInputDefinition;
+  showAttributeName: BooleanInputDefinition;
+  showDeviceName: BooleanInputDefinition;
   compare: NumberInputDefinition;
   relation: SelectInputDefinition;
   attribute: AttributeInputDefinition;
-  classColor: SelectInputDefinition<"red-led" | "orange-led">;
+  trueColor: ColorInputDefinition;
+  falseColor: ColorInputDefinition;
+  ledSize: NumberInputDefinition;
+  textSize: NumberInputDefinition;
 }
 
 type Props = WidgetProps<Inputs>;
 
 function Led(props) {
-  let classColor = "green-led";
-  if (props.condition) {
-    classColor = props.color;
-  }
-  classColor = classColor + " led";
-  if (props.value === undefined) {
-    classColor = classColor + " led-blank";
-  }
-  return <span className={classColor}>{props.value}</span>;
+  const {fillColor, textColor, ledSize, value} = props;
+  return <div className="led" style={{color: textColor, backgroundColor: fillColor, width: ledSize, height: ledSize, lineHeight: ledSize}}>{value}</div>;
 }
 
 class LedReadOnly extends Component<Props> {
   public render() {
-    const { name } = this.deviceAndAttribute();
+    const {trueColor, falseColor, ledSize, textSize, showDeviceName, showAttributeName, showAttributeValue} = this.props.inputs;
+    const {deviceName, attributeName} = this.deviceAndAttribute();
+    const ledStyle: CSSProperties = { padding: "0.2em", whiteSpace: "nowrap", fontSize: ledSize/2 + "em" };
+    const textStyle: CSSProperties = { fontSize: textSize + "em" };
+    
+    const condition = this.checkCondition();
+    // if condition is null, color the LED to white (blank)
+    let fillColor = "#ffffff";
+    // black color for the value text
+    let textColor = "#000000";
+    // otherwise apply the color specified
+    if (condition !== null) {
+      fillColor = condition ? trueColor : falseColor;      
+    }
+    const emledSize = 1 * ledSize + "em";
+    const value = this.props.inputs.attribute.value;
+    
+    // if LED is darker, make the value color to be white
+    if (isDark(fillColor)) {
+      textColor = "#ffffff";
+    }
 
-    const value = this.checkCondition();
-    const style: CSSProperties = { padding: "0.5em", whiteSpace: "nowrap" };
-
-    const inner = this.props.inputs.showDevice ? (
+    const inner = (
       <Fragment>
-        {name}:{" "}
+        <div style={textStyle}>
+          { showDeviceName && deviceName}
+          { showAttributeName && "/" + attributeName}
+        </div>
+        { showAttributeValue ? (
         <Led
-          condition={value}
-          color={this.props.inputs.classColor}
-          value={this.props.inputs.attribute.value}
+          fillColor={fillColor}
+          textColor={textColor}
+          ledSize={emledSize}
+          value={value}
         />
-      </Fragment>
-    ) : (
-      <Fragment>
-        <Led condition={value} color={this.props.inputs.classColor} />
+        ) : (
+        <Led
+          fillColor={fillColor}
+          textColor={textColor}
+          ledSize={emledSize}
+        />
+        )}
       </Fragment>
     );
 
-    return <div style={style}>{inner}</div>;
+    return <div style={ledStyle}>{inner}</div>;
   }
 
   private checkCondition(): any {
-    if (this.props.mode !== "run") {
-      return (
-        <span style={{ fontStyle: "italic" }}>
-          <div className="green-led">value</div>
-        </span>
-      );
-    }
 
     const {
-      attribute: { value },
+      attribute: { value:stringVal },
       compare,
       relation
     } = this.props.inputs;
 
-    if (Number(parseFloat(value)) === value) {
+    if (isNaN(stringVal)) {
+      return null;
+    }
+    else {
+      const value = Number(stringVal);
       switch (relation) {
         case ">":
           return value > compare;
@@ -85,23 +107,20 @@ class LedReadOnly extends Component<Props> {
         default:
           break;
       }
-    } else {
-      return value === undefined ? null : String(value);
     }
   }
-
-  private deviceAndAttribute(): { device: string; name: string } {
+  private deviceAndAttribute(): { deviceName: string; attributeName: string } {
     const { attribute } = this.props.inputs;
-    const device = attribute.device || "device";
-    const name = attribute.attribute || "attribute";
-    return { device, name };
+    const deviceName = attribute.device || "device";
+    const attributeName = attribute.attribute || "attribute";
+    return { deviceName, attributeName };
   }
 }
 
 export const definition: WidgetDefinition<Inputs> = {
   type: "LED_DISPLAY",
-  name: "Led Display",
-  defaultWidth: 10,
+  name: "Attribute LED Display",
+  defaultWidth: 2,
   defaultHeight: 2,
   inputs: {
     attribute: {
@@ -143,24 +162,41 @@ export const definition: WidgetDefinition<Inputs> = {
       label: "Compare",
       default: 0
     },
-    classColor: {
-      type: "select",
-      label: "style",
-      default: "red-led",
-      options: [
-        {
-          name: "Red",
-          value: "red-led"
-        },
-        {
-          name: "Orange",
-          value: "orange-led"
-        }
-      ]
+    trueColor: {
+      type: "color",
+      label: "True color",
+      default: "#3ac73a",
     },
-    showDevice: {
+    falseColor: {
+      type: "color",
+      label: "False color",
+      default: "#ff0000",
+    },
+    ledSize: {
+      label: "Size of LED (in units)",
+      type: "number",
+      default: 2,
+      nonNegative: true,
+    },
+    textSize: {
+      label: "Size of text (in units)",
+      type: "number",
+      default: 2,
+      nonNegative: true,
+    },
+    showAttributeValue: {
       type: "boolean",
-      label: "Attribute Value",
+      label: "Show Attribute Value",
+      default: false
+    },
+    showDeviceName: {
+      type: "boolean",
+      label: "Show Device Name",
+      default: false
+    },
+    showAttributeName: {
+      type: "boolean",
+      label: "Show Attribute Name",
       default: false
     }
   }
