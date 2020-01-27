@@ -17,6 +17,15 @@ export const STATE_COLORS = {
 }
 
 /**
+ * Lightness is capped at the interval [0, 1] where 0 is black and 1 is white
+ * Returns true if the given color is more dark than light
+ */
+export const isDark = (cssColor:string): boolean => {
+  const color = Color(cssColor)
+  return color.lightness() < 0.5
+}
+
+/**
  * Increases the brightness of a cssColor with brighnessDelta. Brightness is capped at the interval [0, 100] where 0 is black and 100 is white
  * A negative brightnessDelta can be provided to make it darker
  * Returns the new string color on the format #RRGGBB

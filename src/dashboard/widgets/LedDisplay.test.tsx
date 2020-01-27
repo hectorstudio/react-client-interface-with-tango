@@ -6,11 +6,16 @@ import Adapter from "enzyme-adapter-react-16";
 import LedDisplay from "./LedDisplay";
 
 interface Input {
-  showDevice: boolean;
+  showAttributeValue: boolean;
+  showAttributeName: boolean;
+  showDeviceName: boolean;
   compare: number;
   relation: string;
   attribute: AttributeInput;
-  classColor: "red-led" | "orange-led";
+  trueColor: string;
+  falseColor: string;
+  ledSize: number;
+  textSize: number;
 }
 
 configure({ adapter: new Adapter() });
@@ -39,11 +44,16 @@ describe("LedReadOnly", () => {
     };
 
     myInput = {
-      showDevice: true,
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
       compare: 20,
       relation: "<",
-      classColor: "orange-led",
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      trueColor: "#ffffff",
+      falseColor: "#000000",
+      ledSize: 2,
+      textSize: 2
     };
 
     const element = React.createElement(LedDisplay.component, {
@@ -73,12 +83,18 @@ describe("LedReadOnly", () => {
     };
 
     myInput = {
-      showDevice: true,
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
       compare: 20,
       relation: "<",
-      classColor: "orange-led",
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      trueColor: "#ffffff",
+      falseColor: "#000000",
+      ledSize: 2,
+      textSize: 2
     };
+
     const element = React.createElement(LedDisplay.component, {
       mode: "edit",
       t0: 1,
@@ -86,7 +102,7 @@ describe("LedReadOnly", () => {
       actualHeight: 100,
       inputs: myInput
     });
-    expect(shallow(element).html()).toContain("orange-led");
+    expect(shallow(element).html()).toContain("led");
   });
 
   it("renders in edit mode before device and attribute are set", () => {
@@ -105,12 +121,18 @@ describe("LedReadOnly", () => {
     };
 
     myInput = {
-      showDevice: true,
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
       compare: 20,
       relation: "<",
-      classColor: "orange-led",
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      trueColor: "#ffffff",
+      falseColor: "#000000",
+      ledSize: 2,
+      textSize: 2
     };
+
     const element = React.createElement(LedDisplay.component, {
       mode: "edit",
       t0: 1,
@@ -118,10 +140,10 @@ describe("LedReadOnly", () => {
       actualHeight: 100,
       inputs: myInput
     });
-    expect(shallow(element).html()).toContain("orange-led");
+    expect(shallow(element).html()).toContain("led");
   });
 
-  it("applies the colour-blank class if the value is not set ", () => {
+  it("renders if the value is not set ", () => {
     myAttributeInput = {
       device: "sys/tg_test/1",
       attribute: "short_scalar",
@@ -138,11 +160,16 @@ describe("LedReadOnly", () => {
     };
 
     myInput = {
-      showDevice: true,
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
       compare: 20,
       relation: "<",
-      classColor: "orange-led",
-      attribute: myAttributeInput
+      attribute: myAttributeInput,
+      trueColor: "#ffffff",
+      falseColor: "#000000",
+      ledSize: 2,
+      textSize: 2
     };
 
     const element = React.createElement(LedDisplay.component, {
@@ -152,62 +179,77 @@ describe("LedReadOnly", () => {
       actualHeight: 100,
       inputs: myInput
     });
-    expect(shallow(element).html()).toContain("led-blank");
+    expect(shallow(element).html()).toContain("led");
   });
 
-  it("hide the attribute name if showDevice is not set", () => {
+  it("hide the device name if showDeviceName is not set", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 10,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
     myInput = {
-      classColor: "orange-led",
-      relation: "<",
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: false,
       compare: 20,
-      showDevice: false,
-      attribute: {
-        attribute: "double_scalar",
-        dataFormat: "scalar",
-        dataType: "DevDouble",
-        device: "sys/tg_test/1",
-        isNumeric: true,
-        timestamp: 123456,
-        unit: "",
-        enumlabels: [],
-        value: 100,
-        writeValue: "",
-        history: [],
-        write: writeArray
-      }
-    };
-
-    const element = React.createElement(LedDisplay.component, {
-      mode: "run",
-      t0: 1,
-      actualWidth: 100,
-      actualHeight: 100,
-      inputs: myInput
-    });
-    expect(shallow(element).html()).not.toContain("double_scalar");
-  });
-
-  it("displays the attribute name if showDevice is set", () => {
-    myInput = {
-      classColor: "orange-led",
       relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#ffffff",
+      falseColor: "#000000",
+      ledSize: 2,
+      textSize: 2
+    };
+
+    const element = React.createElement(LedDisplay.component, {
+      mode: "run",
+      t0: 1,
+      actualWidth: 100,
+      actualHeight: 100,
+      inputs: myInput
+    });
+    expect(shallow(element).html()).not.toContain("sys/tg_test/1");
+  });
+
+  it("show the device name if showDeviceName is set", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 10,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
+    myInput = {
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
       compare: 20,
-      showDevice: true,
-      attribute: {
-        attribute: "double_scalar",
-        dataFormat: "scalar",
-        dataType: "DevDouble",
-        device: "sys/tg_test/1",
-        isNumeric: true,
-        timestamp: 123456,
-        unit: "",
-        enumlabels: [],
-        value: 100,
-        writeValue: "",
-        history: [],
-        write: writeArray
-      }
+      relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#ffffff",
+      falseColor: "#000000",
+      ledSize: 2,
+      textSize: 2
     };
+
     const element = React.createElement(LedDisplay.component, {
       mode: "run",
       t0: 1,
@@ -215,29 +257,36 @@ describe("LedReadOnly", () => {
       actualHeight: 100,
       inputs: myInput
     });
-    expect(shallow(element).html()).toContain("double_scalar");
+    expect(shallow(element).html()).toContain("sys/tg_test/1");
   });
 
-  it("displays green-led if condition is not met", () => {
+  it("hide the attribute name if showAttributeName is not set", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 10,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
     myInput = {
-      classColor: "orange-led",
-      relation: "=",
-      compare: 19,
-      showDevice: true,
-      attribute: {
-        attribute: "double_scalar",
-        dataFormat: "scalar",
-        dataType: "DevDouble",
-        device: "sys/tg_test/1",
-        isNumeric: true,
-        timestamp: 123456,
-        unit: "",
-        enumlabels: [],
-        value: 100,
-        writeValue: "",
-        history: [],
-        write: writeArray
-      }
+      showAttributeValue: true,
+      showAttributeName: false,
+      showDeviceName: false,
+      compare: 20,
+      relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#ffffff",
+      falseColor: "#000000",
+      ledSize: 2,
+      textSize: 2
     };
 
     const element = React.createElement(LedDisplay.component, {
@@ -247,29 +296,36 @@ describe("LedReadOnly", () => {
       actualHeight: 100,
       inputs: myInput
     });
-    expect(shallow(element).html()).toContain("green-led");
+    expect(shallow(element).html()).not.toContain("short_scalar");
   });
 
-  it("displays an orange led if condition is met", () => {
+  it("show the attribute name if showAttributeName is set", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 10,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
     myInput = {
-      classColor: "orange-led",
-      relation: ">=",
-      compare: 10,
-      showDevice: true,
-      attribute: {
-        attribute: "double_scalar",
-        dataFormat: "scalar",
-        dataType: "DevDouble",
-        device: "sys/tg_test/1",
-        isNumeric: true,
-        timestamp: 123456,
-        unit: "",
-        enumlabels: [],
-        value: 10,
-        writeValue: "",
-        history: [],
-        write: writeArray
-      }
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
+      compare: 20,
+      relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#ffffff",
+      falseColor: "#000000",
+      ledSize: 2,
+      textSize: 2
     };
 
     const element = React.createElement(LedDisplay.component, {
@@ -279,29 +335,270 @@ describe("LedReadOnly", () => {
       actualHeight: 100,
       inputs: myInput
     });
-    expect(shallow(element).html()).toContain("orange-led");
+    expect(shallow(element).html()).toContain("short_scalar");
+  });
+
+  it("hide the attribute value if showAttributeValue is not set", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 1000000,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
+    myInput = {
+      showAttributeValue: false,
+      showAttributeName: false,
+      showDeviceName: false,
+      compare: 20,
+      relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#ffffff",
+      falseColor: "#000000",
+      ledSize: 2,
+      textSize: 2
+    };
+
+    const element = React.createElement(LedDisplay.component, {
+      mode: "run",
+      t0: 1,
+      actualWidth: 100,
+      actualHeight: 100,
+      inputs: myInput
+    });
+    expect(shallow(element).html()).not.toContain(1000000);
+  });
+
+  it("show the attribute value if showAttributeValue is set", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 1000000,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
+    myInput = {
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
+      compare: 20,
+      relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#ffffff",
+      falseColor: "#000000",
+      ledSize: 2,
+      textSize: 2
+    };
+
+    const element = React.createElement(LedDisplay.component, {
+      mode: "run",
+      t0: 1,
+      actualWidth: 100,
+      actualHeight: 100,
+      inputs: myInput
+    });
+    expect(shallow(element).html()).toContain(1000000);
+  });
+
+  it("displays true colored led if condition is met", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 10,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
+    myInput = {
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
+      compare: 20,
+      relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#00ff00",
+      falseColor: "#ff0000",
+      ledSize: 2,
+      textSize: 2
+    };
+
+    const element = React.createElement(LedDisplay.component, {
+      mode: "run",
+      t0: 1,
+      actualWidth: 100,
+      actualHeight: 100,
+      inputs: myInput
+    });
+    expect(shallow(element).html()).toContain("00ff00");
+  });
+
+  it("displays false colored led if condition is not met", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 30,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
+    myInput = {
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
+      compare: 20,
+      relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#00ff00",
+      falseColor: "#ff0000",
+      ledSize: 2,
+      textSize: 2
+    };
+
+    const element = React.createElement(LedDisplay.component, {
+      mode: "run",
+      t0: 1,
+      actualWidth: 100,
+      actualHeight: 100,
+      inputs: myInput
+    });
+    expect(shallow(element).html()).toContain("ff0000");
+  });
+
+  it("displays value in white (when background is dark)", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 30,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
+    myInput = {
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
+      compare: 20,
+      relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#fefefe",
+      falseColor: "#010101",
+      ledSize: 2,
+      textSize: 2
+    };
+
+    const element = React.createElement(LedDisplay.component, {
+      mode: "run",
+      t0: 1,
+      actualWidth: 100,
+      actualHeight: 100,
+      inputs: myInput
+    });
+    expect(shallow(element).html()).toContain("ffffff");
+  });
+
+  it("displays value in black (when background is light)", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 30,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
+    myInput = {
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
+      compare: 20,
+      relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#010101",
+      falseColor: "#fefefe",
+      ledSize: 2,
+      textSize: 2
+    };
+
+    const element = React.createElement(LedDisplay.component, {
+      mode: "run",
+      t0: 1,
+      actualWidth: 100,
+      actualHeight: 100,
+      inputs: myInput
+    });
+    expect(shallow(element).html()).toContain("000000");
   });
 
   it("it handles an undefined relation", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 10,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
     myInput = {
-      classColor: "red-led",
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
+      compare: 20,
       relation: "¯_(ツ)_/¯",
-      compare: 20,
-      showDevice: true,
-      attribute: {
-        attribute: "double_scalar",
-        dataFormat: "scalar",
-        dataType: "DevDouble",
-        device: "sys/tg_test/1",
-        isNumeric: true,
-        timestamp: 123456,
-        unit: "",
-        enumlabels: [],
-        value: 10,
-        writeValue: "",
-        history: [],
-        write: writeArray
-      }
+      attribute: myAttributeInput,
+      trueColor: "#000000",
+      falseColor: "#ffffff",
+      ledSize: 2,
+      textSize: 2
     };
 
     const element = React.createElement(LedDisplay.component, {
@@ -311,29 +608,36 @@ describe("LedReadOnly", () => {
       actualHeight: 100,
       inputs: myInput
     });
-    expect(shallow(element).html()).toContain("green-led");
+    expect(shallow(element).html()).toContain("led");
   });
 
-  it("displays an red led if less than or equal condition is met", () => {
+  it("displays true colored LED if less than or equal condition is met", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 20,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
     myInput = {
-      classColor: "red-led",
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
+      compare: 20,
       relation: "<=",
-      compare: 20,
-      showDevice: true,
-      attribute: {
-        attribute: "double_scalar",
-        dataFormat: "scalar",
-        dataType: "DevDouble",
-        device: "sys/tg_test/1",
-        isNumeric: true,
-        timestamp: 123456,
-        unit: "",
-        enumlabels: [],
-        value: 10,
-        writeValue: "",
-        history: [],
-        write: writeArray
-      }
+      attribute: myAttributeInput,
+      trueColor: "#000000",
+      falseColor: "#ffffff",
+      ledSize: 2,
+      textSize: 2
     };
 
     const element = React.createElement(LedDisplay.component, {
@@ -343,28 +647,36 @@ describe("LedReadOnly", () => {
       actualHeight: 100,
       inputs: myInput
     });
-    expect(shallow(element).html()).toContain("red-led");
+    expect(shallow(element).html()).toContain("000000");
   });
-  it("displays an red led if greater than  condition is met", () => {
+
+  it("displays true colored LED if greater than  condition is met", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 30,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
     myInput = {
-      classColor: "red-led",
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
+      compare: 20,
       relation: ">",
-      compare: 5,
-      showDevice: true,
-      attribute: {
-        attribute: "double_scalar",
-        dataFormat: "scalar",
-        dataType: "DevDouble",
-        device: "sys/tg_test/1",
-        isNumeric: true,
-        timestamp: 123456,
-        unit: "",
-        enumlabels: [],
-        value: 10,
-        writeValue: "",
-        history: [],
-        write: writeArray
-      }
+      attribute: myAttributeInput,
+      trueColor: "#000000",
+      falseColor: "#ffffff",
+      ledSize: 2,
+      textSize: 2
     };
 
     const element = React.createElement(LedDisplay.component, {
@@ -374,61 +686,36 @@ describe("LedReadOnly", () => {
       actualHeight: 100,
       inputs: myInput
     });
-    expect(shallow(element).html()).toContain("red-led");
-  });
-
-  it("it handles an undefined value", () => {
-    myInput = {
-      classColor: "red-led",
-      relation: "<=",
-      compare: 20,
-      showDevice: true,
-      attribute: {
-        attribute: "double_scalar",
-        dataFormat: "scalar",
-        dataType: "DevDouble",
-        device: "sys/tg_test/1",
-        isNumeric: true,
-        timestamp: 123456,
-        unit: "",
-        enumlabels: [],
-        value: undefined,
-        writeValue: "",
-        history: [],
-        write: writeArray
-      }
-    };
-
-    const element = React.createElement(LedDisplay.component, {
-      mode: "run",
-      t0: 1,
-      actualWidth: 100,
-      actualHeight: 100,
-      inputs: myInput
-    });
-    expect(shallow(element).html()).toContain("green-led");
+    expect(shallow(element).html()).toContain("000000");
   });
 
   it("it handles a null value", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: null,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
     myInput = {
-      classColor: "red-led",
-      relation: ">",
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
       compare: 20,
-      showDevice: true,
-      attribute: {
-        attribute: "double_scalar",
-        dataFormat: "scalar",
-        dataType: "DevDouble",
-        device: "sys/tg_test/1",
-        isNumeric: true,
-        timestamp: 123456,
-        unit: "",
-        enumlabels: [],
-        value: null,
-        writeValue: "",
-        history: [],
-        write: writeArray
-      }
+      relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#ffffff",
+      falseColor: "#000000",
+      ledSize: 2,
+      textSize: 2
     };
 
     const element = React.createElement(LedDisplay.component, {
@@ -438,29 +725,36 @@ describe("LedReadOnly", () => {
       actualHeight: 100,
       inputs: myInput
     });
-    expect(shallow(element).html()).toContain("red-led");
+    expect(shallow(element).html()).toContain("led");
   });
 
-  it("it handles an undefined relation", () => {
+  it("displays correct LED size", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 10,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
     myInput = {
-      classColor: "red-led",
-      relation: "¯_(ツ)_/¯",
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
       compare: 20,
-      showDevice: true,
-      attribute: {
-        attribute: "double_scalar",
-        dataFormat: "scalar",
-        dataType: "DevDouble",
-        device: "sys/tg_test/1",
-        isNumeric: true,
-        timestamp: 123456,
-        unit: "",
-        enumlabels: [],
-        value: 10,
-        writeValue: "",
-        history: [],
-        write: writeArray
-      }
+      relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#00ff00",
+      falseColor: "#ff0000",
+      ledSize: 10,
+      textSize: 2
     };
 
     const element = React.createElement(LedDisplay.component, {
@@ -470,6 +764,48 @@ describe("LedReadOnly", () => {
       actualHeight: 100,
       inputs: myInput
     });
-    expect(shallow(element).html()).toContain("green-led");
+    expect(shallow(element).find("Led").get(0).props.ledSize).toBe("10em");
+  });
+
+  it("displays correct text size", () => {
+    myAttributeInput = {
+      device: "sys/tg_test/1",
+      attribute: "short_scalar",
+      history: [],
+      dataType: "",
+      dataFormat: "",
+      isNumeric: true,
+      unit: "",
+      enumlabels: [],
+      write: writeArray,
+      value: 10,
+      writeValue: "",
+      timestamp: timestamp
+    };
+
+    myInput = {
+      showAttributeValue: true,
+      showAttributeName: true,
+      showDeviceName: true,
+      compare: 20,
+      relation: "<",
+      attribute: myAttributeInput,
+      trueColor: "#00ff00",
+      falseColor: "#ff0000",
+      ledSize: 10,
+      textSize: 2
+    };
+
+    const element = React.createElement(LedDisplay.component, {
+      mode: "run",
+      t0: 1,
+      actualWidth: 100,
+      actualHeight: 100,
+      inputs: myInput
+    });
+    expect(shallow(element).children().first().get(0).props.style).toHaveProperty(
+      'fontSize',
+      '2em',
+    );
   });
 });
