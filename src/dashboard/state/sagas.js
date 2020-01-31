@@ -64,6 +64,7 @@ import {
 import { getWidgets, getSelectedDashboard } from "./selectors";
 import { definitionForType, definitionForWidget } from "../widgets";
 import { defaultInputs } from "../utils";
+import { stat } from "fs";
 
 export default function* sagas() {
   yield fork(createUserSaga());
@@ -211,48 +212,54 @@ function* editWidget() {
           }, {});
         const { history: oldHistory, widgets: oldWidgets } = state;
         const history = pushToHistory(oldHistory, oldWidgets);
-        newState = { ...state, widgets: reorderIndex(widgets), selectedIds: [], history };
+        newState = {
+          ...state,
+          widgets: reorderIndex(widgets),
+          selectedIds: [],
+          history
+        };
         break;
       }
       case SET_INPUT: {
         const { path, value } = payload;
-        const id = state.selectedIds[0];
-        if (id == null) {
-          newState = state;
-        }
-        const newWidget = validate(setInput(state.widgets[id], path, value));
-        const widgets = { ...state.widgets, [id]: newWidget };
+        newState = state;
+        const newWidgets = {};
+        state.selectedIds.forEach(id => {
+          const newWidget = validate(setInput(state.widgets[id], path, value));
+          newWidgets[id] = newWidget;
+        });
+        const widgets = { ...state.widgets, ...newWidgets };
         const { history: oldHistory, widgets: oldWidgets } = state;
         const history = pushToHistory(oldHistory, oldWidgets);
         newState = { ...state, widgets, history };
         break;
       }
       case ADD_INPUT: {
+        newState = state;
         const { path } = payload;
-        const id = state.selectedIds[0];
-        if (id == null) {
-          newState = state;
-        }
-        const oldWidget = state.widgets[id];
-        const definition = definitionForWidget(oldWidget);
-        const value = nestedDefault(definition, path);
-        const newWidget = validate(
-          addInput(state.widgets[id], [...path, -1], value)
-        );
-        const widgets = { ...state.widgets, [id]: newWidget };
+        const newWidgets = {};
+        state.selectedIds.forEach(id => {
+          const oldWidget = state.widgets[id];
+          const definition = definitionForWidget(oldWidget);
+          const value = nestedDefault(definition, path);
+          const newWidget = validate(addInput(state.widgets[id], [...path, -1], value));
+          newWidgets[id] = newWidget;
+        });
+        const widgets = { ...state.widgets, ...newWidgets };
         const { history: oldHistory, widgets: oldWidgets } = state;
         const history = pushToHistory(oldHistory, oldWidgets);
         newState = { ...state, widgets, history };
         break;
       }
       case DELETE_INPUT: {
+        newState = state;
         const { path } = payload;
-        const id = state.selectedIds[0];
-        if (id == null) {
-          newState = state;
-        }
-        const newWidget = validate(deleteInput(state.widgets[id], path));
-        const widgets = { ...state.widgets, [id]: newWidget };
+        const newWidgets = {};
+        state.selectedIds.forEach(id => {
+            const newWidget = validate(deleteInput(state.widgets[id], path));
+            newWidgets[id] = newWidget;
+        });
+        const widgets = { ...state.widgets, ...newWidgets };
         const { history: oldHistory, widgets: oldWidgets } = state;
         const history = pushToHistory(oldHistory, oldWidgets);
         newState = { ...state, widgets, history };
@@ -393,7 +400,7 @@ function* loadDashboard() {
 function* saveDashboard() {
   while (true) {
     const { id, widgets, name } = yield take(SAVE_DASHBOARD);
-    
+
     try {
       const { id: newId, created } = yield call(
         API.save,
