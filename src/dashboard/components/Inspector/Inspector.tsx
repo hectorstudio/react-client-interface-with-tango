@@ -1,16 +1,32 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
 import { IndexPath, Widget } from "../../types";
-
 import { bundles } from "../../widgets";
-
 import { DELETE_INPUT, ADD_INPUT, SET_INPUT } from "../../state/actionTypes";
 import InputList from "./InputList";
 
+const MultipleSelection = () => (
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      height: "100%"
+    }}
+  >
+    <span
+      style={{
+        fontWeight: "bold",
+        color: "lightgray"
+      }}
+    >
+      Multiple selection of different type of widget
+    </span>
+  </div>
+);
 interface Props {
   tangoDB: string;
-  widget: Widget;
+  widgets: Widget[];
   isRootCanvas: boolean;
   nbrSelectedWidgets: number;
   render: boolean;
@@ -24,32 +40,38 @@ class Inspector extends Component<Props> {
     if (!this.props.render){
       return null;
     }
-    if (this.props.nbrSelectedWidgets === 0){
-      return <div>No widget selected</div>
-    }
-    if (this.props.nbrSelectedWidgets !== 1){
-      return <div>Multiple widgets selected</div>
-    }
-    const { widget, tangoDB } = this.props;
+    const { widgets, tangoDB } = this.props;
     const definitions = bundles.map(bundle => bundle.definition);
-    const definition = definitions.find(({ type }) => type === widget.type);
+    const definition = definitions.find(({ type }) => type === widgets[0].type);
     
     if (definition == null) {
       return null;
     }
+    let isSameTypeOfWidget = true;
+    if(this.props.nbrSelectedWidgets > 1){
+      for (let i = 0; i < this.props.nbrSelectedWidgets; i++) {
+        isSameTypeOfWidget =
+          (isSameTypeOfWidget && (widgets[i].type === widgets[0].type));
+        if (!isSameTypeOfWidget) {
+          break;
+        }
+      }
+    }
 
-    return (
+    return isSameTypeOfWidget? (
       <div className="Inspector">
         <InputList
           tangoDB={tangoDB}
           inputDefinitions={definition.inputs}
-          inputs={widget.inputs}
+          inputs={widgets[0].inputs}
           onChange={(path, value) => this.props.onSetInput(path, value)}
           onDelete={path => this.props.onDeleteInput(path)}
           onAdd={path => this.props.onAddInput(path)}
         />
       </div>
-    );
+    ):(
+      <MultipleSelection/>
+    )
   }
 }
 
