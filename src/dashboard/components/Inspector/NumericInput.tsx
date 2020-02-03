@@ -31,6 +31,7 @@ export default class NumericInput extends Component<Props, State> {
       <input
         style={this.state.invalid ? { border: "1px solid red" } : {}}
         className={this.props.className || ""}
+        type="number"
         value={this.state.value}
         onChange={event => {
           const value = event.target.value;
