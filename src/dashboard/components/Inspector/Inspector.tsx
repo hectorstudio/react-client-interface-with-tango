@@ -47,16 +47,7 @@ class Inspector extends Component<Props> {
     if (definition == null) {
       return null;
     }
-    let isSameTypeOfWidget = true;
-    if(this.props.nbrSelectedWidgets > 1){
-      for (let i = 0; i < this.props.nbrSelectedWidgets; i++) {
-        isSameTypeOfWidget =
-          (isSameTypeOfWidget && (widgets[i].type === widgets[0].type));
-        if (!isSameTypeOfWidget) {
-          break;
-        }
-      }
-    }
+    const isSameTypeOfWidget = widgets.reduce((acc, curr) => acc && curr.type === widgets[0].type, true);
 
     return isSameTypeOfWidget? (
       <div className="Inspector">

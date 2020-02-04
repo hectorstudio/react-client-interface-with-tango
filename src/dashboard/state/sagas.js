@@ -64,7 +64,6 @@ import {
 import { getWidgets, getSelectedDashboard } from "./selectors";
 import { definitionForType, definitionForWidget } from "../widgets";
 import { defaultInputs } from "../utils";
-import { stat } from "fs";
 
 export default function* sagas() {
   yield fork(createUserSaga());
