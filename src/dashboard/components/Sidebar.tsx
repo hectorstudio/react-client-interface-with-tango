@@ -1,28 +1,8 @@
 import React, { Component } from "react";
 import Inspector from "./Inspector/Inspector";
 import Library from "./Library/Library";
-
 import { Widget } from "../types";
 
-const MultipleSelection = () => (
-  <div
-    style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      height: "100%"
-    }}
-  >
-    <span
-      style={{
-        fontWeight: "bold",
-        color: "lightgray"
-      }}
-    >
-      Multiple selection
-    </span>
-  </div>
-);
 
 interface Props {
   mode: "run" | "edit";
@@ -54,18 +34,16 @@ export default class Sidebar extends Component<Props, State> {
             selectedTab={selectedTab}
             onTabChange={newVal => this.setState({ selectedTab: newVal })}
           />
-        ) : selectedWidgets.length === 1 ? (
+        ):(
           <Inspector
             nbrSelectedWidgets={selectedWidgets.length}
-            widget={selectedWidgets[0]}
+            widgets={selectedWidgets}
             isRootCanvas={true}
             tangoDB={tangoDB}
             render={true}
           />
-        ) : (
-          <MultipleSelection />
         )}
       </div>
-    );
+    )
   }
 }

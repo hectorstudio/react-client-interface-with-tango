@@ -101,7 +101,7 @@ export default class NewSideBar extends Component<Props, State> {
             <CardBody>
               <Inspector
                 nbrSelectedWidgets={selectedWidgets.length}
-                widget={selectedWidgets[0]}
+                widgets={selectedWidgets}
                 isRootCanvas={true}
                 tangoDB={tangoDB}
                 render={selectedMenus["SELECTED_WIDGET"]}
