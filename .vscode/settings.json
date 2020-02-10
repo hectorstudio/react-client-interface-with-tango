@@ -6,7 +6,12 @@
     { "language": "typescriptreact", "autoFix": true }
   ],
   "files.exclude": {
+<<<<<<< HEAD
     "build/": true,
     "node_modules/": true
+=======
+    "node_modules/": true,
+    "build/": true
+>>>>>>> origin/master
   }
 }

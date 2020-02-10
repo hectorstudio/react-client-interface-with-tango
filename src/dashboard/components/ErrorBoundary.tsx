@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 
+<<<<<<< HEAD
 export default class ErrorBoundary extends Component<
   {},
   { error: Error | null }
 > {
+=======
+export default class ErrorBoundary extends Component<{}, { error: Error | null }> {
+>>>>>>> origin/master
   public constructor(props) {
     super(props);
     this.state = { error: null };

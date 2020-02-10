@@ -1,8 +1,17 @@
 import reducer from "./selectedDashboard";
 import {
   selectWidgets,
+<<<<<<< HEAD
   dashboardRenamed
 } from "../actionCreators";
+=======
+  deleteWidget,
+  dashboardRenamed
+} from "../actionCreators";
+import { getWidgets } from "../selectors";
+import { RootState } from ".";
+//import { Dashboard } from "../../types";
+>>>>>>> origin/master
 
 const basicState = {
   widgets: {},
@@ -10,6 +19,7 @@ const basicState = {
   id: "",
   name: "",
   user: "",
+<<<<<<< HEAD
   group: "",
   lastUpdatedBy: "",
   insertTime: null,
@@ -22,6 +32,11 @@ const basicState = {
     undoLength: 0,
     redoLength: 0,
   }
+=======
+  redirect: false,
+  insertTime: null,
+  updateTime: null
+>>>>>>> origin/master
 };
 
 const savedState = {
@@ -39,6 +54,38 @@ test("SELECT_WIDGETS", () => {
   expect(state.selectedIds).toEqual(ids);
 });
 
+<<<<<<< HEAD
+=======
+test("DELETE_WIDGETS", () => {
+  const ids = ["1", "2", "3", "4", "5"];
+  const widgets = ids.reduce((accum, id) => {
+    return {
+      ...accum,
+      [id]: {
+        id,
+        type: "",
+        valid: true,
+        x: 0,
+        y: 0,
+        canvas: "",
+        width: 0,
+        height: 0,
+        inputs: []
+      }
+    };
+  }, {});
+
+  const withWidgets = { ...basicState, widgets };
+  const withSelection = reducer(withWidgets, selectWidgets(["2", "3", "4"]));
+  const state = reducer(withSelection, deleteWidget());
+  const widgetsAfter = getWidgets({ selectedDashboard: state } as RootState);
+  const idsAfter = widgetsAfter.map(({ id }) => id);
+
+  expect(idsAfter).toEqual(["1", "5"]);
+  expect(state.selectedIds).toEqual([]);
+});
+
+>>>>>>> origin/master
 test("DASHBOARD_RENAMED", () => {
   const newName = "new name";
   const action = dashboardRenamed(savedState.id, newName);

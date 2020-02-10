@@ -5,14 +5,20 @@
 
 # testing
 /coverage
+<<<<<<< HEAD
 junit.xml
+=======
+>>>>>>> origin/master
 
 # production
 /build
 
+<<<<<<< HEAD
 # docs
 /docs/build
 
+=======
+>>>>>>> origin/master
 # misc
 .DS_Store
 .env.local
@@ -23,7 +29,10 @@ junit.xml
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+<<<<<<< HEAD
 src/setupProxy.js
 
 #editor-files
 /.idea
+=======
+>>>>>>> origin/master

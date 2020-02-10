@@ -1,6 +1,10 @@
 import React from "react";
 
+<<<<<<< HEAD
 import { WidgetDefinition, AttributeInput, AttributeInputDefinition } from "../types";
+=======
+import { WidgetDefinition, AttributeInput } from "../types";
+>>>>>>> origin/master
 import { WidgetProps } from "./types";
 
 // In order to avoid importing the entire plotly.js library. Note that this mutates the global PlotlyCore object.
@@ -10,12 +14,16 @@ import createPlotlyComponent from "react-plotly.js/factory";
 PlotlyCore.register([PlotlyScatter]);
 const Plotly = createPlotlyComponent(PlotlyCore);
 
+<<<<<<< HEAD
 type Inputs = {
   independent: AttributeInputDefinition;
   dependent: AttributeInputDefinition;
 }
 
 const definition: WidgetDefinition<Inputs> = {
+=======
+const definition: WidgetDefinition = {
+>>>>>>> origin/master
   type: "ATTRIBUTE_SCATTER",
   name: "Attribute Scatter",
   defaultWidth: 30,
@@ -38,6 +46,14 @@ const definition: WidgetDefinition<Inputs> = {
   }
 };
 
+<<<<<<< HEAD
+=======
+interface Inputs {
+  independent: AttributeInput<number>;
+  dependent: AttributeInput<number>;
+}
+
+>>>>>>> origin/master
 type Props = WidgetProps<Inputs>;
 
 // Naive lerp implementation, with fallback to first/last value of unknown is ouside range
@@ -87,6 +103,10 @@ const sampleY = [-3.59, -3.84, -2.64, -2.28, -2.38, -1.04, -0.99, -0.87, 0.07, 0
 function AttributeScatter(props: Props) {
   const { mode, inputs, actualWidth, actualHeight } = props;
   const staticMode = mode !== "run";
+<<<<<<< HEAD
+=======
+  const height = mode === "library" ? 200 : actualHeight;
+>>>>>>> origin/master
 
   const { dependent, independent } = inputs;
   const independentName =
@@ -98,13 +118,21 @@ function AttributeScatter(props: Props) {
 
   const layout = {
     font: { family: "Helvetica, Arial, sans-serif" },
+<<<<<<< HEAD
+=======
+    width: actualWidth,
+    height,
+>>>>>>> origin/master
     margin: {
       l: 45,
       r: 15,
       t: 15,
       b: 35
     },
+<<<<<<< HEAD
     autosize: true,
+=======
+>>>>>>> origin/master
     hovermode: "closest",
     xaxis: {
       title: independentName,
@@ -155,7 +183,10 @@ function AttributeScatter(props: Props) {
       layout={layout}
       config={{ staticPlot: staticMode === true }}
       responsive={true}
+<<<<<<< HEAD
       style={{ width: actualWidth, height: mode === "library" ? 150 : actualHeight}}
+=======
+>>>>>>> origin/master
     />
   );
 }

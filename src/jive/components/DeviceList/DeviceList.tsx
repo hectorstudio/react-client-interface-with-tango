@@ -123,7 +123,11 @@ class DeviceList extends Component<Props, State> {
             <input
               name="filter"
               className="form-control"
+<<<<<<< HEAD
               type="search"
+=======
+              type="text"
+>>>>>>> origin/master
               placeholder="Search..."
               value={filter}
               onChange={this.handleTextChange}
@@ -137,9 +141,13 @@ class DeviceList extends Component<Props, State> {
         </div>
         {didLimit && (
           <div className="limited">
+<<<<<<< HEAD
             <span role="img" aria-label="Warning">
               ⚠️
             </span>{" "}
+=======
+            <span role="img" aria-label="Warning">⚠️</span>{" "}
+>>>>>>> origin/master
             <span>Only displaying the first {limit} matching devices.</span>
           </div>
         )}

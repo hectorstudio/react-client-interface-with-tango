@@ -14,7 +14,11 @@
 .DeviceList .entry.selected {
 	background-color: #007bff;
 	color: white;
+<<<<<<< HEAD
 	display: inline-block;
+=======
+	width: fit-content;
+>>>>>>> origin/master
 	border-radius: 1em;
 }
 

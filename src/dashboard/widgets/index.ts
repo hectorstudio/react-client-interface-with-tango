@@ -5,6 +5,7 @@ import attributeScatter from "./AttributeScatter";
 import label from "./Label";
 import spectrum from "./Spectrum";
 import commandExecutor from "./CommandExecutor";
+<<<<<<< HEAD
 import commandWriter from "./CommandWriter";
 import attributeDial from "./AttributeDial";
 // import booleanDisplay from "./BooleanDisplay";
@@ -17,6 +18,15 @@ import { Widget, WidgetDefinition, WidgetBundle } from "../types";
 import DeviceStatus from "./DeviceStatus";
 
 export const bundles: WidgetBundle<{}>[] = [
+=======
+import attributeDial from "./AttributeDial";
+// import booleanDisplay from "./BooleanDisplay";
+import sardanaMotor from "./SardanaMotor/SardanaMotor";
+
+import { Widget, WidgetDefinition, WidgetBundle } from "../types";
+
+export const bundles: WidgetBundle[] = [
+>>>>>>> origin/master
   label,
   attributeDisplay,
   attributeWriter,
@@ -24,6 +34,7 @@ export const bundles: WidgetBundle<{}>[] = [
   attributeScatter,
   spectrum,
   commandExecutor,
+<<<<<<< HEAD
   commandWriter,
   attributeDial,
   // booleanDisplay,
@@ -32,6 +43,11 @@ export const bundles: WidgetBundle<{}>[] = [
   sardanaMotor,
   attributeLogger,
   spectrumTable,
+=======
+  attributeDial,
+  // booleanDisplay,
+  sardanaMotor
+>>>>>>> origin/master
 ];
 
 function bundleForType(type: string) {
@@ -44,7 +60,11 @@ function bundleForType(type: string) {
   return bundle;
 }
 
+<<<<<<< HEAD
 export function definitionForType(type: string): WidgetDefinition<{}> {
+=======
+export function definitionForType(type: string): WidgetDefinition {
+>>>>>>> origin/master
   const bundle = bundleForType(type);
   return bundle.definition;
 }

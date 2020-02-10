@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { Component, FormEvent, CSSProperties } from "react";
 
 import { WidgetProps } from "./types";
@@ -19,6 +20,18 @@ type Inputs = {
   size: NumberInputDefinition;
   font: SelectInputDefinition;
 };
+=======
+import React, { Component, FormEvent } from "react";
+
+import { WidgetProps } from "./types";
+import { WidgetDefinition, AttributeInput } from "../types";
+
+interface Inputs {
+  attribute: AttributeInput;
+  showDevice: boolean;
+  showAttribute: boolean;
+}
+>>>>>>> origin/master
 
 type Props = WidgetProps<Inputs>;
 
@@ -39,6 +52,7 @@ class AttributeWriter extends Component<Props, State> {
 
   public render() {
     const { mode, inputs } = this.props;
+<<<<<<< HEAD
     const {
       attribute,
       showDevice,
@@ -49,6 +63,10 @@ class AttributeWriter extends Component<Props, State> {
       font
     } = inputs;
     const { device, writeValue, attribute: attributeName } = attribute;
+=======
+    const { attribute, showDevice, showAttribute } = inputs;
+    const { device, attribute: attributeName } = attribute;
+>>>>>>> origin/master
 
     const unit = mode === "run" ? attribute.unit : "unit";
     const deviceLabel = device || "device";
@@ -70,6 +88,7 @@ class AttributeWriter extends Component<Props, State> {
 
     const isInvalid = dataType === "numeric" && isNaN(Number(this.state.input));
     const invalidStyle = isInvalid ? { outline: "1px solid red" } : {};
+<<<<<<< HEAD
     const style: CSSProperties = {
       display: "flex",
       alignItems: "center",
@@ -84,6 +103,16 @@ class AttributeWriter extends Component<Props, State> {
     return (
       <form
         style={style}
+=======
+
+    return (
+      <form
+        style={{
+          display: "flex",
+          alignItems: "center",
+          padding: "0.25em 0.5em"
+        }}
+>>>>>>> origin/master
         onSubmit={this.handleSubmit}
       >
         {label && (
@@ -96,7 +125,10 @@ class AttributeWriter extends Component<Props, State> {
             minWidth: "3em",
             ...invalidStyle
           }}
+<<<<<<< HEAD
           placeholder={writeValue || ""}
+=======
+>>>>>>> origin/master
           value={this.state.input}
           onChange={e => this.setState({ input: e.target.value })}
         />
@@ -141,7 +173,11 @@ class AttributeWriter extends Component<Props, State> {
   }
 }
 
+<<<<<<< HEAD
 const definition: WidgetDefinition<Inputs> = {
+=======
+const definition: WidgetDefinition = {
+>>>>>>> origin/master
   type: "ATTRIBUTE_WRITER",
   name: " Attribute Writer",
   defaultHeight: 2,
@@ -161,6 +197,7 @@ const definition: WidgetDefinition<Inputs> = {
       type: "boolean",
       label: "Show Attribute Name",
       default: true
+<<<<<<< HEAD
     },
     textColor: {
       label: "Text Color",
@@ -192,6 +229,8 @@ const definition: WidgetDefinition<Inputs> = {
           value: "Courier new"
         }
       ]
+=======
+>>>>>>> origin/master
     }
   }
 };

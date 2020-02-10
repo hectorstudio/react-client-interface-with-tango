@@ -1,4 +1,5 @@
 .DescriptionDisplay {
+<<<<<<< HEAD
   cursor: help;
 }
 
@@ -10,4 +11,11 @@
 .react-tooltip-lite {
   border-radius: 0.3em;
   white-space: pre;
+=======
+    cursor: help;
+}
+
+.DescriptionDisplay.no-description {
+    color: lightgray;
+>>>>>>> origin/master
 }

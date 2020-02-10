@@ -25,7 +25,10 @@ export interface ILoginAction extends Action {
 export interface ILoginSuccessAction extends Action {
   type: typeof LOGIN_SUCCESS;
   username: string;
+<<<<<<< HEAD
   userGroups: string[];
+=======
+>>>>>>> origin/master
 }
 
 export interface ILogoutAction extends Action {
@@ -47,7 +50,10 @@ export interface IPreloadUserAction extends Action {
 export interface IPreloadUserSuccessAction extends Action {
   type: typeof PRELOAD_USER_SUCCESS;
   username: string;
+<<<<<<< HEAD
   userGroups: string[];
+=======
+>>>>>>> origin/master
 }
 
 export interface IPreloadUserFailedAction extends Action {

@@ -115,7 +115,11 @@ export default class CommandSelect extends Component<Props, State> {
     if (inputType != null) {
       return commands.filter(({ intype }) => intype === inputType);
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/master
     return commands;
   }
 

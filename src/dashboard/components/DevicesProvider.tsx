@@ -16,7 +16,11 @@ const initialState: Readonly<State> = {
   fetching: false,
   error: false,
   devices: [],
+<<<<<<< HEAD
   tangoDB: ""
+=======
+  tangoDB: "",
+>>>>>>> origin/master
 };
 
 const deviceContext = React.createContext<State>({ ...initialState });

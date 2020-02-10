@@ -23,12 +23,20 @@
 }
 .sidebar-tabs .toggle-button-selected{
     background: #f0f0f0;
+<<<<<<< HEAD
     color: black;
+=======
+    color: #000;
+>>>>>>> origin/master
     cursor: default;
     box-shadow: inset 0px 0px 7px rgba(0,0,0,0.1);
 }
 
 .sidebar-tabs .toggle-button-selected:hover{
+<<<<<<< HEAD
     color: black;
+=======
+    color: #000;
+>>>>>>> origin/master
     background: #f0f0f0;
 }

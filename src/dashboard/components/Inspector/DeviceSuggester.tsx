@@ -97,7 +97,11 @@ export default class DeviceSuggester extends Component<Props, State> {
   public render(): Autosuggest {
     const { value, suggestions } = this.state;
     const inputProps = {
+<<<<<<< HEAD
       placeholder: "Type in a device (or * to list devices)",
+=======
+      placeholder: "Type in a device...",
+>>>>>>> origin/master
       value,
       onChange: this.onChange
     };

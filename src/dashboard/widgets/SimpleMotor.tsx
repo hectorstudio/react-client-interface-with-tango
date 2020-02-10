@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+<<<<<<< HEAD
 import { WidgetDefinition, DeviceInputDefinition, CommandInputDefinition, AttributeInputDefinition} from "../types";
 import { WidgetProps } from "./types";
 
@@ -13,6 +14,12 @@ type Inputs = {
 type Props = WidgetProps<Inputs>;
 
 class SimpleMotor extends Component<Props> {
+=======
+import { WidgetDefinition } from "../types";
+import { WidgetProps } from "./types";
+
+class SimpleMotor extends Component<WidgetProps> {
+>>>>>>> origin/master
   public render() {
     const { doubleScalar, ulongScalar } = this.props.inputs;
 
@@ -26,7 +33,11 @@ class SimpleMotor extends Component<Props> {
   }
 }
 
+<<<<<<< HEAD
 const definition: WidgetDefinition<Inputs> = {
+=======
+const definition: WidgetDefinition = {
+>>>>>>> origin/master
   type: "TEST_DEVICE",
   name: "Test Device",
   defaultHeight: 5,

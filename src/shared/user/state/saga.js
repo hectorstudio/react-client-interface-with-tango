@@ -27,7 +27,11 @@ function* preloadUser() {
   while (true) {
     yield take(PRELOAD_USER);
     const user = yield call(UserAPI.preloadUser);
+<<<<<<< HEAD
     const action = user ? preloadUserSuccess({username: user.username, userGroups: user.groups}) : preloadUserFailed();
+=======
+    const action = user ? preloadUserSuccess(user) : preloadUserFailed();
+>>>>>>> origin/master
     yield put(action);
   }
 }
@@ -36,7 +40,11 @@ function* login() {
   while (true) {
     const { username, password } = yield take(LOGIN);
     const result = yield call(UserAPI.login, username, password);
+<<<<<<< HEAD
     const action = result ? loginSuccess({ username, userGroups: result.groups }) : loginFailed();
+=======
+    const action = result ? loginSuccess({ username }) : loginFailed();
+>>>>>>> origin/master
     yield put(action);
   }
 }

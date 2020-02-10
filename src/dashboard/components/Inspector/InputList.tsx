@@ -1,6 +1,14 @@
 import React, { Component, Fragment } from "react";
 
+<<<<<<< HEAD
 import { InputDefinitionMapping, InputMapping, IndexPath } from "../../types";
+=======
+import {
+  InputDefinitionMapping,
+  InputMapping,
+  IndexPath
+} from "../../types";
+>>>>>>> origin/master
 
 import NumericInput from "./NumericInput";
 import AttributeSelect from "./AttributeSelect";
@@ -60,6 +68,10 @@ export default class InputList extends Component<Props> {
         );
       } else if (inputDefinition.type === "string") {
         const value = inputs[inputName] as string;
+<<<<<<< HEAD
+=======
+        console.log(inputDefinition);
+>>>>>>> origin/master
         return (
           <tr key={inputName}>
             <td>{label}</td>

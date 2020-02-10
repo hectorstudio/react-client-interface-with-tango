@@ -260,8 +260,12 @@ class EditCanvas extends Component {
         />
 
         <div className="grid">
+<<<<<<< HEAD
           {/* render the lowest order widets first */}
           {this.props.widgets.sort((a, b) => b.order - a.order).map(widget => {
+=======
+          {this.props.widgets.map(widget => {
+>>>>>>> origin/master
             const { x, y, id, width, height, valid } = widget;
 
             const definition = definitionForWidget(widget);

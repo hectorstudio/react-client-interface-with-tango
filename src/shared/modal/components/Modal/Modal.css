@@ -3,10 +3,13 @@
   animation: fadein 0.25s;
 }
 
+<<<<<<< HEAD
 .modal .modal-title {
   word-break: break-word;
 }
 
+=======
+>>>>>>> origin/master
 @keyframes fadein {
   from {
     opacity: 0;

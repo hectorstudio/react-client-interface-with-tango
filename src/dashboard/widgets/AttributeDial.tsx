@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { WidgetProps } from "./types";
+<<<<<<< HEAD
 import {
   WidgetDefinition,
   AttributeInputDefinition,
@@ -17,6 +18,19 @@ type Inputs = {
 };
 
 type Props = WidgetProps<Inputs>;
+=======
+import { WidgetDefinition, AttributeInput } from "../types";
+
+interface Input {
+  attribute: AttributeInput;
+  min: number;
+  max: number;
+  label: string;
+  showWriteValue: boolean;
+}
+
+type Props = WidgetProps<Input>;
+>>>>>>> origin/master
 
 function normalizeWithFlex(
   value: number,
@@ -93,7 +107,11 @@ class AttributeDial extends Component<Props> {
     const { min, max, attribute, label, showWriteValue } = inputs;
 
     const radius =
+<<<<<<< HEAD
       mode === "library" ? 30 : Math.min(actualHeight, actualWidth) / 2;
+=======
+      mode === "library" ? 60 : Math.min(actualHeight, actualWidth) / 2;
+>>>>>>> origin/master
     const libraryProps = mode === "library" ? { margin: "0.5em" } : {};
 
     const value = attribute.value || 0;
@@ -121,7 +139,10 @@ class AttributeDial extends Component<Props> {
           width: 2 * radius,
           height: 2 * radius,
           userSelect: "none",
+<<<<<<< HEAD
           transform: "scale(0.95)",
+=======
+>>>>>>> origin/master
           ...libraryProps
         }}
       >
@@ -215,7 +236,11 @@ class AttributeDial extends Component<Props> {
   }
 }
 
+<<<<<<< HEAD
 const definition: WidgetDefinition<Inputs> = {
+=======
+const definition: WidgetDefinition = {
+>>>>>>> origin/master
   type: "ATTRIBUTE_DIAL",
   name: "Attribute Dial",
   defaultWidth: 10,

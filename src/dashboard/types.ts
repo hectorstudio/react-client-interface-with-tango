@@ -1,4 +1,8 @@
 import React from "react";
+<<<<<<< HEAD
+=======
+//import { WidgetProps } from "./widgets/types";
+>>>>>>> origin/master
 
 export interface BaseInputDefinition<T> {
   label?: string;
@@ -7,10 +11,17 @@ export interface BaseInputDefinition<T> {
   required?: boolean;
 }
 
+<<<<<<< HEAD
 export interface Notification {
   level: string;
   sourceAction: string;
   msg: string;
+=======
+export interface Notification{
+  level:string;
+  sourceAction:string;
+  msg:string;
+>>>>>>> origin/master
 }
 
 export interface BooleanInputDefinition extends BaseInputDefinition<boolean> {
@@ -26,6 +37,7 @@ export interface StringInputDefinition extends BaseInputDefinition<string> {
   type: "string";
   placeholder?: string;
 }
+<<<<<<< HEAD
 export interface ComplexInputDefinition<T = any>
   extends BaseInputDefinition<null> {
   type: "complex";
@@ -41,6 +53,20 @@ export interface SelectInputDefinition<T = string>
   extends BaseInputDefinition<string> {
   type: "select";
   options: SelectInputDefinitionOption<T>[];
+=======
+
+export interface ComplexInputDefinition extends BaseInputDefinition<null> {
+  type: "complex";
+  inputs: InputDefinitionMapping;
+}
+
+export interface SelectInputDefinition extends BaseInputDefinition<string> {
+  type: "select";
+  options: Array<{
+    name: string;
+    value: any;
+  }>;
+>>>>>>> origin/master
 }
 
 export interface AttributeInputDefinition
@@ -71,6 +97,7 @@ export interface CommandInputDefinition extends BaseInputDefinition<null> {
   command?: string;
   intype?: string;
   invalidates?: string[];
+<<<<<<< HEAD
   parameter?: string;
 }
 
@@ -81,6 +108,8 @@ export interface CommandInputWithParameterDefinition extends BaseInputDefinition
   intype?: string;
   invalidates?: string[];
   parameter?: string;
+=======
+>>>>>>> origin/master
 }
 
 export type InputDefinition =
@@ -108,6 +137,7 @@ export interface Widget {
   width: number;
   height: number;
   inputs: InputMapping;
+<<<<<<< HEAD
   order: number;
 }
 
@@ -129,34 +159,54 @@ export interface DashboardEditHistory{
   redoIndex: number,
   undoLength: number,
   redoLength: number,
+=======
+>>>>>>> origin/master
 }
 
 export interface Dashboard {
   id: string;
   name: string;
   user: string;
+<<<<<<< HEAD
   insertTime: Date | null;
   updateTime: Date | null;
   group: string | null;
   lastUpdatedBy: string | null;
   selectedIds: string[];
   history: DashboardEditHistory;
+=======
+  redirect: boolean;
+  insertTime: Date | null;
+  updateTime: Date | null;
+>>>>>>> origin/master
 }
 
 export interface InputMapping {
   [name: string]: any;
 }
 
+<<<<<<< HEAD
 export interface WidgetDefinition<T extends InputDefinitionMapping> {
+=======
+export interface WidgetDefinition {
+>>>>>>> origin/master
   type: string;
   name: string;
   defaultWidth: number;
   defaultHeight: number;
+<<<<<<< HEAD
   inputs: T;
 }
 
 export interface WidgetBundle<T extends InputDefinitionMapping> {
   definition: WidgetDefinition<T>;
+=======
+  inputs: InputDefinitionMapping;
+}
+
+export interface WidgetBundle {
+  definition: WidgetDefinition;
+>>>>>>> origin/master
   component: React.ElementType;
 }
 
@@ -174,7 +224,10 @@ export interface AttributeInput<ValueT = any> extends AttributeValue<ValueT> {
   history: Array<AttributeValue<ValueT>>;
   dataType: string;
   dataFormat: string;
+<<<<<<< HEAD
   enumlabels: Array<string>;
+=======
+>>>>>>> origin/master
   isNumeric: boolean;
   unit: string;
   write: (value: ValueT) => void;
@@ -183,6 +236,7 @@ export interface AttributeInput<ValueT = any> extends AttributeValue<ValueT> {
 export interface CommandInput<OutputT = any> {
   device: string;
   command: string;
+<<<<<<< HEAD
   parameter?: string;
   dataType?: string;
   output: OutputT;
@@ -206,6 +260,12 @@ export interface CommandInputWithParameter<OutputT = any> {
 
 export type ComplexInput<T> = any;
 
+=======
+  output: OutputT;
+  execute: () => void;
+}
+
+>>>>>>> origin/master
 export interface Canvas {
   id: string;
   name: string;

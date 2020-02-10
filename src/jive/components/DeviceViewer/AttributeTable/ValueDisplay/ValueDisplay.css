@@ -9,11 +9,16 @@
 .ValueDisplay.DevString p,
 .ValueDisplay.DevEncoded p {
     margin: 0;
+<<<<<<< HEAD
     white-space: pre-wrap;
 }
 
 .ValueDisplay.DevDouble {
     word-break: break-all;
+=======
+    word-break: break-all;
+    white-space: pre-wrap;
+>>>>>>> origin/master
 }
 
 .ValueDisplay p.monospace {

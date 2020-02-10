@@ -1,6 +1,7 @@
 import React, { Component, CSSProperties } from "react";
 
 import { WidgetProps } from "./types";
+<<<<<<< HEAD
 import {
   WidgetDefinition,
   StringInputDefinition,
@@ -10,6 +11,9 @@ import {
   ColorInputDefinition,
   SelectInputDefinition
 } from "../types";
+=======
+import { WidgetDefinition, CommandInput } from "../types";
+>>>>>>> origin/master
 
 function timeout(seconds) {
   return new Promise(resolve => {
@@ -17,6 +21,7 @@ function timeout(seconds) {
   });
 }
 
+<<<<<<< HEAD
 type Inputs = {
   title: StringInputDefinition;
   requireConfirmation: BooleanInputDefinition;
@@ -28,6 +33,15 @@ type Inputs = {
   size: NumberInputDefinition;
   font: SelectInputDefinition;
 };
+=======
+interface Inputs {
+  title: string;
+  requireConfirmation: string;
+  command: CommandInput;
+  displayOutput: boolean;
+  cooldown: number;
+}
+>>>>>>> origin/master
 
 type Props = WidgetProps<Inputs>;
 
@@ -44,12 +58,17 @@ class CommandExecutor extends Component<Props, State> {
 
   public render() {
     const { mode, inputs } = this.props;
+<<<<<<< HEAD
     const { title, command, backgroundColor, textColor, size, font } = inputs;
+=======
+    const { title, command } = inputs;
+>>>>>>> origin/master
     const actualTitle = title || command.command || "command";
 
     const extraStyle = mode === "library" ? { margin: "0.25em" } : {};
     const containerStyle: CSSProperties = {
       padding: "0.25em",
+<<<<<<< HEAD
       backgroundColor,
       color: textColor,
       fontSize: size + "em",
@@ -58,6 +77,11 @@ class CommandExecutor extends Component<Props, State> {
     if (font){
       containerStyle["fontFamily"] = font;
     }
+=======
+      ...extraStyle
+    };
+
+>>>>>>> origin/master
     const [output, outputStyle] = this.outputAndStyle();
     const fullOutputStyle: CSSProperties = {
       marginLeft: "0.5em",
@@ -66,7 +90,11 @@ class CommandExecutor extends Component<Props, State> {
 
     return (
       <div style={containerStyle}>
+<<<<<<< HEAD
         <button style={{border: "none", borderRadius: "2px", color: backgroundColor, backgroundColor: textColor}} disabled={this.state.cooldown} onClick={this.handleExecute}>
+=======
+        <button disabled={this.state.cooldown} onClick={this.handleExecute}>
+>>>>>>> origin/master
           {actualTitle}
         </button>
         <span style={fullOutputStyle}>{output}</span>
@@ -77,7 +105,13 @@ class CommandExecutor extends Component<Props, State> {
   private async handleExecute() {
     const { command, requireConfirmation, cooldown } = this.props.inputs;
 
+<<<<<<< HEAD
     const message = `Confirm executing "${command.command}" on "${command.device}"`;
+=======
+    const message = `Confirm executing "${command.command}" on "${
+      command.device
+    }"`;
+>>>>>>> origin/master
 
     /* eslint-disable no-restricted-globals */
     if (!requireConfirmation || confirm(message)) {
@@ -113,7 +147,11 @@ class CommandExecutor extends Component<Props, State> {
   }
 }
 
+<<<<<<< HEAD
 const definition: WidgetDefinition<Inputs> = {
+=======
+const definition: WidgetDefinition = {
+>>>>>>> origin/master
   type: "COMMAND_EXECUTOR",
   name: "Command Executor",
   defaultHeight: 2,
@@ -128,7 +166,11 @@ const definition: WidgetDefinition<Inputs> = {
     title: {
       type: "string",
       label: "Title",
+<<<<<<< HEAD
       default: ""
+=======
+      default: "",
+>>>>>>> origin/master
     },
     requireConfirmation: {
       type: "boolean",
@@ -145,6 +187,7 @@ const definition: WidgetDefinition<Inputs> = {
       label: "Cooldown (s)",
       default: 0,
       nonNegative: true
+<<<<<<< HEAD
     },
     textColor: {
       label: "Text Color",
@@ -176,6 +219,8 @@ const definition: WidgetDefinition<Inputs> = {
           value: "Courier new"
         }
       ]
+=======
+>>>>>>> origin/master
     }
   }
 };

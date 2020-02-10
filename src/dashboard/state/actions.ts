@@ -1,7 +1,10 @@
 import { Action } from "redux";
 import {
+<<<<<<< HEAD
   UNDO,
   REDO,
+=======
+>>>>>>> origin/master
   ADD_WIDGET,
   MOVE_WIDGETS,
   SELECT_WIDGETS,
@@ -20,6 +23,7 @@ import {
   DASHBOARD_SAVED,
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
+<<<<<<< HEAD
   REORDER_WIDGETS,
   SAVE_DASHBOARD,
   RENAME_DASHBOARD,
@@ -44,6 +48,12 @@ export interface RedoAction extends Action {
 export interface DuplicateWidgetAction extends Action {
   type: typeof DUPLICATE_WIDGET;
 }
+=======
+  SAVE_DASHBOARD,
+} from "./actionTypes";
+
+import { IndexPath, Widget, Dashboard, Notification } from "../types";
+>>>>>>> origin/master
 
 export interface AddWidgetAction extends Action {
   type: typeof ADD_WIDGET;
@@ -116,6 +126,7 @@ export interface DashboardsLoadedAction extends Action {
   dashboards: Dashboard[];
 }
 
+<<<<<<< HEAD
 export interface RenameDashboardAction extends Action {
   type: typeof RENAME_DASHBOARD;
   id: string;
@@ -129,10 +140,20 @@ export interface DashboardRenamedAction extends Action {
 }
 
 export interface DashboardDeletedAction extends Action {
+=======
+export interface DashboardRenamedAction extends Action{
+  type: typeof DASHBOARD_RENAMED;
+  id: string
+  name: string;
+}
+
+export interface DashboardDeletedAction extends Action{
+>>>>>>> origin/master
   type: typeof DASHBOARD_DELETED;
   id: string;
 }
 
+<<<<<<< HEAD
 export interface CloneDashboardAction extends Action {
   type: typeof CLONE_DASHBOARD;
   id: string;
@@ -155,14 +176,26 @@ export interface DashboardSharedAction extends Action{
 }
 
 export interface DashboardLoadedAction extends Action {
+=======
+export interface DashboardClonedAction extends Action{
+  type: typeof DASHBOARD_CLONED;
+  id: string;
+}
+
+export interface DashboardLoadedAction extends Action{
+>>>>>>> origin/master
   type: typeof DASHBOARD_LOADED;
   dashboard: Dashboard;
   widgets: Widget[];
 }
+<<<<<<< HEAD
 export interface ReorderWidgetsAction extends Action{
   type: typeof REORDER_WIDGETS;
   widgets: Widget[];
 }
+=======
+
+>>>>>>> origin/master
 export interface SaveDashboardAction extends Action {
   type: typeof SAVE_DASHBOARD;
   id: string;
@@ -170,23 +203,36 @@ export interface SaveDashboardAction extends Action {
   widgets: Widget[];
 }
 
+<<<<<<< HEAD
 export interface DashboardSavedAction extends Action {
+=======
+export interface DashboardSavedAction extends Action{
+>>>>>>> origin/master
   type: typeof DASHBOARD_SAVED;
   id: string;
   created: boolean;
   name: string;
 }
 
+<<<<<<< HEAD
 export interface ShowNotificationAction extends Action {
+=======
+export interface ShowNotificationAction extends Action{
+>>>>>>> origin/master
   type: typeof SHOW_NOTIFICATION;
   notification: Notification;
 }
 
+<<<<<<< HEAD
 export interface HideNotificationAction extends Action {
+=======
+export interface HideNotificationAction extends Action{
+>>>>>>> origin/master
   type: typeof HIDE_NOTIFICATION;
   notification: Notification;
 }
 
+<<<<<<< HEAD
 export interface dashboardEditedAction extends Action {
   type: typeof DASHBOARD_EDITED;
   dashboard: SelectedDashboardState
@@ -197,6 +243,9 @@ export type DashboardAction =
   | UndoAction
   | RedoAction
   | DuplicateWidgetAction
+=======
+export type DashboardAction =
+>>>>>>> origin/master
   | AddWidgetAction
   | MoveWidgetsAction
   | ResizeWidgetAction
@@ -209,6 +258,7 @@ export type DashboardAction =
   | ToggleModeAction
   | DashboardLoadedAction
   | DashboardsLoadedAction
+<<<<<<< HEAD
   | RenameDashboardAction
   | DashboardRenamedAction
   | DashboardDeletedAction
@@ -221,3 +271,11 @@ export type DashboardAction =
   | CloneDashboardAction
   | DashboardClonedAction
   | dashboardEditedAction;
+=======
+  | DashboardRenamedAction
+  | DashboardDeletedAction
+  | DashboardClonedAction
+  | DashboardSavedAction
+  | ShowNotificationAction
+  | HideNotificationAction;
+>>>>>>> origin/master

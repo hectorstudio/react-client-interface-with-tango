@@ -76,7 +76,11 @@ class CommandTable extends Component {
                     <InputField isEnabled={isLoggedIn} onExecute={onExecute} commands={commands} name={name} intype={intype}/>
                   </td>
                   <td className='description'>
+<<<<<<< HEAD
                     <DescriptionDisplay name={name} description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
+=======
+                    <DescriptionDisplay description={`Input: ${intypedesc}\nOutput: ${outtypedesc}`}/>
+>>>>>>> origin/master
                   </td>
                 </tr>
               );
@@ -141,7 +145,11 @@ class InputField extends Component {
     }else{
      this.props.onExecute(this.props.name, this.state.value)
     }
+<<<<<<< HEAD
     this.setState({value: '' });
+=======
+    this.setState({value: '', valid: false });
+>>>>>>> origin/master
   }
 
   render() {

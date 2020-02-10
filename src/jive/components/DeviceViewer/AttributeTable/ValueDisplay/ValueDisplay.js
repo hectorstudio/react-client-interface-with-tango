@@ -1,17 +1,33 @@
+<<<<<<< HEAD
 import React from "react";
 import PropTypes from "prop-types";
+=======
+import React from 'react';
+import PropTypes from 'prop-types'
+>>>>>>> origin/master
 
 // Spectrum visualisation is disabled for performance reasons until a more sustainable solution is found. For now, skip importing from reacharts in order to reduce bundle size.
 // import { LineChart, Line, CartesianGrid, Tooltip, YAxis } from 'recharts';
 
+<<<<<<< HEAD
 import { JSONTree } from "./JSONTree";
 
 import "./ValueDisplay.css";
+=======
+import AttributeInput from '../AttributeInput/AttributeInput';
+import { JSONTree } from './JSONTree';
+
+import './ValueDisplay.css';
+>>>>>>> origin/master
 
 function parseJSONObject(str) {
   try {
     const obj = JSON.parse(str);
+<<<<<<< HEAD
     return typeof obj === "object" ? obj : null;
+=======
+    return typeof(obj) === "object" ? obj : null;
+>>>>>>> origin/master
   } catch (err) {
     return null;
   }
@@ -21,6 +37,28 @@ function looksLikeMonospace(str) {
   return str.match(/(\n {2})|\t| {4}/);
 }
 
+<<<<<<< HEAD
+=======
+function isNumeric(datatype) {
+  const numericTypes = [
+    "DevDouble",
+    "DevShort",
+    "DevFloat",
+    "DevLong",
+    "DevULong",
+    "DevULong64",
+    "DevUShort",
+    "DevLong64",
+    "DevUChar"
+  ];
+  return numericTypes.indexOf(datatype) !== -1;
+}
+
+function isWritable(writable) {
+  return ["READ_WRITE", "WRITE", "READ_WITH_WRITE"].indexOf(writable) !== -1;
+}
+
+>>>>>>> origin/master
 const DevStringValueDisplay = ({ value }) => {
   const values = [].concat(value);
 
@@ -42,6 +80,7 @@ const DevStringValueDisplay = ({ value }) => {
 };
 
 DevStringValueDisplay.propTypes = {
+<<<<<<< HEAD
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string)
@@ -69,6 +108,47 @@ const ScalarValueDisplay = ({ value, datatype }) => {
   }
 };
 
+=======
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+}
+
+const ScalarValueDisplay = ({value, writeValue, datatype, name, writable, setDeviceAttribute, minvalue, maxvalue}) => {
+  if (datatype === "DevString") {
+    return <DevStringValueDisplay value={value}/>;
+  } else if (datatype === "DevEncoded") {
+    const [type, payload] = value;
+    if (type !== "json") {
+      return `Unsupported encoding '${type}'`;
+    }
+
+    if (parseJSONObject(payload) == null) {
+      return (
+        <span className="invalid-json">
+          Invalid JSON
+        </span>
+      );
+    }
+
+    return <DevStringValueDisplay value={payload}/>;
+  } else if (isWritable(writable) && isNumeric(datatype)) {
+    return (
+      <AttributeInput
+        save={setDeviceAttribute.bind(this, name)}
+        value={Number(value)}
+        motorName={name}
+        writeValue={writeValue}
+        decimalPoints="24"
+        state={2}
+        disabled={false}
+        maxvalue={maxvalue}
+        minvalue={minvalue}
+      />
+    );
+  } else {
+    return String(value);
+  }
+}
+>>>>>>> origin/master
 ScalarValueDisplay.propTypes = {
   datatype: PropTypes.string,
   maxvalue: PropTypes.any,
@@ -77,12 +157,22 @@ ScalarValueDisplay.propTypes = {
   setDeviceAttribute: PropTypes.func,
   value: PropTypes.any,
   writeValue: PropTypes.any,
+<<<<<<< HEAD
   writable: PropTypes.string
 };
 
 const SpectrumValueDisplay = ({ value, datatype }) => {
   if (datatype === "DevString") {
     return <DevStringValueDisplay value={value} />;
+=======
+  writable: PropTypes.string,
+}
+
+
+const SpectrumValueDisplay = ({value, datatype}) => {
+  if (datatype === 'DevString') {
+    return <DevStringValueDisplay value={value}/>;
+>>>>>>> origin/master
   }
 
   return null;
@@ -105,6 +195,7 @@ const SpectrumValueDisplay = ({ value, datatype }) => {
 
 SpectrumValueDisplay.propTypes = {
   value: PropTypes.any,
+<<<<<<< HEAD
   datatype: PropTypes.string
 };
 
@@ -119,6 +210,83 @@ const ValueDisplay = ({
   minvalue,
   maxvalue
 }) => {
+=======
+  datatype: PropTypes.string,
+}
+
+class ImageValueDisplay extends React.Component {
+  imageWidth() {
+    return this.props.value[0].length;
+  }
+
+  imageHeight() {
+    return this.props.value.length;
+  }
+
+  imageMax() {
+    const max = arr => arr.reduce((a, b) => Math.max(a, b));
+    const maxes = this.props.value.map(max);
+    return max(maxes);
+  }
+
+  getIndicesForCoord(x, y) {
+    var index = y * this.imageWidth() * 4 + x * 4;
+    return index;
+  }
+
+  updateCanvas(){
+    const canvas = document.getElementById(this.props.name); // TODO: use ref instead
+    const context = canvas.getContext('2d');
+
+    const image = this.props.value;
+    const imgWidth = this.imageWidth();
+    const imgHeight = this.imageHeight();
+
+    const imgData = context.createImageData(imgWidth, imgHeight);
+    canvas.width  = imgWidth;
+    canvas.height = imgHeight;
+
+    const max = this.imageMax();
+
+    image.forEach((outerArray, y) => {
+      outerArray.forEach((value, x) => {
+        const index = this.getIndicesForCoord(x,y, imgData.width);
+        const normal = 255 * (value / (max === 0 ? 1 : max));
+        imgData.data[index+0] = normal;
+        imgData.data[index+1] = normal;
+        imgData.data[index+2] = normal;
+        imgData.data[index+3] = 255;
+      });
+    });
+
+    context.putImageData(imgData, 0, 0);
+  }
+
+  componentDidMount() {
+    this.updateCanvas();
+  }
+
+  
+  render() {
+    if(document.getElementById(this.props.name)){
+      this.updateCanvas();
+    }
+    return <canvas id={this.props.name} />
+  }
+}
+
+ImageValueDisplay.propTypes = {
+  datatype: PropTypes.string,
+  maxvalue: PropTypes.any,
+  minvalue: PropTypes.any,
+  name: PropTypes.string,
+  setDeviceAttribute: PropTypes.func,
+  value: PropTypes.any,
+  writable: PropTypes.string,
+}
+
+const ValueDisplay = ({value, writeValue, writable, setDeviceAttribute,  datatype, dataformat, name, minvalue, maxvalue}) => {
+>>>>>>> origin/master
   if (value === null) {
     return <span className="ValueDisplay no-value">No value</span>;
   }
@@ -128,6 +296,7 @@ const ValueDisplay = ({
   }
 
   const InnerDisplay = {
+<<<<<<< HEAD
     SCALAR: ScalarValueDisplay,
     SPECTRUM: SpectrumValueDisplay
   }[dataformat];
@@ -135,6 +304,14 @@ const ValueDisplay = ({
   const className = ["ValueDisplay", dataformat.toLowerCase(), datatype].join(
     " "
   );
+=======
+    'IMAGE': ImageValueDisplay,
+    'SCALAR': ScalarValueDisplay,
+    'SPECTRUM': SpectrumValueDisplay,
+  }[dataformat];
+
+  const className = ['ValueDisplay', dataformat.toLowerCase(), datatype].join(' ');
+>>>>>>> origin/master
 
   return (
     <div className={className}>
@@ -145,7 +322,11 @@ const ValueDisplay = ({
         name={name}
         writable={writable}
         maxvalue={maxvalue}
+<<<<<<< HEAD
         minvalue={minvalue}
+=======
+        minvalue={minvalue} 
+>>>>>>> origin/master
         setDeviceAttribute={setDeviceAttribute}
       />
     </div>
@@ -160,7 +341,12 @@ ValueDisplay.propTypes = {
   name: PropTypes.string,
   setDeviceAttribute: PropTypes.func,
   value: PropTypes.any,
+<<<<<<< HEAD
   writable: PropTypes.string
 };
+=======
+  writable: PropTypes.string,
+}
+>>>>>>> origin/master
 
 export default ValueDisplay;

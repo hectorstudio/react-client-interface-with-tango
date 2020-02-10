@@ -1,11 +1,19 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+<<<<<<< HEAD
 
 import React, { useState } from "react";
+=======
+//TODO: We should replace the 'links' that don't have a specific destination  with buttons 
+//      to better signal intention to screen readers etc.
+
+import React, { Component } from "react";
+>>>>>>> origin/master
 import classNames from "classnames";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import ValueDisplay from "./ValueDisplay/ValueDisplay";
+<<<<<<< HEAD
 import EditModal from "./EditModal";
 
 import DescriptionDisplay from "../DescriptionDisplay/DescriptionDisplay";
@@ -15,6 +23,12 @@ import {
   setDeviceAttribute,
   setDataFormat
 } from "../../../state/actions/tango";
+=======
+import DescriptionDisplay from "../DescriptionDisplay/DescriptionDisplay";
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
+
+import { setDeviceAttribute, setDataFormat } from "../../../state/actions/tango";
+>>>>>>> origin/master
 
 import {
   getActiveDataFormat,
@@ -22,8 +36,11 @@ import {
 } from "../../../state/selectors/deviceDetail";
 
 import "./AttributeTable.css";
+<<<<<<< HEAD
 import { getIsLoggedIn } from "../../../../shared/user/state/selectors";
 import { NonScalarValueModal } from "./NonScalarValueModal";
+=======
+>>>>>>> origin/master
 
 const DataFormatChooser = ({ dataFormats, selected, onSelect }) => {
   const order = ["SCALAR", "SPECTRUM", "IMAGE"];
@@ -69,12 +86,23 @@ const QualityIndicator = ({ quality }) => {
 
   return (
     <span className={`QualityIndicator ${sub}`} title={quality}>
+<<<<<<< HEAD
       {sub.toUpperCase()}
+=======
+      ●{" "}
+>>>>>>> origin/master
     </span>
   );
 };
 
+<<<<<<< HEAD
 const AttributeTableRow = ({ tangoDB, deviceName, attribute, allowedToEdit, onEdit }) => {
+=======
+const AttributeTableRow = ({
+  attribute,
+  onSetDeviceAttribute
+}) => {
+>>>>>>> origin/master
   const {
     name,
     value,
@@ -88,6 +116,7 @@ const AttributeTableRow = ({ tangoDB, deviceName, attribute, allowedToEdit, onEd
     quality
   } = attribute;
 
+<<<<<<< HEAD
   const [nonScalarOnDisplay, setNonScalarOnDisplay] = useState(null);
   const isWritable = dataformat === "SCALAR" && writable !== "READ";
 
@@ -139,11 +168,35 @@ const AttributeTableRow = ({ tangoDB, deviceName, attribute, allowedToEdit, onEd
       </td>
       <td className="description">
         <DescriptionDisplay name={name} description={description} />
+=======
+  return (
+    <tr>
+      <td className="quality">
+        <QualityIndicator quality={quality} />
+      </td>
+      <td className="name">{name}</td>
+      <td className="value">
+        <ValueDisplay
+          name={name}
+          value={value}
+          writeValue={writeValue}
+          datatype={datatype}
+          dataformat={dataformat}
+          writable={writable}
+          maxvalue={maxvalue}
+          minvalue={minvalue}
+          setDeviceAttribute={onSetDeviceAttribute}
+        />
+      </td>
+      <td className="description">
+        <DescriptionDisplay description={description} />
+>>>>>>> origin/master
       </td>
     </tr>
   );
 };
 
+<<<<<<< HEAD
 function AttributeTable(props) {
   const {
     attributes,
@@ -219,6 +272,58 @@ function AttributeTable(props) {
       </table>
     </div>
   );
+=======
+class AttributeTable extends Component {
+  render() {
+    const {
+      attributes,
+      selectedFormat,
+      disabledDisplevels,
+      onSelectDataFormat,
+      onSetDeviceAttribute
+    } = this.props;
+
+    const dataFormats = Array.from(
+      new Set(attributes.map(attr => attr.dataformat))
+    );
+
+    const selectedOrFirstFormat =
+      dataFormats.indexOf(selectedFormat) !== -1
+        ? selectedFormat
+        : dataFormats[0];
+
+    const filteredAttributes = attributes.filter(
+      attr =>
+        attr.dataformat === selectedOrFirstFormat &&
+        disabledDisplevels.indexOf(attr.displevel) === -1
+    );
+
+    return (
+      <div className="AttributeTable">
+        <NotLoggedIn>
+          You are currently not logged in and cannot change attribute values.
+        </NotLoggedIn>
+        <DataFormatChooser
+          dataFormats={dataFormats}
+          selected={selectedOrFirstFormat}
+          onSelect={onSelectDataFormat}
+        />
+        <table className="separated">
+          <tbody>
+            {filteredAttributes.map((attribute, i) => (
+              <AttributeTableRow
+                key={i}
+                attribute={attribute}
+                deviceName={this.props.deviceName}
+                onSetDeviceAttribute={onSetDeviceAttribute}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+>>>>>>> origin/master
 }
 
 AttributeTable.propTypes = {
@@ -246,9 +351,14 @@ AttributeTable.propTypes = {
 
 function mapStateToProps(state) {
   return {
+<<<<<<< HEAD
     isLoggedIn: getIsLoggedIn(state),
     selectedFormat: getActiveDataFormat(state),
     disabledDisplevels: getDisabledDisplevels(state)
+=======
+    selectedFormat: getActiveDataFormat(state),
+    disabledDisplevels: getDisabledDisplevels(state),
+>>>>>>> origin/master
   };
 }
 

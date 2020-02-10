@@ -1,5 +1,10 @@
 .LogInOut {
+<<<<<<< HEAD
   font-size: 0.85em;
   min-width: fit-content;
+=======
+  font-size: 0.75em;
+  float: right;
+>>>>>>> origin/master
   z-index: 1;
 }

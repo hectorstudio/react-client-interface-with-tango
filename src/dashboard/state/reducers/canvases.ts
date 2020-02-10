@@ -7,6 +7,7 @@ export interface CanvasesState {
 const initialState = {
   "0": {
     id: "0",
+<<<<<<< HEAD
     name: "Root"
   },
   "1": {
@@ -20,6 +21,21 @@ const initialState = {
   "3": {
     id: "3",
     name: "Subcanvas 3"
+=======
+    name: "Root",
+  },
+  "1": {
+    id: "1",
+    name: "Subcanvas 1",
+  },
+  "2": {
+    id: "2",
+    name: "Subcanvas 2",
+  },
+  "3": {
+    id: "3",
+    name: "Subcanvas 3",
+>>>>>>> origin/master
   }
 };
 

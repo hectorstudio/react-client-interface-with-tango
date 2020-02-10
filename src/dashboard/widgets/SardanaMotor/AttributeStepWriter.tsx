@@ -30,9 +30,13 @@ export class AttributeStepWriter extends Component<Props, State> {
             className="input"
             type="number"
             value={this.state.stepSize}
+<<<<<<< HEAD
             onChange={e =>
               this.setState({ stepSize: parseFloat(e.target.value) })
             }
+=======
+            onChange={e => this.setState({ stepSize: parseFloat(e.target.value) })}
+>>>>>>> origin/master
           />
           <button
             disabled={state === "MOVING"}

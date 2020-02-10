@@ -31,7 +31,11 @@ import {
   fetchDatabaseInfoFailed,
   attributeFrameReceived,
   fetchLoggedActionsFailed,
+<<<<<<< HEAD
   fetchLoggedActionsSuccess
+=======
+  fetchLoggedActionsSuccess,
+>>>>>>> origin/master
 } from "../actions/tango";
 
 import { displayError } from "../actions/error";
@@ -64,6 +68,7 @@ function* fetchDeviceNames() {
 }
 
 function* fetchLoggedActions() {
+<<<<<<< HEAD
   while (true) {
     const { tangoDB, deviceName, limit } = yield take(FETCH_LOGGED_ACTIONS);
     try {
@@ -75,6 +80,14 @@ function* fetchLoggedActions() {
       );
       yield put(fetchLoggedActionsSuccess(logs));
     } catch (err) {
+=======
+  while (true){
+    const {tangoDB, deviceName, limit} = yield take(FETCH_LOGGED_ACTIONS);
+    try{
+      const logs = yield call(TangoAPI.fetchLoggedActions, tangoDB, deviceName, limit)
+      yield put(fetchLoggedActionsSuccess(logs));
+    }catch(err){
+>>>>>>> origin/master
       yield put(fetchLoggedActionsFailed(err.toString()));
     }
   }
@@ -171,12 +184,18 @@ function* fetchDatabaseInfo() {
   }
 }
 
+<<<<<<< HEAD
 function* refetchDeviceStateOnAttributeWrite() {
   while (true) {
     const {
       tangoDB,
       attribute: { device }
     } = yield take(SET_DEVICE_ATTRIBUTE_SUCCESS);
+=======
+function *refetchDeviceStateOnAttributeWrite() {
+  while (true) {
+    const { tangoDB, attribute: { device} } = yield take(SET_DEVICE_ATTRIBUTE_SUCCESS);
+>>>>>>> origin/master
     const state = yield call(TangoAPI.fetchDeviceState, tangoDB, device);
     const action = { type: "DEVICE_STATE_RECEIVED", device, state };
     yield put(action);
@@ -185,12 +204,17 @@ function* refetchDeviceStateOnAttributeWrite() {
 
 /* Subscriptions */
 
+<<<<<<< HEAD
 function createChangeEventChannel(tangoDB, fullNames, includeValues) {
   const emitter = TangoAPI.changeEventEmitter(
     tangoDB,
     fullNames,
     includeValues
   );
+=======
+function createChangeEventChannel(tangoDB, fullNames) {
+  const emitter = TangoAPI.changeEventEmitter(tangoDB, fullNames);
+>>>>>>> origin/master
   return eventChannel(emitter);
 }
 
@@ -208,14 +232,20 @@ function* handleChangeEvents(channel) {
   }
 }
 
+<<<<<<< HEAD
 /* This generator has become a little messy due to some changes that needed to be made in order to make the performance acceptable. At some point, data fetching should probably be moved closer to the components, which will hopefully reduce the complexity. */
 function* subscribeOnFetchDevice() {
   let scalarHandler = null;
   let nonScalarHandler = null;
+=======
+function* subscribeOnFetchDevice() {
+  let handler = null;
+>>>>>>> origin/master
 
   while (true) {
     const { device, tangoDB } = yield take(FETCH_DEVICE_SUCCESS);
     const { name: deviceName, attributes } = device;
+<<<<<<< HEAD
 
     const scalarAttributes = attributes.filter(
       ({ dataformat }) => dataformat === "SCALAR"
@@ -255,5 +285,15 @@ function* subscribeOnFetchDevice() {
 
     scalarHandler = yield fork(handleChangeEvents, scalarChannel);
     nonScalarHandler = yield fork(handleChangeEvents, nonScalarChannel);
+=======
+    // Only subscribe to scalar attributes. Spectrums and images may be too data-heavy and crash the app.
+    const scalarAttributes = attributes.filter(({ dataformat }) => dataformat === "SCALAR");
+    const fullNames = scalarAttributes.map(({ name }) => `${deviceName}/${name}`);
+    const channel = yield call(createChangeEventChannel, tangoDB, fullNames);
+    if (handler != null) {
+      yield cancel(handler);
+    }
+    handler = yield fork(handleChangeEvents, channel);
+>>>>>>> origin/master
   }
 }

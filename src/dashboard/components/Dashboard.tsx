@@ -30,8 +30,11 @@ import "./Dashboard.css";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
 import { getIsLoggedIn } from "../../shared/user/state/selectors";
+<<<<<<< HEAD
 import NewSideBar from "./NewSideBar";
 
+=======
+>>>>>>> origin/master
 
 interface Match {
   tangoDB: string;
@@ -57,13 +60,19 @@ class Dashboard extends Component<Props> {
   }
 
   public async componentDidMount() {
+<<<<<<< HEAD
     const id = this.parseId();
+=======
+    const redirectId = this.props.selectedDashboard.redirect;
+    const id = redirectId ? this.props.selectedDashboard.id : this.parseId();
+>>>>>>> origin/master
     if (id) {
       this.props.loadDashboard(id);
     }
   }
 
   public async componentDidUpdate(prevProps) {
+<<<<<<< HEAD
     const {id:currentId, name} = this.props.selectedDashboard;
     const {name:oldName} = prevProps;
     const id = this.parseId();
@@ -76,6 +85,35 @@ class Dashboard extends Component<Props> {
     }
     if (name && name !== oldName){
       document.title = name + " - Webjive";
+=======
+    // update if url currently is missing and the selcted one has one?
+    const redirect = this.props.selectedDashboard.redirect;
+    const currentId = this.props.selectedDashboard.id;
+    const id = this.parseId();
+
+    if (redirect && currentId !== id) {
+      // The state has been updated with a flag indicating that we should navigate
+      // to a new dashboard.
+      this.props.history.replace("?id=" + this.props.selectedDashboard.id);
+      return;
+    }
+    const justLoggedInOnAnonymous =
+      this.props.isLoggedIn && this.props.widgets.length > 0 && !id;
+
+    if (
+      JSON.stringify(prevProps.widgets) ===
+        JSON.stringify(this.props.widgets) &&
+      !justLoggedInOnAnonymous
+    ) {
+      return;
+    }
+    if (this.props.isLoggedIn) {
+      this.props.saveDashboard(
+        id,
+        this.props.selectedDashboard.name,
+        this.props.widgets
+      );
+>>>>>>> origin/master
     }
   }
 
@@ -101,6 +139,7 @@ class Dashboard extends Component<Props> {
             modeToggleDisabled={disabled}
           />
           <div className={classNames("CanvasArea", mode)}>{canvasContents}</div>
+<<<<<<< HEAD
           {/* <NewSideBar
             mode={mode}
             selectedMenu="DASHBOARD_LIBRARY"
@@ -110,6 +149,11 @@ class Dashboard extends Component<Props> {
           <Sidebar
             mode={mode}
             selectedTab="dashboards"
+=======
+          <Sidebar
+            mode={mode}
+            selectedTab="library"
+>>>>>>> origin/master
             tangoDB={tangoDB}
             selectedWidgets={selectedWidgets}
           />

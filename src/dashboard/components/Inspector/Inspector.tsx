@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+<<<<<<< HEAD
 import { IndexPath, Widget } from "../../types";
 import { bundles } from "../../widgets";
 import { DELETE_INPUT, ADD_INPUT, SET_INPUT } from "../../state/actionTypes";
@@ -30,6 +31,20 @@ interface Props {
   isRootCanvas: boolean;
   nbrSelectedWidgets: number;
   render: boolean;
+=======
+
+import { IndexPath, Widget } from "../../types";
+
+import { bundles } from "../../widgets";
+
+import { DELETE_INPUT, ADD_INPUT, SET_INPUT } from "../../state/actionTypes";
+import InputList from "./InputList";
+
+interface Props {
+  tangoDB: string;
+  widget: Widget;
+  isRootCanvas: boolean;
+>>>>>>> origin/master
   onSetInput: (path: IndexPath, value: any) => void;
   onDeleteInput: (path: IndexPath) => void;
   onAddInput: (path: IndexPath) => void;
@@ -37,6 +52,7 @@ interface Props {
 
 class Inspector extends Component<Props> {
   public render() {
+<<<<<<< HEAD
     if (!this.props.render){
       return null;
     }
@@ -50,19 +66,38 @@ class Inspector extends Component<Props> {
     const isSameTypeOfWidget = widgets.reduce((acc, curr) => acc && curr.type === widgets[0].type, true);
 
     return isSameTypeOfWidget? (
+=======
+    const { widget, tangoDB } = this.props;
+    const definitions = bundles.map(bundle => bundle.definition);
+    const definition = definitions.find(({ type }) => type === widget.type);
+
+    if (definition == null) {
+      return null;
+    }
+
+    return (
+>>>>>>> origin/master
       <div className="Inspector">
         <InputList
           tangoDB={tangoDB}
           inputDefinitions={definition.inputs}
+<<<<<<< HEAD
           inputs={widgets[0].inputs}
+=======
+          inputs={widget.inputs}
+>>>>>>> origin/master
           onChange={(path, value) => this.props.onSetInput(path, value)}
           onDelete={path => this.props.onDeleteInput(path)}
           onAdd={path => this.props.onAddInput(path)}
         />
       </div>
+<<<<<<< HEAD
     ):(
       <MultipleSelection/>
     )
+=======
+    );
+>>>>>>> origin/master
   }
 }
 

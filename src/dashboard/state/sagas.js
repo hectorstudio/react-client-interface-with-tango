@@ -1,4 +1,17 @@
+<<<<<<< HEAD
 import { take, fork, put, call, select, race, delay } from "redux-saga/effects";
+=======
+import {
+  take,
+  fork,
+  put,
+  call,
+  select,
+  race,
+  delay
+} from "redux-saga/effects";
+// import delay from "@redux-saga/delay-p";
+>>>>>>> origin/master
 
 import createUserSaga from "../../shared/user/state/saga";
 import * as API from "../dashboardRepo";
@@ -11,15 +24,20 @@ import {
   dashboardSaved,
   showNotification,
   hideNotification,
+<<<<<<< HEAD
   dashboardShared,
   saveDashboard as saveDashboardAction,
   dashboardEdited
+=======
+  saveDashboard as saveDashboardAction
+>>>>>>> origin/master
 } from "./actionCreators";
 import {
   PRELOAD_USER_SUCCESS,
   LOGIN_SUCCESS
 } from "../../shared/user/state/actionTypes";
 import {
+<<<<<<< HEAD
   move,
   setInput,
   deleteInput,
@@ -44,10 +62,19 @@ import {
   DASHBOARD_RENAMED,
   DASHBOARD_DELETED,
   DASHBOARD_SHARED,
+=======
+  RENAME_DASHBOARD,
+  DELETE_DASHBOARD,
+  CLONE_DASHBOARD,
+  LOAD_DASHBOARD,
+  DASHBOARD_RENAMED,
+  DASHBOARD_DELETED,
+>>>>>>> origin/master
   DASHBOARD_CLONED,
   SAVE_DASHBOARD,
   DASHBOARD_SAVED,
   DASHBOARD_CREATED,
+<<<<<<< HEAD
   SHOW_NOTIFICATION,
   ADD_WIDGET,
   MOVE_WIDGETS,
@@ -64,6 +91,11 @@ import {
 import { getWidgets, getSelectedDashboard } from "./selectors";
 import { definitionForType, definitionForWidget } from "../widgets";
 import { defaultInputs } from "../utils";
+=======
+  SHOW_NOTIFICATION
+} from "./actionTypes";
+import { getWidgets } from "./selectors";
+>>>>>>> origin/master
 
 export default function* sagas() {
   yield fork(createUserSaga());
@@ -76,6 +108,7 @@ export default function* sagas() {
   yield fork(notifyOnSave);
   yield fork(notifyOnClone);
   yield fork(notifyOnDelete);
+<<<<<<< HEAD
   yield fork(notifyOnShare);
   yield fork(hideNotificationAfterDelay);
   yield fork(shareDashboard);
@@ -283,11 +316,18 @@ function* editWidget() {
     );
     yield put(saveDashboardAction(newState.id, newState.name, widgetArray));
   }
+=======
+  yield fork(hideNotificationAfterDelay);
+>>>>>>> origin/master
 }
 
 function* loadDashboards() {
   while (true) {
+<<<<<<< HEAD
     const payload = yield take([
+=======
+    yield take([
+>>>>>>> origin/master
       PRELOAD_USER_SUCCESS,
       LOGIN_SUCCESS,
       DASHBOARD_RENAMED,
@@ -295,6 +335,7 @@ function* loadDashboards() {
       DASHBOARD_CLONED,
       DASHBOARD_SAVED
     ]);
+<<<<<<< HEAD
     //in the case of DASHBOARD_SAVED, only load the dashboard from the db if it was created.
     //Loading the dashboard on every save becomes very sluggish, e.g. when trying to type text
     //in a widget label
@@ -305,10 +346,18 @@ function* loadDashboards() {
       } catch (exception) {
         console.log(exception);
       }
+=======
+    try {
+      const result = yield call(API.loadUserDashboards);
+      yield put(dashboardsLoaded(result));
+    } catch (exception) {
+      console.log(exception);
+>>>>>>> origin/master
     }
   }
 }
 
+<<<<<<< HEAD
 function* shareDashboard() {
   while (true) {
     const { id, group } = yield take(SHARE_DASHBOARD);
@@ -317,6 +366,8 @@ function* shareDashboard() {
   }
 }
 
+=======
+>>>>>>> origin/master
 function* renameDashboard() {
   while (true) {
     const { id, name } = yield take(RENAME_DASHBOARD);
@@ -357,6 +408,7 @@ function* loadDashboard() {
       DASHBOARD_SAVED
     ]);
     const { id, type } = payload;
+<<<<<<< HEAD
     //In the case of dashboard_saved, only load dashboard if the dashboard was just created (we need the ID)
     let created = false;
     if (type === DASHBOARD_SAVED) {
@@ -392,6 +444,32 @@ function* loadDashboard() {
           showNotification("ERROR", LOAD_DASHBOARD, "Dashboard not found")
         );
       }
+=======
+    try {
+      const { widgets, name, user, insertTime, updateTime } = yield call(
+        API.load,
+        id
+      );
+      //We want to redirect the dashboard component to the url with the dashboard id if the
+      //dashboard was just created
+      let created = false;
+      if (type === DASHBOARD_SAVED) {
+        created = payload.created;
+      }
+      const redirect =
+        type === DASHBOARD_CLONED || (type === DASHBOARD_SAVED && created);
+      yield put(
+        dashboardLoaded(
+          { id, name, user, redirect, insertTime, updateTime },
+          widgets
+        )
+      );
+    } catch (exception) {
+      // Replace with failure action and write saga that reacts on it and puts a notification action
+      yield put(
+        showNotification("ERROR", LOAD_DASHBOARD, "Dashboard not found")
+      );
+>>>>>>> origin/master
     }
   }
 }
@@ -407,8 +485,14 @@ function* saveDashboard() {
         widgets,
         name || ""
       );
+<<<<<<< HEAD
       yield put(dashboardSaved(newId, created, name));
     } catch (exception) {
+=======
+      yield put(dashboardSaved(newId, created, name)); // Should take name from response, but API doesn't support it at time of writing
+    } catch (exception) {
+      // Replace with failure action and write saga that reacts on it and puts a notification action
+>>>>>>> origin/master
       yield put(
         showNotification(
           "ERROR",
@@ -431,6 +515,7 @@ function* notifyOnSave() {
   }
 }
 
+<<<<<<< HEAD
 function* notifyOnShare() {
   while (true) {
     const { group } = yield take(DASHBOARD_SHARED);
@@ -439,6 +524,8 @@ function* notifyOnShare() {
   }
 }
 
+=======
+>>>>>>> origin/master
 function* notifyOnClone() {
   while (true) {
     yield take(DASHBOARD_CLONED);
@@ -466,7 +553,11 @@ function* hideNotificationAfterDelay() {
         break;
       }
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/master
     yield put(hideNotification());
   }
 }

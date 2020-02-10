@@ -27,7 +27,10 @@ export interface AttributeMetadata {
   readonly dataFormat?: string;
   readonly dataType?: string;
   readonly unit?: string;
+<<<<<<< HEAD
   readonly enumlabels?: any;
+=======
+>>>>>>> origin/master
 }
 
 export interface DeviceMetadata {
@@ -42,12 +45,30 @@ export type AttributeHistoryLookup = LookupFunction<AttributeValue[]>;
 export type CommandOutputLookup = LookupFunction<any>;
 export type DeviceMetadataLookup = LookupFunction<DeviceMetadata>;
 
+<<<<<<< HEAD
 type OnWrite = (device: string, attribute: string, value: any) => Promise<void>;
 
 type OnExecute = (device: string, command: string, argin: any) => Promise<void>;
 
 type OnInvalidate = (attributes: string[]) => void;
 
+=======
+type OnWrite = (
+  device: string,
+  attribute: string,
+  value: any
+) => Promise<void>;
+
+type OnExecute = (
+  device: string,
+  command: string,
+  argin: any
+) => Promise<void>;
+
+type OnInvalidate = (attributes: string[]) => void;
+
+// TODO (?) make as many as possible of the members optional
+>>>>>>> origin/master
 export interface ExecutionContext {
   readonly deviceMetadataLookup: DeviceMetadataLookup;
   readonly attributeMetadataLookup: AttributeMetadataLookup;
@@ -87,7 +108,11 @@ function enrichedInput(
 
     const attribute = input.attribute || inputDefinition.attribute;
     const fullName = `${resolvedDevice}/${attribute}`;
+<<<<<<< HEAD
     const { dataType, dataFormat, unit, enumlabels } = context.attributeMetadataLookup(
+=======
+    const { dataType, dataFormat, unit } = context.attributeMetadataLookup(
+>>>>>>> origin/master
       fullName
     );
     const isNumeric = dataType != null && numericTypes.indexOf(dataType) !== -1;
@@ -100,7 +125,10 @@ function enrichedInput(
       ...values,
       history,
       dataType,
+<<<<<<< HEAD
       enumlabels,
+=======
+>>>>>>> origin/master
       dataFormat,
       isNumeric,
       unit,
@@ -228,6 +256,7 @@ export function enrichedInputs(
   return names.reduce((accum, name) => {
     const subInput = inputs[name];
     const subDefinition = inputDefinitions[name];
+<<<<<<< HEAD
     let value = "";
     if (subDefinition){
       value = enrichedInput(
@@ -238,6 +267,17 @@ export function enrichedInputs(
         onInvalidate
       );
     }
+=======
+
+    const value = enrichedInput(
+      subInput,
+      subDefinition,
+      published,
+      contextWithDefaults,
+      onInvalidate
+    );
+
+>>>>>>> origin/master
     return { ...accum, [name]: value };
   }, {});
 }

@@ -75,7 +75,11 @@ const StateIndicator = ({ state }) => {
   const classes = {
     ON: "on",
     OFF: "off",
+<<<<<<< HEAD
     CLOSE: "close-status", // In order to avoid collision with bootstrap class name
+=======
+    CLOSE: "close",
+>>>>>>> origin/master
     OPEN: "open",
     INSERT: "insert",
     EXTRACT: "extract",

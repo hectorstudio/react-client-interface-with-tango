@@ -4,17 +4,34 @@
   width: 100%;
 
   display: grid;
+<<<<<<< HEAD
   grid-template-rows: 3em auto;
+=======
+  grid-template-rows: 0em auto;
+>>>>>>> origin/master
   grid-template-columns: 22em auto;
 
   font-family: Helvetica, Arial, sans-serif;
 }
+<<<<<<< HEAD
 
 .Layout .Navbar {
   grid-column: 1 / -1;
   grid-row: 1;
 }
 
+=======
+.Layout .layout-navbar {
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25em 0.5em;
+}
+.Layout .layout-navbar a {
+  margin-right: 0.5em;
+}
+>>>>>>> origin/master
 .Layout header {
   background-color: #222;
   padding: 20px;

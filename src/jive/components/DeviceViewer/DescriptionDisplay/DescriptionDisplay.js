@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import cx from "classnames";
 import Tooltip from "react-tooltip-lite";
@@ -42,6 +43,25 @@ function DescriptionDisplay({ name, description }) {
       </Tooltip>
     </>
   );
+=======
+import React from 'react';
+import cx from 'classnames';
+import PropTypes from 'prop-types'
+import './DescriptionDisplay.css';
+
+const DescriptionDisplay = ({description}) => <i
+	className={cx(
+		'DescriptionDisplay fa fa-info-circle', {
+		  'no-description': description === 'No description'
+		}
+	)}
+	title={description}
+	onClick={alert.bind(null, description)}
+/>;
+
+DescriptionDisplay.propTypes = {
+	description: PropTypes.string,
+>>>>>>> origin/master
 }
 
 export default DescriptionDisplay;

@@ -213,7 +213,11 @@ export default class RunCanvas extends Component<Props, State> {
 
     const widgetsToRender = unrecoverableError
       ? []
+<<<<<<< HEAD
       : widgets.sort((a, b) => b.order - a.order).map(widget => {
+=======
+      : widgets.map(widget => {
+>>>>>>> origin/master
           const { component, definition } = bundleForWidget(widget);
           const { x, y, id, width, height } = widget;
 
@@ -251,7 +255,11 @@ export default class RunCanvas extends Component<Props, State> {
                 top,
                 width: actualWidth,
                 height: actualHeight,
+<<<<<<< HEAD
                 overflow: "auto"
+=======
+                overflow: "hidden"
+>>>>>>> origin/master
               }}
             >
               <ErrorBoundary>{element}</ErrorBoundary>
@@ -309,6 +317,7 @@ export default class RunCanvas extends Component<Props, State> {
     this.setState({ runtimeErrors, unrecoverableError: true });
   }
 
+<<<<<<< HEAD
   private async executeCommand(
     device: string,
     command: string,
@@ -322,6 +331,12 @@ export default class RunCanvas extends Component<Props, State> {
       command,
       parameter
     );
+=======
+  private async executeCommand(device: string, command: string): Promise<void> {
+    let result: any;
+
+    result = await TangoAPI.executeCommand(this.props.tangoDB, device, command);
+>>>>>>> origin/master
     if (result == null || result.ok === false) {
       return this.reportRuntimeWarning(
         `Couldn't execute command "${command}" on device "${device}".`
@@ -403,6 +418,7 @@ export default class RunCanvas extends Component<Props, State> {
     };
 
     const attributeHistory = attributeHistories[fullName];
+<<<<<<< HEAD
 
     if(attributeHistory !== undefined)
     {
@@ -436,6 +452,36 @@ export default class RunCanvas extends Component<Props, State> {
         attributeHistories: newAttributeHistories
       });
     }
+=======
+    const newHistory = [...attributeHistory, valueRecord];
+
+    if (attributeHistory.length > 0) {
+      const lastFrame = attributeHistory.slice(-1)[0];
+
+      if (lastFrame.timestamp == null) {
+        throw new Error("timestamp is missing");
+      }
+
+      if (lastFrame.timestamp >= timestamp) {
+        return;
+      }
+    }
+
+    const shortenedHistory =
+      newHistory.length > HISTORY_LIMIT
+        ? newHistory.slice(-HISTORY_LIMIT)
+        : newHistory;
+
+    const newAttributeHistories = {
+      ...attributeHistories,
+      [fullName]: shortenedHistory
+    };
+
+    this.setState({
+      attributeValues: newAttributeValues,
+      attributeHistories: newAttributeHistories
+    });
+>>>>>>> origin/master
   }
 
   private handleNewFrame(frame: EmittedFrame): void {

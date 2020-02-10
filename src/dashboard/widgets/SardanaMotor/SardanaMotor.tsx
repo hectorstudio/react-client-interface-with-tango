@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import cx from "classnames";
 
+<<<<<<< HEAD
 import {
   WidgetDefinition,
   DeviceInputDefinition,
@@ -9,11 +10,16 @@ import {
   AttributeInputDefinition
 } from "../../types";
 
+=======
+import { WidgetProps } from "../types";
+import { WidgetDefinition } from "../../types";
+>>>>>>> origin/master
 import "./SardanaMotor.css";
 // import { MultiDialWriter } from "./MultiDialWriter";
 // import { AttributeStepWriter } from "./AttributeStepWriter";
 import { AttributeAbsWriter } from "./AttributeAbsWriter";
 import { StateIndicatorLabel } from "../../../shared/ui/components/StateIndicatorLabel";
+<<<<<<< HEAD
 import { WidgetProps } from "../types";
 
 type Inputs = {
@@ -30,6 +36,11 @@ type Props = WidgetProps<Inputs>;
 
 class SardanaMotor extends Component<Props> {
   constructor(props: Props) {
+=======
+
+class SardanaMotor extends Component<WidgetProps> {
+  constructor(props: WidgetProps) {
+>>>>>>> origin/master
     super(props);
     this.handleStop = this.handleStop.bind(this);
     this.setPower = this.setPower.bind(this);
@@ -167,7 +178,11 @@ class SardanaMotor extends Component<Props> {
   }
 }
 
+<<<<<<< HEAD
 const definition: WidgetDefinition<Inputs> = {
+=======
+const definition: WidgetDefinition = {
+>>>>>>> origin/master
   type: "SARDANA_MOTOR",
   name: "Sardana Motor",
   defaultHeight: 2,

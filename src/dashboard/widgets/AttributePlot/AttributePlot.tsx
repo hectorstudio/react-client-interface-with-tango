@@ -2,6 +2,7 @@ import React from "react";
 
 import Plot, { Trace } from "./Plot";
 import { WidgetProps } from "../types";
+<<<<<<< HEAD
 import { Inputs } from ".";
 
 type Props = WidgetProps<Inputs>;
@@ -10,13 +11,37 @@ type AttributeEntries = Props["inputs"]["attributes"];
 function AttributePlot(props: Props) {
   const { mode, inputs, actualWidth, actualHeight } = props;
   const { attributes, timeWindow, showZeroLine, logarithmic } = inputs;
+=======
+import { AttributeInput } from "../../types";
+
+interface AttributeComplexInput {
+  attribute: AttributeInput<number>;
+  yAxis: "left" | "right";
+}
+
+interface InputProps {
+  timeWindow: number;
+  showZeroLine: boolean;
+  attributes: AttributeComplexInput[];
+}
+
+type Props = WidgetProps<InputProps>;
+
+function AttributePlot(props: Props) {
+  const { mode, inputs, actualWidth, actualHeight } = props;
+  const { attributes, timeWindow, showZeroLine } = inputs;
+>>>>>>> origin/master
 
   const runParams = {
     width: actualWidth,
     height: actualHeight,
     timeWindow,
+<<<<<<< HEAD
     showZeroLine,
     logarithmic
+=======
+    showZeroLine
+>>>>>>> origin/master
   };
 
   const staticParams = { ...runParams, staticMode: true };
@@ -27,7 +52,11 @@ function AttributePlot(props: Props) {
   }
 
   if (mode === "library") {
+<<<<<<< HEAD
     const xValues = Array(timeWindow)
+=======
+    const xValues = Array(120)
+>>>>>>> origin/master
       .fill(0)
       .map((_, i) => i);
     const sample1 = xValues.map(x => 8 * Math.sin(x / 6) * Math.sin(x / 20));
@@ -47,7 +76,11 @@ function AttributePlot(props: Props) {
       }
     ];
 
+<<<<<<< HEAD
     return <Plot traces={traces} params={{ ...staticParams, height: 150 }} />;
+=======
+    return <Plot traces={traces} params={{ ...staticParams, height: 200 }} />;
+>>>>>>> origin/master
   } else {
     const traces = attributes.map(attributeInput => {
       const { device, attribute } = attributeInput.attribute;
@@ -61,7 +94,11 @@ function AttributePlot(props: Props) {
 }
 
 function tracesFromAttributeInputs(
+<<<<<<< HEAD
   complexInputs: AttributeEntries,
+=======
+  complexInputs: AttributeComplexInput[],
+>>>>>>> origin/master
   t0: number
 ): Trace[] {
   return complexInputs.map(complexInput => {
@@ -81,5 +118,8 @@ function tracesFromAttributeInputs(
   });
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 export default AttributePlot;

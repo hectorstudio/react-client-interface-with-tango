@@ -3,14 +3,22 @@
   height: 100%;
   position: absolute;
   display: grid;
+<<<<<<< HEAD
   grid-template-rows: 3em auto;
+=======
+  grid-template-rows: min-content auto;
+>>>>>>> origin/master
   grid-template-columns: auto 22em;
   font-family: Helvetica, Arial, sans-serif;
 }
 
 .Dashboard .CanvasArea {
   grid-row: 2;
+<<<<<<< HEAD
   overflow: auto;
+=======
+  overflow: hidden;
+>>>>>>> origin/master
 }
 
 .Dashboard .CanvasArea.edit {
@@ -74,9 +82,33 @@
   margin-top: -1px;
 }
 
+<<<<<<< HEAD
 .Dashboard .Navbar {
   grid-row: 1;
   grid-column: -1 / 1;
+=======
+.Dashboard .TopBar {
+  padding: 0.33em;
+
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+
+  grid-row: 1;
+  grid-column: -1 / 1;
+
+  display: flex;
+  justify-content: space-between;
+  place-items: center;
+}
+
+.Dashboard .TopBar .LogInOut {
+  margin-right: 0.25em;
+}
+
+.Dashboard .TopBar .FetchInfo {
+  margin-left: 0.5em;
+  color: #666;
+>>>>>>> origin/master
 }
 
 .Dashboard .Sidebar {

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { Component, CSSProperties, ReactNode } from "react";
 import { WidgetProps } from "./types";
 
@@ -95,10 +96,24 @@ const definition: WidgetDefinition<Inputs> = {
 };
 
 type Props = WidgetProps<Inputs>;
+=======
+import React, { Component, Fragment, CSSProperties, ReactNode } from "react";
+import { WidgetProps } from "./types";
+import { WidgetDefinition, AttributeInput } from "../types";
+
+interface Input {
+  showDevice: boolean;
+  precision: number;
+  attribute: AttributeInput;
+}
+
+type Props = WidgetProps<Input>;
+>>>>>>> origin/master
 
 class AttributeReadOnly extends Component<Props> {
   public render() {
     const { device, name } = this.deviceAndAttribute();
+<<<<<<< HEAD
     const {
       showDevice,
       showAttribute,
@@ -133,6 +148,22 @@ class AttributeReadOnly extends Component<Props> {
           : valueG}
       </div>
     );
+=======
+
+    const value = this.value();
+    const style: CSSProperties = { padding: "0.5em", whiteSpace: "nowrap" };
+    const inner = this.props.inputs.showDevice ? (
+      <Fragment>
+        {device}/{name}: {value}
+      </Fragment>
+    ) : (
+      <Fragment>
+        {name}: {value}
+      </Fragment>
+    );
+
+    return <div style={style}>{inner}</div>;
+>>>>>>> origin/master
   }
 
   private value(): ReactNode {
@@ -142,17 +173,25 @@ class AttributeReadOnly extends Component<Props> {
 
     const {
       attribute: { value, unit },
+<<<<<<< HEAD
       precision,
       scientificNotation
+=======
+      precision
+>>>>>>> origin/master
     } = this.props.inputs;
 
     let result: ReactNode;
     if (Number(parseFloat(value)) === value) {
+<<<<<<< HEAD
       if (scientificNotation) {
         result = value.toExponential(precision);
       } else {
         result = value.toFixed(precision);
       }
+=======
+      result = value.toFixed(precision);
+>>>>>>> origin/master
     } else {
       result = value === undefined ? null : String(value);
     }
@@ -174,4 +213,32 @@ class AttributeReadOnly extends Component<Props> {
   }
 }
 
+<<<<<<< HEAD
+=======
+const definition: WidgetDefinition = {
+  type: "ATTRIBUTE_DISPLAY",
+  name: "Attribute Display",
+  defaultWidth: 10,
+  defaultHeight: 2,
+  inputs: {
+    attribute: {
+      type: "attribute",
+      label: "",
+      dataFormat: "scalar",
+      required: true
+    },
+    precision: {
+      type: "number",
+      label: "Precision",
+      default: 2
+    },
+    showDevice: {
+      type: "boolean",
+      label: "Device Name",
+      default: false
+    }
+  }
+};
+
+>>>>>>> origin/master
 export default { component: AttributeReadOnly, definition };

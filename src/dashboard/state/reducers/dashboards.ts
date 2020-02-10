@@ -7,7 +7,11 @@ export interface DashboardsState {
 }
 
 const initialState: DashboardsState = {
+<<<<<<< HEAD
   dashboards: []
+=======
+  dashboards: [],
+>>>>>>> origin/master
 };
 
 export default function dashboard(

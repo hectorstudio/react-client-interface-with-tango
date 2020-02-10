@@ -15,9 +15,15 @@ services:
 
   # cache is used to specify a list of files and directories which should be cached between jobs. You can only use paths that are within the project workspace.
 # If cache is defined outside the scope of jobs, it means it is set globally and all jobs will use that definition
+<<<<<<< HEAD
 cache:
   paths:
     - build
+=======
+# cache:
+#   paths:
+#     - node_modules/
+>>>>>>> origin/master
 
 # before_script is used to define the command that should be run before all jobs, including deploy jobs, but after the restoration of artifacts.
 # This can be an array or a multi-line string. In this case node install will install all our dependencies including the scripts
@@ -33,6 +39,7 @@ cache:
 stages:
   - dependencies
   - test
+<<<<<<< HEAD
   - deploy
   - image
 
@@ -49,6 +56,10 @@ clean shell runner:
     # Gitlab CI badges creation
     - rm -rf build/*
 
+=======
+  - build
+  - deploy
+>>>>>>> origin/master
 
 # The YAML file defines a set of jobs with constraints stating when they should be run.
 # You can specify an unlimited number of jobs which are defined as top-level elements with an arbitrary name and always have to contain at least the script clause.
@@ -82,6 +93,7 @@ test_and_coverage:
       - node_modules/
     policy: pull
   script:
+<<<<<<< HEAD
     - mkdir -p build/reports
     - npm run test
     - npm run code-analysis
@@ -89,11 +101,22 @@ test_and_coverage:
     - mv junit.xml build/reports/unit-tests.xml
     - mv linting.xml build/reports/linting.xml
     - mv build/coverage/cobertura-coverage.xml build/reports/code-coverage.xml
+=======
+    - CI=true npm test -- --coverage
+    - mkdir htmlcov
+    - cp -r coverage/lcov-report/* htmlcov
+    - cp coverage/clover.xml htmlcov
+    - cp coverage/coverage-final.json htmlcov
+>>>>>>> origin/master
 
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
     paths:
+<<<<<<< HEAD
       - build/
+=======
+      - htmlcov
+>>>>>>> origin/master
 
 # list the current top level dependencies for the project
 # TODO We could write a script to convert the json and
@@ -140,6 +163,7 @@ code_quality:
   artifacts:
     paths: [gl-code-quality-report.json]
 
+<<<<<<< HEAD
 # Build the application and copy reports
 build_deploy:
   stage: deploy
@@ -147,12 +171,18 @@ build_deploy:
     - test_and_coverage
     - list_dependencies
     - code_quality
+=======
+# Build the application
+build:
+  stage: build
+>>>>>>> origin/master
   cache:
     paths:
       - node_modules/
     policy: pull
   script:
     - npm install -g increase-memory-limit
+<<<<<<< HEAD
     - npm install # Install all dependencies
     - CI=false npm run build --prod # Build for prod
 
@@ -198,3 +228,24 @@ create_ci_metrics:
     paths:
       - public
       - ./build
+=======
+    - npm run fix-memory-limit
+    - npm run build --prod
+
+# export the report
+pages:
+  stage: deploy
+  dependencies:
+    - test_and_coverage
+    - list_dependencies
+    - code_quality
+  script:
+    - mv public/* .
+    - cp -r htmlcov/* public
+    - cp gl-code-quality-report.json public
+    - cp -r .public/* public
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+>>>>>>> origin/master

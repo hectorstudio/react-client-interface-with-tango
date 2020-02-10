@@ -1,8 +1,13 @@
 import { createSelector } from "reselect";
 import { RootState } from "../reducers";
+<<<<<<< HEAD
 import { SelectedDashboardState } from "../reducers/selectedDashboard";
 
 function getSelectedDashboardState(state: RootState):SelectedDashboardState {
+=======
+
+function getSelectedDashboardState(state: RootState) {
+>>>>>>> origin/master
   return state.selectedDashboard;
 }
 
@@ -28,9 +33,15 @@ export const getNotification = createSelector(
   getNotificationsState,
   state => state.notification
 );
+<<<<<<< HEAD
 export const hasSelectedWidgets = createSelector(
   getSelectedDashboardState,
   state => state.selectedIds.length > 0
+=======
+export const getRedirect = createSelector(
+  getSelectedDashboardState,
+  state => state.redirect
+>>>>>>> origin/master
 );
 export const getUserName = createSelector(
   getUserState,
@@ -44,6 +55,7 @@ export const getDashboards = createSelector(
 export const getSelectedDashboard = createSelector(
   getSelectedDashboardState,
   state => {
+<<<<<<< HEAD
     return state;
   }
 );
@@ -51,6 +63,12 @@ export const getUserGroups = createSelector(
   getUserState,
   state => state.userGroups || []
 )
+=======
+    const { selectedIds, widgets, ...dashboard } = state;
+    return dashboard;
+  }
+);
+>>>>>>> origin/master
 
 const getWidgetsObject = createSelector(
   getSelectedDashboardState,

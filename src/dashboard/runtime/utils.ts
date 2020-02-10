@@ -22,9 +22,14 @@ export function publishedDevices(
   const result = {};
 
   for (const name of inputNames) {
+<<<<<<< HEAD
 
     const definition = definitions[name];
     if (definition && definition.type === "device") {
+=======
+    const definition = definitions[name];
+    if (definition.type === "device") {
+>>>>>>> origin/master
       const { publish } = definition;
 
       if (publish == null) {

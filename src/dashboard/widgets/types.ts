@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   NumberInputDefinition,
   StringInputDefinition,
@@ -47,3 +48,12 @@ export type WidgetProps<T> = {
   actualWidth: number;
   actualHeight: number;
 };
+=======
+export interface WidgetProps<T = Record<string, any>> {
+  inputs: T;
+  mode: "run" | "edit" | "library";
+  t0: number;
+  actualWidth: number;
+  actualHeight: number;
+}
+>>>>>>> origin/master

@@ -48,8 +48,13 @@ query {
 `;
 
 const EXECUTE_COMMAND = `
+<<<<<<< HEAD
 mutation ExecuteCommand($device: String!, $command: String!, $argin: ScalarTypes) {
   executeCommand(device: $device, command: $command, argin: $argin) {
+=======
+mutation ExecuteCommand($device: String!, $command: String!) {
+  executeCommand(device: $device, command: $command) {
+>>>>>>> origin/master
     ok
     output
   }
@@ -74,7 +79,10 @@ query FetchAttributeMetadata($fullNames: [String]!) {
     device
     dataformat
     datatype
+<<<<<<< HEAD
     enumLabels
+=======
+>>>>>>> origin/master
     unit
   }
 }`;
@@ -146,11 +154,18 @@ export async function fetchDeviceNames(tangoDB: string) {
 export async function executeCommand(
   tangoDB: string,
   device: string,
+<<<<<<< HEAD
   command: string,
   argin?: any
 ) {
   try {
     const args = { device, command, argin };
+=======
+  command: string
+) {
+  try {
+    const args = { device, command };
+>>>>>>> origin/master
     const data = await request(tangoDB, EXECUTE_COMMAND, args);
     const { ok, output } = data.executeCommand;
     return { ok, output };
@@ -177,14 +192,23 @@ export async function fetchAttributeMetadata(
   const result = {};
 
   for (const attribute of data.attributes) {
+<<<<<<< HEAD
     const { device, name, dataformat, datatype, enumLabels, unit } = attribute;
+=======
+    const { device, name, dataformat, datatype, unit } = attribute;
+>>>>>>> origin/master
 
     const fullName = device + "/" + name;
     const dataFormat = dataformat.toLowerCase();
     const dataType = datatype;
+<<<<<<< HEAD
     const enumlabels = enumLabels;
 
     result[fullName] = { dataFormat, dataType, unit, enumlabels };
+=======
+
+    result[fullName] = { dataFormat, dataType, unit };
+>>>>>>> origin/master
   }
 
   return result;

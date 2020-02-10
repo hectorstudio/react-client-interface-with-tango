@@ -23,4 +23,7 @@ build_image:
     - docker push docker.maxiv.lu.se/webjive-frontend
   only:
     - master
+<<<<<<< HEAD
     - develop
+=======
+>>>>>>> origin/master

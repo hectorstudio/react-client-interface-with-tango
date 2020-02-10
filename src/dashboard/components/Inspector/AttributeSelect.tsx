@@ -77,6 +77,7 @@ export default class AttributeSelect extends Component<Props, State> {
 
               <select
                 className="form-control"
+<<<<<<< HEAD
                 disabled={!hasAttributes}
                 onChange={this.handleSelectAttribute}
                 defaultValue={attribute || ""}
@@ -89,10 +90,24 @@ export default class AttributeSelect extends Component<Props, State> {
                 )}
                 {hasDevice && !hasAttributes && (
                   <option value="">
+=======
+                value={attribute}
+                disabled={hasAttributes === false}
+                onChange={this.handleSelectAttribute}
+              >
+                {hasDevice === false && (
+                  <option selected={true} value="">
+                    Pick a device first
+                  </option>
+                )}
+                {hasDevice && hasAttributes === false && (
+                  <option value="" selected={true}>
+>>>>>>> origin/master
                     No attributes
                   </option>
                 )}
                 {hasDevice && hasAttributes && (
+<<<<<<< HEAD
                   <option value="" disabled={true}>
                     Select attribute...
                   </option>
@@ -100,6 +115,15 @@ export default class AttributeSelect extends Component<Props, State> {
                 {attributes.map(({ name, datatype }, i) => (
                   <option key={i} value={name}>
                     {name} {datatype === "DevEnum" ? '[...]' : null}
+=======
+                  <option value="" disabled={true} selected={true}>
+                    Select attribute...
+                  </option>
+                )}
+                {attributes.map(({ name }, i) => (
+                  <option key={i} value={name}>
+                    {name}
+>>>>>>> origin/master
                   </option>
                 ))}
               </select>

@@ -1,4 +1,5 @@
 import React from "react";
+<<<<<<< HEAD
 import {
   WidgetDefinition,
   StringInputDefinition,
@@ -22,11 +23,19 @@ type Props = WidgetProps<Inputs>;
 const Inner = ({ mode, text, linkTo, size, font}) => {
   if (mode === "library") {
     return <span>Label</span>;
+=======
+import { WidgetDefinition } from "../types";
+
+const Inner = ({ mode, text }) => {
+  if (mode === "library") {
+    return "Label";
+>>>>>>> origin/master
   }
 
   if (text === "" && mode === "edit") {
     return <span style={{ fontStyle: "italic" }}>Empty</span>;
   }
+<<<<<<< HEAD
   const style = {fontSize: size + "em"}
   if (font){
     style["fontFamily"] = font;
@@ -41,11 +50,20 @@ const Label = (props: Props) => {
   const { inputs, mode, actualWidth, actualHeight } = props;
   const { text, backgroundColor, textColor, linkTo, size, font } = inputs;
 
+=======
+
+  return text;
+};
+
+const Label = ({ mode, inputs, actualWidth, actualHeight }) => {
+  const { text, backgroundColor } = inputs;
+>>>>>>> origin/master
   return (
     <div
       style={{
         padding: "0.5em",
         backgroundColor,
+<<<<<<< HEAD
         color: textColor,
         wordBreak: "break-word",
         height: actualHeight,
@@ -53,11 +71,23 @@ const Label = (props: Props) => {
       }}
     >
       <Inner mode={mode} text={text} linkTo={linkTo} size={size} font={font} />
+=======
+        wordBreak: "break-word",
+        height: actualHeight,
+        width: actualWidth
+      }}
+    >
+      <Inner mode={mode} text={text} />
+>>>>>>> origin/master
     </div>
   );
 };
 
+<<<<<<< HEAD
 const definition: WidgetDefinition<Inputs> = {
+=======
+const definition: WidgetDefinition = {
+>>>>>>> origin/master
   type: "LABEL",
   name: "Label",
   defaultHeight: 2,
@@ -68,15 +98,19 @@ const definition: WidgetDefinition<Inputs> = {
       type: "string",
       default: ""
     },
+<<<<<<< HEAD
     textColor: {
       label: "Text Color",
       type: "color",
       default: "#000"
     },
+=======
+>>>>>>> origin/master
     backgroundColor: {
       label: "Background Color",
       type: "color",
       default: "#ffffff"
+<<<<<<< HEAD
     },
     size: {
       label: "Text size (in units)",
@@ -104,6 +138,8 @@ const definition: WidgetDefinition<Inputs> = {
       type: "string",
       default: "",
       placeholder: "Optional link URL"
+=======
+>>>>>>> origin/master
     }
   }
 };

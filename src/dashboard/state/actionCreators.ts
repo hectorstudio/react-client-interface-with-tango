@@ -1,6 +1,9 @@
 import {
+<<<<<<< HEAD
   UNDO,
   REDO,
+=======
+>>>>>>> origin/master
   ADD_WIDGET,
   MOVE_WIDGETS,
   RESIZE_WIDGET,
@@ -21,6 +24,7 @@ import {
   DASHBOARD_SAVED,
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
+<<<<<<< HEAD
   DUPLICATE_WIDGET,
   SHARE_DASHBOARD,
   DASHBOARD_SHARED,
@@ -31,6 +35,11 @@ import {
 import {
   UndoAction,
   RedoAction,
+=======
+} from "./actionTypes";
+
+import {
+>>>>>>> origin/master
   AddWidgetAction,
   MoveWidgetsAction,
   ResizeWidgetAction,
@@ -41,6 +50,7 @@ import {
   DashboardLoadedAction,
   DashboardRenamedAction,
   SaveDashboardAction,
+<<<<<<< HEAD
   DashboardSavedAction,
   RenameDashboardAction,
   CloneDashboardAction,
@@ -63,6 +73,13 @@ export function redo(): RedoAction{
 export function duplicateWidget(): DuplicateWidgetAction{
   return {type: DUPLICATE_WIDGET}
 }
+=======
+  DashboardSavedAction
+} from "./actions";
+
+import { Widget, Dashboard } from "../types";
+
+>>>>>>> origin/master
 export function addWidget(
   x: number,
   y: number,
@@ -106,6 +123,7 @@ export function toggleMode(): ToggleModeAction {
   return { type: TOGGLE_MODE };
 }
 
+<<<<<<< HEAD
 export function dashboardsLoaded(dashboards: Dashboard[]) {
   return { type: DASHBOARDS_LOADED, dashboards };
 }
@@ -182,3 +200,54 @@ export function showNotification(level: string, action: string, msg: string) {
 export function hideNotification() {
   return { type: HIDE_NOTIFICATION };
 }
+=======
+export function dashboardsLoaded(dashboards: Dashboard[]){
+  return {type: DASHBOARDS_LOADED, dashboards};
+}
+
+export function renameDashboard(id: string, name: string) {
+  return { type: RENAME_DASHBOARD, id, name };
+}
+export function dashboardRenamed(id: string, name: string): DashboardRenamedAction {
+  return {type: DASHBOARD_RENAMED, id, name };
+}
+export function deleteDashboard(id:string){
+  return {type: DELETE_DASHBOARD, id}
+}
+export function dashboardDeleted(id:string){
+  return {type: DASHBOARD_DELETED, id};
+}
+export function cloneDashboard(id:string, newUser:string){
+  return {type: CLONE_DASHBOARD, id, newUser}
+}
+export function dashboardCloned(id:string){
+  return {type: DASHBOARD_CLONED, id};
+}
+export function loadDashboard(id: string){
+  return {type: LOAD_DASHBOARD, id};
+}
+export function dashboardLoaded(
+  dashboard:Dashboard,
+  widgets: Widget[],
+
+): DashboardLoadedAction {
+  return { type: DASHBOARD_LOADED, dashboard, widgets};
+}
+export function dashboardSaved(id:string, created: boolean, name: string): DashboardSavedAction {
+  return { type: DASHBOARD_SAVED, id, created, name };
+}
+
+export function saveDashboard(id: string, name: string, widgets: Widget[]): SaveDashboardAction {
+  return {type: SAVE_DASHBOARD, id, name, widgets};
+}
+
+export function showNotification(level:string, action:string, msg:string){
+  return ({ type: SHOW_NOTIFICATION, notification: {level, action, msg}})
+}
+export function hideNotification(){
+    return { type: HIDE_NOTIFICATION }
+}
+
+
+
+>>>>>>> origin/master

@@ -57,6 +57,7 @@ The render method of the component implementation may look something like this:
       );
     }
 
+<<<<<<< HEAD
 ## Type-Safe Widget Props
 
 If widgets are implemented in TypeScript, type-safe component props, including widget inputs, can be obtained using the `WidgetProps` type mapping. The following steps illustrate how to adapt the widget described in the example above to TypeScript.
@@ -94,6 +95,8 @@ for class-based components, or
 
 for function-based components.
 
+=======
+>>>>>>> origin/master
 ## Widget Definition
 
 | Key | Type | Description
@@ -130,7 +133,11 @@ Manifests itself as an input field where the user can enter a numeric value.
 
 | Key | Type | Description
 |-|-|-
+<<<<<<< HEAD
 | nonNegative? | boolean | If true, the user can't enter negative values.
+=======
+| nonNumeric? | boolean | If true, the user can't enter negative values.
+>>>>>>> origin/master
 
 ### Select Input Definition
 

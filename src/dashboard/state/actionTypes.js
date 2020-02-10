@@ -1,7 +1,10 @@
+<<<<<<< HEAD
 export const UNDO = "UNDO"
 export const REDO = "REDO"
 export const DUPLICATE_WIDGET = "DUPLICATE_WIDGET"
 
+=======
+>>>>>>> origin/master
 export const SELECT_WIDGETS = "SELECT_WIDGETS";
 export const DELETE_WIDGET = "DELETE_WIDGET";
 export const ADD_WIDGET = "ADD_WIDGET";
@@ -39,6 +42,7 @@ export const HIDE_NOTIFICATION = "HIDE_NOTIFICATION";
 
 export const DASHBOARD_CREATED = "DASHBOARD_CREATED";
 
+<<<<<<< HEAD
 export const SHARE_DASHBOARD = "SHARE_DASHBOARD";
 export const DASHBOARD_SHARED = "DASHBOARD_SHARED";
 
@@ -46,4 +50,6 @@ export const DASHBOARD_EDITED = "DASHBOARD_EDITED";
 
 export const REORDER_WIDGETS = "REORDER_WIDGETS"
 
+=======
+>>>>>>> origin/master
 

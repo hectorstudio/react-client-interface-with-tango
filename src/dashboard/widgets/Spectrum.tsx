@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 
 import { WidgetProps } from "./types";
+<<<<<<< HEAD
 import {
   WidgetDefinition,
   BooleanInputDefinition,
   AttributeInputDefinition
 } from "../types";
+=======
+import { WidgetDefinition, AttributeInput } from "../types";
+>>>>>>> origin/master
 
 // In order to avoid importing the entire plotly.js library. Note that this mutates the global PlotlyCore object.
 import PlotlyCore from "plotly.js/lib/core";
@@ -17,11 +21,19 @@ const Plotly = createPlotlyComponent(PlotlyCore);
 // prettier-ignore
 const sampleData = [0, -2, 3, -2, 1, -5, 4, -3, -2, -4, 0, -4, 2, 2, -2, -2, 2, -5, -2, -3, 0];
 
+<<<<<<< HEAD
 type Inputs = {
   attribute: AttributeInputDefinition;
   showTitle: BooleanInputDefinition;
   inelastic: BooleanInputDefinition;
 };
+=======
+interface Inputs {
+  attribute: AttributeInput;
+  showTitle: boolean;
+  inelastic: boolean;
+}
+>>>>>>> origin/master
 
 interface State {
   min?: number;
@@ -44,10 +56,15 @@ class Spectrum extends Component<Props, State> {
     const { value } = this.props.inputs.attribute;
     const { min: currMin, max: currMax } = this.state;
 
+<<<<<<< HEAD
     const propMin =
       value && value.length > 0 ? value.reduce((a, b) => Math.min(a, b)) : 0;
     const propMax =
       value && value.length > 0 ? value.reduce((a, b) => Math.max(a, b)) : 0;
+=======
+    const propMin = value ? value.reduce((a, b) => Math.min(a, b)) : 0;
+    const propMax = value ? value.reduce((a, b) => Math.max(a, b)) : 0;
+>>>>>>> origin/master
     const min = currMin == null ? propMin : Math.min(currMin, propMin);
     const max = currMax == null ? propMax : Math.max(currMax, propMax);
 
@@ -81,7 +98,12 @@ class Spectrum extends Component<Props, State> {
         t: 15 + (showTitle ? 20 : 0),
         b: 20
       },
+<<<<<<< HEAD
       autosize: true,
+=======
+      width: this.props.actualWidth,
+      height: mode !== "library" ? this.props.actualHeight : 200,
+>>>>>>> origin/master
       yaxis
     };
 
@@ -92,7 +114,10 @@ class Spectrum extends Component<Props, State> {
           layout={layout}
           config={{ staticPlot: true }}
           responsive={true}
+<<<<<<< HEAD
           style={{ width: this.props.actualWidth, height: mode === "library" ? 150 : this.props.actualHeight}}
+=======
+>>>>>>> origin/master
         />
       </div>
     );
@@ -110,7 +135,11 @@ class Spectrum extends Component<Props, State> {
   }
 }
 
+<<<<<<< HEAD
 const definition: WidgetDefinition<Inputs> = {
+=======
+const definition: WidgetDefinition = {
+>>>>>>> origin/master
   type: "SPECTRUM",
   name: "Spectrum",
   defaultWidth: 30,

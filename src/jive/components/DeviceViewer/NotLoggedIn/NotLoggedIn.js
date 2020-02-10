@@ -1,5 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+<<<<<<< HEAD
 
+=======
+//TODO: We should replace the 'links' that don't have a specific destination  with buttons 
+//      to better signal intention to screen readers etc.
+>>>>>>> origin/master
 
 import React, { Component } from "react";
 import { connect } from "react-redux";

@@ -1,4 +1,5 @@
 import AttributePlot from "./AttributePlot";
+<<<<<<< HEAD
 import {
   WidgetDefinition,
   NumberInputDefinition,
@@ -21,6 +22,11 @@ export type Inputs = {
 }
 
 const definition: WidgetDefinition<Inputs> = {
+=======
+import { WidgetDefinition } from "../../../dashboard/types";
+
+const definition: WidgetDefinition = {
+>>>>>>> origin/master
   type: "ATTRIBUTE_PLOT",
   name: "Attribute Plot",
   defaultWidth: 30,
@@ -36,11 +42,14 @@ const definition: WidgetDefinition<Inputs> = {
       default: true,
       label: "Show Zero Line"
     },
+<<<<<<< HEAD
     logarithmic: {
       type: "boolean",
       default: false,
       label: "Log y axis"
     },
+=======
+>>>>>>> origin/master
     attributes: {
       label: "Graphs",
       type: "complex",

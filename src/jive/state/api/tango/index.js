@@ -8,8 +8,12 @@ import {
   DELETE_DEVICE_PROPERTY,
   FETCH_DEVICE,
   FETCH_DEVICE_STATE,
+<<<<<<< HEAD
   ATTRIBUTES_SUB_WITH_VALUES,
   ATTRIBUTES_SUB_WITHOUT_VALUES,
+=======
+  ATTRIBUTES_SUB,
+>>>>>>> origin/master
   FETCH_DATABASE_INFO,
   FETCH_LOGGED_ACTIONS,
   FETCH_ALL_LOGGED_ACTIONS
@@ -112,6 +116,7 @@ export default {
     }
   },
 
+<<<<<<< HEAD
   changeEventEmitter(tangoDB, fullNames, includeValues) {
     includeValues = includeValues === undefined ? true : includeValues;
 
@@ -120,13 +125,21 @@ export default {
       ? ATTRIBUTES_SUB_WITH_VALUES
       : ATTRIBUTES_SUB_WITHOUT_VALUES;
 
+=======
+  changeEventEmitter(tangoDB, fullNames) {
+    const socket = createSocket(tangoDB);
+>>>>>>> origin/master
     return emit => {
       socket.addEventListener("open", () => {
         const variables = { fullNames };
         const startMessage = JSON.stringify({
           type: "start",
           payload: {
+<<<<<<< HEAD
             query,
+=======
+            query: ATTRIBUTES_SUB,
+>>>>>>> origin/master
             variables
           }
         });

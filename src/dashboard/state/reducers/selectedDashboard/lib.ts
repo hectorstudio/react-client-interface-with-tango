@@ -4,20 +4,28 @@ import {
   WidgetDefinition,
   InputDefinitionMapping,
   InputMapping,
+<<<<<<< HEAD
   InputDefinition,
   DashboardEditHistory
+=======
+  InputDefinition
+>>>>>>> origin/master
 } from "../../../types";
 import { defaultInputs } from "../../../utils";
 import { definitionForWidget } from "../../../widgets";
 
+<<<<<<< HEAD
 const HISTORY_SIZE = 100;
 
+=======
+>>>>>>> origin/master
 export function move(widget: Widget, dx: number, dy: number) {
   const { x, y } = widget;
   const targetX = Math.max(0, x + dx);
   const targetY = Math.max(0, y + dy);
   return { ...widget, x: targetX, y: targetY };
 }
+<<<<<<< HEAD
 export function undo(
   history: DashboardEditHistory,
   widgets: Record<string, Widget>
@@ -68,6 +76,8 @@ export function pushToHistory(
   history.redoLength = 0;
   return history;
 }
+=======
+>>>>>>> origin/master
 
 export function resize(
   widget: Widget,
@@ -148,13 +158,21 @@ export function setWithIndexPath(
 }
 
 export function defaultDimensions(
+<<<<<<< HEAD
   definition: WidgetDefinition<{}>
+=======
+  definition: WidgetDefinition
+>>>>>>> origin/master
 ): { width: number; height: number } {
   const { defaultWidth: width, defaultHeight: height } = definition;
   return { width, height };
 }
 
+<<<<<<< HEAD
 export function nestedDefault(definition: WidgetDefinition<{}>, path: IndexPath) {
+=======
+export function nestedDefault(definition: WidgetDefinition, path: IndexPath) {
+>>>>>>> origin/master
   const initial = { inputs: definition.inputs };
   const leaf = path.reduce((accum, segment): {
     inputs: InputDefinitionMapping;
@@ -234,6 +252,7 @@ export function nextId(widgets: Record<string, Widget>): string {
   const highest = ids.reduce((max, id) => Math.max(max, id), 0);
   return String(1 + highest);
 }
+<<<<<<< HEAD
 
 export function nextOrderIndex(widgets: Record<string, Widget>){
   const orders = Object.values(widgets).map(value => {
@@ -284,3 +303,5 @@ export function moveSingleOrderIndex(widgets: Widget[], sourceIndex:number, up:b
   }
   return widgets;
 }
+=======
+>>>>>>> origin/master

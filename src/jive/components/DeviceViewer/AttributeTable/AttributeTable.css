@@ -1,4 +1,5 @@
 .AttributeTable table {
+<<<<<<< HEAD
   width: 100%;
 }
 
@@ -85,4 +86,62 @@
 
 .AttributeTable .DataFormatChooser {
   margin-bottom: 1em;
+=======
+    width: 100%;
+}
+
+.AttributeTable td {
+    /* white-space: pre; */
+    padding: 0.25em;
+    padding-right: 1em;
+}
+
+.AttributeTable td:last-child {
+    padding-right: 0.5em;
+}
+
+.AttributeTable td.name,
+.AttributeTable td.description {
+    width: 1%;
+    height: 3em; /* Unpretty way of making all rows equally high. Are there better methods? */
+}
+
+
+.AttributeTable td.quality {
+    width: 1%;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+}
+
+.AttributeTable .QualityIndicator {
+    text-shadow: 0em 0em 0.3em;
+    cursor: help;
+    margin-right: 0.5em;
+    font-weight: bold;
+}
+
+.AttributeTable .QualityIndicator.valid {
+	color: lightgreen;
+}
+
+.AttributeTable .QualityIndicator.invalid {
+    color: lightgray;
+    text-shadow: none;
+}
+
+.AttributeTable .QualityIndicator.changing {
+	color: blue;
+}
+
+.AttributeTable .QualityIndicator.alarm {
+	color: red;
+}
+
+.AttributeTable .QualityIndicator.warning {
+	color: orange;
+}
+
+.AttributeTable .DataFormatChooser {
+    margin-bottom: 1em;
+>>>>>>> origin/master
 }

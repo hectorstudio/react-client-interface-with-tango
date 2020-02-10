@@ -147,7 +147,11 @@ query FetchDevice($name: String!) {
   }
 }`;
 
+<<<<<<< HEAD
 export const ATTRIBUTES_SUB_WITH_VALUES = `
+=======
+export const ATTRIBUTES_SUB = `
+>>>>>>> origin/master
 subscription Attributes($fullNames: [String]!) {
   attributes(fullNames: $fullNames) {
     device
@@ -157,6 +161,7 @@ subscription Attributes($fullNames: [String]!) {
     quality
   }
 }`;
+<<<<<<< HEAD
 
 export const ATTRIBUTES_SUB_WITHOUT_VALUES = `
 subscription Attributes($fullNames: [String]!) {
@@ -166,3 +171,5 @@ subscription Attributes($fullNames: [String]!) {
     quality
   }
 }`;
+=======
+>>>>>>> origin/master
